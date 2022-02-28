@@ -48,11 +48,11 @@
 	connected to the internet or using a real email account. The help menu of the Mail program also has
 	a document called "How to use pop mail" which explains how to use the program.
 	
-	Imap is not included because the protocol is more complicated to implement than POP mail. Imap
-	allows multiple users synchronous access to an email account from different computers which is
-	useful for some companies or organizations because POP mail accounts can only be accessed from one
-	device at a time. Imap also allows users to change the state of the messages on the server, but the
-	POP mail protocol could be amended or the email servers could be upgraded to include this feature.
+	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
+	lows multiple users synchronous access to an email account from different computers which is useful
+	for some companies or organizations because POP mail accounts can only be accessed from one device
+	at a time. Imap also allows users to change the state of the messages on the server, but the POP
+	mail protocol could be amended or the email servers could be upgraded to include this feature.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -61,10 +61,10 @@
 	or ciphers. The composite key is then used to initialize a hash function that generates another
 	one-time pad for the message encryption.
 	
-	The private key encryption uses a hashing function that encrypts the private key and the data.
-	No encryption ciphers or invertible functions are used for encryption because there is no proof
-	that any invertible function that is used more than once is secure, and private keys are not sup-
-	posed to be reused for public or private key ciphers.
+	The private key encryption uses a hashing function that encrypts the private key and the data. No
+	encryption ciphers or invertible functions are used for encryption because there is no proof that
+	any invertible function that is used more than once is secure, and private keys are not supposed to
+	be reused for public or private key ciphers.
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to
 	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
@@ -75,10 +75,11 @@
 	The email text, file attachments, and file descriptions are each encoded in base-64 to remove spe-
 	cial characters such as newlines, carriage returns, and end of message or end of file chars, and
 	then the encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base
-	64 to remove special characters from the encryption method. This expands the data by (4/3)^2 or 16/9
-	because base-64 encoding maps 6 bits of data to 8-bit chars and two encodings are used to package
-	the data. Other protocols may use one encoding but this would only reduce the expansion to 3/4 of
-	the size.
+	64 to remove special characters from the encryption method. This expands the data to (4/3)^2 = 16/9
+	the size because base-64 encoding maps 6 bits of data to 8-bit chars and two encodings are used to
+	package the data. (The public key encryption method includes a base-64 encoding because it has to
+	encode the cipherdata to attach the one-time public keys.) Other protocols may use two encodings but
+	this would only reduce the expansion to 3/4 the size.
 	
 	The text editor and email program were written to test the public key software and to show develop-
 	ers how to use and implement the public key ciphers in other programs, but anybody who knows how to
@@ -98,13 +99,15 @@
 	encrypted emails.
 	
 	A few errors were also corrected in the software so the compiler's Xlint doesn't issue warnings
-	every time the program is compiled; errors in the userpass menu item and private key encryption
-	menu item were corrected; the file compression was corrected so that attached files are compressed
-	to ~ 1/4 of their size except for files that are incompressible; the sign out / log out method was
-	modified so that if the email server or mail program becomes unresponsive or the wifi loses its con-
-	nection it will end the program in a few seconds so the user doesn't have to close the terminal or
-	open the System monitor to find and terminate the process; and errors in the readMessage method were
-	corrected so that the messages and attached files are detached and displayed correctly for encrypted
+	every time the program is compiled; errors in the Number class were corrected; errors in the user-
+	pass menu item and private key encryption menu item were corrected; the file compression was cor-
+	rected so that attached files are compressed to ~ 1/4 of their size except for files that are incom-
+	pressible; the sign out / log out method was modified so that if the email server or mail program
+	becomes unresponsive or the wifi loses its connection it will end the program in a few seconds so
+	the user doesn't have to close the terminal or open the System monitor to find and terminate the
+	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded
+	data with a base-16 separator to make it base-64; and errors in the readMessage method were cor-
+	rected so that the messages and attached files are detached and displayed correctly for encrypted
 	and unencrypted emails; the test mail feature and read all method show that the messages and files
 	are displayed correctly.
 	
@@ -114,6 +117,10 @@
 	
 	
 	Instructions for running Java programs on Linux
+	
+	(Your computer should have at least 8 GB of memory
+	if you run Java and a web browser at the same time
+	or else your computer could run out of memory.)
 	
 	
 	Downloading the Java Development Kit (JDK)
@@ -134,6 +141,7 @@
 	
 	
 	
+	
 	Installing the Java Development Kit (JDK) and running the Java Editor program
 	
 	0.  Download the file openjdk-17.0.2_linux-x64_bin.tar.gz  from the website jdk.java.net/17.
@@ -150,16 +158,16 @@
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-17.0.2/bin/java ./Downloads/Editor.java (text, table, html, image, mail)
+	    cd; /usr/jdk/jdk-17.0.2/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
-	If you add an argument after the file name then the program will display the text editor, table
-	editor, html editor, image viewer, or email editor.
+	If you add an argument after the file name then the program will display the text editor, table editor,
+	image viewer, or email editor.
 	
-	(The Editor program has a table editor, html viewer, and image viewer because other editors are
-	not able to display encrypted files or directories. The text editor, html viewer, and image viewer
-	programs don't have to decrypt and re-encrypt the Documents and Pictures folders because they only
-	read and decrypt the file input to the program. The files on the disk remain encrypted and unmodi-
-	fied unless the user decrypts them.)
+	(The Editor program has a table editor, html viewer, and image viewer because other editors are not
+	able to display encrypted files or directories. The text editor, html viewer, and image viewer programs
+	don't have to decrypt and re-encrypt the Documents and Pictures folders because they only read and de-
+	crypt the file input to the program. The files on the disk remain encrypted and unmodified unless the
+	user decrypts them.)
 	
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
@@ -224,9 +232,15 @@
 	
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
-	number and n is a state from 0 to 9. The TOP command could return the message state number after
-	+OK which would be backward compatible with the Pop protocol because it would only display a num-
-	ber if a user changes the state of a message.
+	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but
+	could also return the message state number after each message size such as 1 size 0 \n 2 size 2
+	\n 3 size 1 ... This would be backward compatible with the Pop protocol because it would only
+	display a number if a user changes the state of a message.
+	
+	Or the email headers could include a stat:0,1,2,...,9 or stat=0,1,2,...,9 variable so that the
+	mail program or email header class could parse the header for the message state just as it parses
+	the header for the from: and date: fields. (The subject field in the header is empty except for
+	messages that are sent unencrypted.)
 	
 	The client program could also store the email hashes and message states in a file but then the
 	user would have to use the same computer or store the mail folder / directory on a USB storage
@@ -257,8 +271,8 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1     k2               -x2  x1  x2          -k2  k1  k2
-	  Y  =  A1  A2 ,   E  =  A1  Y  A2 ,  and  Y  =  A2  A1  A2 ,   E  =  A2   Y   A2   (mod p)
+	          x1  x2           k1      k2               -x2  x1   x2          -k2  k1   k2
+	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
 	use matrices or hypercomplex numbers instead of integers and they use multiple variables instead of
@@ -378,8 +392,8 @@
 	the recipient can extract the message by inverting e modulo phi(n)/e instead of modulo phi because
 	the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
-	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public
-	key class because the factorization and integer discrete log problem is susceptible to quantum and
+	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
+	class because the factorization and integer discrete log problem is susceptible to quantum and
 	classical computing.
 	
 	A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
@@ -891,7 +905,7 @@ class __
 	
 	
 	
-	sendretrieveemail = "Send / Retrieve Email",
+	sendretrievemail = "Send / Retrieve Mail",
 	
 	sendemail = "Send Email",
 	
@@ -1612,7 +1626,8 @@ class __
 	//
 	//  To implement this feature, the STAT command could be augmented or overloaded to
 	//  accept two arguments so that the user could change the status of a message, and
-	//  the TOP command could return the message state number after +OK.
+	//  the LIST or TOP command could return the message state number after +OK size or
+	//  the header could include a stat:0,1,2,...,9.
 	//
 	//  For example, the command STAT m n could change the state of message m to state n,
 	//  where m is the message number from 1 to k and n is an integer from 0 to 9. By de-
@@ -1683,7 +1698,7 @@ class __
 	
 	
 	
-	//  POP mail / Send Mail information messages
+	//  POP Mail / Send Mail information messages
 	
 	
 	public static final String
@@ -1702,11 +1717,10 @@ class __
 	
 	choosethereplykeysize2 =
 	
-	    "If you don't include a reply key, the recipient will have to request\n" +
+	    "If you do not include a reply key, the recipient will have to request\n" +
 	    "your public key to send an encrypted reply to your email until email\n" +
 	    "service providers upgrade their software to allow clients or users to\n" +
 	    "store their public keys on their servers.",
-	
 	
 	thismessageisundecryptable =
 	
@@ -1875,13 +1889,10 @@ class Programs
 	PublicKeyRing publickeyring = new PublicKeyRing();
 	
 	private String SP0; // the saved passphrase
-	
-	private String SP; // the secret passphrase
+	private String SP; // the secret passphrase SP = SP0 + SP1
 	
 	private byte[] SK; // encryption secret key
-	
 	private byte[] signatureSK; // signature secret key
-	
 	private byte[] filekey; // file key
 	
 	//  the last directory used by File->Open or File->Save
@@ -1915,8 +1926,8 @@ class Programs
 	private Font menuitemfont;
 	
 	
-	{	//  Scale the font sizes so the size is proportional to
-		//  the screen size; otherwise the font size appears too
+	{	//  Scale the font sizes so the size is proportional to the
+		//  screen size; otherwise the font size would appear too
 		//  small on a large screen and too large on a small screen
 		
 		float q = (float) (screenarea / (1024*1024));
@@ -1951,9 +1962,6 @@ class Programs
 	
 	
 	private JMenuBar menubar;
-	
-	
-	private String language = "English";
 	
 	private String titleseparator = "  -  ";
 	
@@ -2079,9 +2087,12 @@ class Programs
 		
 		private float fontsize = textfont.getSize();
 		
-		
 		private int width  = (int) d.getWidth() * 5/8;
 		private int height = (int) d.getHeight()* 5/6;
+		
+		private boolean showhidebuttons = true;
+		
+		private String program = "Java Editor";
 		
 		private String titlename = "";
 		
@@ -2261,42 +2272,28 @@ class Programs
 		htmlviewerbutton;
 		
 		
-		private boolean showhidebuttons = true;
-		
 		
 		
 		public TextFrame()
 		{
 		
 			frame = this;
-			
 			frame.setSize(width, height);
-			
 			frame.setResizable(true);
-			
 			frame.setVisible(true);
-			
 			frame.setTitle(titlename);
-			
 			frame.setLayout(new GridBagLayout());
-			
 			frame.setDefaultCloseOperation(
-			
 			    DO_NOTHING_ON_CLOSE);
-			
 			
 			
 			windowlistener1 = new WindowListener1();
 			changelistener1 = new ChangeListener1();
-			
 			componentlistener1 = new ComponentListener1();
 			
 			keylistener1 = new KeyListener1();
-			
 			focuslistener = new FocusListener();
-			
 			mouselistener = new MouseListener();
-			
 			mousewheellistener1 = new MouseWheelListener1();
 			
 			
@@ -2314,11 +2311,8 @@ class Programs
 			//  Create a draggable tabbed pane
 			
 			tabbedpane = new JDraggableTabbedPane();
-			
 			tabbedpane.setDragEnabled(true);
-			
 			tabbedpane.setFocusTraversalPolicy();
-			
 			tabbedpane.addMouseListener(mouselistener);
 			
 			
@@ -2789,7 +2783,7 @@ class Programs
 			internetmenu = new JMenu(__.Internet);
 			internetmenu.setFont(menufont);
 			
-			retrievemenuitem = new JMenuItem(__.sendretrieveemail, sendreceiveicon);
+			retrievemenuitem = new JMenuItem(__.sendretrievemail, sendreceiveicon);
 			retrievemenuitem.addActionListener(retrievemaillistener);
 			internetmenu.add(retrievemenuitem);
 			
@@ -2944,19 +2938,19 @@ class Programs
 			htmlviewerbutton = new JButton();
 			
 			
-			  newbutton.addActionListener(newlistener);
-			 openbutton.addActionListener(openlistener);
-			 savebutton.addActionListener(savelistener);
+			newbutton.addActionListener(newlistener);
+			openbutton.addActionListener(openlistener);
+			savebutton.addActionListener(savelistener);
 			closebutton.addActionListener(closelistener);
 			
 			undobutton.addActionListener(undolistener);
 			redobutton.addActionListener(undolistener);
 			
-			 cutbutton.addActionListener(cutlistener);
+			cutbutton.addActionListener(cutlistener);
 			copybutton.addActionListener(copylistener);
 			pastebutton.addActionListener(pastelistener);
 			
-			 findbutton.addActionListener(findlistener);
+			findbutton.addActionListener(findlistener);
 			
 			fontsizebutton.addActionListener(fontsizelistener);
 			textboldbutton.addActionListener(textboldlistener);
@@ -2966,7 +2960,7 @@ class Programs
 			
 			
 			
-			 newbutton.setToolTipText(__.new_);
+			newbutton.setToolTipText(__.new_);
 			openbutton.setToolTipText(__.open);
 			savebutton.setToolTipText(__.save);
 			closebutton.setToolTipText(__.close);
@@ -2981,7 +2975,7 @@ class Programs
 			fontsizebutton.setToolTipText(__.font);
 			textboldbutton.setToolTipText(__.text_bold);
 			colorbutton.setToolTipText(__.textscreencolor);
-			sendretrievemailbutton.setToolTipText(__.sendretrieveemail);
+			sendretrievemailbutton.setToolTipText(__.sendretrievemail);
 			
 			
 			imageicons = new ImageIcon[]
@@ -3037,15 +3031,11 @@ class Programs
 			
 			private File file;
 			
-			
 			private boolean filechanged = false;
 			private boolean encrypted = false;
-			
 			private boolean gotoline  = false;
 			private boolean indenting = false;
-			
 			private boolean autoindent = true;
-			
 			private boolean linewrap = true;
 			
 			private Undo undo;
@@ -3078,7 +3068,6 @@ class Programs
 				
 				
 				textarea.addMouseListener(mouselistener);
-				
 				textarea.addFocusListener(focuslistener);
 				textarea.addKeyListener(keylistener1);
 				
@@ -3131,7 +3120,6 @@ class Programs
 		
 		private class ChangeListener1 implements ChangeListener
 		{
-		
 			public void stateChanged(ChangeEvent e)
 			{
 				textareapanel = (TextAreaPanel)
@@ -3153,10 +3141,8 @@ class Programs
 		
 		private void setMenuItemsEnabled(boolean bool)
 		{
-		
 			JMenuItem[] menuitems = new JMenuItem[]
 			{
-			
 				//  newmenuitem, openmenuitem, deletemenuitem, exitmenuitem,
 				savemenuitem, saveasmenuitem, printmenuitem, closemenuitem,
 				
@@ -3201,7 +3187,6 @@ class Programs
 		
 		private void setCurrentLineTextField()
 		{
-		
 			//  Find the current line
 			
 			if (textareapanel == null) return;
@@ -3348,10 +3333,8 @@ class Programs
 		
 		private class MouseWheelListener1 implements MouseWheelListener
 		{
-		
 			public void mouseWheelMoved(MouseWheelEvent e)
 			{
-			
 				int rotation = e.getWheelRotation();
 				
 				//  ...
@@ -3420,8 +3403,7 @@ class Programs
 				
 				//  ctrl + a == 1,  ctrl + b == 2, ctrl + c == 3, ...
 				
-				if ((control && (keychar == 'c' - 'a' + 1))
-				 || (control && (keychar == 'x' - 'a' + 1)))
+				if (control && (keychar == 'x' - 'a' + 1))
 				{
 					textareapanel.filechanged = true;
 				}
@@ -3655,13 +3637,10 @@ class Programs
 			
 			
 			
-			
 			private class MouseWheelListener1 implements MouseWheelListener
 			{
-			
 				public void mouseWheelMoved(MouseWheelEvent e)
 				{
-				
 					int rotation = e.getWheelRotation();
 					
 					//  ...
@@ -3817,13 +3796,9 @@ class Programs
 			
 			
 			
-			
-			
-			//  Automatically indent each time the enter key is pressed
-			
-			
 			private void autoindent()
 			{
+				//  indents each time the enter key is pressed
 			
 				JTextArea textarea = textareapanel.textarea;
 				
@@ -3878,7 +3853,6 @@ class Programs
 		
 			public void focusGained(FocusEvent e)
 			{
-			
 				if ((textareapanel != null)
 				
 				 && (e.getSource() == textareapanel.textarea))
@@ -3934,7 +3908,6 @@ class Programs
 		
 		private void setFrameTitle()
 		{
-		
 			String title = ((textareapanel != null)
 			
 			    && (textareapanel.file != null)) ?
@@ -3958,9 +3931,7 @@ class Programs
 		
 		private class NewListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
-			
 			
 			public void run()
 			{
@@ -4102,8 +4073,6 @@ class Programs
 				JTextArea textarea = textareapanel.textarea;
 				
 				textarea.setText(text);
-				
-				
 				textarea.setCaretPosition(0);
 				
 				boolean wrap = linewraplistener.autoWrap(text);
@@ -4116,16 +4085,13 @@ class Programs
 				
 				
 				textareapanel.file = file;
-				
 				textareapanel.filechanged = false;
-				
 				textarea.requestFocusInWindow();
 				
 				
 				//  Clear the stack and save a copy of the new text
 				
 				textareapanel.undo.clear();
-				
 				textareapanel.undo.push();
 				
 				
@@ -4193,6 +4159,7 @@ class Programs
 			
 			public byte[] open(File file)
 			{
+			
 				if (file.length() > 16*1024*1024)
 				{
 					String message = __.largefile;
@@ -4246,18 +4213,14 @@ class Programs
 				
 				if (textareapanel.encrypted)
 				{
+					JTextArea textarea = textareapanel.textarea;
+					
 					FileDecryptor fd;
 					
 					fd = new FileDecryptor(frame);
-					
 					fd.setFileKey(filekey);
-					
 					fd.setPassphrase(SP);
-					
-					JTextArea textarea = textareapanel.textarea;
-					
 					fd.setFont(textarea.getFont());
-					
 					fd.setForeground(textarea.getForeground());
 					fd.setBackground(textarea.getBackground());
 					
@@ -4551,13 +4514,10 @@ class Programs
 						FileEncryptor fe = new FileEncryptor(frame);
 						
 						fe.setFont(textareapanel.textarea.getFont());
-						
 						fe.setForeground(foreground);
 						fe.setBackground(background);
 						
-						if (filekey != null)
-						
-						    fe.setFileKey(filekey);
+						if (filekey != null) fe.setFileKey(filekey);
 						
 						else if ((SP != null) && !SP.isEmpty())
 						
@@ -4631,10 +4591,8 @@ class Programs
 		
 		
 		
-		
 		private class DeleteListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				deletefilelistener.run();
@@ -4642,27 +4600,20 @@ class Programs
 		}
 		
 		
-		
 		private class PrintListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			private void run() { Print.print(textareapanel.textarea); }
 		}
 		
 		
-		
-		
 		private class CloseListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
-			
 			
 			public int run()
 			{
-			
 				if (textareapanellist.size() == 0) return -1;
 				
 				int choice = JOptionPane.NO_OPTION;
@@ -4695,14 +4646,13 @@ class Programs
 				if (textareapanellist.size() == 1)
 				{
 					JTextArea textarea = textareapanel.textarea;
-					
-					font = textarea.getFont();
-					
 					textareapanel.linewrap = textarea.getLineWrap();
 					
 					foreground = textarea.getForeground();
 					background = textarea.getBackground();
 					caretcolor = textarea.getCaretColor();
+					
+					font = textarea.getFont();
 				}
 				
 				textareapanellist.remove(textareapanel);
@@ -4718,7 +4668,6 @@ class Programs
 				return choice;
 			}
 		}
-		
 		
 		
 		
@@ -4833,12 +4782,10 @@ class Programs
 			
 			private class FocusListener extends FocusAdapter
 			{
-			
 				public void focusGained(FocusEvent e)
 				{
-					//  ...
+					
 				}
-				
 				
 				public void focusLost(FocusEvent e)
 				{
@@ -4853,9 +4800,9 @@ class Programs
 			
 			
 			
-			
 			private void listFileList()
 			{
+			
 				//  creates and displays a dialog that allows the user
 				//  to add or remove commonly used or important files
 				
@@ -5045,8 +4992,7 @@ class Programs
 				
 				for (JTextField textfield : textfieldlist)
 				{
-					if (textfield.hasFocus() &&
-					    textfield.getText().isEmpty())
+					if (textfield.hasFocus() && textfield.getText().isEmpty())
 					{
 						//  Paste from clipboard
 						
@@ -5094,7 +5040,6 @@ class Programs
 		
 		private class UndoListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				if (textareapanel == null) return;
@@ -5114,9 +5059,9 @@ class Programs
 		
 		
 		
+		
 		private class CutListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				if (textareapanel == null) return;
@@ -5126,9 +5071,7 @@ class Programs
 				//  Save a copy of the text
 				
 				textareapanel.undo.push();
-				
 				textareapanel.textarea.cut();
-				
 				textareapanel.textarea.requestFocusInWindow();
 			}
 		}
@@ -5136,13 +5079,11 @@ class Programs
 		
 		private class CopyListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				if (textareapanel == null) return;
 				
 				textareapanel.textarea.copy();
-				
 				textareapanel.textarea.requestFocusInWindow();
 			}
 		}
@@ -5150,7 +5091,6 @@ class Programs
 		
 		private class PasteListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				if (textareapanel == null) return;
@@ -5158,11 +5098,8 @@ class Programs
 				//  Save a copy of the text
 				
 				textareapanel.undo.push();
-				
 				textareapanel.textarea.paste();
-				
 				textareapanel.filechanged = true;
-				
 				textareapanel.textarea.requestFocusInWindow();
 			}
 		}
@@ -5417,7 +5354,6 @@ class Programs
 					
 					textfield1.addKeyListener(keylistener1);
 					textfield2.addKeyListener(keylistener1);
-					
 					textfield1.addFocusListener(focusadapter);
 					textfield2.addFocusListener(focusadapter);
 					
@@ -5603,7 +5539,6 @@ class Programs
 				
 				private void setColor()
 				{
-				
 					if (textareapanel == null) return;
 					
 					Color foreground = textareapanel.textarea.getForeground();
@@ -5611,10 +5546,8 @@ class Programs
 					
 					textfield1.setForeground(foreground);
 					textfield2.setForeground(foreground);
-					
 					textfield1.setBackground(background);
 					textfield2.setBackground(background);
-					
 					textfield1.setCaretColor(foreground);
 					textfield2.setCaretColor(foreground);
 				}
@@ -5623,7 +5556,6 @@ class Programs
 				
 				private void setFont(Font font)
 				{
-				
 					//  Set the font of the find box
 					
 					Font font1 = font.deriveFont((float)
@@ -5635,6 +5567,7 @@ class Programs
 					textarea3 .setFont(font1);
 				}
 			}
+			
 			
 			//  End class FindListener
 			
@@ -5667,7 +5600,6 @@ class Programs
 				
 				public void actionPerformed(ActionEvent e)
 				{
-				
 					setVisible(true);
 				}
 				
@@ -5686,9 +5618,7 @@ class Programs
 					
 					dialog.setVisible(bool);
 					
-					setFont(font);
-					
-					setColor();
+					setFont(font); setColor();
 					
 					textfield1.requestFocusInWindow();
 				}
@@ -5883,16 +5813,16 @@ class Programs
 					  matchcase = matchcasebox.isSelected(); } });
 					
 					
-					prevbutton = new JButton(__.Prev);
-					findbutton     = new JButton(__.Find);
-					replacebutton  = new JButton(__.Replace);
+					   prevbutton = new JButton(__.Prev);
+					   findbutton = new JButton(__.Find);
+					replacebutton = new JButton(__.Replace);
 					
-					prevbutton.addActionListener(actionlistener);
-					findbutton.addActionListener(actionlistener);
-					replacebutton .addActionListener(actionlistener);
+					   prevbutton.addActionListener(actionlistener);
+					   findbutton.addActionListener(actionlistener);
+					replacebutton.addActionListener(actionlistener);
 					
-					findbutton.addFocusListener(focusadapter);
-					prevbutton.addFocusListener(focusadapter);
+					   findbutton.addFocusListener(focusadapter);
+					   prevbutton.addFocusListener(focusadapter);
 					replacebutton.addFocusListener(focusadapter);
 					
 					textfield1.addFocusListener(focusadapter);
@@ -5932,7 +5862,6 @@ class Programs
 					textfield1.setText("");
 					textfield2.setText("");
 					
-					
 					dialog = new JDialog(frame);
 					dialog.setResizable(false);
 					dialog.add(panel);
@@ -5963,10 +5892,8 @@ class Programs
 					
 					textfield1.setForeground(foreground);
 					textfield2.setForeground(foreground);
-					
 					textfield1.setBackground(background);
 					textfield2.setBackground(background);
-					
 					textfield1.setCaretColor(foreground);
 					textfield2.setCaretColor(foreground);
 				}
@@ -6018,12 +5945,15 @@ class Programs
 				
 				String selectedtext = textarea.getSelectedText();
 				
-				if ((selectedtext == null) || selectedtext.isEmpty()) return;
+				if ((selectedtext == null)
+				  || selectedtext.isEmpty()) return;
 				
 				int start = textarea.getSelectionStart();
 				int end   = textarea.getSelectionEnd();
 				
-				try { h.addHighlight(start, end, DefaultHighlighter.DefaultPainter); }
+				try { h.addHighlight(start, end,
+				
+				    DefaultHighlighter.DefaultPainter); }
 				
 				catch (BadLocationException ex) {  }
 			}
@@ -6033,7 +5963,6 @@ class Programs
 			
 			private void findNext(String text, boolean matchcase)
 			{
-			
 				if (textareapanel == null) return;
 				
 				String str = text;
@@ -6046,7 +5975,9 @@ class Programs
 				
 				int sp = findNext(str, cp, matchcase);
 				
-				if (sp != -1) textarea.select(sp, sp + str.length());
+				if (sp != -1) textarea
+				
+				    .select(sp, sp + str.length());
 				
 				else if (sp == -1)
 				{
@@ -6065,7 +5996,6 @@ class Programs
 			
 			private void findPrevious(String text, boolean matchcase)
 			{
-			
 				if (textareapanel == null) return;
 				
 				String str = text;
@@ -6084,8 +6014,7 @@ class Programs
 				
 				else if (sp == -1)
 				{
-					textarea.setText(
-					textarea.getText());
+					textarea.setText(textarea.getText());
 					
 					sp = findPrevious(str, textareapanel
 					
@@ -6101,10 +6030,8 @@ class Programs
 			
 			
 			
-			
 			private int findNext(String str, int position, boolean matchcase)
 			{
-			
 				if (str == null) return -1;
 				
 				int sp = 0;
@@ -6112,20 +6039,17 @@ class Programs
 				if (matchcase == true)
 				
 				     sp = textareapanel.textarea.getText().indexOf(str, position);
-				
 				else sp = textareapanel.textarea.getText().toLowerCase()
 				
-					.indexOf(str.toLowerCase(), position);
+				    .indexOf(str.toLowerCase(), position);
 				
 				return sp;
 			}
 			
 			
 			
-			
 			private int findPrevious(String str, int position, boolean matchcase)
 			{
-			
 				if (str == null) return -1;
 				
 				int sp = 0, length = str.length();
@@ -6154,7 +6078,6 @@ class Programs
 			
 			private void replace(String find_string, String replace_string, boolean matchcase)
 			{
-			
 				if (textareapanel == null) return;
 				
 				JTextArea textarea = textareapanel.textarea;
@@ -6293,7 +6216,7 @@ class Programs
 						
 						textareapanel.filechanged = true;
 					}
-				} ) ;
+				}) ;
 				
 				
 				Box vbox = Box.createVerticalBox();
@@ -6349,13 +6272,14 @@ class Programs
 			
 			private JTextField linewidthfield;
 			
-			private JButton[] buttons;
-			
-			private boolean isstring, isbase16, isbase64;
-			
 			private String text0;
 			
 			private int caretposition;
+			
+			private boolean isstring;
+			private boolean isbase16;
+			private boolean isbase64;
+			
 			
 			public void actionPerformed(ActionEvent e) { run(); }
 			
@@ -6403,21 +6327,17 @@ class Programs
 					}
 				});
 				
-				buttons = new JButton[4];
+				JButton[] buttons = new JButton[4];
 				
 				buttons[0] = new JButton(__.base64);
 				buttons[1] = new JButton(__.base16);
-				
 				buttons[2] = new JButton(__.string);
-				
-				//  buttons[2] = new JButton(__.Tostring);
-				//  buttons[3] = new JButton(__.Fromstring);
-				
 				buttons[3] = new JButton(__.revert);
 				
 				float fontsize = font.getSize();
 				
-				if (fontsize > maxfontsize) fontsize = maxfontsize;
+				if (fontsize > maxfontsize)
+				    fontsize = maxfontsize;
 				
 				Font font1 = font.deriveFont(fontsize);
 				
@@ -6531,7 +6451,6 @@ class Programs
 					
 					     isbase16 = true;
 					else isbase16 = false;
-					
 					
 					if (Number.isBase64(text1) &&
 					
@@ -6957,7 +6876,6 @@ class Programs
 		
 		private class HighlightTextListener implements ActionListener
 		{
-		
 			private JTextField textfield;
 			
 			public void actionPerformed(ActionEvent e)
@@ -6965,12 +6883,9 @@ class Programs
 				String title = __.highlighttext;
 				
 				textfield = new JTextField(16);
-				
 				textfield.setFont(font);
-				
 				textfield.setForeground(foreground);
 				textfield.setBackground(background);
-				
 				textfield.requestFocus();
 				
 				JOptionPane.showMessageDialog(frame, textfield,
@@ -7014,7 +6929,6 @@ class Programs
 			}
 			
 			
-			
 			private void highlight(ArrayList<int[]> startendlist)
 			{
 				Highlighter h = textareapanel.textarea.getHighlighter();
@@ -7046,7 +6960,6 @@ class Programs
 			
 			private JLabel textlabel;
 			
-			
 			private Character closechar
 			
 			    = Character.valueOf((char) 10007);
@@ -7063,7 +6976,6 @@ class Programs
 				if (menubar.getComponentIndex(panel) == -1)
 				{
 					menubar.add(panel);
-					
 					menubar.setVisible(false);
 					menubar.setVisible(true);
 				}
@@ -7071,17 +6983,13 @@ class Programs
 				panel.setVisible(bool);
 				
 				//  textfield.requestFocusInWindow();
-				//  
+				//
 				//  textfield.setText("");
 				
 				currentlinefield.requestFocusInWindow();
-				
 				currentlinefield.setText("");
 				
-				
-				setFont(font);
-				
-				setColor();
+				setFont(font); setColor();
 			}
 			
 			
@@ -7094,31 +7002,20 @@ class Programs
 				textlabel = new JLabel();
 				
 				closefield = new JTextField(1); // x
-				
 				closefield.setEditable(false);
-				
 				closefield.setBorder(null);
-				
-				currentlinefield.setEditable(true);
-				
-				closefield.setBackground(new JPanel().getBackground());
-				
-				currentlinefield.setBackground(
-				
+				closefield.setBackground(
 				    new JPanel().getBackground());
 				
+				currentlinefield.setEditable(true);
+				currentlinefield.setBackground(
+				    new JPanel().getBackground());
 				
 				currentlinefield.addFocusListener( new FocusAdapter()
 				{
-					public void focusGained(FocusEvent e)
-					{
+					public void focusGained(FocusEvent e) {  }
 					
-					}
-					
-					public void focusLost(FocusEvent e)
-					{
-					
-					}
+					public void focusLost(FocusEvent e) {  }
 				} );
 				
 				
@@ -7201,7 +7098,6 @@ class Programs
 							
 							String str = currentlinefield.getText();
 							
-							
 							if ((str == null) || str.isBlank()
 							
 							   || (textareapanel == null))  return;
@@ -7244,7 +7140,6 @@ class Programs
 				
 				
 				currentlinefield .addKeyListener(keylistener);
-				
 				
 				closefield.addMouseListener(new MouseListener()
 				{
@@ -7334,10 +7229,8 @@ class Programs
 		
 		private class UpperLowerCaseListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				JTextArea textarea = textareapanel.textarea;
 				
 				String text = textarea.getSelectedText();
@@ -7359,7 +7252,6 @@ class Programs
 				int length = end - start;
 				
 				if (length == 0) return;
-				
 				
 				int upperchars = 0, lowerchars = 0;
 				
@@ -7393,10 +7285,8 @@ class Programs
 		
 		private class IndentListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				String text = textareapanel.textarea.getSelectedText();
 				
 				if ((text == null) || text.isEmpty())
@@ -7411,7 +7301,6 @@ class Programs
 					
 					return;
 				}
-				
 				
 				//  Click the right arrow key
 				
@@ -7429,7 +7318,6 @@ class Programs
 		
 		private class SetTitleListener implements ActionListener
 		{
-		
 			private int maxfontsize = 24;
 			
 			public void actionPerformed(ActionEvent e)
@@ -7520,10 +7408,8 @@ class Programs
 			}
 			
 			
-			
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				//  Read the text and selected text
 				
 				JTextArea textarea = textareapanel.textarea;
@@ -7544,7 +7430,6 @@ class Programs
 				
 				
 				//  A type 1 hash is used for hashing programs.
-				//
 				//  A type 2 hash is used for hashing documents such as the GPL
 				//  because it ignores white space before hashing. This allows
 				//  the user to reformat the spacing of the lines or paragraphs
@@ -7564,14 +7449,11 @@ class Programs
 				
 				textarea1.setEditable(false);
 				textarea2.setEditable(false);
-				
 				textarea1.setFont(font1);
 				textarea2.setFont(font1);
 				
-				textarea1.setBackground(new
-				    JPanel().getBackground());
-				textarea2.setBackground(new
-				    JPanel().getBackground());
+				textarea1.setBackground(new JPanel().getBackground());
+				textarea2.setBackground(new JPanel().getBackground());
 				
 				String message1 = Convert.partition(hash1, " ", 4);
 				String message2 = Convert.partition(hash2, " ", 4);
@@ -7608,13 +7490,10 @@ class Programs
 				JFileChooser fc;
 				
 				fc = new FileChooser();
-				
 				fc.setFont(font);
-				
 				fc.setDialogTitle(__.hashfile);
 				
 				int choice = fc.showOpenDialog(frame);
-				
 				if (choice == JFileChooser.APPROVE_OPTION)
 				
 				    selectedfile = fc.getSelectedFile();
@@ -7651,15 +7530,13 @@ class Programs
 					FileDecryptor fd;
 					
 					fd = new FileDecryptor(frame);
-					
 					fd.setFileKey(filekey);
-					
 					fd.setPassphrase(SP);
-					
-					JTextArea textarea = textareapanel.textarea;
 					
 					if (textareapanel != null)
 					{
+						JTextArea textarea = textareapanel.textarea;
+						
 						fd.setFont(textarea.getFont());
 						fd.setForeground(textarea.getForeground());
 						fd.setBackground(textarea.getBackground());
@@ -7696,10 +7573,10 @@ class Programs
 				JTextArea textarea = new JTextArea();
 				
 				textarea.setText(hashstr);
-				
-				textarea.setFont(font); textarea.setEditable(false);
-				
-				textarea.setBackground(new JPanel().getBackground());
+				textarea.setFont(font);
+				textarea.setEditable(false);
+				textarea.setBackground(
+				    new JPanel().getBackground());
 				
 				textarea.addMouseListener( new MouseAdapter()
 				{
@@ -7745,7 +7622,6 @@ class Programs
 		
 		private class HashPublicKeyListener implements ActionListener
 		{
-		
 			private JTextArea textarea;
 			
 			private MouseListener mouselistener;
@@ -7780,7 +7656,6 @@ class Programs
 			
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				//  Read the text and selected text
 				
 				JTextArea textarea = textareapanel.textarea;
@@ -7839,10 +7714,8 @@ class Programs
 		
 		private class SelectAllListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				JTextArea textarea = textareapanel.textarea;
 				
 				if (keylistener1.getShift() || keylistener1.getControl())
@@ -7969,7 +7842,7 @@ class Programs
 						
 						bool = bool ? false : true;
 					}
-				} ) ;
+				});
 				
 				
 				textfield1 = new JTextField(20);
@@ -8071,6 +7944,8 @@ class Programs
 				
 				int height = -1, hints = Image.SCALE_SMOOTH;
 				
+				if (width == 0) width = 1;
+				
 				image = image.getScaledInstance(width, height, hints);
 				
 				ImageIcon scaledicon = new ImageIcon(image);
@@ -8133,10 +8008,8 @@ class Programs
 				
 				ActionListener actionlistener = new ActionListener()
 				{
-				
 					public void actionPerformed(ActionEvent e)
 					{
-					
 						if (e.getSource() == plusbutton)
 						{
 							incrementSize();
@@ -8167,10 +8040,8 @@ class Programs
 				
 				textfield.addKeyListener(new KeyAdapter()
 				{
-				
 					public void keyReleased(KeyEvent e)
 					{
-					
 						String text = textfield.getText();
 						
 						int fontsize = !text.isBlank() ?
@@ -8197,7 +8068,6 @@ class Programs
 						
 						textarea.setFont(font);
 					}
-					
 					
 					public void keyTyped(KeyEvent e)
 					{
@@ -8253,11 +8123,9 @@ class Programs
 				     { font = new Font(name, style, size += 1); }
 				else { font = new Font(name, style, size += size / k); }
 				
-				
 				//  Set the font
 				
 				setFont1(font);
-				
 				
 				//  Restore the screen position
 				
@@ -8290,11 +8158,9 @@ class Programs
 					font = new Font(name, style, size);
 				}
 				
-				
 				//  Set the font
 				
 				setFont1(font);
-				
 				
 				//  Restore the screen position
 				
@@ -8316,7 +8182,6 @@ class Programs
 		
 			extends MouseAdapter implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				String fontname = font.getName();
@@ -8404,11 +8269,9 @@ class Programs
 			
 			private void getFontType(final Font font)
 			{
-			
 				//  Select a font type from a message dialog and
 				//  show the user what each font type looks like as
 				//  the arrow key is pressed or the mouse is clicked
-				
 				
 				GraphicsEnvironment ge;
 				
@@ -8501,7 +8364,6 @@ class Programs
 				hbox2.add(Box.createHorizontalStrut(20));
 				hbox2.add(fontlabel);
 				
-				
 				vbox = Box.createVerticalBox();
 				
 				vbox.add(Box.createVerticalStrut(10)); vbox.add(hbox1);
@@ -8530,24 +8392,18 @@ class Programs
 				{ if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				  || (e.getKeyChar() == '\n')) dialog.dispose(); } };
 				
+				
 				scrollpane.addKeyListener(closelistener);
-				
-				
-				dialog.setDefaultCloseOperation(
-				
-				    JDialog.DISPOSE_ON_CLOSE);
-				
-				dialog.add(vbox);
-				
-				dialog.setResizable(false);
+				scrollpane.requestFocusInWindow();
 				
 				Dimension d = new Dimension(400, 800);
 				
+				dialog.add(vbox);
+				dialog.setResizable(false);
+				dialog.setDefaultCloseOperation(
+				    JDialog.DISPOSE_ON_CLOSE);
 				dialog.setPreferredSize(d);
-				
 				dialog.pack();
-				
-				scrollpane.requestFocusInWindow();
 				
 				dialog.setVisible(true);
 			}
@@ -8596,11 +8452,9 @@ class Programs
 				try
 				{
 				
-				JButton textcolorbutton, screencolorbutton, swapcolorsbutton;
-				
-				textcolorbutton   = new JButton(__.textcolor);
-				screencolorbutton = new JButton(__.screencolor);
-				swapcolorsbutton  = new JButton(__.swapcolors);
+				JButton textcolorbutton   = new JButton(__.textcolor);
+				JButton screencolorbutton = new JButton(__.screencolor);
+				JButton swapcolorsbutton  = new JButton(__.swapcolors);
 				
 				String title = "";
 				
@@ -8734,7 +8588,6 @@ class Programs
 		
 		private class LineWrapListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public void run()
@@ -8772,12 +8625,10 @@ class Programs
 			}
 			
 			
-			
 			//  text line auto-wrapping feature
 			//
 			//  If a text file has a line with more than 160 characters,
 			//  the autowrap feature will set the linewrap to true.
-			
 			
 			private boolean autoWrap(String text)
 			{
@@ -8822,12 +8673,10 @@ class Programs
 		private class WordLineCountListener implements ActionListener
 		{
 		
-			//  Count words or tokens, lines and newlines
-			
+			//  counts words or tokens, lines and newlines
 			
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				String text = textareapanel.textarea.getSelectedText();
 				
 				if ((text == null) || text.isEmpty())
@@ -8862,6 +8711,7 @@ class Programs
 				
 					newlines ++;
 				
+				
 				//  Count the bytes
 				
 				int bytes = text.getBytes().length;
@@ -8881,10 +8731,9 @@ class Programs
 				JTextArea textarea = new JTextArea(message);
 				
 				textarea.setEditable(false);
-				
 				textarea.setFont(font);
-				
-				textarea.setBackground(new JPanel().getBackground());
+				textarea.setBackground(
+				    new JPanel().getBackground());
 				
 				int msgtype = JOptionPane.INFORMATION_MESSAGE;
 				
@@ -8896,7 +8745,6 @@ class Programs
 		
 		private class ShowHideButtonsListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				showhidebuttons = !showhidebuttons;
@@ -8909,7 +8757,6 @@ class Programs
 		
 		private class TableEditorListener implements ActionListener
 		{
-		
 			private TableFrame tableframe;
 			
 			public void actionPerformed(ActionEvent e)
@@ -8940,7 +8787,6 @@ class Programs
 		
 		private class ImageViewerListener implements ActionListener
 		{
-		
 			private ImageFrame imageframe;
 			
 			public void actionPerformed(ActionEvent e)
@@ -8972,7 +8818,6 @@ class Programs
 		
 		private class HTMLEditorPaneListener implements ActionListener
 		{
-		
 			private HTMLFrame htmlframe;
 			
 			public void actionPerformed(ActionEvent e)
@@ -9260,7 +9105,6 @@ class Programs
 		private class SignDocumentListener implements ActionListener
 		{
 		
-		
 			//  The message is trimmed before hashing
 			
 			
@@ -9383,7 +9227,6 @@ class Programs
 				if (!choice) return;
 				
 				
-				
 				//  Generate the signature key and sign the message
 				
 				Signature signature = new Signature(signatureSK, cipher);
@@ -9415,7 +9258,6 @@ class Programs
 				    textarea.getSelectionEnd());
 				
 				int digits = 40;
-				
 				
 				
 				//  Convert a jagged array (mrsy) to a
@@ -9502,7 +9344,6 @@ class Programs
 				}
 				
 				
-				
 				//  Confirm the key
 				
 				JTextArea textarea = new JTextArea();
@@ -9519,23 +9360,17 @@ class Programs
 					
 					Signature sig = new Signature(signatureSK, cipher);
 					
-					String keyid = sig.getKeyID();
+					String keyid;
 					
+					keyid = sig.getKeyID();
 					keyid = keyid.substring(0, 32);
-					
 					keyid = Convert.partition(keyid, " ", 4);
 					
-					
 					textarea.setText(keyid);
-					
-					textarea.setFont((font.getSize() <= 40) ?
-					
-					    font : font.deriveFont(40.0f));
-					
 					textarea.setEditable(false);
-					
+					textarea.setFont((font.getSize() <= 40) ?
+					    font : font.deriveFont(40.0f));
 					textarea.setBackground(
-					
 					   new JPanel().getBackground());
 					
 					
@@ -9567,13 +9402,10 @@ class Programs
 						   frame, PassphraseDialog.passphrase_only);
 						
 						pd.setMinimumLength(minlength);
-						
-						pd.setFont1((font != null) ?
-						
-						    font : frame.getFont());
-						
 						pd.setForeground1(foreground);
 						pd.setBackground1(background);
+						pd.setFont1((font != null) ?
+						    font : frame.getFont());
 						
 						String passphrase = pd.readPassphrase();
 						
@@ -9780,7 +9612,6 @@ class Programs
 					
 					    .replace(29, 30, " - ").toString();
 					
-					
 					JLabel label1 = new JLabel();
 					JLabel label2 = new JLabel();
 					
@@ -9838,9 +9669,6 @@ class Programs
 				//  key or key hash has changed.
 				
 				
-				//  ...
-				
-				//  ...
 			}
 		}
 		
@@ -9915,14 +9743,11 @@ class Programs
 					JTextArea textarea = new JTextArea(1, 24);
 					
 					textarea.setBorder(null);
-					
 					textarea.setEditable(false);
-					
 					textarea.setText(__.publickeyerror);
-					
 					textarea.setFont(labelfont);
-					
-					textarea.setBackground(new JPanel().getBackground());
+					textarea.setBackground(
+					    new JPanel().getBackground());
 					
 					JOptionPane.showMessageDialog(parent, textarea,
 					
@@ -9961,7 +9786,6 @@ class Programs
 					Box hbox = Box.createHorizontalBox();
 					
 					hbox.add(scrollpane);
-					
 					hbox.add(deletebutton);
 					
 					deletebutton.addActionListener(new ActionListener()
@@ -10025,10 +9849,6 @@ class Programs
 					String publickey = publickeyring.get(choice)[1];
 					
 					if (publickey == null)  return null;
-					
-					
-					//  The recipient can have a double,
-					//  quad, oct, or max public key
 					
 					
 					//  Encrypt the message
@@ -10215,7 +10035,6 @@ class Programs
 		
 		
 		
-		
 		private class EncryptDirectoryListener implements ActionListener
 		{
 			EncryptDecryptDirectory ed = new EncryptDecryptDirectory(frame);
@@ -10261,11 +10080,14 @@ class Programs
 					dd.setBackground(textarea.getBackground());
 				}
 				
+				//  Set the dialog file key,
+				//  decrypt the directory, and
+				//  update the file key if the 
+				//  user changes the key
+				
 				dd.setFileKey(filekey);
 				
 				dd.decryptDirectory();
-				
-				//  Update the file key
 				
 				if (dd.getFileKey() != null)
 				
@@ -10276,10 +10098,8 @@ class Programs
 		
 		
 		
-		
 		private class EncryptFileListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public void run()
@@ -10387,11 +10207,8 @@ class Programs
 		
 		
 		
-		
-		
 		private class DecryptFileListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public void run()
@@ -10519,19 +10336,22 @@ class Programs
 			//  (Note that repeating bytes are also sequential bytes in
 			//  which the increment equals 0 instead of 1, 2, 3, ...)
 			//
-			//  If the user saves the file to disk or attaches the file
-			//  to an email, the program won't decrypt or prompt the
-			//  user to enter a passphrase to decrypt the file because
-			//  the encrypted data is not formatted.
+			//  If the user saves the file to disk or attaches the file to
+			//  an email, the program won't decrypt or prompt the user to
+			//  enter a passphrase to decrypt the file because the encrypted
+			//  data is not formatted.
 			
 			
 			private int maxfontsize = 24;
 			
-			private JTextField passphrasefield, sizefield, hashfield;
+			private JTextField passphrasefield;
+			private JTextField sizefield;
+			private JTextField hashfield;
 			
-			private JTextArea passphrasearea = new JTextArea();
+			private JTextArea passphrasearea;
 			
-			private JButton encryptbutton, decryptbutton;
+			private JButton encryptbutton;
+			private JButton decryptbutton;
 			
 			private JCheckBox base64box;
 			
@@ -10568,6 +10388,8 @@ class Programs
 				decryptbutton = new JButton(__.decrypt);
 				
 				passphrasefield = new JTextField(24);
+				passphrasearea = new JTextArea();
+				
 				sizefield = new JTextField(3);
 				hashfield = new JTextField(16);
 				
@@ -10583,7 +10405,6 @@ class Programs
 				MouseListener mouselistener = new MouseListener();
 				KeyListener keylistener1 = new KeyListener();
 				
-				
 				encryptbutton.addActionListener(buttonlistener);
 				decryptbutton.addActionListener(buttonlistener);
 				
@@ -10595,34 +10416,31 @@ class Programs
 				    new JPanel().getBackground());
 				
 				passphrasefield.setFont(font1);
-				      sizefield.setFont(font1);
-				      hashfield.setFont(font1);
+				sizefield.setFont(font1);
+				hashfield.setFont(font1);
 				
-				encryptbutton .setFont(font1);
-				decryptbutton .setFont(font1);
+				encryptbutton.setFont(font1);
+				decryptbutton.setFont(font1);
 				
 				passphrasefield.setForeground(foreground);
 				passphrasefield.setBackground(background);
 				
-				      sizefield.setForeground(foreground);
-				      sizefield.setBackground(background);
+				sizefield.setForeground(foreground);
+				sizefield.setBackground(background);
 				
 				passphrasefield.addKeyListener(keylistener1);
-				      sizefield.addKeyListener(keylistener1);
+				sizefield.addKeyListener(keylistener1);
 				
-				      sizefield.addMouseListener(mouselistener);
-				      base64box.addMouseListener(mouselistener);
+				sizefield.addMouseListener(mouselistener);
+				base64box.addMouseListener(mouselistener);
 				
-				passphrasefield.addFocusListener(
-				
-				    new FocusAdapter()
+				passphrasefield.addFocusListener(new FocusAdapter()
 				{
 					public void focusGained(FocusEvent e)
 					{
 						if (encrypted) decryptbutton.doClick();
 					}
 				});
-				
 				
 				
 				//  Create a horizontal box for the fields
@@ -10680,8 +10498,10 @@ class Programs
 			
 			private class MouseListener extends MouseAdapter
 			{
-				//  converts cipherdata to ciphertext
-				//       and ciphertext to cipherdata
+				//  clicking the base-64 checkbox
+				//
+				//  converts ciphertext to cipherdata
+				//        or cipherdata to ciphertext
 				
 				public void mousePressed(MouseEvent e)
 				{
@@ -10796,7 +10616,8 @@ class Programs
 				//  and the size is > maxlen, return
 				//  without diplaying the ciphertext
 				
-				int maxlen = 256 * 1024;
+				int maxlen = 256 * 1024; // 256 K bytes
+				
 				if ((text.length() > maxlen)
 				 && !text.contains("\n")) return;
 				
@@ -10836,7 +10657,6 @@ class Programs
 				if (Number.isBase64(ciphertext))
 				
 				     cipherdata = Convert.base64ToByteArray(ciphertext);
-				
 				else cipherdata = Convert.base64ToByteArray(
 				
 				    Convert.stringToBase64(ciphertext));
@@ -10917,9 +10737,9 @@ class Programs
 				
 				int linewidth = Integer.valueOf(sizestr);
 				
-				if (linewidth > 0)
+				if (linewidth > 0) text1 = Convert
 				
-				    text1 = Convert.partition(text1, "\n", linewidth);
+				    .partition(text1, "\n", linewidth);
 				
 				textarea.setText(text1);
 				
@@ -10958,7 +10778,7 @@ class Programs
 			
 			private void countFrequencies(byte[] bytes)
 			{
-				//  Tests the randomness of the cipherdata
+				//  tests the randomness of the cipherdata
 				//  by counting the frequencies of the bytes
 				//  0, 1, 2, 3, ..., 253, 254, 255
 				
@@ -10978,7 +10798,6 @@ class Programs
 			
 			private class KeyListener extends KeyAdapter
 			{
-			
 				private boolean control;
 				
 				public void keyTyped(KeyEvent e)
@@ -11054,7 +10873,6 @@ class Programs
 		
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				//  This method opens the public key passphrase
 				//  dialog box and prints a new public key
 				
@@ -11120,26 +10938,19 @@ class Programs
 			public void actionPerformed(ActionEvent e)
 			{
 				String title = __.about;
-				
 				String copyright = "Copyright © 2020";
-				
 				String authors = "The Java Editor authors";
 				
-				String program = "Java Editor";
-				
 				String message = program + "  ";
-				
 				message += __.version + " " + version + "\n";
-				
 				message += copyright + " " + authors;
 				
 				JTextArea textarea = new JTextArea(message);
 				
 				textarea.setEditable(false);
-				
-				textarea.setBackground(new JPanel().getBackground());
-				
 				textarea.setFont(labelfont);
+				textarea.setBackground(
+				    new JPanel().getBackground());
 				
 				Object[] options = { __.license };
 				
@@ -11180,7 +10991,6 @@ class Programs
 		
 		
 		
-		
 		private class WindowListener1 extends WindowAdapter
 		{
 		
@@ -11191,7 +11001,6 @@ class Programs
 			
 			public void windowOpened(WindowEvent e)
 			{
-			
 				readSettings();
 				
 				colorbuttonlistener.init();
@@ -11208,7 +11017,6 @@ class Programs
 		private class ColorButtonListener
 		{
 		
-		
 			//  The ColorButtonListener could be replaced by a Color
 			//  Palette Listener that uses a Popup and a color palette
 			//  that has 4 x 8 or 5 x 8 colors but there could be an
@@ -11223,15 +11031,11 @@ class Programs
 			
 			//  ...
 			
-			//  ...
-			
-			
 			
 			private void init()
 			{
 			
 				Colors colors = new Colors();
-				
 				
 				JLabel colorlabel = new JLabel();
 				JLabel closelabel = new JLabel();
@@ -11258,13 +11062,11 @@ class Programs
 				
 				colorbutton1 .setForeground(
 				 new JPanel().getBackground());
-				
 				colorbutton2 .setForeground(
 				 new JPanel().getBackground());
 				
 				colorbutton1.addKeyListener(keylistener1);
 				colorbutton2.addKeyListener(keylistener1);
-				
 				
 				
 				//  Set the color buttons to the current foreground or background
@@ -11449,7 +11251,6 @@ class Programs
 			//  home directory = /root
 			//
 			//  ...
-			
 			
 			
 			
@@ -11864,8 +11665,6 @@ class Programs
 		
 		
 		
-		
-		
 		private class RetrieveMailListener implements ActionListener
 		{
 		
@@ -11927,7 +11726,6 @@ class Programs
 		
 		private class EditorListener implements ActionListener
 		{
-		
 			private HTMLFrame htmlframe;
 			
 			public void actionPerformed(ActionEvent e)
@@ -11941,7 +11739,6 @@ class Programs
 				
 				htmlframe.toFront();
 			}
-			
 			
 			private void init()
 			{
@@ -11987,9 +11784,7 @@ class Programs
 		
 		private TablePanel tablepanel;
 		
-		
 		private ArrayList<TablePanel> tablepanellist;
-		
 		
 		
 		private String fontname = __.monospaced;
@@ -12002,22 +11797,15 @@ class Programs
 		
 		    fontname, fontstyle, fontsize);
 		
-		
 		private Color foreground = Color.black;
 		private Color background = Color.white;
-		
 		
 		private int height =  600;
 		private int width  = 1000;
 		
-		
 		private String program = __.table_editor;
 		
-		
 		private String titlename = "";
-		
-		//  title name can equal "Table"
-		//  or any program name
 		
 		
 		
@@ -12176,23 +11964,15 @@ class Programs
 			//  TableFrame constructor
 			
 			frame = this;
-			
 			frame.setSize(width, height);
-			
 			frame.setResizable(true);
-			
 			frame.setVisible(true);
-			
 			frame.setTitle(titlename);
-			
 			frame.setLayout(new GridBagLayout());
-			
 			frame.setDefaultCloseOperation(
-			
 			    DO_NOTHING_ON_CLOSE);
 			
 			//  frame.setLocationRelativeTo(null);
-			
 			
 			
 			windowlistener1 = new WindowListener1();
@@ -12266,9 +12046,7 @@ class Programs
 			tabbedpane = new JDraggableTabbedPane();
 			
 			tabbedpane.setDragEnabled(true);
-			
 			tabbedpane.setFocusTraversalPolicy();
-			
 			tabbedpane.addMouseListener(mouselistener);
 			
 			
@@ -12481,7 +12259,8 @@ class Programs
 			
 			viewmenu.addSeparator();
 			
-			textscreencolormenuitem = new JMenuItem(__.textscreencolor, textscreencoloricon);
+			textscreencolormenuitem = new JMenuItem(
+			    __.textscreencolor, textscreencoloricon);
 			textscreencolormenuitem.addActionListener(colorlistener);
 			textscreencolormenuitem.setFont(menuitemfont);
 			viewmenu.add(textscreencolormenuitem);
@@ -12529,7 +12308,8 @@ class Programs
 			//  The encrypt directory and encrypt file menu items could be
 			//  merged into one menu item like the hash file / dir menu item
 			
-			encryptdirectorymenuitem = new JMenuItem(__.encryptdirectory, encryptdirectoryicon);
+			encryptdirectorymenuitem = new JMenuItem(
+			    __.encryptdirectory, encryptdirectoryicon);
 			encryptdirectorymenuitem.addActionListener(encryptdirectorylistener);
 			encryptdirectorymenuitem.setFont(menuitemfont);
 			encryptmenu.add(encryptdirectorymenuitem);
@@ -12590,7 +12370,7 @@ class Programs
 			
 			
 			
-			//  Create a new TablePanel to be added to the JTabbedPane
+			//  Create a new TablePanel to add to the JTabbedPane
 			
 			newlistener.run();
 			
@@ -12767,19 +12547,16 @@ class Programs
 				table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 				
 				table.setRowHeight(40);
-				
 				table.setColumnSelectionAllowed(true);
 				
 				table.setForeground(foreground);
 				table.setBackground(background);
-				
 				
 				table.addMouseListener(mouselistener);
 				table.addFocusListener(focuslistener);
 				table.addKeyListener(keylistener1);
 				
 				undo = new Undo(table);
-				
 				
 				scrollpane = new JScrollPane();
 				
@@ -12808,11 +12585,9 @@ class Programs
 				
 				
 				rowheader = new JTable(rowheadermodel);
-				
 				rowheader.setRowHeight(table.getRowHeight());
 				
 				tableheader = table.getTableHeader();
-				
 				tableheader.addMouseListener(mouselistener);
 				
 				rowheader.setBackground(tableheader.getBackground());
@@ -12822,7 +12597,6 @@ class Programs
 				Dimension d = new Dimension(width, 0);
 				
  				rowheader.setPreferredScrollableViewportSize(d);
-				
 				rowheader.addMouseListener(mouselistener);
 				rowheader.addMouseMotionListener(mousemotionlistener);
 				
@@ -12831,11 +12605,9 @@ class Programs
 				cornerlabel.addMouseListener(mouselistener);
 				
 				scrollpane.setRowHeaderView(rowheader);
-				
 				scrollpane.setCorner(ScrollPaneConstants
 				
 				    .UPPER_LEFT_CORNER, cornerlabel);
-				
 				
 				Gbc gbc = new Gbc();
 				
@@ -12925,9 +12697,7 @@ class Programs
 			tablepanellist.add(tablepanel);
 			
 			tabbedpane.add(tablepanel, index);
-			
 			tabbedpane.setTitleAt(index, title);
-			
 			tabbedpane.setSelectedComponent(tablepanel);
 			
 			tablepanel.table.requestFocusInWindow();
@@ -12959,10 +12729,8 @@ class Programs
 		
 		
 		
-		
 		private class ChangeListener1 implements ChangeListener
 		{
-		
 			public void stateChanged(ChangeEvent e)
 			{
 				tablepanel = (TablePanel)
@@ -12977,10 +12745,8 @@ class Programs
 		
 		private void setMenuItemsEnabled(boolean bool)
 		{
-		
 			JMenuItem[] menuitems = new JMenuItem[]
 			{
-			
 				savemenuitem, saveasmenuitem,
 				
 				printmenuitem, closemenuitem,
@@ -13060,7 +12826,6 @@ class Programs
 				deleterowsmenuitem = new JMenuItem(__.deleterows);
 				deleterowsmenuitem.addActionListener(new DeleteRowsListener());
 				popupmenu.add(deleterowsmenuitem);
-				
 				
 				
 				
@@ -13148,9 +12913,8 @@ class Programs
 				if (e.getSource() == tablepanel.scrollpane.getCorner(
 				
 				    ScrollPaneConstants.UPPER_LEFT_CORNER))
-				{
+				
 					table.selectAll();
-				}
 			}
 			
 			
@@ -13259,8 +13023,7 @@ class Programs
 				
 				//  ctrl + a == 1,  ctrl + b == 2, ctrl + c == 3, ...
 				
-				if ((control && (keychar == 'c' - 'a' + 1))
-				 || (control && (keychar == 'x' - 'a' + 1)))
+				if (control && (keychar == 'x' - 'a' + 1))
 				{
 					tablepanel.filechanged = true;
 				}
@@ -13285,7 +13048,6 @@ class Programs
 				if (keycode == vk_shift) shift = true;
 				if (keycode == vk_control) control = true;
 				if (keycode == vk_alt) alt = true;
-				
 				
 				
 				
@@ -13327,7 +13089,6 @@ class Programs
 				}
 				
 				else  tablepanel.undo.enter = false;
-				
 				
 				
 				
@@ -13434,7 +13195,6 @@ class Programs
 			}
 			
 			
-			
 			public void keyReleased(KeyEvent e)
 			{
 				keypressed = false;
@@ -13443,9 +13203,7 @@ class Programs
 				int keychar = e.getKeyChar();
 				
 				if (keycode == vk_shift) shift = false;
-				
 				if (keycode == vk_control) control = false;
-				
 				if (keycode == vk_alt) alt = false;
 			}
 		}
@@ -13459,10 +13217,8 @@ class Programs
 		
 		private class MouseWheelListener1 implements MouseWheelListener
 		{
-		
 			public void mouseWheelMoved(MouseWheelEvent e)
 			{
-			
 				int rotation = e.getWheelRotation();
 				
 				//  ...
@@ -13481,29 +13237,22 @@ class Programs
 		
 		private class FocusListener extends FocusAdapter
 		{
-		
 			public void focusGained(FocusEvent e)
 			{
 				if ((tablepanel != null)
 				
 				 && (e.getSource() == tablepanel.table))
 				{
-				
 					//  if (e.getSource() == ...
 				}
 			}
 			
-			
 			public void focusLost(FocusEvent e)
 			{
-			
 				if ((tablepanel != null)
 				
 				 && (e.getSource() == tablepanel.table))
 				{
-				
-					//  ...
-					
 					//  ...
 				}
 			}
@@ -13511,11 +13260,8 @@ class Programs
 		
 		
 		
-		
-		
 		private void setFrameTitle()
 		{
-		
 			String title = ((tablepanel != null)
 			
 			    && (tablepanel.file != null)) ?
@@ -13541,7 +13287,6 @@ class Programs
 		
 		private class NewListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public void run() { run(0, 0); }
@@ -13565,6 +13310,7 @@ class Programs
 				setFont1(font);
 			}
 		}
+		
 		
 		
 		
@@ -13656,7 +13402,6 @@ class Programs
 				
 				
 				tablepanel.file = file;
-				
 				tablepanel.filechanged = false;
 				
 				if (Cipher.isEncrypted(file))
@@ -13673,7 +13418,6 @@ class Programs
 				//  Clear the stack and save a copy of the new text
 				
 				tablepanel.undo.clear();
-				
 				tablepanel.undo.push();
 				
 				
@@ -13762,15 +13506,15 @@ class Programs
 					FileDecryptor fd;
 					
 					fd = new FileDecryptor(frame);
-					
 					fd.setFileKey(filekey);
-					
 					fd.setPassphrase(SP);
 					
-					fd.setFont(tablepanel.table.getFont());
-					
-					fd.setForeground(tablepanel.table.getForeground());
-					fd.setBackground(tablepanel.table.getBackground());
+					if (tablepanel != null)
+					{
+						fd.setFont(tablepanel.table.getFont());
+						fd.setForeground(tablepanel.table.getForeground());
+						fd.setBackground(tablepanel.table.getBackground());
+					}
 					
 					//  Decrypt the file input
 					
@@ -13793,7 +13537,6 @@ class Programs
 			
 			public File chooseFile(String directory)
 			{
-			
 				File file = null;
 				
 				JFileChooser fc;
@@ -13877,7 +13620,6 @@ class Programs
 				//  Clear the stack and save a copy of the new text
 				
 				tablepanel.undo.clear();
-				
 				tablepanel.undo.push();
 				
 				
@@ -13934,7 +13676,6 @@ class Programs
 					
 					return 0;
 				}
-				
 				
 				//  File already exists
 				
@@ -14064,14 +13805,16 @@ class Programs
 						
 						FileEncryptor fe = new FileEncryptor(frame);
 						
-						fe.setFont(tablepanel.table.getFont());
+						if (tablepanel != null)
+						{
+							JTable table = tablepanel.table;
+							
+							fe.setFont(table.getFont());
+							fe.setForeground(table.getForeground());
+							fe.setBackground(table.getBackground());
+						}
 						
-						fe.setForeground(foreground);
-						fe.setBackground(background);
-						
-						if (filekey != null)
-						
-						    fe.setFileKey(filekey);
+						if (filekey != null) fe.setFileKey(filekey);
 						
 						else if ((SP != null) && !SP.isEmpty())
 						
@@ -14141,7 +13884,6 @@ class Programs
 		
 		private boolean isCSV(String text)
 		{
-		
 			//  verifies that a String contains
 			//  character separated values
 			//  (tabs, commas, or semicolons)
@@ -14230,11 +13972,11 @@ class Programs
 		}
 		
 		
-		
 		private void setData(String text)
 		{
 			setData(text, true);
 		}
+		
 		
 		private void setData(String text, boolean expand)
 		{
@@ -14365,7 +14107,6 @@ class Programs
 		
 		private class DeleteListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				deletefilelistener.run();
@@ -14376,7 +14117,6 @@ class Programs
 		
 		private class PrintListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public void run()
@@ -14391,9 +14131,7 @@ class Programs
 		
 		private class CloseListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
-			
 			
 			public int run()
 			{
@@ -14457,14 +14195,12 @@ class Programs
 		
 		private String getPassphrase()
 		{
-		
 			return SP;
 		}
 		
 		
 		private void setPassphrase(String passphrase)
 		{
-		
 			SP = passphrase;
 			
 			if (SP == null) return;
@@ -14476,9 +14212,7 @@ class Programs
 		
 		private class ExitListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
-			
 			
 			public void run()
 			{
@@ -14494,7 +14228,6 @@ class Programs
 				
 				frame.dispose();
 			}
-			
 			
 			
 			private int saveFiles()
@@ -14518,9 +14251,9 @@ class Programs
 							
 							label.setFont(labelfont);
 							
-							int choice = JOptionPane.showConfirmDialog(
+							int choice = JOptionPane
 							
-							    frame, label);
+							    .showConfirmDialog(frame, label);
 							
 							if ((choice == JOptionPane.CANCEL_OPTION)
 							 || (choice == JOptionPane.CLOSED_OPTION)) return -1;
@@ -14666,20 +14399,18 @@ class Programs
 			{
 				textfield1 = new JTextField(7);
 				textfield2 = new JTextField(7);
-				
-				textfield1.setForeground(foreground);
-				textfield2.setForeground(foreground);
-				
-				textfield1.setBackground(background);
-				textfield2.setBackground(background);
-				
 				textfield3 = new JTextField(7);
+				
 				textfield3.setEditable(false);
 				textfield3.setBorder(null);
 				
+				textfield1.setForeground(foreground);
+				textfield2.setForeground(foreground);
+				textfield1.setBackground(background);
+				textfield2.setBackground(background);
+				
 				textfield1.setFont(font);
 				textfield2.setFont(font);
-				
 				textfield3.setFont(font);
 				
 				 timeslabel = new JLabel("x");
@@ -14859,7 +14590,6 @@ class Programs
 		
 		private class UndoListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				if (tablepanel == null) return;
@@ -14933,7 +14663,7 @@ class Programs
 				Integer[] cp = (Integer[]) text_cp_size[1];
 				Integer[] size = (Integer[]) text_cp_size[2];
 				
-				int row  = cp[0],   col  = cp[1];
+				int row = cp[0], col = cp[1];
 				int rows = size[0], cols = size[1];
 				
 				if ((rows != table.getRowCount())
@@ -15019,10 +14749,10 @@ class Programs
 			
 			
 			
-			//  If the keylistener makes changes to the stack
-			//  by pushing or popping the textarea text, then if
-			//  the indexer is not zero because the user clicked
-			//  the undo menu or the undo key code, the push method
+			//  If the keylistener makes changes to the stack by
+			//  pushing or popping the textarea text, then if the
+			//  indexer is not zero because the user clicked the
+			//  undo menu or the undo key code, the push method
 			//  deletes the future history and resets the indexer
 			//  so that the user is typing in the present instead
 			//  of the past.
@@ -15061,7 +14791,6 @@ class Programs
 				
 				Integer[] size = new Integer[] { rows, cols };
 				
-				
 				stack.add(0, new Object[] { text, cp, size });
 				
 				if (stack.size() > stacksize)
@@ -15094,7 +14823,6 @@ class Programs
 		
 		
 		
-		
 		private class CutListener implements ActionListener
 		{
 			public void actionPerformed(ActionEvent e)
@@ -15115,7 +14843,6 @@ class Programs
 		
 		private class CopyListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				if (tablepanel == null) return;
@@ -15152,12 +14879,9 @@ class Programs
 					
 					     cellvalues[i][j] = "";
 					
-					if (delete)
-					{
-						table.setValueAt("",
+					if (delete) table.setValueAt("",
 						
-						   rows[0] + i, cols[0] + j);
-					}
+					    rows[0] + i, cols[0] + j);
 				}
 				
 				//  Convert the cell values to string
@@ -15187,7 +14911,6 @@ class Programs
 		
 		private class PasteListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				//  Paste from clipboard
@@ -15308,7 +15031,8 @@ class Programs
 		private class FindAndReplace
 		{
 		
-			//  class FindListener,  class ReplaceListener
+			//  class FindListener
+			//  class ReplaceListener
 			
 			
 			private JTextField textfield1;
@@ -15322,10 +15046,10 @@ class Programs
 				
 				private JLabel findreplacelabel;
 				
-				private JTextArea closearea, matchcasearea;
+				private JTextArea closearea;
+				private JTextArea matchcasearea;
 				
 				private boolean matchcase;
-				
 				
 				private Character closechar // x
 				
@@ -15420,7 +15144,6 @@ class Programs
 					panel.add(textfield2, gbc);
 					
 					
-					
 					matchcasearea.addMouseListener(new MouseListener()
 					{
 						public void mousePressed(MouseEvent e)
@@ -15450,7 +15173,6 @@ class Programs
 					
 					findreplacelabel.addMouseListener(new MouseListener()
 					{
-					
 						public void mouseClicked(MouseEvent e)
 						{
 							if (findreplacelabel.getText().equals(__.Find))
@@ -15476,7 +15198,6 @@ class Programs
 					
 					closearea.addMouseListener(new MouseListener()
 					{
-					
 						public void mouseEntered(MouseEvent e)
 						{
 							closearea.setText(new String(
@@ -15527,16 +15248,12 @@ class Programs
 				
 				
 				
-				
 				private class KeyListener1 implements KeyListener
 				{
-				
 					private boolean shift, control, keypressed;
-					
 					
 					public void keyPressed(KeyEvent e)
 					{
-					
 						keypressed = true;
 						
 						int keychar = e.getKeyChar();
@@ -15605,7 +15322,6 @@ class Programs
 					
 					public void keyReleased(KeyEvent e)
 					{
-					
 						keypressed = false;
 						
 						int keychar = e.getKeyChar();
@@ -15654,10 +15370,8 @@ class Programs
 					
 					public void keyTyped(KeyEvent e)
 					{
-					
 						int keychar = e.getKeyChar();
 						int keycode = e.getKeyCode();
-						
 						
 						if (keychar == vk_enter)
 						{
@@ -15771,7 +15485,6 @@ class Programs
 					setVisible(true);
 				}
 				
-				
 				public void setVisible(boolean bool)
 				{
 					if (!dialog.isVisible())
@@ -15797,13 +15510,10 @@ class Programs
 				
 				public ReplaceListener()
 				{
-				
 					KeyListener keylistener = new KeyListener()
 					{
-					
 						public void keyPressed(KeyEvent e)
 						{
-						
 							int keychar = e.getKeyChar();
 							int keycode = e.getKeyCode();
 							
@@ -15852,7 +15562,6 @@ class Programs
 						
 						public void keyReleased(KeyEvent e)
 						{
-						
 							int keychar = e.getKeyChar();
 							int keycode = e.getKeyCode();
 							
@@ -15896,7 +15605,6 @@ class Programs
 						
 						public void keyTyped(KeyEvent e)
 						{
-						
 							int keychar = e.getKeyChar();
 							int keycode = e.getKeyCode();
 							
@@ -15919,10 +15627,8 @@ class Programs
 					
 					ActionListener actionlistener = new ActionListener()
 					{
-					
 						public void actionPerformed(ActionEvent e)
 						{
-						
 							if (tablepanel == null) return;
 							
 							if (e.getSource() == prevbutton)
@@ -16064,10 +15770,8 @@ class Programs
 					
 					textfield1.setForeground(foreground);
 					textfield2.setForeground(foreground);
-					
 					textfield1.setBackground(background);
 					textfield2.setBackground(background);
-					
 					textfield1.setCaretColor(foreground);
 					textfield2.setCaretColor(foreground);
 				}
@@ -16107,7 +15811,6 @@ class Programs
 			
 			private void findNext(String text, boolean matchcase)
 			{
-			
 				if (tablepanel == null) return;
 				
 				String str = text;
@@ -16132,19 +15835,15 @@ class Programs
 					if (sp != null) select(sp[0], sp[1]);
 				}
 				
-				if (sp != null)
+				if (sp != null) table.changeSelection(
 				
-				    table.changeSelection(
-				
-					sp[0], sp[1], false, false);
+				    sp[0], sp[1], false, false);
 			}
-			
 			
 			
 			
 			private void findPrevious(String text, boolean matchcase)
 			{
-			
 				if (tablepanel == null) return;
 				
 				String str = text;
@@ -16170,19 +15869,15 @@ class Programs
 					if (sp != null) select(sp[0], sp[1]);
 				}
 				
-				if (sp != null)
+				if (sp != null) table.changeSelection(
 				
-				    table.changeSelection(
-				
-					sp[0], sp[1], false, false);
+				    sp[0], sp[1], false, false);
 			}
-			
 			
 			
 			
 			private int[] findNext(String str, int row, int col, boolean matchcase)
 			{
-			
 				if (str == null) return null;
 				
 				JTable table = tablepanel.table;
@@ -16218,7 +15913,6 @@ class Programs
 			
 			private int[] findPrevious(String str, int row, int col, boolean matchcase)
 			{
-			
 				if (str == null) return null;
 				
 				JTable table = tablepanel.table;
@@ -16255,10 +15949,8 @@ class Programs
 			
 			
 			
-			
 			private void replace(String find_string, String replace_string, boolean matchcase)
 			{
-			
 				if (tablepanel == null) return;
 				
 				JTable table = tablepanel.table;
@@ -16301,7 +15993,6 @@ class Programs
 		
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				if (tablepanel == null) return;
 				
 				JTable table = tablepanel.table;
@@ -16418,15 +16109,10 @@ class Programs
 				
 				
 				Number sum = new Number(0).setPrecision(2);
-				
 				for (Number n : numbers) sum = sum.add(n);
-				
 				Number average = sum .divide(numbers.size());
-				
 				Number median = numbers.get(size/2);
-				
 				Number min = numbers.get(0);
-				
 				Number max = numbers.get(size-1);
 				
 				String range = firstcell + ":" + lastcell;
@@ -16445,12 +16131,11 @@ class Programs
 				Font font = tablepanel.table.getFont();
 				
 				JTextArea textarea = new JTextArea(message);
-				
+
 				textarea.setEditable(false);
-				
+				textarea.setBackground(
+				    new JPanel().getBackground());
 				textarea.setFont(font);
-				
-				textarea.setBackground(new JPanel().getBackground());
 				
 				int msgtype = JOptionPane.INFORMATION_MESSAGE;
 				
@@ -16491,8 +16176,11 @@ class Programs
 				tablepanel.undo.push();
 				
 				
+				//  Read the previous table size
+				
 				int row = table.getSelectedRow();
 				int col = table.getSelectedColumn();
+				
 				
 				//  Read the row vectors
 				
@@ -16568,7 +16256,6 @@ class Programs
 			//  1/16 magnification per click
 			
 			
-			
 			public void actionPerformed(ActionEvent e)
 			{
 			
@@ -16591,10 +16278,8 @@ class Programs
 				
 				ActionListener actionlistener = new ActionListener()
 				{
-				
 					public void actionPerformed(ActionEvent e)
 					{
-					
 						if (e.getSource() == plusbutton) incrementSize();
 						if (e.getSource() == minusbutton) decrementSize();
 						
@@ -16619,10 +16304,8 @@ class Programs
 				
 				textfield.addKeyListener(new KeyAdapter()
 				{
-				
 					public void keyReleased(KeyEvent e)
 					{
-					
 						String text = textfield.getText();
 						
 						int fontsize = !text.isBlank() ?
@@ -16688,10 +16371,8 @@ class Programs
 			
 			
 			
-			
 			private void incrementSize()
 			{
-			
 				String name = font.getName();
 				int style   = font.getStyle();
 				int size    = font.getSize();
@@ -16711,10 +16392,8 @@ class Programs
 			
 			
 			
-			
 			private void decrementSize()
 			{
-			
 				String name = font.getName();
 				int style   = font.getStyle();
 				int size    = font.getSize();
@@ -16827,11 +16506,9 @@ class Programs
 			
 			private void getFontType(final Font font)
 			{
-			
 				//  Select a font type from a message dialog and
 				//  show the user what each font type looks like as
 				//  the arrow key is pressed or the mouse is clicked
-				
 				
 				GraphicsEnvironment ge;
 				
@@ -16952,23 +16629,18 @@ class Programs
 				{ if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				  || (e.getKeyChar() == '\n')) dialog.dispose(); } };
 				
+				
 				scrollpane.addKeyListener(closelistener);
-				
-				dialog.setDefaultCloseOperation(
-				
-				    JDialog.DISPOSE_ON_CLOSE);
-				
-				dialog.add(vbox);
-				
-				dialog.setResizable(false);
+				scrollpane.requestFocusInWindow();
 				
 				Dimension d = new Dimension(400, 800);
 				
+				dialog.add(vbox);
+				dialog.setResizable(false);
+				dialog.setDefaultCloseOperation(
+				    JDialog.DISPOSE_ON_CLOSE);
 				dialog.setPreferredSize(d);
-				
 				dialog.pack();
-				
-				scrollpane.requestFocusInWindow();
 				
 				dialog.setVisible(true);
 			}
@@ -17042,7 +16714,6 @@ class Programs
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				run();
 			}
 			
@@ -17154,6 +16825,7 @@ class Programs
 				
 			}
 		}
+		
 		
 		
 		private class ColorListener implements ActionListener
@@ -17369,10 +17041,8 @@ class Programs
 		
 		
 		
-		
 		private class EncryptFileListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public void run()
@@ -17434,7 +17104,6 @@ class Programs
 					
 					if (bool == false) return;
 					
-					
 					//  Update the file key
 					
 					filekey = fe.getFileKey();
@@ -17479,10 +17148,8 @@ class Programs
 		
 		
 		
-		
 		private class DecryptFileListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public void run()
@@ -17529,7 +17196,6 @@ class Programs
 					boolean bool = fd.decrypt(file);
 					
 					if (bool == false) return;
-					
 					
 					//  Update the file key
 					
@@ -17579,7 +17245,6 @@ class Programs
 		private class ColorButtonListener
 		{
 		
-		
 			//  The ColorButtonListener could be replaced by a Color
 			//  Palette Listener that uses a Popup and a color palette
 			//  that has 4 x 8 or 5 x 8 colors but there could be an
@@ -17594,15 +17259,11 @@ class Programs
 			
 			//  ...
 			
-			//  ...
-			
-			
 			
 			private void init()
 			{
 			
 				Colors colors = new Colors();
-				
 				
 				JLabel colorlabel = new JLabel();
 				JLabel closelabel = new JLabel();
@@ -17767,13 +17428,10 @@ class Programs
 		
 		
 		
-		
 		private class AboutListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				String title = __.about;
 				
 				String message = program + "  " + version;
@@ -17800,9 +17458,7 @@ class Programs
 		
 		private class LicenseListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
-			
 			
 			public void run()
 			{
@@ -17824,13 +17480,11 @@ class Programs
 		
 			public void windowClosing(WindowEvent e)
 			{
-			
 				exitmenuitem.doClick();
 			}
 			
 			public void windowOpened(WindowEvent e)
 			{
-			
 				readSettings();
 				
 				colorbuttonlistener.init();
@@ -17840,7 +17494,6 @@ class Programs
 				//  ...
 			}
 		}
-		
 		
 		
 		private void readSettings()
@@ -17881,6 +17534,7 @@ class Programs
 		private ArrayList<LabelPanel> labelpanellist;
 		
 		
+		private JButton openbutton, closebutton;
 		private JButton backbutton, forwardbutton;
 		
 		private JTextField titlefield;
@@ -17912,12 +17566,10 @@ class Programs
 		
 		private String program = __.imageviewer;
 		
-		
 		private String titlename = __.imageviewer;
 		
 		//  title name can equal Image Viewer
 		//  or any program name
-		
 		
 		
 		
@@ -17969,7 +17621,6 @@ class Programs
 		
 		
 		
-		
 		JMenuItem[] menuitems;
 		
 		JMenu filemenu, editmenu, viewmenu, encryptmenu, helpmenu;
@@ -17995,35 +17646,24 @@ class Programs
 		private JButton[] iconbuttons;
 		
 		
-		private JButton openbutton, closebutton;
-		
 		
 		
 		public ImageFrame()
 		{
 		
 			frame = this;
-			
 			frame.setSize(width, height);
-			
 			frame.setResizable(true);
-			
 			frame.setVisible(true);
-			
-			frame.setDefaultCloseOperation(
-			
-			    DO_NOTHING_ON_CLOSE);
-			
-			
 			frame.setTitle(titlename);
-			
 			frame.setLayout(new GridBagLayout());
+			frame.setDefaultCloseOperation(
+			    DO_NOTHING_ON_CLOSE);
 			
 			
 			//  Create an array list of LabelPanel to hold the label panels
 			
 			labelpanellist = new ArrayList<LabelPanel>();
-			
 			
 			
 			//  Define the listeners
@@ -18044,7 +17684,6 @@ class Programs
 			mouselistener = new MouseListener();
 			
 			focuslistener = new FocusListener();
-			
 			
 			
 			newlistener = new NewListener();
@@ -18068,7 +17707,6 @@ class Programs
 			licenselistener = new LicenseListener();
 			
 			
-			
 			//  Create a draggable tabbed pane
 			
 			tabbedpane = new JDraggableTabbedPane();
@@ -18081,7 +17719,6 @@ class Programs
 			//  to update the reference to the selected tab
 			
 			tabbedpane.addChangeListener(new ChangeListener1());
-			
 			
 			
 			   backbutton = new JButton("<<");
@@ -18147,16 +17784,7 @@ class Programs
 			
 			
 			
-			
 			//  File menu
-			
-			
-			//  The f10 key opens the file menu
-			
-			//  The esc key closes the file menu
-			//  and the dialog boxes
-			
-			
 			
 			filemenu = new JMenu(__.file);
 			filemenu.setFont(menufont);
@@ -18198,7 +17826,6 @@ class Programs
 			
 			//  Edit menu
 			
-			
 			editmenu = new JMenu(__.edit);
 			editmenu.setFont(menufont);
 			
@@ -18209,7 +17836,6 @@ class Programs
 			
 			
 			//  View menu
-			
 			
 			viewmenu = new JMenu(__.view);
 			viewmenu.setFont(menufont);
@@ -18242,7 +17868,6 @@ class Programs
 			
 			//  Encrypt menu
 			
-			
 			encryptmenu = new JMenu(__.encrypt);
 			encryptmenu.setFont(menufont);
 			
@@ -18263,7 +17888,6 @@ class Programs
 			
 			//  Help menu
 			
-			
 			helpmenu = new JMenu(__.help);
 			helpmenu.setFont(menufont);
 			
@@ -18278,11 +17902,9 @@ class Programs
 			setMenuItemsEnabled(false);
 			
 			
-			
 			//  Add the Window and Component listeners
 			
 			frame.addWindowListener(windowlistener1);
-			
 			frame.addComponentListener(componentlistener1);
 			
 			
@@ -18316,16 +17938,8 @@ class Programs
 			openbutton.setToolTipText(__.open);
 			closebutton.setToolTipText(__.close);
 			
-			
-			imageicons = new ImageIcon[]
-			{
-				openicon, closeicon,
-			};
-			
-			iconbuttons = new JButton[]
-			{
-				openbutton, closebutton,
-			};
+			imageicons = new ImageIcon[] { openicon, closeicon, };
+			iconbuttons = new JButton[] { openbutton, closebutton, };
 			
 			
 			Box box = Box.createHorizontalBox();
@@ -18356,7 +17970,7 @@ class Programs
 			panel.setLayout(new GridBagLayout());
 			
 			
-			//    open   close     Back         forward        file name / title
+			//    open   close     back         forward        file name / title
 			//   ______ ______ _____________ _____________ _________________________
 			//  |      |      |             |             |                         |
 			//  |______|______|_____________|_____________|_________________________|
@@ -18420,7 +18034,6 @@ class Programs
 		
 		private void setIconSize(int width)
 		{
-		
 			//  sets the icon sizes for the image frame
 			
 			for (int i = 0; i < iconbuttons.length; i++)
@@ -18449,13 +18062,10 @@ class Programs
 		
 		
 		
-		
 		private class ButtonListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
-			
 				if (e.getSource() == backbutton)
 				
 				    backlistener.run();
@@ -18485,28 +18095,22 @@ class Programs
 			private boolean filechanged = false;
 			
 			private ArrayList<Boolean> encrypted;
-			
 			private ArrayList<Image> images;
-			
 			private ArrayList<String> pages;
 			
 			private int currentpage = 0;
-			
 			
 			
 			public LabelPanel()
 			{
 			
 				encrypted = new ArrayList<Boolean>();
-				
 				images = new ArrayList<Image>();
-				
-				pages = new ArrayList<String>();
+				pages  = new ArrayList<String>();
 				
 				this.setLayout(new GridBagLayout());
 				
 				label = new JLabel();
-				
 				
 				label.addMouseListener(mouselistener);
 				label.addFocusListener(focuslistener);
@@ -18516,9 +18120,7 @@ class Programs
 				//  Create a scrollpane to hold the label
 				
 				scrollpane = new JScrollPane(label);
-				
 				scrollpane.addMouseWheelListener(mousewheellistener1);
-				
 				scrollpane.addKeyListener(keylistener1);
 				
 				
@@ -18539,10 +18141,8 @@ class Programs
 		
 		
 		
-		
 		private class ChangeListener1 implements ChangeListener
 		{
-		
 			public void stateChanged(ChangeEvent e)
 			{
 				labelpanel = (LabelPanel)
@@ -18562,8 +18162,6 @@ class Programs
 				printmenuitem,
 				
 				//  ...
-				
-				//  ...
 			};
 			
 			for (JMenuItem menuitem : menuitems)
@@ -18576,25 +18174,19 @@ class Programs
 		
 		private class MouseListener extends MouseAdapter
 		{
-		
 			private JPopupMenu popupmenu;
 			
 			public MouseListener()
 			{
-			
 				popupmenu = new JPopupMenu();
 				
 				JMenuItem menuitem;
 				
 				//  ...
-				
-				//  ...
 			}
-			
 			
 			public void mousePressed(MouseEvent e)
 			{
-			
 				if (e.getButton() != MouseEvent.BUTTON1)
 				
 				    popupmenu.show(labelpanel.label, e.getX(), e.getY());
@@ -18602,7 +18194,6 @@ class Programs
 			
 			public void mouseReleased(MouseEvent e)
 			{
-			
 				resizeImage();
 			}
 		}
@@ -18612,7 +18203,6 @@ class Programs
 		
 		private class ActionListener1 implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e)
 			{
 				if (e.getSource() == titlefield)
@@ -18650,12 +18240,10 @@ class Programs
 				return control;
 			}
 			
-			
 			public void keyTyped(KeyEvent e)
 			{
 			
 			}
-			
 			
 			public void keyPressed(KeyEvent e)
 			{
@@ -18780,7 +18368,6 @@ class Programs
 			
 			private class MouseWheelListener1 implements MouseWheelListener
 			{
-			
 				//  This is the ImageFrame MouseWheelListener
 				
 				private boolean resized = false;
@@ -18825,13 +18412,10 @@ class Programs
 		
 		
 		
-		
 		private class FocusListener extends FocusAdapter
 		{
-		
 			public void focusGained(FocusEvent e)
 			{
-			
 				if ((labelpanel != null)
 				
 				 && (e.getSource() == labelpanel.label))
@@ -18842,10 +18426,8 @@ class Programs
 				}
 			}
 			
-			
 			public void focusLost(FocusEvent e)
 			{
-			
 				if ((labelpanel != null)
 				
 				  && (e.getSource() == labelpanel.label))
@@ -18893,13 +18475,10 @@ class Programs
 		
 		private class OpenDirectoryListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
-			
 			
 			public void run()
 			{
-			
 				//  Create a new text area panel
 				
 				if ((labelpanel == null) || (labelpanel.pages.size() != 0))
@@ -18912,7 +18491,6 @@ class Programs
 				File file = openlistener.chooseFile(
 				
 				  //  JFileChooser.DIRECTORIES_ONLY);
-				
 				      JFileChooser.FILES_AND_DIRECTORIES);
 				
 				if (file == null) return;
@@ -19016,7 +18594,6 @@ class Programs
 			
 			
 			
-			
 			private File chooseFile(int filetype)
 			{
 			
@@ -19073,7 +18650,6 @@ class Programs
 			
 			
 			
-			
 			private boolean setImage(String filename1)
 			{
 			
@@ -19102,11 +18678,8 @@ class Programs
 						FileDecryptor fd;
 						
 						fd = new FileDecryptor(frame);
-						
 						fd.setFileKey(filekey);
-						
 						fd.setPassphrase(SP);
-						
 						fd.setFont(font.deriveFont(fontsize));
 						
 						imagedata = fd.decrypt(imagedata);
@@ -19219,7 +18792,6 @@ class Programs
 		
 		private void resizeImage()
 		{
-		
 			//  resizes the image to fit the frame size
 			//
 			//  (packing the frame would resize the frame to fit the image size)
@@ -19241,7 +18813,6 @@ class Programs
 		
 		private Image changeImageSize(Image image)
 		{
-		
 			//  returns a scaled instance of the image
 			
 			//  Read the screen width
@@ -19268,7 +18839,6 @@ class Programs
 		
 		private void incrementSize()
 		{
-		
 			//  increments the image frame size
 			
 			float x_y = 1.0f * componentlistener1.getx()
@@ -19288,7 +18858,6 @@ class Programs
 			
 			frame.setSize(d);
 			
-			
 			//  Set the font size
 			
 			float fontsize = frameSizeToFontSize();
@@ -19301,7 +18870,6 @@ class Programs
 		
 		private void decrementSize()
 		{
-		
 			//  decrements the image frame size
 			
 			float x_y = 1.0f * componentlistener1.getx()
@@ -19320,7 +18888,6 @@ class Programs
 			Dimension d = new Dimension(x, y);
 			
 			frame.setSize(d);
-			
 			
 			//  Set the font size
 			
@@ -19356,14 +18923,12 @@ class Programs
 		
 		private String getPassphrase()
 		{
-		
 			return SP;
 		}
 		
 		
 		private void setPassphrase(String passphrase)
 		{
-		
 			SP = passphrase;
 			
 			if (SP == null) return;
@@ -19375,14 +18940,11 @@ class Programs
 		
 		private class PrintListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
-			
 			
 			private void run()
 			{
-			
-				//  ...
+				
 			}
 		}
 		
@@ -19390,7 +18952,6 @@ class Programs
 		
 		private class CloseListener implements ActionListener
 		{
-		
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public int run()
@@ -19617,7 +19178,7 @@ class Programs
 				//  directories to download information to a usb device. Users
 				//  who travel to other countries may also be required to pro-
 				//  vide access to files on their computers or smartphones but
-				//  they may not want to allow the directories to be decrypted.
+				//  may not want to allow the directories to be decrypted.
 				
 				//  Don't set the file key
 				
@@ -19747,12 +19308,9 @@ class Programs
 				exitmenuitem.doClick();
 			}
 			
-			
 			public void windowOpened(WindowEvent e)
 			{
 				readSettings();
-				
-				//  ...
 				
 				//  ...
 			}
@@ -19804,9 +19362,6 @@ class Programs
 		
 		private ArrayList<EditorPanePanel> editorpanepanellist;
 		
-		private String language = "English";
-		
-		
 		private String fontname = __.monospaced;
 		
 		private int fontstyle = Font.PLAIN;
@@ -19819,9 +19374,7 @@ class Programs
 		
 		private Color foreground, background;
 		
-		
 		private int height = 800, width = 1000;
-		
 		
 		private String program = __.HTMLEditor;
 		
@@ -19895,42 +19448,27 @@ class Programs
 		public HTMLFrame()
 		{
 		
-			this.setSize(width, height);
-			
-			this.setResizable(true);
-			
-			this.setVisible(true);
-			
-			this.setDefaultCloseOperation(
-			
-			    DO_NOTHING_ON_CLOSE);
-			
-			
-			this.frame = this;
-			
-			
+			frame = this;
+			frame.setSize(width, height);
+			frame.setResizable(true);
+			frame.setVisible(true);
 			frame.setTitle(titlename);
-			
 			frame.setLayout(new GridBagLayout());
-			
+			frame.setDefaultCloseOperation(
+			    DO_NOTHING_ON_CLOSE);
 			
 			
 			//  Define the listeners
 			
 			windowlistener1 = new WindowListener1();
-			
 			keylistener1 = new KeyListener1();
-			
 			mousewheellistener1 = keylistener1
-			
 			    .new MouseWheelListener1();
 			
 			mouselistener = new MouseListener();
-			
 			focuslistener = new FocusListener();
 			
 			hyperactive = new Hyperactive();
-			
 			
 			
 			//  Create an array list of EditorPanePanel to hold the editor panels
@@ -19983,7 +19521,6 @@ class Programs
 			
 			
 			//  File menu
-			
 			
 			filemenu = new JMenu(__.file);
 			filemenu.setFont(menufont);
@@ -20058,7 +19595,6 @@ class Programs
 			findmenuitem.setFont(menuitemfont);
 			editmenu.add(findmenuitem);
 			
-			
 			//  ...
 			
 			menubar.add(editmenu);
@@ -20088,13 +19624,11 @@ class Programs
 			
 			//  ...
 			
-			
 			menubar.add(viewmenu);
 			
 			
 			
 			//  Help menu
-			
 			
 			helpmenu = new JMenu(__.help);
 			helpmenu.setFont(menufont);
@@ -20104,9 +19638,7 @@ class Programs
 			aboutmenuitem.setFont(menuitemfont);
 			helpmenu.add(aboutmenuitem);
 			
-			
 			//  ...
-			
 			
 			menubar.add(helpmenu);
 			
@@ -20131,7 +19663,6 @@ class Programs
 		
 		
 		//  End HTMLFrame constructor
-		
 		
 		
 		
@@ -20186,7 +19717,6 @@ class Programs
 			private static final long serialVersionUID = 1L;
 			
 			private JEditorPane editorpane;
-			
 			
 			private File file;
 			
@@ -20243,7 +19773,6 @@ class Programs
 		
 		private class ChangeListener1 implements ChangeListener
 		{
-		
 			public void stateChanged(ChangeEvent e)
 			{
 				editorpanepanel = (EditorPanePanel)
@@ -20276,17 +19805,14 @@ class Programs
 		
 		private class MouseListener extends MouseAdapter
 		{
-		
 			private JPopupMenu popupmenu, tabpopupmenu;
 			
 			private JMenuItem cutmenuitem, copymenuitem, pastemenuitem,
 			
 			    insertrowsmenuitem, deleterowsmenuitem;
 			
-			
 			public MouseListener()
 			{
-			
 				popupmenu = new JPopupMenu();
 				
 				tabpopupmenu = new JPopupMenu();
@@ -20520,7 +20046,6 @@ class Programs
 				
 				  && (e.getSource() == editorpanepanel.editorpane))
 				{
-				
 					//  if (e.getSource() == ...
 				}
 				
@@ -20528,16 +20053,13 @@ class Programs
 				//  ...
 			}
 			
-			
 			public void focusLost(FocusEvent e)
 			{
 				if ((editorpanepanel != null)
 				
 				 && (e.getSource() == editorpanepanel.editorpane))
 				{
-					//  ...
 					
-					//  ...
 				}
 			}
 		}
@@ -20693,20 +20215,15 @@ class Programs
 						FileDecryptor fd;
 						
 						fd = new FileDecryptor(frame);
-						
 						fd.setFileKey(filekey);
-						
 						fd.setPassphrase(SP);
-						
 						fd.setFont(font.deriveFont(fontsize));
 						
 						filedata = fd.decrypt(filedata);
 						
 						filekey = fd.getFileKey();
 						
-						if (filekey == null)
-						
-						     return false;
+						if (filekey == null) return false;
 						
 						else filekey = filekey;
 					}
@@ -20837,14 +20354,12 @@ class Programs
 					FileDecryptor fd;
 					
 					fd = new FileDecryptor(frame);
-					
 					fd.setFileKey(filekey);
-					
 					fd.setPassphrase(SP);
 					
-					fd.setFont(editorpanepanel
-					
-					    .editorpane.getFont());
+					if (editorpanepanel != null)
+					    fd.setFont(editorpanepanel
+						.editorpane.getFont());
 					
 					plaindata = fd.decrypt(input);
 					
@@ -21466,11 +20981,9 @@ class Programs
 		
 		private String SP;
 		
-		private byte[] SK;
-		
-		//  saved passphrase
-		
 		private String SP0;
+		
+		private byte[] SK;
 		
 		private int passphraseminlength = 16;
 		
@@ -21488,7 +21001,6 @@ class Programs
 		private String replypassphrase = "sender's passphrase--";
 		
 		private KeyboardListener keyboardlistener;
-		
 		
 		
 		private Dimension d = Toolkit
@@ -21648,11 +21160,8 @@ class Programs
 			JMenu filemenu, editmenu; // ...
 			
 			JMenuItem  attachmenuitem,
-			
 			openmenuitem, saveasmenuitem,
-			
 			closemenuitem, exitmenuitem;
-			
 			
 			JMenuItem undeletemenuitem,
 			selectallmenuitem, copymenuitem, findmenuitem;
@@ -21660,7 +21169,6 @@ class Programs
 			JMenuItem fontsizemenuitem, fonttypemenuitem,
 			textboldmenuitem, textscreencolormenuitem,
 			keyboardmenuitem;
-			
 			
 			
 			
@@ -21711,17 +21219,11 @@ class Programs
 			{
 			
 				frame = this;
-				
 				frame.setResizable(true);
-				
 				frame.setVisible(true);
-				
 				frame.setTitle("");
-				
 				frame.setDefaultCloseOperation(
-				
 				    DO_NOTHING_ON_CLOSE);
-				
 				
 				setFrameSize();
 				
@@ -21891,7 +21393,6 @@ class Programs
 				
 				sendbutton.setForeground(foreground);
 				sendbutton.setBackground(background);
-				
 				sendbutton.setFont(font);
 				
 				
@@ -22374,7 +21875,6 @@ class Programs
 							String message1 = __.useclipboardkey;
 							
 							String message2 = Convert.partition(
-							
 							    hash .substring(0, 28), " ", 4);
 							
 							JLabel label1 = new JLabel(message1);
@@ -22597,7 +22097,6 @@ class Programs
 				private boolean clicked = false;
 				
 				private String plaintext, sendtext;
-				
 				private String clientservertext;
 				
 				private int   publickeymessages = 0;
@@ -22618,7 +22117,8 @@ class Programs
 					
 					if ((clientservertext != null) && !clientservertext.isEmpty())
 					{
-						//  Swap the send text and the client / server text
+						//  Rotate the plaintext, sendtext, and client/server
+						//  text each time the send button is clicked
 						
 						String text = textarea.getText();
 						
@@ -22767,14 +22267,18 @@ class Programs
 						}
 						
 						
-						//  The SendMailListener should not create
-						//  a send mail frame if the outgoing mail
-						//  server is empty or null
-						
 						if ((outgoingmailserver == null)
 						  || outgoingmailserver.isEmpty())
+						{
+							String message = __.outgoingmailserverfieldisempty;
+							
+							JOptionPane.showMessageDialog(panel,
+							
+							    message, "", JOptionPane.ERROR_MESSAGE);
+							
+							return;
+						}
 						
-							throw new Exception();
 						
 						
 						//  Verify that the user domain
@@ -22841,18 +22345,17 @@ class Programs
 						//  one stored in the file, the program should alert the user that the
 						//  recipient's public key has changed. If the message is important, the
 						//  sender could verify that the recipient's key has changed by calling
-						//  the recipient. If the message is unimportant then it doesn't matter.)
+						//  the recipient. If the message is unimportant then it doesn't matter.
 						
 						
 						
-						//  Read the public key file for this user name (The username
-						//  or email address is in the from field of the Send Mail frame)
-						
+						//  Read the public key file for this user name or email address
+												
 						String useraddr = fromstring;
 						
-						if (useraddr.contains(" "))
+						if (useraddr.contains(" ")) useraddr =
 						
-						    useraddr = useraddr.substring(0, useraddr.indexOf(" "));
+						    useraddr.substring(0, useraddr.indexOf(" "));
 						
 						//  Use the passphrase and from address to read the public key file
 						
@@ -22879,8 +22382,6 @@ class Programs
 							//  Use the recipient's POP mail server
 							//  to retrieve the recipient's public key
 							
-							/********************************
-							
 							//  The email service providers should upgrade their POP mail servers
 							//  to store and retrieve users' public keys.
 							//  
@@ -22889,26 +22390,17 @@ class Programs
 							//  thentication, because anyone can request a public key but only
 							//  the user/client/recipient can set/store/save the public key.
 							//
-							//  Since saving or changing the public key is done very infrequently,
+							//  Since saving or changing the public key is done infrequently,
 							//  and usually only once, it could be done via the web browser and
 							//  could be stored along with the user / client's password and other
-							//  email settings.)
+							//  email settings.
 							
 							
 							
 							//  Connect to the recipient's pop mail server
-							//  (such as pop.mail.com 995) and issue the command
+							//  (such as pop.example.com 995) and issue the command
 							//
-							//  RETR
-							//
-							//  +OK username ...
-							//
-							//  Then send the name of the addressee
-							//  to retrieve the recipient's public key
-							//
-							//  recipient@domain.com
-							//
-							//  +OK ...
+							//  RETR recipientsaddr@example.com
 							//
 							//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 							//  xxxxxxxxxxxxxxxx0123456789abcdefxxxxxxxxx
@@ -22918,14 +22410,27 @@ class Programs
 							//  .
 							
 							
-							String publickey = xxxxxxxxxx0123456789abcdef...
+							/****************
 							
-							recipientskey = publickey;
+							//  This code will be implemented if the email server
+							//  programs are upgraded to store and retrieve keys
 							
-							...     ...
+							int portno = 995;
 							
-							********************************/
+							PopMail popmail = new PopMail(tostring, portno);
 							
+							String publickey = popmail.retrieve(tostring);
+							
+							//  xxxxxxxxxx0123456789abcdefxxxxxxxxxx ...  or
+							//  xxxxxxxxxx-xxxxxxxxxxxx-xxxxxxxxxxxx ...
+							
+							if ((publickey != null) && !publickey.isEmpty()
+							
+							  && PublicKey.isValidKey(publickey))
+							
+								recipientskey = publickey;
+							
+							****************/
 							
 							
 							//  If the public key is not in the recipient's public key direc-
@@ -22939,30 +22444,34 @@ class Programs
 								
 								String name = name_key[0], key = name_key[1];
 								
-								//  System.out.println("name == " + name);
-								
-								if (false) //// (name.equals(tostring) && (publickeymessages == 0))
+								if (name.equals(tostring) && (publickeymessages == 0))
 								{
 									//  System.out.println("Reading recipient's"
 									//     + " public key from public key ring");
 									
-									//  Use keyring key 1234 5678 ....,
+									//  Use key ring key as recipient's key
+									//  address@example.com
+									//  0123 4567 89ab cdef
 									
 									String keyhash = PublicKey.hashPublicKey(key) .substring(0, 32);
 									
 									keyhash = Convert.partition(keyhash, " ", 4);
 									
 									JLabel label1 = new JLabel(__.usekeyringkey);
-									JLabel label2 = new JLabel(keyhash);
+									JLabel label2 = new JLabel(name);
+									JLabel label3 = new JLabel(keyhash);
 									
 									label1.setFont(labelfont);
 									label2.setFont(labelfont);
+									label3.setFont(labelfont);
 									
 									Box vbox = Box.createVerticalBox();
 									
 									vbox.add(label1);
 									vbox.add(Box.createVerticalStrut(6));
 									vbox.add(label2);
+									vbox.add(Box.createVerticalStrut(6));
+									vbox.add(label3);
 									
 									String title = __.usekeyringkey;
 									
@@ -23025,13 +22534,9 @@ class Programs
 								JTextArea textarea = new JTextArea(1, 24);
 								
 								textarea.setBorder(null);
-								
 								textarea.setEditable(false);
-								
 								textarea.setText(__.publickeyerror);
-								
 								textarea.setFont(labelfont);
-								
 								textarea.setBackground(new JPanel().getBackground());
 								
 								JOptionPane.showMessageDialog(frame,
@@ -23109,7 +22614,7 @@ class Programs
 						   && (recipientskeyaddress != null)
 						   &&  recipientskeyaddress.equals(tostring))
 						
-						      encrypt = true;  else  encrypt = false;
+						      encrypt = true;  else encrypt = false;
 						
 						
 						
@@ -23231,15 +22736,16 @@ class Programs
 							});
 							
 							
-							//   _____________________________________________
-							//  |___ Send Message ____________________________|
-							//  |                                             |
-							//  |   Attached files 2  |   Encrypt Key Size 2  |
-							//  |   file name1        |  -------------------  |
-							//  |   file name2        |  My Reply Key Size 2  |
-							//  |                                             |
-							//  |    [ / Yes ] [ Attach Files ] [ X Cancel ]  |
-							//  |_____________________________________________|
+							//   ______________________________________________
+							//  |____ Send Message ____________________________|
+							//  |                                              |
+							//  |    Attached files 2  |   Encrypt Key Size 2  |
+							//  |    file name1        |  -------------------  |
+							//  |    file name2        |  My Reply Key Size 2  |
+							//  |                                              |
+							//  | copy                                         |
+							//  | icon [ / Yes ] [ Attach Files ] [ X Cancel ] |
+							//  |______________________________________________|
 							
 							
 							
@@ -23274,7 +22780,9 @@ class Programs
 							
 							
 							
-							//  mail copy to self label
+							//  mail copy to self icon label
+							
+							//  the copy icon looks better than a checkbox
 							
 							JLabel copylabel = new JLabel();
 							
@@ -23283,6 +22791,7 @@ class Programs
 							copylabel.setEnabled(mailcopytoself);
 							if (tostring.equals(fromstring))
 							    copylabel.setEnabled(false);
+							
 							copylabel.addMouseListener(new MouseAdapter()
 							{ public void mouseClicked(MouseEvent e)
 							{     mailcopytoself = ! mailcopytoself;
@@ -23312,7 +22821,6 @@ class Programs
 								if (!filenames[i].isBlank())
 								
 								     label.setText(filenames[i]);
-								
 								else label.setText("(" + __.notitle + ")");
 							}
 							
@@ -23355,7 +22863,6 @@ class Programs
 								
 								vbox.add(hbox);
 								vbox.add(Box.createVerticalStrut(20));
-								
 								vbox.add(hbox3);
 								
 								panel.add(vbox);
@@ -23534,7 +23041,6 @@ class Programs
 										FileDecryptor fd;
 										
 										fd = new FileDecryptor(frame);
-										
 										fd.setFont(textarea.getFont());
 										fd.setFileKey(filekey);
 										fd.setPassphrase(SP);
@@ -23611,11 +23117,9 @@ class Programs
 									JTextField textfield = new JTextField(20);
 									
 									textfield.setText(file.getName());
-									
-									textfield.setFont(font);
-									
 									textfield.setForeground(foreground);
 									textfield.setBackground(background);
+									textfield.setFont(font);
 									
 									JOptionPane .showMessageDialog(frame,
 									
@@ -23685,10 +23189,9 @@ class Programs
 							JTextArea textarea = new JTextArea(warning);
 							
 							textarea.setFont(labelfont);
-							
-							textarea.setBackground(new JLabel().getBackground());
-							
 							textarea.setEditable(false);
+							textarea.setBackground(
+							    new JLabel().getBackground());
 							
 							JButton yes_button, no_button; Icon icon = null;
 							
@@ -23726,8 +23229,9 @@ class Programs
 						
 						//  The format used to encode, encrypt, and partition
 						//  email messages. Read the format from right to left
-						//  for encoding and encrypting, or left to right for
-						//  decoding and decrypting.
+						//  for encoding, encrypting, encoding, and partitioning,
+						//  or from left to right for unpartitioning, decoding,
+						//  decrypting, and decoding.
 						//
 						//  Encoding is used to hide newline chars that are used
 						//  as delimiters and to convert the random encrypted data
@@ -23737,10 +23241,12 @@ class Programs
 						//
 						//  This method doubles the size of the email because each
 						//  base-64 encoding expands the data by 1/3 which means
-						//  that two encodings expands the data to 4/3 ^ 2 == 16/9.
+						//  that two encodings and the encryption encoding expands
+						//  the data to 4/3 ^ 2 == 16/9 times the size or a 7/9 ==
+						//  0.77 increase.
 						
 						
-						//  partition | encode | encrypt | >>
+						//  partition | (encode or replace \n\n) | encrypt | >>
 						//
 						//       | base-16 reply key (optional)
 						//
@@ -23978,12 +23484,21 @@ class Programs
 								sendtext2 = PublicKey.encrypt(text1,   mypublickey);
 							}
 							
-							//  Encode the encrypted text to hide the newlines
+							
+							//  Encode the encrypted text to hide the newlines in the public key block
+							//  (this encoding is redundant and can be removed by replacing the newline
+							//  separators with the base-16 separator 0123456789abcdef)
 							
 							System.out.println("Encoding the ciphertext in base 64");
 							
-							sendtext1 = Convert.stringToBase64(sendtext1);
-							sendtext2 = Convert.stringToBase64(sendtext2);
+							//  sendtext1 = Convert.stringToBase64(sendtext1);
+							//  sendtext2 = Convert.stringToBase64(sendtext2);
+							
+							
+							//  This code can replace the stringTobase-64 conversion
+							
+							sendtext1 = sendtext1 .replaceAll("\n\n", Convert.base16Separator);
+							sendtext2 = sendtext2 .replaceAll("\n\n", Convert.base16Separator);
 						}
 						
 						
@@ -24514,17 +24029,15 @@ class Programs
 				{
 					File file = null;
 					
+					int mode = JFileChooser.FILES_AND_DIRECTORIES;
+					
 					JFileChooser fc;
 					
 					fc = new FileChooser(directory);
 					
-					fc.setFont(font);
-					
-					int mode = JFileChooser.FILES_AND_DIRECTORIES;
-					
 					fc.setFileSelectionMode(mode);
-					
 					fc.setDialogTitle(title);
+					fc.setFont(font);
 					
 					int choice = fc.showOpenDialog(frame);
 					
@@ -24597,7 +24110,6 @@ class Programs
 						FileDecryptor fd;
 						
 						fd = new FileDecryptor(frame);
-						
 						fd.setFileKey(filekey);
 						fd.setPassphrase(SP);
 						fd.setFont(textarea.getFont());
@@ -24694,12 +24206,9 @@ class Programs
 							FileEncryptor fe;
 							
 							fe = new FileEncryptor(frame);
-							
 							fe.setFont(textarea.getFont());
 							
-							if (filekey != null)
-							
-							    fe.setFileKey(filekey);
+							if (filekey != null) fe.setFileKey(filekey);
 							
 							else if ((SP != null) && !SP.isEmpty())
 							
@@ -24715,7 +24224,6 @@ class Programs
 			
 			private class ExitListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e) { run(); }
 				
 				public void run()
@@ -24744,10 +24252,8 @@ class Programs
 			
 			private class WindowListener1 extends WindowAdapter
 			{
-			
 				public void windowClosing(WindowEvent e)
 				{
-				
 					exitlistener.run();
 				}
 			}
@@ -25037,9 +24543,11 @@ class Programs
 					//  (the icon size can exceed the maxicon
 					//  size for the font, not the frame area)
 					
-					int fontsize = font.getSize();
+					double fontsize = font.getSize();
 					
-					width = (int) 1.0f * width * fontsize / defaultfontsize;
+					width = (int) (width * fontsize / defaultfontsize);
+					
+					if (width == 0) width = 1;
 					
 					int height = -1, hints = Image.SCALE_SMOOTH;
 					
@@ -25083,9 +24591,11 @@ class Programs
 					//  (the icon size can exceed the maxicon
 					//  size for the font, not the frame area)
 					
-					int fontsize = font.getSize();
+					double fontsize = font.getSize();
 					
-					width = (int) 1.0f * width * fontsize / defaultfontsize;
+					width = (int) (width * fontsize / defaultfontsize);
+					
+					if (width == 0) width = 1;
 					
 					int height = -1, hints = Image.SCALE_SMOOTH;
 					
@@ -25138,8 +24648,6 @@ class Programs
 				textarea.setText(text);
 				
 				textarea.requestFocusInWindow();
-				
-				String str = textarea.getText();
 			}
 			
 			
@@ -25270,9 +24778,7 @@ class Programs
 			
 			private class MouseListener extends MouseAdapter
 			{
-			
 				//  This is the SendMail mouse listener
-				
 				
 				private JPopupMenu popupmenu;
 				
@@ -25338,10 +24844,8 @@ class Programs
 			
 				private boolean shift, control, keypressed;
 				
-				
 				public void keyPressed(KeyEvent e)
 				{
-				
 					keypressed = true;
 					
 					int keychar = e.getKeyChar();
@@ -25425,7 +24929,6 @@ class Programs
 				
 				private class MouseWheelListener1 implements MouseWheelListener
 				{
-				
 					//  This is the SendMail Frame MouseWheelListener
 					
 					private boolean resized = false;
@@ -25580,9 +25083,7 @@ class Programs
 				public void windowClosing(WindowEvent e)
 				{
 					keyboardframe.dispose();
-					
 					keyboardframe = null;
-					
 					keyboard = null;
 				}
 			}
@@ -25599,16 +25100,12 @@ class Programs
 					keyboard = new Keyboard();
 					
 					keyboardframe = keyboard.getFrame();
-					
-					keyboardframe.addWindowListener(
-					
-					    new WindowListener1());
-					
 					keyboardframe.setLocationRelativeTo(null);
+					keyboardframe.addWindowListener(
+					    new WindowListener1());
 				}
 				
 				if (keyboardframe != null)
-				
 				    keyboardframe.setVisible(true);
 				
 				setFont(font.deriveFont(font.getSize() + 4.0f));
@@ -25627,14 +25124,12 @@ class Programs
 			public void setBackground(Color color)
 			{
 				keyboard.setBackground(color);
-				
 				keyboard.setKeyboardBackground(color);
 			}
 			
 			public void setFont(Font font)
 			{
 				keyboard.setFont(font);
-				
 				keyboardframe.pack();
 			}
 		}
@@ -25702,6 +25197,7 @@ class Programs
 			private Cursor    wait_cursor = Cursor.getPredefinedCursor(Cursor.   WAIT_CURSOR);
 			
 			
+			//  the popup messages
 			
 			private String testmailpopupmsg = __.testmail;
 			private String  readallpopupmsg = __.listfirst;
@@ -25709,7 +25205,6 @@ class Programs
 			private String    replypopupmsg = __.deleteboxischecked;
 			private String     prevpopupmsg = __.firstmessage;
 			private String     nextpopupmsg = __.lastmessage;
-			
 			
 			
 			//  Icons for the list screen
@@ -25739,9 +25234,9 @@ class Programs
 			ImageIcon senticon    = Icons.get(Icons.mail_send_32x32);  // postage stamp
 			ImageIcon attachicon  = Icons.get(Icons.attachment);  // paper + paper clip
 			
-			//  icon popup menu (the subject / message key decryption thread will change the
-			//  unread and read icons to plaintext_unread and plaintext_read icons if the messages
-			//  are unencrypted)
+			//  icon popup menu (the subject / message key decrypt thread will change the unread
+			//  and read icons to plaintext_unread and plaintext_read icons if the messages are
+			//  unencrypted)
 			
 			ImageIcon  unreadicon = Icons.get(Icons.unread_mail_32x32);  // new envelope gold star
 			ImageIcon    readicon = Icons.get(Icons.read_mail_32x32);    // opened envelope
@@ -25757,7 +25252,6 @@ class Programs
 			
 			ImageIcon    staricon = Icons.get(Icons.star_32x32);           // star icon
 			ImageIcon    saveicon = Icons.get(Icons.save_24x24);           // save icon
-			
 			
 			
 			
@@ -25816,9 +25310,7 @@ class Programs
 			keyboardmenuitem;
 			
 			JMenuItem aboutmenuitem;
-			
 			JMenuItem howtousepopmailmenuitem;
-			
 			JCheckBoxMenuItem testmailmenuitem;
 			
 			
@@ -25873,11 +25365,8 @@ class Programs
 			MouseMotionListener mousemotionlistener;
 			
 			WindowListener1 windowlistener1;
-			
 			WindowStateListener1 windowstatelistener1;
-			
 			ComponentListener1 componentlistener1;
-			
 			
 			
 			
@@ -25920,21 +25409,13 @@ class Programs
 			{
 			
 				frame = this;
-				
 				frame.setResizable(true);
-				
 				frame.setVisible(true);
-				
 				frame.setTitle(titlename);
-				
 				frame.setLayout(new GridBagLayout());
-				
-				//  the WindowListener windowClosing() method
-				//  calls the exitlistener.run() method
-				
 				frame.setDefaultCloseOperation(
-				
 				    DO_NOTHING_ON_CLOSE);
+				
 				
 				width  = screenwidth  * 70 / 100;
 				height = screenheight * 60 / 100;
@@ -25948,11 +25429,8 @@ class Programs
 				//  munication between the client and server
 				
 				pop3window = new JWindow(frame);
-				
 				pop3window.setSize(screenwidth/6, screenheight);
-				
 				pop3window.setVisible(false);
-				
 				
 				
 				//  Create a draggable JTabbedPane
@@ -25962,9 +25440,7 @@ class Programs
 				int tabplacement = JTabbedPane.TOP;
 				
 				tabbedpane = new JDraggableTabbedPane(tabplacement);
-				
 				tabbedpane.setDragEnabled(true);
-				
 				tabbedpane.setFocusTraversalPolicy();
 				
 				frame.add(tabbedpane);
@@ -26059,7 +25535,6 @@ class Programs
 				
 				//  MenuBar
 				
-				
 				menubar = new JMenuBar();
 				
 				frame.setJMenuBar(menubar);
@@ -26095,9 +25570,7 @@ class Programs
 				
 				
 				
-				
 				//  Edit menu
-				
 				
 				editmenu = new JMenu(__.edit);
 				editmenu.setFont(menufont);
@@ -26186,9 +25659,7 @@ class Programs
 				
 				
 				
-				
 				//  View menu
-				
 				
 				viewmenu = new JMenu(__.view);
 				viewmenu.setFont(menufont);
@@ -26208,7 +25679,6 @@ class Programs
 				viewmenu.add(boldmenuitem);
 				
 				viewmenu.addSeparator();
-				
 				
 				
 				textscreencolormenuitem = new JMenuItem(__.textscreencolor, coloricon);
@@ -26249,7 +25719,6 @@ class Programs
 				viewsavedemailsmenuitem.addActionListener(viewsavedemailslistener);
 				viewmenu.add(viewsavedemailsmenuitem);
 				
-				
 				//  viewmenu.addSeparator();
 				//
 				//  keyboardmenuitem = new JMenuItem(__.Keyboard);
@@ -26258,7 +25727,6 @@ class Programs
 				//
 				//  viewmenu.addSeparator();
 				
-				
 				//  ...
 				
 				menubar.add(viewmenu);
@@ -26266,9 +25734,7 @@ class Programs
 				
 				
 				
-				
 				//  Help menu
-				
 				
 				helpmenu = new JMenu(__.help);
 				helpmenu.setFont(menufont);
@@ -26367,9 +25833,9 @@ class Programs
 				
 				private JTable table, rowheader;
 				
-				private int rows1, cols1 = 8;
-				
 				private boolean[] isvisible;
+				
+				private int rows1, cols1 = 8;
 				
 				private int msno, numberofmessages;
 				
@@ -26948,9 +26414,11 @@ class Programs
 					//  (the icon size can exceed the maxicon
 					//  size for the font, not the frame area)
 					
-					double size = 1.0D * font.getSize();
+					double fontsize = 1.0D * font.getSize();
 					
-					width = (int) (width * size / defaultfontsize);
+					width = (int) (width * fontsize / defaultfontsize);
+					
+					if (width == 0) width = 1;
 					
 					int height = -1, hints = Image.SCALE_SMOOTH;
 					
@@ -27147,7 +26615,6 @@ class Programs
 				
 				private boolean ascending = true;
 				
-				
 				private String tabtitle = "";
 				
 				
@@ -27164,7 +26631,6 @@ class Programs
 				
 				private PublicKey[] publickey_sp;
 				private PublicKey[] publickey_sp_email;
-				
 				private PublicKey[] publickey_testmail;
 				
 				
@@ -27217,13 +26683,11 @@ class Programs
 				
 				private ButtonListener buttonlistener;
 				
-				
 				private JComponent[] components;
 				
 				private JTextArea textarea;
 				
 				private JPanel readallpanel;
-				
 				
 				private JScrollPane scrollpane1;
 				private JScrollPane scrollpane2;
@@ -27236,9 +26700,10 @@ class Programs
 				
 				//  buttonpanel == List, Read All, Delete, Sign out
 				
-				private JPanel textfieldpanel,
-				
-				    buttonpanel1, iconpanel, panel;
+				private JPanel textfieldpanel;
+				private JPanel buttonpanel1;
+				private JPanel iconpanel;
+				private JPanel panel;
 				
 				
 				private ImageIcon listicon = Icons.get(Icons.compose_mail_32x32);
@@ -27252,13 +26717,14 @@ class Programs
 				private ImageIcon[] imageicons;
 				private JButton[] iconbuttons;
 				
-				private JButton
-				
-				composebutton, passphrasebutton,
-				textboldbutton, fontsizebutton,
-				showhidebutton, printkeybutton,
-				reversecolorsbutton,
-				clientserverbutton;
+				private JButton composebutton;
+				private JButton passphrasebutton;
+				private JButton textboldbutton;
+				private JButton fontsizebutton;
+				private JButton showhidebutton;
+				private JButton printkeybutton;
+				private JButton reversecolorsbutton;
+				private JButton clientserverbutton;
 				
 				
 				private boolean reverse_colors;
@@ -27308,9 +26774,7 @@ class Programs
 					//  Create a textfield panel
 					
 					textfieldpanel = new JPanel();
-					
 					textfieldpanel.setOpaque(true);
-					
 					textfieldpanel.setLayout(new GridBagLayout());
 					
 					
@@ -27389,11 +26853,8 @@ class Programs
 					for (JButton button : buttons)
 					{
 						button.setFont(font);
-						
 						button.setContentAreaFilled(false);
-						
 						button.addActionListener(buttonlistener);
-						
 						button.addKeyListener(keylistener1);
 					}
 					
@@ -27455,8 +26916,6 @@ class Programs
 					
 					
 					
-					
-					
 					//  Add the icon panel to the panel
 					
 					gbc = new Gbc();
@@ -27472,10 +26931,10 @@ class Programs
 					//  Create the list pane (list screen)
 					//  and the text area (message screen)
 					
-					
 					final int t = 0;
 					
 					listpanel = new ListPanel(t);
+					listpanel.setFont1(font);
 					
 					textarea = new JTextArea();
 					
@@ -27483,13 +26942,9 @@ class Programs
 					textarea.setWrapStyleWord(true);
 					
 					readallpanel = new JPanel();
-					
 					readallpanel.setLayout(new GridBagLayout());
 					
-					listpanel.setFont1(font);
-					
 					textarea.setHighlighter(null);
-					
 					textarea.setEditable(false);
 					
 					
@@ -27604,9 +27059,9 @@ class Programs
 					{
 						emaillabel, emailfield,
 						
-						textfieldpanel,
+						textfieldpanel, iconpanel,
 						
-						iconpanel, panel, listpanel
+						panel, listpanel
 					};
 					
 					for (Component component : components)
@@ -27964,13 +27419,10 @@ class Programs
 			
 			private class NewListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e) { run(); }
-				
 				
 				public void run()
 				{
-				
 					//  Create a new email panel and tab
 					
 					EmailPanel emailpanel = new EmailPanel();
@@ -28000,20 +27452,15 @@ class Programs
 			
 			
 			
-			
 			private class CloseListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e) { run(); }
-				
 				
 				public void run()
 				{
-				
 					if (emailpanel.emailfield.getText().isBlank())
-					{
-						tabbedpane.remove(tabbedpane.getSelectedComponent());
-					}
+					
+					    tabbedpane.remove(tabbedpane.getSelectedComponent());
 					
 					else
 					{	String title = __.deleteorclosetab;
@@ -28048,6 +27495,8 @@ class Programs
 					
 					emailpanel = (EmailPanel) tabbedpane .getSelectedComponent();
 					
+					
+					//  Enable or disable the menu items
 					
 					if (emailpanel == null)
 					
@@ -28143,7 +27592,6 @@ class Programs
 					sendmailframe = new SendMailFrame();
 					
 					sendmailframe.setFont1(font
-					
 					    .deriveFont((float) maxfontsize));
 					
 					sendmailframe.setReverseColors(
@@ -28162,15 +27610,13 @@ class Programs
 					      emailpanel.outgoingmailport);
 					
 					
-					
 					//  Set the username and userpass
 					
 					sendmailframe.setFromField(fromaddr);
-					
 					sendmailframe.userpass = emailpanel.userpass;
-					
 					sendmailframe.setNumberOfCiphers(emailpanel.numberofciphers);
 					sendmailframe.setUseReplyAddressKey(emailpanel.usereplyaddresskey);
+					
 					
 					//  Display the keyboard
 					
@@ -28184,9 +27630,7 @@ class Programs
 						keyboard.setBackground(emailpanel.background);
 						
 						keyboardlistener.setFont(font);
-						
 						keyboardlistener.keyboardframe.setLocationRelativeTo(null);
-						
 						keyboardlistener.setTextComponent(sendmailframe.textarea);
 					}
 					
@@ -28217,7 +27661,6 @@ class Programs
 					sendmailframe.requestFocusInWindow("textarea");
 				}
 			}
-			
 			
 			
 			
@@ -28387,7 +27830,7 @@ class Programs
 					//  | Choose the key size that you want sent with your messages.  |
 					//  | The recipient will use this key to reply to your messages.  |
 					//  |                                                             |
-					//  | If you don't include a reply key, the recipient will have   |
+					//  | If you do not include a reply key, the recipient will have  |
 					//  | to request your public key to send an encrypted reply to    |
 					//  | your email until email service providers upgrade their soft |
 					//  | ware to allow clients or users to store their public keys   |
@@ -28422,11 +27865,8 @@ class Programs
 					JTextArea addressarea = new JTextArea();
 					
 					addressarea.setEditable(false);
-					
 					addressarea.setBackground(new JPanel().getBackground());
-					
 					addressarea.setText(__.usemyaddresstogeneratereplykey);
-					
 					addressarea.setFont(labelfont);
 					
 					final int defaultkeysize = Math.min(4, PublicKey.numberofciphers);
@@ -28530,7 +27970,6 @@ class Programs
 						//  Set the email panel send mail frame members
 						
 						emailpanel.numberofciphers = numberofciphers1[0];
-						
 						emailpanel.usereplyaddresskey = checkbox.isSelected();
 						
 						if ((emailpanel != null) && (emailpanel.list1 != null))
@@ -28567,7 +28006,6 @@ class Programs
 			
 				extends MouseAdapter implements ActionListener
 			{
-			
 				public void mouseClicked(MouseEvent e)
 				{
 					if (e.getSource() instanceof JButton)
@@ -28706,7 +28144,6 @@ class Programs
 							
 							textfield1.setForeground(emailpanel.foreground);
 							textarea1 .setForeground(emailpanel.foreground);
-							
 							textfield1.setBackground(emailpanel.background);
 							textarea1 .setBackground(emailpanel.background);
 							
@@ -28868,11 +28305,11 @@ class Programs
 					useremailaddresslabel .setFont(font);
 					userpassfield .setFont(font);
 					
-					useremailaddresslabel .setForeground(emailpanel.foreground);
-					useremailaddresslabel .setBackground(emailpanel.background);
+					useremailaddresslabel.setForeground(emailpanel.foreground);
+					useremailaddresslabel.setBackground(emailpanel.background);
 					
-					userpassfield .setForeground(emailpanel.foreground);
-					userpassfield .setBackground(emailpanel.background);
+					userpassfield.setForeground(emailpanel.foreground);
+					userpassfield.setBackground(emailpanel.background);
 					
 					userpassfield .requestFocus();
 					
@@ -28921,11 +28358,8 @@ class Programs
 			
 			
 			
-			
-			
 			private class RandomTextListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e)
 				{
 					int t = 128, rows = 8, cols = 24;
@@ -28960,6 +28394,7 @@ class Programs
 				private String generateRandomText(int t)
 				{
 					ArrayList<Character> charlist;
+					
 					charlist = new ArrayList<Character>();
 					
 					Math.initRng(System.nanoTime());
@@ -29093,7 +28528,6 @@ class Programs
 					String publickeyhash = PublicKey.hashPublicKey(publickeystr);
 					
 					publickeyhash = publickeyhash .substring(0, 32);
-					
 					publickeyhash = Convert.partition(publickeyhash, " ", 4);
 					
 					
@@ -29223,11 +28657,9 @@ class Programs
 				
 				private void getFontType(final Font font)
 				{
-				
 					//  Select a font type from a message dialog and
 					//  show the user what each font type looks like as
 					//  the arrow key is pressed or the mouse is clicked
-					
 					
 					GraphicsEnvironment ge;
 					
@@ -29350,34 +28782,22 @@ class Programs
 					{ ok[0] = false;  dialog.dispose(); } } );
 					
 					KeyAdapter closelistener = new KeyAdapter()
-					{
-						public void keyPressed(KeyEvent e)
-						{
-							if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
-							 || (e.getKeyChar() == '\n'))
-							
-							    dialog.dispose();
-						}
-					};
+					{ public void keyPressed(KeyEvent e)
+					{ if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
+					   || (e.getKeyChar() == '\n')) dialog.dispose(); } };
+					
 					
 					scrollpane.addKeyListener(closelistener);
-					
-					
-					dialog.setDefaultCloseOperation(
-					
-					    JDialog.DISPOSE_ON_CLOSE);
-					
-					dialog.add(vbox);
-					
-					dialog.setResizable(false);
+					scrollpane.requestFocusInWindow();
 					
 					Dimension d = new Dimension(400, 800);
 					
+					dialog.add(vbox);
+					dialog.setResizable(false);
+					dialog.setDefaultCloseOperation(
+					    JDialog.DISPOSE_ON_CLOSE);
 					dialog.setPreferredSize(d);
-					
 					dialog.pack();
-					
-					scrollpane.requestFocusInWindow();
 					
 					dialog.setVisible(true);
 				}
@@ -29628,7 +29048,7 @@ class Programs
 					
 					if (choice != JOptionPane.OK_OPTION) return;
 					
-					else {    }
+					else {   }
 				}
 				
 				
@@ -29644,7 +29064,6 @@ class Programs
 				
 				private void setForeground(EmailPanel emailpanel, Color color)
 				{
-				
 					//  Set the emailpanel foreground
 					
 					if (!color.equals(Color.white))
@@ -29736,7 +29155,6 @@ class Programs
 				
 				private void setBackground(EmailPanel emailpanel, Color color)
 				{
-				
 					//  Set the emailpanel foreground (not background)
 					//  because the colors may be reversed
 					
@@ -29831,10 +29249,8 @@ class Programs
 			
 			
 			
-			
 			private class ColorButtonListener
 			{
-			
 			
 				//  The ColorButtonListener could be replaced by a Color
 				//  Palette Listener that uses a Popup and a color palette
@@ -29850,15 +29266,11 @@ class Programs
 				
 				//  ...
 				
-				//  ...
-				
-				
 				
 				private void init()
 				{
 				
 					Colors colors = new Colors();
-					
 					
 					JLabel colorlabel = new JLabel();
 					JLabel closelabel = new JLabel();
@@ -30000,7 +29412,6 @@ class Programs
 			
 			private class ClientServerListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e)
 				{
 					pop3window.setVisible(!pop3window.isVisible());
@@ -30021,7 +29432,6 @@ class Programs
 			
 			private class ShowKeyboardListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e)
 				{
 					showkeyboard = !showkeyboard;
@@ -30034,7 +29444,6 @@ class Programs
 			
 				extends MouseAdapter implements ActionListener
 			{
-			
 				public void mouseClicked(MouseEvent e)
 				{
 					if (e.getSource() instanceof JButton)
@@ -30099,17 +29508,13 @@ class Programs
 			
 			private class ReverseColorsListener extends MouseAdapter implements ActionListener
 			{
-			
 				public void mouseClicked(MouseEvent e)
 				{
 					if (e.getSource() instanceof JButton)
 					if (e.getSource() == emailpanel.reversecolorsbutton) run();
 				}
 				
-				public void actionPerformed(ActionEvent e)
-				{
-					run();
-				}
+				public void actionPerformed(ActionEvent e) { run(); }
 				
 				public void run()
 				{
@@ -30264,13 +29669,10 @@ class Programs
 			
 			
 			
-			
 			private class AboutListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e)
 				{
-				
 					if (emailpanel == null) return;
 					
 					String title = __.about;
@@ -30299,7 +29701,6 @@ class Programs
 			
 			private class HowToUsePopMailListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e)
 				{
 					if (emailpanel == null) return;
@@ -30322,9 +29723,7 @@ class Programs
 			
 			private class LicenseListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e) { run(); }
-				
 				
 				public void run()
 				{
@@ -30343,10 +29742,8 @@ class Programs
 			
 			
 			
-			
 			private class TestMailListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e)
 				{
 					if (emailpanel == null) return;
@@ -30362,6 +29759,7 @@ class Programs
 					testmail = testmailmenuitem.isSelected();
 				}
 			}
+			
 			
 			
 			
@@ -30469,9 +29867,11 @@ class Programs
 						//  (the icon size can exceed the maxicon
 						//  size for the font, not the frame area)
 						
-						double size = 1.1D * font.getSize();
+						double fontsize = 1.1D * font.getSize();
 						
-						width = (int) (width * size / defaultfontsize);
+						width = (int) (width * fontsize / defaultfontsize);
+						
+						if (width == 0) width = 1;
 						
 						int height = -1, hints = Image.SCALE_SMOOTH;
 						
@@ -30517,9 +29917,11 @@ class Programs
 					//  (the icon size can exceed the maxicon
 					//  size for the font, not the frame area)
 					
-					double size = 1.1D * font.getSize();
+					double fontsize = 1.1D * font.getSize();
 					
-					width = (int) (width * size / defaultfontsize);
+					width = (int) (width * fontsize / defaultfontsize);
+					
+					if (width == 0) width = 1;
 					
 					int height = -1, hints = Image.SCALE_SMOOTH;
 					
@@ -30613,16 +30015,12 @@ class Programs
 			
 			
 			
-			
-			
 			private class FocusListener1 implements FocusListener
 			{
-			
 				public void focusGained(FocusEvent e)
 				{
 					
 				}
-				
 				
 				public void focusLost(FocusEvent e)
 				{
@@ -30722,7 +30120,7 @@ class Programs
 						
 						//  Send a command to the POP mail server such as STAT m n where m
 						//  is the msg no and n is a digit that represents the message state
-						//  if pop mail servers are upgraded to allow the user to change the
+						//  if pop mail servers are upgraded to allow users to change the
 						//  state of the messages.
 						
 						//  ...
@@ -30767,7 +30165,6 @@ class Programs
 				
 				
 				
-				
 				public MouseListener1()
 				{
 				
@@ -30788,7 +30185,7 @@ class Programs
 					
 					
 					//  The menu for changing the message state
-					//  if Pop mail servers can be upgraded
+					//  if pop mail servers can be upgraded
 					
 					iconpopupmenu = new JPopupMenu();
 					
@@ -30848,10 +30245,8 @@ class Programs
 				
 				
 				
-				
 				private void showPopupMessage(MouseEvent e, String message)
 				{
-				
 					//  Display the popup message
 					
 					label.setText(message);
@@ -30869,7 +30264,6 @@ class Programs
 				
 				public void mouseReleased(MouseEvent e)
 				{
-				
 					if (e.getSource() instanceof JCheckBox)
 					{
 						int numberofmessages = emailpanel
@@ -30906,7 +30300,6 @@ class Programs
 					
 					keylistener1.setControl(false);
 				}
-				
 				
 				
 				
@@ -31145,7 +30538,6 @@ class Programs
 							
 							
 							
-							
 							else if ( (cp >= nextpos) && (cp < nextpos + nextwidth) )
 							{
 							
@@ -31170,7 +30562,6 @@ class Programs
 								
 								readAndDisplayMessage(emailpanel.msno);
 							}
-							
 							
 							
 							
@@ -31383,7 +30774,6 @@ class Programs
 					 || emailpanel.buttonlistener.quitting) return;
 					
 					if (emailpanel.listscreen && (emailpanel.listpanel == null)) return;
-					
 					
 					
 					int numberofmessages = emailpanel.listpanel.getNumberOfMessages();
@@ -31936,6 +31326,7 @@ class Programs
 			}
 			
 			
+			
 			private void viewAttachedFile(int msno, int fileno)
 			{
 			
@@ -31969,7 +31360,6 @@ class Programs
 				    if (!Character.isDefined(c))
 				
 					textorhtml = false;
-				
 				
 				
 				if (textorhtml)
@@ -32092,7 +31482,6 @@ class Programs
 				String title = filedesc;
 				
 				
-				
 				//  Prompt the user to choose a file name
 				
 				File file = new SaveFile(frame, __.save + " "
@@ -32141,12 +31530,9 @@ class Programs
 						FileEncryptor fe;
 						
 						fe = new FileEncryptor(frame);
-						
 						fe.setFont(emailpanel.textarea.getFont());
 						
-						if (filekey != null)
-						
-						    fe.setFileKey(filekey);
+						if (filekey != null) fe.setFileKey(filekey);
 						
 						else if ((SP != null) && !SP.isEmpty())
 						
@@ -32171,7 +31557,6 @@ class Programs
 			
 			private String[] splitBase64Encoding(String str)
 			{
-			
 				//  This method iteratively / recursively removes
 				//  multiple levels of base-64 encoding
 				
@@ -32222,7 +31607,6 @@ class Programs
 			
 			private String[] splitBase64Encoding1(String str)
 			{
-			
 				//  This method removes one level of base-64 encoding
 				
 				//  It skips base-16 tokens such as a reply key.
@@ -32366,7 +31750,7 @@ class Programs
 				//  the size of the email because (4/3) ^ 2 == 16 / 9 ~ 2.
 				
 				
-				//  partition | encode | encrypt | >>
+				//  partition | encode or replace \n\n | encrypt | >>
 				//
 				//       | base-16 reply key (optional)
 				//
@@ -32382,30 +31766,46 @@ class Programs
 				
 				
 				
-				message = message.trim();
+				String message1 = message.trim();
+				
+				//  Remove any partitioning
+				
+				if (message1.contains("\n") && !message1.contains("\n\n"))
+				
+				    message1 = message1 .replaceAll("\n{1}", "") .trim();
 				
 				
-				//  If the message is a solid block of base-64 chars
-				//  partitioned into lines, remove the newline chars
+				//  If the message uses the base-16 separator 0123456789abcdef
+				//  replace the base-16 separator with the \n\n separator
 				
-				if (message.contains("\n") && !message.contains("\n\n")
+				if (message1.contains(Convert.base16Separator))
 				
-				    && !message.contains(" "))
+				    if (PublicKey.isEncrypted(message1.replaceAll(
 				
-					message = message .replaceAll("\n", "");
+					Convert.base16Separator, "\n\n")))
+				
+					    message1 = message1 .replaceAll(
+					
+						Convert.base16Separator, "\n\n");
 				
 				
-				//  Remove the base-64 encoding to show the encrypted block
+				//  Remove any base-64 encoding
 				
-				if (Number.isBase64(message))
+				if (Number.isBase64(message1)) message1
 				
-				    message = Convert.base64ToString(message);
+				    = Convert.base64ToString(message1);
 				
 				
 				//  Test if the message is encrypted
 				//  and set the encryption variable
 				
-				boolean encrypted = PublicKey.isEncrypted(message);
+				boolean encrypted = PublicKey.isEncrypted(message1);
+				
+				if (encrypted) message = message1;
+				
+				if (!encrypted && message.contains("\n") && !message.contains("\n\n"))
+				
+				    message = message .replaceAll("\n{1}", "") .trim();
 				
 				
 				//  If the message is encrypted decrypt the message block
@@ -32926,7 +32326,7 @@ class Programs
 			}
 			
 			
-			//  end readMessage method
+			//  End readMessage method
 			
 			
 			
@@ -33109,7 +32509,6 @@ class Programs
 			
 			private void readAndDisplayMessage(int msno)
 			{
-			
 				//  Read and decrypt the message
 				
 				if ((emailpanel.list1.getMessage(emailpanel.msno) == null)
@@ -33137,7 +32536,6 @@ class Programs
 			
 			private void parseEmailField()
 			{
-			
 				//  This method parses the email field
 				
 				//  username@example.com
@@ -33191,11 +32589,10 @@ class Programs
 			
 			private class EmailHeader
 			{
-			
+				private String date, from, subject;
+				
 				//  The constructor parses the header for
 				//  the date, from, and subject fields
-				
-				private String date, from, subject;
 				
 				public EmailHeader(String header)
 				{
@@ -33211,11 +32608,15 @@ class Programs
 						
 						if ((line1.startsWith("date:")
 						
-						  || line1.startsWith(__.Date.toLowerCase() + ":"))
+						  || line1.startsWith(__.Date.toLowerCase() + ":")
+						  || line1.startsWith(__.Date.toLowerCase() + "="))
 						
 						    && ((date == null) || date.isEmpty()))
 						{
-							int startpos = line1.indexOf(":") + 1;
+							int startpos = line1.contains(":") ?
+							
+							    line1.indexOf(":") + 1 :
+							    line1.indexOf("=") + 1;
 							
 							date = line .substring(startpos);
 							
@@ -33227,7 +32628,8 @@ class Programs
 						
 						if ((line1.startsWith("from:")
 						
-						  || line1.startsWith(__.From.toLowerCase() + ":"))
+						  || line1.startsWith(__.From.toLowerCase() + ":")
+						  || line1.startsWith(__.From.toLowerCase() + "="))
 						
 						    && line1.contains("@") && ((from == null) || from.isEmpty()))
 						{
@@ -33243,7 +32645,7 @@ class Programs
 								
 								     from = token.substring(
 								
-									1, token.length()-1);
+									1, token.length() -1);
 								
 								else from = token;
 								
@@ -33255,11 +32657,15 @@ class Programs
 						
 						if ((line1.startsWith("subject:")
 						
-						  || line1.startsWith(__.Subject.toLowerCase() + ":"))
+						  || line1.startsWith(__.Subject.toLowerCase() + ":")
+						  || line1.startsWith(__.Subject.toLowerCase() + "="))
 						
 						    && ((subject == null) || subject.isEmpty()))
 						{
-							int startpos = line.indexOf(":") + 1;
+							int startpos = line1.contains(":") ?
+							
+							    line1.indexOf(":") + 1 :
+							    line1.indexOf("=") + 1;
 							
 							subject = line .substring(startpos);
 							
@@ -33549,7 +32955,6 @@ class Programs
 				}
 				
 				
-				
 				//  Append a few newlines so that the text area does not
 				//  keep bouncing up and down as the user clicks delete, next,
 				//  or prev and the vertical scroll bar becomes alternately
@@ -33599,9 +33004,7 @@ class Programs
 				
 				emailpanel.textarea.setLineWrap(linewrap);
 				emailpanel.textarea.setWrapStyleWord(linewrap);
-				
 				emailpanel.textarea.requestFocusInWindow();
-				
 				emailpanel.textarea.setCaretPosition(0);
 				
 				tabbedpane.repaint();
@@ -33728,7 +33131,6 @@ class Programs
 				sendmailframe.setUseReplyAddressKey(emailpanel.usereplyaddresskey); // include addr in private key
 				
 				sendmailframe.setReverseColors(emailpanel.reverse_colors);
-				
 				sendmailframe.setForeground1(emailpanel.foreground);
 				sendmailframe.setBackground1(emailpanel.background);
 				
@@ -33738,25 +33140,19 @@ class Programs
 				
 				//  Initialize the send mail text area
 				
-				
 				String str = new String();
 				
 				String separator32 = "________________________________";
 				
 				
 				str += "\n\n\n";
-				
 				str += separator32 +"\n\n";
-				
 				str += (message + "\n");
-				
 				
 				final String str1 = str;
 				
 				sendmailframe.setText(str1);
-				
 				sendmailframe.setTextLength(str1.length());
-				
 				sendmailframe.setCaretPosition(0);
 				
 				
@@ -33777,7 +33173,6 @@ class Programs
 					keyboard.setFont(font);
 					
 					keyboardlistener.keyboardframe.setLocationRelativeTo(null);
-					
 					keyboardlistener.setTextComponent(sendmailframe.textarea);
 				}
 				
@@ -34474,13 +33869,10 @@ class Programs
 			
 			
 			
-			
 			private class ViewSavedEmailsListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e)
 				{
-				
 					if ((emailpanel == null) ||
 					
 					    (emailpanel.username == null)) return;
@@ -34490,7 +33882,6 @@ class Programs
 					savedemails.viewSavedEmails();
 				}
 			}
-			
 			
 			
 			
@@ -34571,11 +33962,9 @@ class Programs
 					
 					
 					if (!new File(maildirectory).exists())
-					
 					     new File(maildirectory).mkdir();
 					
 					File dir = new File(dirname);
-					
 					if (!dir.exists()) dir.mkdir();
 					
 					
@@ -34897,12 +34286,10 @@ class Programs
 					DateFormatSymbols dfs = new DateFormatSymbols();
 					
 					String[] months = dfs.getMonths();
-					
-					String[] days = dfs.getWeekdays();
+					String[]   days = dfs.getWeekdays();
 					
 					String dayofweek = days[cal.get(Calendar.DAY_OF_WEEK) -1];
-					
-					String month = months[cal.get(Calendar.MONTH)];
+					String    month = months[cal.get(Calendar.MONTH)];
 					
 					String day = new Number(
 					
@@ -34947,6 +34334,7 @@ class Programs
 						 textarea.setBackground(color);
 					    else textarea.setForeground(color);
 				}
+				
 				
 				public void setFont(Font font)
 				{
@@ -35179,9 +34567,9 @@ class Programs
 						
 						final int i1 = i;
 						
-						deletebox.addActionListener( new ActionListener()
+						deletebox.addActionListener(new ActionListener()
 						{ public void actionPerformed(ActionEvent e)
-						{ textarea.setEnabled(!deletebox.isSelected()); } } );
+						{ textarea.setEnabled(!deletebox.isSelected()); } });
 						
 						JButton editbutton = editbuttons[i];
 						
@@ -35355,7 +34743,6 @@ class Programs
 			
 			
 			
-			
 			private class UndeleteListener implements ActionListener
 			{
 				public void actionPerformed(ActionEvent e)
@@ -35384,9 +34771,7 @@ class Programs
 			
 			private class CheckAllListener implements ActionListener
 			{
-			
 				public void actionPerformed(ActionEvent e) { run(); }
-				
 				
 				public void run()
 				{
@@ -35404,7 +34789,6 @@ class Programs
 					for (int i = 0; i < numberofmessages; i++)
 					{
 						if (!emailpanel.listpanel.isVisible(i)) continue;
-						
 						if  (emailpanel.listpanel.checkboxes[i].isSelected())
 						
 						    numberofvisiblechecks++;
@@ -35449,7 +34833,6 @@ class Programs
 			
 			private class SetTitleListener implements ActionListener
 			{
-			
 				private int maxfontsize = 24;
 				
 				public void actionPerformed(ActionEvent e)
@@ -35499,7 +34882,6 @@ class Programs
 			
 			private class SetTabTitleListener implements ActionListener
 			{
-			
 				private int maxfontsize = 24;
 				
 				public void actionPerformed(ActionEvent e)
@@ -35546,7 +34928,6 @@ class Programs
 			
 			private class FindListener implements ActionListener
 			{
-			
 				public FindListener()
 				{
 				
@@ -35561,9 +34942,8 @@ class Programs
 			
 			
 			
-			private class ButtonListener
 			
-				extends MouseAdapter implements ActionListener
+			private class ButtonListener extends MouseAdapter implements ActionListener
 			{
 			
 				private boolean clicked = false;
@@ -35686,7 +35066,7 @@ class Programs
 							
 							else listing = true;
 							
-							System.out.print("\nlisting");
+							//  System.out.print("\nlisting");
 							
 							try
 							{	//  Disable the email field until the user
@@ -35755,12 +35135,9 @@ class Programs
 									if (testmail)
 									{
 										emailpanel.popmail.setTestMail(testmail);
-										
 										emailpanel.popmail.setTestPassphrase(testpassphrase);
-										
 										emailpanel.popmail.setReplyPassphrase(replypassphrase);
 									}
-									
 									
 									
 									//  Change the cursor from default to wait
@@ -35850,183 +35227,194 @@ class Programs
 									
 									
 									try
-									{	//  STAT the number of messages and bytes
+									{
+									
+									//  STAT the number of messages and bytes
+									
+									int[] number_totalbytes;
+									
+									number_totalbytes = emailpanel.popmail.stat();
+									
+									
+									int numberofmessages = number_totalbytes[0];
+									
+									//  Change the listbutton to inbox and no.of msgs
+									
+									emailpanel.listbutton.setText(
+									
+									    __.Inbox + " " + numberofmessages);
+									
+									
+									//  The number of messages on the server may be
+									//  less than the messages per screen
+									
+									final int t = Math.min(numberofmessages,
+									
+									    emailpanel.messagesperscreen);
+									
+									
+									//  Find the msg no (msno) and bytes in each message
+									
+									String[] listarray = null;
+									
+									listarray = emailpanel.popmail.list();
+									
+									
+									//  Create a list1 object to store the headers and messages
+									
+									emailpanel.list1 = new ArrayList1();
+									emailpanel.list1 .setSize(t);
+									
+									
+									
+									//  Read the message headers for the t newest messages
+									//  to display the from and subject strings for each message
+									
+									
+									//  Download the headers using the TOP (msno, lines) command
+									//
+									//  The program downloads the first ~ 128 lines x (approx)
+									//  80 chars / line == 10 K chars == 10 K bytes to read the
+									//  one-time public keys and the one-time encryption key.
+									
+									
+									
+									final int n = 128;
+									
+									for (int i = 0; i < t; i++)
+									{
+										if (quitting || (emailpanel.popmail == null)) return;
 										
-										int[] number_totalbytes;
+										//  Use the POP TOP command to read
+										//  the email headers and message tops
 										
-										number_totalbytes = emailpanel.popmail.stat();
+										String poptop;
 										
-										
-										int numberofmessages = number_totalbytes[0];
-										
-										//  Change the listbutton to inbox and no.of msgs
-										
-										emailpanel.listbutton.setText(
-										
-										    __.Inbox + " " + numberofmessages);
+										poptop = emailpanel.popmail.top(i, n);
 										
 										
-										//  The number of messages on the server may be
-										//  less than the messages per screen
-										
-										final int t = Math.min(numberofmessages,
-										
-										    emailpanel.messagesperscreen);
+										emailpanel.poptextarea.repaint();
+										emailpanel.popscrollpane.repaint();
+										pop3window.repaint();
 										
 										
-										//  Find the msg no (msno) and bytes in each message
+										//  Separate the header and message top
 										
-										String[] listarray = null;
+										int pos = poptop.indexOf("\n\n");
 										
-										listarray = emailpanel.popmail.list();
-										
-										
-										//  Create a list1 object to store the headers and messages
-										
-										emailpanel.list1 = new ArrayList1();
-										emailpanel.list1 .setSize(t);
+										if (pos == -1) continue; // error
 										
 										
+										//  Read the header and top
 										
-										//  Read the message headers for the t newest messages
-										//  to display the from and subject strings for each message
+										String header = poptop.substring(0, pos);
+										String top    = poptop.substring(pos).trim();
 										
 										
-										//  Download the headers using the TOP (msno, lines) command
+										//  Remove any partitioning
+										
+										if (top.contains("\n") && !top.contains("\n\n"))
+										
+										    top = top .replaceAll("\n{1}", "") .trim();
+										
+										
+										//  If the message uses the base-16 separator 0123456789abcdef
+										//  replace the base-16 separator with the \n\n separator
+										
+										if (top.contains(Convert.base16Separator))
+										
+										    top = top.replaceAll(Convert.base16Separator, "\n\n");
+										
+										
+										//  Remove any base-64 encoding
+										
+										if (Number.isBase64(top))
+										
+										    top = Convert.base64ToString(top);
+										
+										//  System.out.println("top == " + top.substring(0, 256));
+										
+										
+										//  Save the header and message top
+										
+										emailpanel.list1.setHeader(i, header);
+										emailpanel.list1.setTop(i, top);
+									}
+									
+									
+									//  Parse the headers array
+									
+									for (int i = 0; i < t; i++)
+									{
+										int size = 0;
+										
+										String header = emailpanel.list1.getHeader(i);
+										
+										if (header == null) continue;
+										
+										String firstline = header.trim();
+										
+										if (header.contains("\n")) firstline = firstline
+										
+										    .substring(0, header.trim() .indexOf("\n"));
+										
+										String[] tokens = firstline.split(" {1,}");
+										
+										for (String token : tokens)
+										
+										    if (Number.isDigitString(token.trim(), 10))
+										
+											try { size = Integer.parseInt(token.trim()); break; }
+											
+											catch (NumberFormatException ex) {  }
+										
+										EmailHeader emailheader = new EmailHeader(header);
+										
+										String date = emailheader.date;
+										String from = emailheader.from;
+										String subj = emailheader.subject;
+										
+										if (date == null) date = "";
+										if (from == null) from = "";
+										if (subj == null) subj = "";
+										
+										emailpanel.list1 .setDate(i, date);
+										emailpanel.list1 .setFrom(i, from);
+										emailpanel.list1 .setSubject(i, subj);
+										
+										//  Store the server number and size or number of octets
+										
+										String[] number_bytes = listarray[i].split(" {1,}");
+										
+										String numberstr = number_bytes[0];
+										String bytestr   = number_bytes[1];
+										
+										int number, bytes;
+										
+										try
+										{	number = Integer.parseInt(numberstr);
+											bytes  = Integer.parseInt(bytestr);
+										}
+										
+										catch (NumberFormatException ex)
+										
+										    { ex.printStackTrace(); continue; }
+										
+										//  Store the server message number and number of bytes
 										//
-										//  The program downloads the first ~ 128 lines x (approx)
-										//  80 chars / line == 10 K chars == 10 K bytes to read the
-										//  one-time public keys and the one-time encryption key.
+										//  (The Popmail class has the responsibility of implementing
+										//  the ascending / descending message order and translating the
+										//  index number to the server message number. The other classes
+										//  don't know anything about ascending / descending message
+										//  order or server message numbers, except for the display
+										//  code below that shows the user the server msno.)
 										
+										//  Set the server message number
 										
-										
-										final int n = 128;
-										
-										for (int i = 0; i < t; i++)
-										{
-											if (quitting || (emailpanel.popmail == null)) return;
-											
-											//  Use the POP TOP command to read
-											//  the email headers and message tops
-											
-											String poptop;
-											
-											poptop = emailpanel.popmail.top(i, n);
-											
-											
-											emailpanel.poptextarea.repaint();
-											emailpanel.popscrollpane.repaint();
-											pop3window.repaint();
-											
-											
-											//  Separate the header and message top
-											
-											int pos = poptop.indexOf("\n\n");
-											
-											if (pos == -1) continue; // error
-											
-											String header = poptop.substring(0, pos);
-											String top    = poptop.substring(pos)
-											
-											    .replaceAll("\n", "") .trim();
-											
-											
-											//  Truncate the partial ciphertext or
-											//  base-64 text to a multiple of 4
-											
-											if ((top.length() % 4) != 0) top = top
-											
-											  .substring(0, top.length() - (top.length() % 4));
-											
-											
-											//  Remove any base-64 encoding
-											
-											if (Number.isBase64(top)) top = Convert.base64ToString(top);
-											
-											//  top should contain an encrypted message block and
-											//  partial ciphertext (or maybe the full ciphertext if
-											//  the message is short and there are no attachments)
-											
-											
-											//  Store the header and message top
-											
-											emailpanel.list1.setHeader(i, header);
-											emailpanel.list1.setTop(i, top);
-										}
-										
-										
-										//  Parse the headers array
-										
-										for (int i = 0; i < t; i++)
-										{
-											int size = 0;
-											
-											String header = emailpanel.list1.getHeader(i);
-											
-											if (header == null) continue;
-											
-											String firstline = header.trim();
-											
-											if (header.contains("\n")) firstline = firstline
-											
-											    .substring(0, header.trim().indexOf("\n"));
-											
-											String[] tokens = firstline.split(" {1,}");
-											
-											for (String token : tokens)
-											
-											    if (Number.isDigitString(token.trim(), 10))
-											
-												try { size = Integer.parseInt(token.trim()); break; }
-												
-												catch (NumberFormatException ex) {  }
-											
-											EmailHeader emailheader = new EmailHeader(header);
-											
-											String date    = emailheader.date;
-											String from    = emailheader.from;
-											String subject = emailheader.subject;
-											
-											if    (date == null)    date = "";
-											if    (from == null)    from = "";
-											if (subject == null) subject = "";
-											
-											emailpanel.list1 .setDate(i, date);
-											emailpanel.list1 .setFrom(i, from);
-											emailpanel.list1 .setSubject(i, subject);
-											
-											//  Store the server number and size or number of octets
-											
-											String[] number_bytes = listarray[i].split(" {1,}");
-											
-											String numberstr = number_bytes[0];
-											String bytestr   = number_bytes[1];
-											
-											int number, bytes;
-											
-											try
-											{	number = Integer.parseInt(numberstr);
-												bytes  = Integer.parseInt(bytestr);
-											}
-											
-											catch (NumberFormatException ex)
-											
-											    { ex.printStackTrace(); continue; }
-											
-											//  Store the server message number and number of bytes
-											//
-											//  (The Popmail class has the responsibility of implementing
-											//  the ascending / descending message order and translating the
-											//  index number to the server message number. The other classes
-											//  don't know anything about ascending / descending message
-											//  order or server message numbers, except for the display
-											//  code below that shows the user the server msno.)
-											
-											//  Set the server message number
-											
-											emailpanel.list1.setServerMessageNumber(i, i);
-											emailpanel.list1.setNumberOfBytes(i, bytes);
-										}
+										emailpanel.list1.setServerMessageNumber(i, i);
+										emailpanel.list1.setNumberOfBytes(i, bytes);
+									}
+									
 									}
 									
 									
@@ -36298,7 +35686,7 @@ class Programs
 							
 							
 							
-							//  The subject / message key decryption thread for the list screen
+							//  The subject / message key decrypt thread for the list screen
 							
 							//  The following code starts a new thread to decrypt the partial
 							//  ciphertexts to read the encrypted prepended subject lines until
@@ -36323,10 +35711,10 @@ class Programs
 							//  could start with a '.' character.
 							//
 							//  To generate a private address, the program would compute a hash of the
-							//  descriptive email name. For example, money launderer @ example.com
-							//  would become 1a93781b@example.com. (The email address can start with a
-							//  digit because nearly all email service providers allow email addresses
-							//  to start with a digit.)
+							//  descriptive email name. For example, money launderer @ example.com would
+							//  become 1a93781b@example.com. (The email address can start with a digit
+							//  because nearly all email service providers allow email addresses to start
+							//  with a digit.)
 							//
 							//  The subject thread would decrypt the prepended from address and then
 							//  change the from label from the 8-digit public email address to the private
@@ -36347,15 +35735,15 @@ class Programs
 							//  communication), but only the hash of the private email would be sent over
 							//  the internet.
 							//
-							//  A private email address would also allow people to use illegal or
-							//  special characters to write their addresses any way they want to.
+							//  A private email address would also allow people to use illegal or special
+							//  characters to write their addresses any way they want to.
 							
 							
 							
 							
 							
 							
-							//  The subject thread / message key decryption thread
+							//  The subject thread / message key decrypt thread
 							
 							if (newpopmail[0]) new Thread(() ->
 							{
@@ -36363,8 +35751,8 @@ class Programs
 								{
 								// no indent for the try finally block
 								
-								//  Set decrypting to true so that the quit but-
-								//  ton knows to wait until decrypting == false
+								//  Set decrypting to true so the quit button
+								//  knows to wait until decrypting == false
 								
 								decrypting = true;
 								
@@ -36621,7 +36009,7 @@ class Programs
 							
 							} ) .start();
 							
-							//  end decryption thread
+							//  end decrypt thread
 						
 						}); //  end list thread
 						
@@ -36959,7 +36347,7 @@ class Programs
 								
 								textarea.setText(sb.toString());
 								
-								textarea.setFont(font);
+								textarea.setEditable(false);
 								textarea.setLineWrap(true);
 								textarea.setWrapStyleWord(true);
 								
@@ -36967,11 +36355,10 @@ class Programs
 								textarea.setBackground(emailpanel.background);
 								textarea.setCaretColor(emailpanel.caretcolor);
 								
-								textarea.setSelectionColor(emailpanel.background);
-								
+								textarea.setFont(font);
 								textarea.setHighlighter(null);
-								
-								textarea.setEditable(false);
+								textarea.setSelectionColor(
+								    emailpanel.background);
 								
 								panel.add(textarea);
 							}
@@ -37134,7 +36521,8 @@ class Programs
 							if (emailpanel.listpanel != null)
 							    emailpanel.listpanel.setCursor(default_cursor);
 						}
-						} );
+						
+						});
 						
 						delethread.start();
 					}
@@ -37175,11 +36563,11 @@ class Programs
 						
 						int timer = 0, unit = 500;
 						
-						System.out.print("\nstopping");
+						//  System.out.print("\nstopping");
 						
 						while (listing || decrypting || reading || deleting)
 						{
-							System.out.print(".");
+							//  System.out.print(".");
 							
 							//  Set the time unit increment
 							
@@ -37365,6 +36753,7 @@ class Programs
 				}
 			}
 			
+			
 			//  End class ButtonListener
 			
 			
@@ -37377,7 +36766,6 @@ class Programs
 			{
 			
 				//  This is a RetrieveMailFrame method
-				
 				
 				if (input == null) return;
 				
@@ -37485,6 +36873,8 @@ class Programs
 		
 		
 		
+		
+		
 		//  The ArrayList1 class was moved outside the retrieve mail frame
 		//  class since it doesn't use any of the frame's members or methods
 		
@@ -37493,8 +36883,8 @@ class Programs
 		private class ArrayList1
 		{
 		
-			//  This class creates a super arraylist or an arraylist
-			//  of arraylists to store the retrieved email messages,
+			//  This class creates a super array list or an array list
+			//  of array lists to store the retrieved email messages,
 			//  subjects, attached files, attached reply keys, number
 			//  of encryption ciphers, the reply sendmail frames, ...
 			
@@ -38438,7 +37828,6 @@ class Programs
 		
 		private boolean savePublicKeys(String from, PublicKeyRing keyring)
 		{
-		
 			//  The public key file name suffix equals the hash of the
 			//  (passphrase + from address) so that there is one public
 			//  key file for each user name.
@@ -38601,6 +37990,7 @@ class Programs
 			
 			
 			//  Count the number of ciphers
+			//
 			//  >= 256 chars / 1 K bits
 			
 			final int n = PublicKey.numberofciphers;
@@ -38710,6 +38100,10 @@ class Programs
 	//  could be passed by reference (such as inside an array)
 	//  instead of by value which just creates a copy instead of
 	//  a pointer to a variable.
+	
+	//  ...
+	
+	//  ...
 	
 }
 
@@ -39015,14 +38409,14 @@ class Colors
 	//  purples, pinks, magentas, cyans and aquas but users can
 	//  select any color they want using the Color menu item.
 	
-	//  The solar spectrum has the colors red, green, and blue,
-	//  and the combinations of red and green (yellow, orange)
-	//  and green and blue (cyan, aqua) which are all monochro-
-	//  matic colors; but it doesn't have the combinations of red
-	//  and blue (magenta, pink, purple) because they are at op-
-	//  posite ends of the spectrum. Of course the three primary
-	//  colors can produce any polychromatic or composite color
-	//  by filtering out one of the three colors.
+	//  The visible / ocular / color / solar spectrum has the three
+	//  primary colors red, green, and blue, and the combinations
+	//  of red and green (yellow, orange) and green and blue (cyan,
+	//  aqua) which are all monochromatic colors; but it doesn't have
+	//  the combinations of red and blue (magenta, pink, purple) be-
+	//  cause they are at opposite ends of the spectrum. Of course
+	//  the three primary colors can produce any polychromatic or
+	//  composite color by filtering out one of the three colors.
 	
 	
 	public int index = -1;
@@ -39214,7 +38608,6 @@ class SaveFile
 			}
 		}
 		
-		
 		//  Save the file
 		
 		try { DataStream.write(file, data); }
@@ -39237,7 +38630,6 @@ class SaveFile
 	
 	public File chooseFile()
 	{
-	
 		File selectedfile = null;
 		
 		JFileChooser fc;
@@ -39454,9 +38846,7 @@ class DeleteFileListener implements ActionListener
 			JTextArea textarea = new JTextArea(warning);
 			
 			textarea.setFont(new JLabel().getFont().deriveFont(16.0f));
-			
 			textarea.setBackground(new JLabel().getBackground());
-			
 			textarea.setEditable(false);
 			
 			int choice = JOptionPane.showConfirmDialog(frame,
@@ -41184,11 +40574,9 @@ class FileEncryptor
 			   frame, PassphraseDialog.passphrase_only);
 			
 			pd.setMinimumLength(minlength);
-			
-			pd.setFont1(font);
-			
 			pd.setForeground1(foreground);
 			pd.setBackground1(background);
+			pd.setFont1(font);
 			
 			String passphrase = pd.readPassphrase();
 			
@@ -41257,13 +40645,10 @@ class FileEncryptor
 				   frame, PassphraseDialog.passphrase_only);
 				
 				pd.setMinimumLength(minlength);
-				
-				pd.setFont1(font != null ?
-				
-				    font : frame.getFont());
-				
 				pd.setForeground1(foreground);
 				pd.setBackground1(background);
+				pd.setFont1(font != null ?
+				    font : frame.getFont());
 				
 				String passphrase = pd.readPassphrase();
 				
@@ -41468,16 +40853,12 @@ class FileEncryptor
 			
 			    PassphraseDialog.passphrase_only);
 			
+			pd.setTitle(title);
 			pd.setMinimumLength(minlength);
-			
-			pd.setFont1(font != null ?
-			
-			    font : frame.getFont());
-			
 			pd.setForeground1(foreground);
 			pd.setBackground1(background);
-			
-			pd.setTitle(title);
+			pd.setFont1(font != null ?
+			    font : frame.getFont());
 			
 			
 			while (true)
@@ -41561,16 +40942,12 @@ class FileEncryptor
 		
 		   frame, PassphraseDialog.passphrase_only);
 		
+		pd.setTitle(title);
 		pd.setMinimumLength(minlength);
-		
-		pd.setFont1(font != null ?
-		
-		    font : frame.getFont());
-		
 		pd.setForeground1(foreground);
 		pd.setBackground1(background);
-		
-		pd.setTitle(title);
+		pd.setFont1(font != null ?
+		    font : frame.getFont());
 		
 		
 		while (true)
@@ -41736,7 +41113,6 @@ class FileDecryptor
 		this.minlength = length;
 	}
 	
-	
 	public byte[] getFileKey()
 	{
 		return this.filekey;
@@ -41752,7 +41128,6 @@ class FileDecryptor
 		this.SP = passphrase;
 	}
 	
-	
 	public void setFont(Font font)
 	{
 		float maxfontsize = 24;
@@ -41765,7 +41140,6 @@ class FileDecryptor
 		
 		this.font = font;
 	}
-	
 	
 	public void setForeground(Color color)
 	{
@@ -41908,16 +41282,12 @@ class FileDecryptor
 			
 			   frame, PassphraseDialog.passphrase_only);
 			
+			pd.setTitle(title);
 			pd.setMinimumLength(minlength);
-			
-			pd.setFont1(font != null ?
-			
-			    font : frame.getFont());
-			
 			pd.setForeground1(foreground);
 			pd.setBackground1(background);
-			
-			pd.setTitle(title);
+			pd.setFont1(font != null ?
+			    font : frame.getFont());
 			
 			
 			while (true)
@@ -42292,16 +41662,13 @@ class JDraggableTabbedPane extends JTabbedPane implements
 		
 		//  Create a test frame for the tabbed pane
 		
+		int width = 400, height = 400;
+		
 		JFrame frame = new JFrame("Test Frame");
 		
 		frame.add(tabbedpane, BorderLayout.CENTER);
-		
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
-		int width = 400, height = 400;
-		
 		frame.setSize(width, height);
-		
 		frame.setVisible(true);
 	}
 	
@@ -42498,7 +41865,6 @@ class JDraggableTabbedPane extends JTabbedPane implements
 		
 		foreground1 = getForegroundAt(index1);
 		foreground2 = getForegroundAt(index2);
-		
 		background1 = getBackgroundAt(index1);
 		background2 = getBackgroundAt(index2);
 		
@@ -42526,7 +41892,6 @@ class JDraggableTabbedPane extends JTabbedPane implements
 		
 		setForegroundAt(index1, foreground2);
 		setForegroundAt(index2, foreground1);
-		
 		setBackgroundAt(index1, background2);
 		setBackgroundAt(index2, background1);
 		
@@ -42637,32 +42002,30 @@ class PopMail
 	//	
 	//	PASS userpass           +OK ... or  -ERR ...
 	//	
-	//	STAT                    +OK total bytes
+	//	STAT                    +OK 10 12345
 	//	
-	//	TOP msg# n              +OK subject ...
+	//	LIST                    +OK 10 12345
+	//	
+	//	                        1 size
+	//	                        2 size
+	//	                        3 size
+	//	                        . ....
+	//	                        n size
+	//	                        .
+	//	
+	//	TOP msg# line           +OK 1234 octets
 	//	
 	//	                        header + \n\n + first n lines of msg
 	//	                        .  (end of message)
 	//	
 	//	
-	//	LIST                    +OK
+	//	RETR n                  +OK size
 	//	
-	//	                        1 size
-	//	                        2 size
-	//	                        3 size
-	//	                        ...  ...
-	//	                        ...  ...
-	//	                        n size
+	//	                        header_n + \n\n + message1
 	//	                        .
 	//	
 	//	
-	//	RETR 1                  +OK size
-	//	
-	//	                        header1 + \n\n + message1
-	//	                        .
-	//	
-	//	
-	//	DELE 1                 +OK ... or  -ERR ...
+	//	DELE n                 +OK ... or  -ERR ...
 	//	
 	//	NOOP                   +OK ... or  -ERR ...
 	//	
@@ -42682,6 +42045,8 @@ class PopMail
 	//	
 	//	RSET resets the server to undelete any deleted messages.
 	//	This command may not work on some servers.
+	
+	
 	
 	
 	
@@ -42721,7 +42086,8 @@ class PopMail
 	
 	private int incomingmailport;
 	
-	private String username, userpass;
+	private String username;
+	private String userpass;
 	
 	
 	private ArrayList<String> list;
@@ -42736,7 +42102,8 @@ class PopMail
 	
 	private JTextArea textarea;
 	
-	private int linesread, bytesread;
+	private int linesread;
+	private int bytesread;
 	
 	
 	//  used for test mail
@@ -42768,14 +42135,16 @@ class PopMail
 		
 		//  Read the server domain from the incoming mail server
 		
-		//  server = pop.domain.com
-		//  domain =     domain.com
+		//  server = pop.example.com
+		//  domain =     example.com
 		
-		String domain = t[t.length -2] + "." + t[t.length -1];
+		String domain = t[t.length -2]
+		        + "." + t[t.length -1];
 		
 		this.domain = domain;
 		
-		if (incomingmailport == 0) incomingmailport = 995;
+		if (this.incomingmailport == 0)
+		    this.incomingmailport = 995;
 		
 		this.username = username;
 		this.userpass = userpass;
@@ -42787,6 +42156,33 @@ class PopMail
 	
 	//  End constructor
 	
+	
+	
+	
+	
+	//  A constructor for non-users or non-clients
+	//  to connect to the recipient's mail server
+	//  and request the recipient's public key
+	
+	
+	PopMail(String recipientmailserver, int portno)
+	{
+		//  pop.example.com  995
+		
+		this.incomingmailserver = recipientmailserver;
+		this.incomingmailport = portno;
+		
+		this.domain = domain;
+		
+		if (this.incomingmailport == 0)
+		    this.incomingmailport = 995;
+		
+		//  the compiler requires that final
+		//  class members be initialized even
+		//  if the variable is not used
+		
+		ascending = true;
+	}
 	
 	
 	
@@ -42899,9 +42295,7 @@ class PopMail
 				String header = "";
 				
 				header += "TEST MAIL HEADER";
-				
 				header += "+OK 12345 octets.\n";
-				
 				header += "Date: " + new Date().toString() + "\n";
 				
 				if ((i1 % 5) != 0) // include a few self-addressed messages
@@ -42958,13 +42352,6 @@ class PopMail
 				}
 				
 				
-				//  Encrypt the entire message block and then
-				//  encode in base 64 to hide the newlines
-				
-				//  include a few undecryptable messages / defective ciphertexts
-				//  and include a few plaintext messages to test the readMessage() method
-				
-				
 				if (encrypt)
 				{
 					try
@@ -42983,20 +42370,40 @@ class PopMail
 				}
 				
 				
-				//  Encode the encrypted (plain text + \n\n + file text)
-				//  in base 64 to hide the newlines
+				//  Encode the base-16 public keys and base-64
+				//  ciphertext in base 64 to hide the newlines
+				//
+				//  the list and decrypt threads should be able to read
+				//  and decrypt messages even if this line is commented
+				//
+				//  This line probably should be commented because
+				//  the encoding is redundant
 				
-				if (!Number.isBase64(text)) text = Convert.stringToBase64(text);
+				text = Convert.stringToBase64(text);
+				
+				
+				if (encrypt)
+				{
+					text = text .replaceAll(
+					
+					    "\n\n", Convert.base16Separator);
+				}
+				
 				
 				//  Partition the base-64 text
 				
-				if (Number.isBase64(text) && (text.length() > 512))
+				if (Number.isBase64(text) && (text.length() > 512)
 				
-				    text = Convert.partition(text.trim(), "\n", linewidth);
+				    && Number.isBase64(text))
+				
+					text = Convert.partition(
+					
+					    text.trim(), "\n", linewidth);
+				
 				
 				//  Concatenate the test header and message
 				
-				String str = header + "\n" + text;
+				String str = header + "\n\n" + text;
 				
 				//  Add the header and message to the list
 				
@@ -43027,7 +42434,6 @@ class PopMail
 	}
 	
 	
-	
 	public void setTextArea(JTextArea textarea)
 	{
 		this.textarea = textarea;
@@ -43047,7 +42453,6 @@ class PopMail
 	{
 		this.replypassphrase = replypassphrase;
 	}
-	
 	
 	
 	private Socket createSocket(String host, int port) throws IOException
@@ -43079,10 +42484,10 @@ class PopMail
 	public int connect() throws IOException
 	{
 	
-		//  Test the RetrieveMailFrame for wrong userpass
-		//  by returning an error. A JOptionOptionPane
-		//  should display an error message and a button
-		//  to view the user's password.
+		//  Test the RetrieveMailFrame for wrong userpass by
+		//  returning an error. A JOptionOptionPane should
+		//  display an error message and a button to open
+		//  the userpass menu item and change the password.
 		//
 		//  if (true) return 1;
 		
@@ -43372,6 +42777,41 @@ class PopMail
 		String message = document.substring(pos + 2);
 		
 		return new String[] { header, message };
+	}
+	
+	
+	
+	
+	public String retrieve(String recipientsaddr) throws IOException
+	{
+		//  returns the recipient's public key
+		
+		String publickey;
+		
+		writeLine(out, "RETR " + recipientsaddr);
+		
+		if (!testmail)
+		{
+			StringBuilder sb = new StringBuilder();
+			
+			while (true)
+			{
+				String line = readLine(in);
+				
+				if (line.equals(".")) break;
+				
+				sb.append(line + "\n");
+			}
+			
+			publickey = sb.toString().trim();
+		}
+		
+		else // if (testmail)
+		{
+			publickey = "";
+		}
+		
+		return publickey;
 	}
 	
 	
@@ -44084,7 +43524,6 @@ class SendMail
 	
 	private String readLine(BufferedReader in)
 	{
-	
 		String response = "";
 		
 		try { if (!testmail) response = in.readLine(); }
@@ -44854,8 +44293,8 @@ class Documents
 	" pressing the escape button) restores the original font.\n\n\n\n7. Reply to a me" +
 	"ssage by clicking on the reply label at the top of the message (where it says \"" +
 	" delete  reply  prev  next \").\n\nA reply window appears that has the to, from," +
-	" and subject fields, and the sender's message filled in. You can type your respo" +
-	"nse and then click the Send button.\n\nIf a message box appears that says \"user" +
+	" and subject fields, and the sender's message filled in. You can type your mess" +
+	"age and then click the Send button.\n\nIf a message box appears that says \"user" +
 	" domain does not match server domain\", you will have to click on Edit -> Passwo" +
 	"rd / Settings or use Ctrl + P to open the settings dialog box; click inside the " +
 	"outgoing mail server combo box; erase the existing outgoing server and type your" +
@@ -48547,7 +47986,7 @@ class PublicKeyDialog
 		
 		System.out.println("saved passphrase == " + passphrase0);
 		//  System.out.println("typed passphrase == " + passphrase1);
-		System.out.println("email addr == " + emailaddress);
+		System.out.println("email address == " + emailaddress);
 		System.out.println("no of ciphers == " + numberofciphers);
 		
 		//  System.out.println("line width == " + linewidth);
@@ -51101,17 +50540,6 @@ class PublicKey
 	private static final int size112 = 2*2*2*14; // 112 digits
 	
 	
-	//  circulant matrix / lsd cipher (non-modular and modular)
-	
-	private static final int size144 = 576/4; // 144 digits
-	private static final int size88  = 4*22; // 88 digits
-	
-	
-	//  (integer) vector cross product (vcp) cipher
-	
-	private static final int size120 = 3*40; // 120 digits 
-	
-	
 	//  Matrix polynomial discrete log (mpdl) cipher
 	
 	private static final int size60 = 4*15; // 60 digits
@@ -51122,11 +50550,6 @@ class PublicKey
 	private static final int size56 = 224 / 4; // 56 digits
 	
 	
-	//  Polynomial matrix X A X cipher
-	
-	private static final int size150 = 50*3; // 150 digits
-	
-	
 	//  Latin square discrete log (lsdl) cipher
 	
 	private static final int size84 = 6*14; // 84 digits
@@ -51135,6 +50558,24 @@ class PublicKey
 	//  Quaternion discrete log (qdl) cipher
 	
 	private static final int size80 = 4*20; // 80 digits
+	
+	
+	
+	//  Non-exponential modular and non-modular ciphers
+	
+	//  circulant matrix / lsd cipher
+	
+	private static final int size144 = 576/4; // 144 digits
+	private static final int size88  = 4*22; // 88 digits
+	
+	//  (integer) vector cross product (vcp) cipher
+	
+	private static final int size120 = 3*40; // 120 digits
+	
+	//  Polynomial matrix X A X cipher
+	
+	private static final int size150 = 50*3; // 150 digits
+	
 	
 	
 	
@@ -51454,7 +50895,7 @@ class PublicKey
 	
 	//  A public key cipher is symmetrical if it uses the same function but
 	//  different variables to generate the static and one-time public keys,
-	//  such as y = f(a, x) and z = f(k, a).
+	//  such as y = f(a, x) and z = f(a, k).
 	//
 	//  A public key cipher is asymmetrical if it uses different functions
 	//  to generate the static and one-time public keys, such as y = f(x) and
@@ -51465,9 +50906,9 @@ class PublicKey
 	//  static public key y to encrypt the secret key k, and then the recipient
 	//  inverts or decrypts the one-time public key z (or c) to recover k.
 	// 
-	//  For example, the sender can compute the one-time public key c = m^2
+	//  For example, the sender can compute the one-time public key c = m ^ 2
 	//  (mod n) using the recipient's public key n and then the recipient can
-	//  invert or decrypt c to recover m == c^(1/2) (mod n).
+	//  invert or decrypt c to recover m == c ^ (1/2) == sqrt(c) (mod n).
 	
 	
 	
@@ -51841,8 +51282,15 @@ class PublicKey
 		
 		//  The last line must be in base 64 (not base 16)
 		
-		if (!Number.isBase64(lines[lines.length -1].trim())
-		  || Number.isBase16(lines[lines.length -1].trim()))
+		String lastline = lines[lines.length -1].trim();
+		
+		//  Pad the last line if not a multiple of 4 6-bit chars or 24 bits
+		
+		while ((lastline.length() % 4) != 0) lastline += "=";
+		
+		
+		if (!Number.isBase64(lastline)
+		  || Number.isBase16(lastline))
 		
 			return false;
 		
@@ -53032,7 +52480,9 @@ class PublicKey
 		
 		//  Convert the plaintext to plaindata
 		
-		byte[] plaindata = Convert.charArrayToByteArray(plaintext.toCharArray());
+		byte[] plaindata = Convert.charArrayToByteArray(
+		
+			plaintext.toCharArray());
 		
 		
 		//  Encrypt the plaindata using a private key cipher
@@ -55884,10 +55334,10 @@ class PublicKey
 		//      + a3 b1 j  - a3 b2 k   - a3 b3     + a3 b4 i
 		//      + a4 b1 k  + a4 b2 j   - a4 b3 i   - a4 b4 ]
 		//
-		//   == [  a1 b1 - a2 b2 - a3 b3 - a4 b4,
-		//       ( a1 b2 + a2 b1 + a3 b4 - a4 b3 ) i,
-		//       ( a1 b3 + a3 b1 - a2 b4 + a4 b2 ) j,
-		//       ( a1 b4 + a4 b1 + a2 b3 - a3 b2 ) k ].
+		//   == [ a1 b1 - a2 b2 - a3 b3 - a4 b4,
+		//      ( a1 b2 + a2 b1 + a3 b4 - a4 b3 ) i,
+		//      ( a1 b3 + a3 b1 - a2 b4 + a4 b2 ) j,
+		//      ( a1 b4 + a4 b1 + a2 b3 - a3 b2 ) k ].
 		//
 		//
 		//  Quaternion inversion  A X == I
@@ -56079,7 +55529,7 @@ class PublicKey
 				{ a0,  a1_, a2_, a3_ },
 				{ a1,  a0,  a3_, a2  },
 				{ a2,  a3,  a0,  a1_ },
-				{ a3,  a2_, a1,  a0  }, 
+				{ a3,  a2_, a1,  a0  },
 			});
 			
 			Matrix B = new Matrix(Convert.intArrayToNumberArray(
@@ -59371,7 +58821,7 @@ class PublicKey
 					//  If m1 and m1_ are solutions to the subset
 					//  sum problem, then we have to test both
 					//  solutions to find the one that has several
-					//  repeating digits. 
+					//  repeating digits.
 					
 					
 					boolean bool = false;
@@ -64731,8 +64181,10 @@ class Math
 		//  //  rithm; they just have to be comprime. This means that we can
 		//  //  construct large coprime moduli by multiplying smaller primes
 		//  //  (such as 256-bit or 64-bit primes) because finding large primes
-		//  //  requires O(n) multi-precision exponentiations or O(n^4) single-
-		//  //  precision operations.
+		//  //  requires O(n) multi-precision exponentiations, O(n^2) multi-
+		//  //  precision multiplications (because each exponentiation requires
+		//  //  n multiplications), or O(n^4) single-precision operations using
+		//  //  a quadratic multiplier.
 		//
 		//  for (int i = 0; i < t; i++)
 		//  {
@@ -66411,7 +65863,7 @@ class Math
 		
 		    throw new IllegalArgumentException();
 		
-		a = Arrays.copyOf(a, a.length); 
+		a = Arrays.copyOf(a, a.length);
 		
 		Arrays .sort(a); // Sort the array
 		
@@ -67467,7 +66919,9 @@ class Number implements Comparable<Number>
 	{
 		//  ands two numbers
 		
-		return new Number(Math.and(this.intarray, val.intarray));
+		return new Number(Math.and(
+		
+		    this.intarray, val.intarray));
 	}
 	
 	
@@ -67687,7 +67141,7 @@ class Number implements Comparable<Number>
 		
 		//  If signs are both '-' swap the numbers and negate
 		
-		if ((a.sign == '-') && (b.sign != '-')) 
+		if ((a.sign == '-') && (b.sign == '-'))
 		{
 			Number temp = new Number(a);
 			
@@ -70617,14 +70071,20 @@ class Number implements Comparable<Number>
 			{
 				y = a .multiply(y);
 				
-				y = y .mod(n, invn);
+				if (!y.isComplex())
+				
+				     y = y .mod(n, invn);
+				else y = y .mod(n);
 			}
 			
 			//  Square the square
 			
 			a = a .square();
 			
-			a = a .mod(n, invn);
+			if (!a.isComplex())
+			
+			     a = a .mod(n, invn);
+			else a = a .mod(n);
 			
 			//  Shift the exponent to the next bit
 			
@@ -73681,8 +73141,8 @@ class Number implements Comparable<Number>
 			
 			String rstring, istring;
 			
-			rstring = real        .toString(digits,radix);
-			istring = imag .abs() .toString(digits,radix);
+			rstring = real      .toString(digits,radix).trim();
+			istring = imag.abs().toString(digits,radix).trim();
 			
 			if (imag.sign == '+')
 			
@@ -75423,7 +74883,7 @@ class Matrix
 		
 		   if (!x[i].cube() .add( a.multiply(x[i].square())
 		
-		      .add(b.multiply(x[i])) .add(c) ) .equals(zero)) 
+		      .add(b.multiply(x[i])) .add(c) ) .equals(zero))
 		
 		         throw new ArithmeticException();
 		
@@ -75947,8 +75407,8 @@ class Matrix
 	public static Matrix LatinSquare(Matrix A1, Matrix A2, Matrix A3)
 	{
 	
-		//  creates a symmetric Latin square from 
-		//  two smaller symmetric Latin squares A1, A2,
+		//  creates a symmetric Latin square from two
+		//  smaller symmetric Latin squares A1, A2,
 		//  and one smaller Latin square A3.
 		
 		
@@ -79342,6 +78802,7 @@ class Fourier
 		//  Example  Calculate 1234 x 5678 using
 		//           quadratic and fft multiplication
 		//
+		//
 		//  Quadratic multiplication
 		//
 		//	        1   2   3   4
@@ -79360,7 +78821,7 @@ class Fourier
 		//     7   0   0   6   6   5   2
 		//
 		//
-		//  Discrete Fourier Transform multiplication
+		//  Discrete Fourier transform multiplication
 		//
 		//  int[] x = {  1, 2, 3, 4  }
 		//  int[] y = {  5, 6, 7, 8  }
