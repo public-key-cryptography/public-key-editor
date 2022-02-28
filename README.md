@@ -16,11 +16,11 @@
 	connected to the internet or using a real email account. The help menu of the Mail program also has
 	a document called "How to use pop mail" which explains how to use the program.
 	
-	Imap is not included because the protocol is more complicated to implement than POP mail. Imap
-	allows multiple users synchronous access to an email account from different computers which is
-	useful for some companies or organizations because POP mail accounts can only be accessed from one
-	device at a time. Imap also allows users to change the state of the messages on the server, but the
-	POP mail protocol could be amended or the email servers could be upgraded to include this feature.
+	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
+	lows multiple users synchronous access to an email account from different computers which is useful
+	for some companies or organizations because POP mail accounts can only be accessed from one device
+	at a time. Imap also allows users to change the state of the messages on the server, but the POP
+	mail protocol could be amended or the email servers could be upgraded to include this feature.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -29,10 +29,10 @@
 	or ciphers. The composite key is then used to initialize a hash function that generates another
 	one-time pad for the message encryption.
 	
-	The private key encryption uses a hashing function that encrypts the private key and the data.
-	No encryption ciphers or invertible functions are used for encryption because there is no proof
-	that any invertible function that is used more than once is secure, and private keys are not sup-
-	posed to be reused for public or private key ciphers.
+	The private key encryption uses a hashing function that encrypts the private key and the data. No
+	encryption ciphers or invertible functions are used for encryption because there is no proof that
+	any invertible function that is used more than once is secure, and private keys are not supposed to
+	be reused for public or private key ciphers.
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to
 	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
@@ -43,10 +43,11 @@
 	The email text, file attachments, and file descriptions are each encoded in base-64 to remove spe-
 	cial characters such as newlines, carriage returns, and end of message or end of file chars, and
 	then the encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base
-	64 to remove special characters from the encryption method. This expands the data by (4/3)^2 or 16/9
-	because base-64 encoding maps 6 bits of data to 8-bit chars and two encodings are used to package
-	the data. Other protocols may use one encoding but this would only reduce the expansion to 3/4 of
-	the size.
+	64 to remove special characters from the encryption method. This expands the data to (4/3)^2 = 16/9
+	the size because base-64 encoding maps 6 bits of data to 8-bit chars and two encodings are used to
+	package the data. (The public key encryption method includes a base-64 encoding because it has to
+	encode the cipherdata to attach the one-time public keys.) Other protocols may use two encodings but
+	this would only reduce the expansion to 3/4 the size.
 	
 	The text editor and email program were written to test the public key software and to show develop-
 	ers how to use and implement the public key ciphers in other programs, but anybody who knows how to
@@ -66,13 +67,15 @@
 	encrypted emails.
 	
 	A few errors were also corrected in the software so the compiler's Xlint doesn't issue warnings
-	every time the program is compiled; errors in the userpass menu item and private key encryption
-	menu item were corrected; the file compression was corrected so that attached files are compressed
-	to ~ 1/4 of their size except for files that are incompressible; the sign out / log out method was
-	modified so that if the email server or mail program becomes unresponsive or the wifi loses its con-
-	nection it will end the program in a few seconds so the user doesn't have to close the terminal or
-	open the System monitor to find and terminate the process; and errors in the readMessage method were
-	corrected so that the messages and attached files are detached and displayed correctly for encrypted
+	every time the program is compiled; errors in the Number class were corrected; errors in the user-
+	pass menu item and private key encryption menu item were corrected; the file compression was cor-
+	rected so that attached files are compressed to ~ 1/4 of their size except for files that are incom-
+	pressible; the sign out / log out method was modified so that if the email server or mail program
+	becomes unresponsive or the wifi loses its connection it will end the program in a few seconds so
+	the user doesn't have to close the terminal or open the System monitor to find and terminate the
+	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded
+	data with a base-16 separator to make it base-64; and errors in the readMessage method were cor-
+	rected so that the messages and attached files are detached and displayed correctly for encrypted
 	and unencrypted emails; the test mail feature and read all method show that the messages and files
 	are displayed correctly.
 	
@@ -82,6 +85,10 @@
 	
 	
 	Instructions for running Java programs on Linux
+	
+	(Your computer should have at least 8 GB of memory
+	if you run Java and a web browser at the same time
+	or else your computer could run out of memory.)
 	
 	
 	Downloading the Java Development Kit (JDK)
@@ -102,6 +109,7 @@
 	
 	
 	
+	
 	Installing the Java Development Kit (JDK) and running the Java Editor program
 	
 	0.  Download the file openjdk-17.0.2_linux-x64_bin.tar.gz  from the website jdk.java.net/17.
@@ -118,16 +126,16 @@
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-17.0.2/bin/java ./Downloads/Editor.java (text, table, html, image, mail)
+	    cd; /usr/jdk/jdk-17.0.2/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
-	If you add an argument after the file name then the program will display the text editor, table
-	editor, html editor, image viewer, or email editor.
+	If you add an argument after the file name then the program will display the text editor, table editor,
+	image viewer, or email editor.
 	
-	(The Editor program has a table editor, html viewer, and image viewer because other editors are
-	not able to display encrypted files or directories. The text editor, html viewer, and image viewer
-	programs don't have to decrypt and re-encrypt the Documents and Pictures folders because they only
-	read and decrypt the file input to the program. The files on the disk remain encrypted and unmodi-
-	fied unless the user decrypts them.)
+	(The Editor program has a table editor, html viewer, and image viewer because other editors are not
+	able to display encrypted files or directories. The text editor, html viewer, and image viewer programs
+	don't have to decrypt and re-encrypt the Documents and Pictures folders because they only read and de-
+	crypt the file input to the program. The files on the disk remain encrypted and unmodified unless the
+	user decrypts them.)
 	
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
@@ -192,9 +200,15 @@
 	
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
-	number and n is a state from 0 to 9. The TOP command could return the message state number after
-	+OK which would be backward compatible with the Pop protocol because it would only display a num-
-	ber if a user changes the state of a message.
+	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but
+	could also return the message state number after each message size such as 1 size 0 \n 2 size 2
+	\n 3 size 1 ... This would be backward compatible with the Pop protocol because it would only
+	display a number if a user changes the state of a message.
+	
+	Or the email headers could include a stat:0,1,2,...,9 or stat=0,1,2,...,9 variable so that the
+	mail program or email header class could parse the header for the message state just as it parses
+	the header for the from: and date: fields. (The subject field in the header is empty except for
+	messages that are sent unencrypted.)
 	
 	The client program could also store the email hashes and message states in a file but then the
 	user would have to use the same computer or store the mail folder / directory on a USB storage
@@ -225,8 +239,8 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1     k2               -x2  x1  x2          -k2  k1  k2
-	  Y  =  A1  A2 ,   E  =  A1  Y  A2 ,  and  Y  =  A2  A1  A2 ,   E  =  A2   Y   A2   (mod p)
+	          x1  x2           k1      k2               -x2  x1   x2          -k2  k1   k2
+	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
 	use matrices or hypercomplex numbers instead of integers and they use multiple variables instead of
@@ -346,8 +360,8 @@
 	the recipient can extract the message by inverting e modulo phi(n)/e instead of modulo phi because
 	the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
-	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public
-	key class because the factorization and integer discrete log problem is susceptible to quantum and
+	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
+	class because the factorization and integer discrete log problem is susceptible to quantum and
 	classical computing.
 	
 	A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
