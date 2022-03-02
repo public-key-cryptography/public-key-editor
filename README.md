@@ -46,7 +46,7 @@
 	64 to remove special characters from the encryption method. This expands the data to (4/3)^2 = 16/9
 	the size because base-64 encoding maps 6 bits of data to 8-bit chars and two encodings are used to
 	package the data. (The public key encryption method includes a base-64 encoding because it has to
-	encode the cipherdata to attach the one-time public keys.) Other protocols may use two encodings but
+	encode the cipherdata to attach the one-time public keys.) Other protocols may use one encoding but
 	this would only reduce the expansion to 3/4 the size.
 	
 	The text editor and email program were written to test the public key software and to show develop-
@@ -74,10 +74,10 @@
 	becomes unresponsive or the wifi loses its connection it will end the program in a few seconds so
 	the user doesn't have to close the terminal or open the System monitor to find and terminate the
 	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded
-	data with a base-16 separator to make it base-64; and errors in the readMessage method were cor-
-	rected so that the messages and attached files are detached and displayed correctly for encrypted
-	and unencrypted emails; the test mail feature and read all method show that the messages and files
-	are displayed correctly.
+	data with a base-16 separator to make it base-64; the public key ciphers were re-arranged; and er-
+	rors in the readMessage method were corrected so that the messages and attached files are detached
+	and displayed correctly for encrypted and unencrypted emails; the test mail feature and read all
+	method show that the messages and files are displayed correctly.
 	
 	
 	
