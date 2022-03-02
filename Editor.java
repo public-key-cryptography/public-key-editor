@@ -78,7 +78,7 @@
 	64 to remove special characters from the encryption method. This expands the data to (4/3)^2 = 16/9
 	the size because base-64 encoding maps 6 bits of data to 8-bit chars and two encodings are used to
 	package the data. (The public key encryption method includes a base-64 encoding because it has to
-	encode the cipherdata to attach the one-time public keys.) Other protocols may use two encodings but
+	encode the cipherdata to attach the one-time public keys.) Other protocols may use one encoding but
 	this would only reduce the expansion to 3/4 the size.
 	
 	The text editor and email program were written to test the public key software and to show develop-
@@ -106,10 +106,10 @@
 	becomes unresponsive or the wifi loses its connection it will end the program in a few seconds so
 	the user doesn't have to close the terminal or open the System monitor to find and terminate the
 	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded
-	data with a base-16 separator to make it base-64; and errors in the readMessage method were cor-
-	rected so that the messages and attached files are detached and displayed correctly for encrypted
-	and unencrypted emails; the test mail feature and read all method show that the messages and files
-	are displayed correctly.
+	data with a base-16 separator to make it base-64; the public key ciphers were re-arranged; and er-
+	rors in the readMessage method were corrected so that the messages and attached files are detached
+	and displayed correctly for encrypted and unencrypted emails; the test mail feature and read all
+	method show that the messages and files are displayed correctly.
 	
 	
 	
@@ -10851,9 +10851,13 @@ class Programs
 				
 				passphrase = passphrase.toLowerCase();
 				
-				String passphrasehash = Cipher.hash2(passphrase) .substring(0, 16);
+				String passphrasehash = Cipher
 				
-				passphrasehash = Convert.partition(passphrasehash, " ", 4);
+				    .hash2(passphrase) .substring(0, 16);
+				
+				passphrasehash = Convert
+				
+				    .partition(passphrasehash, " ", 4);
 				
 				hashfield.setText(passphrasehash);
 			}
@@ -11358,7 +11362,16 @@ class Programs
 								fontname = tokens[0].trim();
 								
 								fontstyle = new Number(tokens[1].trim()).intValue();
-								fontsize  = new Number(tokens[2].trim()).intValue();
+								
+								//  Test the font size
+								
+								if ((fontsize > 0) && (fontsize < 50))
+								
+								     fontsize = new Number(
+								
+									tokens[2].trim()).intValue();
+								
+								else fontsize = 20;
 							}
 						}
 						
@@ -13342,12 +13355,8 @@ class Programs
 				
 				
 				//  Find the number of rows and columns by
-				//  counting the number of commas in the first
+				//  counting the number of tabs in the first
 				//  (zeroth) row and the number of newlines
-				//
-				//  \t\t\t\t\t\t\t
-				//  \t\t\t\t\t\t\t
-				//  1\t2\t3\t4...
 				
 				String delimiter;
 				
@@ -13566,7 +13575,6 @@ class Programs
 		
 		
 		
-		
 		private class OpenListFileListener implements ActionListener
 		{
 		
@@ -13649,7 +13657,6 @@ class Programs
 				setFrameTitle();
 			}
 		}
-		
 		
 		
 		
@@ -13925,7 +13932,6 @@ class Programs
 		
 		
 		
-		
 		private String getData()
 		{
 			//  reads values from the table and
@@ -14189,7 +14195,6 @@ class Programs
 				return choice;
 			}
 		}
-		
 		
 		
 		
@@ -17455,7 +17460,6 @@ class Programs
 		
 		
 		
-		
 		private class LicenseListener implements ActionListener
 		{
 			public void actionPerformed(ActionEvent e) { run(); }
@@ -20640,19 +20644,15 @@ class Programs
 				
 				ActionListener actionlistener = new ActionListener()
 				{
-				
 					public void actionPerformed(ActionEvent e)
 					{
-					
 						if (e.getSource() == plusbutton)
-						{
-							incrementSize();
-						}
+						
+						    incrementSize();
 						
 						else if (e.getSource() == minusbutton)
-						{
-							decrementSize();
-						}
+						
+						    decrementSize();
 						
 						textfield.setText(String.valueOf(
 						
@@ -20973,6 +20973,8 @@ class Programs
 		
 		private String titlename = __.POPMail;
 		
+		private JFrame retrievemailframe;
+		
 		
 		//  shared variables
 		
@@ -21002,6 +21004,15 @@ class Programs
 		
 		private KeyboardListener keyboardlistener;
 		
+		//  Choose a linesize < the terminal width = 80 chars
+		//
+		//  The linesize should be different from the public key
+		//  sizes + 16 (the size of 0123456789abcdef) so the base-16
+		//  separators don't align in the encrypted text if the cipher-
+		//  text is partitioned.
+		
+		private int linesize = 78;
+		
 		
 		private Dimension d = Toolkit
 		
@@ -21030,10 +21041,6 @@ class Programs
 			minfontsize = (int) (minfontsize + 5.5f*q1);
 			maxfontsize = (int) (maxfontsize + 5.5f*q1);
 		}
-		
-		
-		
-		private JFrame retrievemailframe;
 		
 		
 		//  Set the font
@@ -21150,6 +21157,7 @@ class Programs
 			private boolean ascending;
 			
 			private boolean encrypted;
+			
 			
 			
 			
@@ -22102,12 +22110,7 @@ class Programs
 				private int   publickeymessages = 0;
 				private int replytoselfmessages = 0;
 				
-				
-				//  76 < 80 which is the terminal width
-				
-				private int linesize = 76;
 				private int  minsize = 256;
-				
 				
 				
 				public void actionPerformed(ActionEvent e)
@@ -23522,7 +23525,6 @@ class Programs
 						
 						
 						
-						
 						//  If the send text is in base 64, and the size is > min size,
 						//  partition the base-64 text
 						
@@ -23536,7 +23538,6 @@ class Programs
 						if (Number.isBase64(sendtext2.trim()) && (sendtext2.length() > minsize))
 						
 						    sendtext2 = Convert.partition(sendtext2.trim(), "\n", linesize);
-						
 						
 						
 						
@@ -23989,7 +23990,10 @@ class Programs
 					
 					}
 					
-					finally { textarea.requestFocusInWindow(); }
+					finally
+					{
+						textarea.requestFocusInWindow();
+					}
 				}
 				
 				
@@ -29838,7 +29842,9 @@ class Programs
 					//  Scale the button icon sizes and button
 					//  text sizes for the retrieve mail frame
 					
-					for (JButton button : emailpanel1.buttons) button.setFont(font);
+					for (JButton button : emailpanel1.buttons)
+					
+					    button.setFont(font.deriveFont(font.getSize()-2.0f));
 					
 					for (int j = 0; j < emailpanel1.buttons.length; j++)
 					{
@@ -29880,8 +29886,6 @@ class Programs
 						ImageIcon scaledicon = new ImageIcon(image);
 						
 						emailpanel1.buttons[j].setIcon(scaledicon);
-						
-						emailpanel1.buttons[j].setFont(font);
 					}
 				}
 				
@@ -32725,6 +32729,8 @@ class Programs
 			{
 			
 				//  constructs a string to display a message
+				//
+				//  This method does not decrypt or decode messages
 				
 				
 				String date     = emailpanel.list1.getDate(msno);
@@ -32737,13 +32743,20 @@ class Programs
 				int numberofciphers = emailpanel.list1.getNumberOfCiphers(msno);
 				
 				
-				//  If the message is in base 64 remove the encoding
+				//  If the message was undecryptable and doesn't
+				//  contain any newlines, partition the string so
+				//  the text doesn't become garbled by the text-
+				//  area if the font size is large
 				
-				if (message == null) return;  message = message.trim();
+				if (message == null) return;
 				
-				if (Number.isBase64(message))
+				if ((message.length() > 256)
 				
-				    message = Convert.base64ToString(message);
+				 && !message.trim().contains("\n"))
+				
+				    message = Convert.partition(
+				
+					message.trim(), "\n", linesize);
 				
 				
 				//  Count the number of ciphers in the reply key
@@ -32800,7 +32813,7 @@ class Programs
 				sb.append(numberofciphers + " / " + replyciphers + "\n");
 				
 				
-				//  Add the [ view ] and [ save ] file labels
+				//  Append the [ view ] and [ save ] file labels
 				
 				for (int i = 0; i < numberoffiles; i++)
 				{
@@ -32817,6 +32830,7 @@ class Programs
 					     sb.append("\n\n");
 					else sb.append("\n");
 				}
+				
 				
 				
 				if (numberofciphers == 0)
@@ -32846,6 +32860,7 @@ class Programs
 					
 					    sb.append("\n" + __.thismessagewassentunencrypted + "\n");
 				}
+				
 				
 				else // if (numberofciphers > 0)
 				{
@@ -32888,6 +32903,7 @@ class Programs
 				
 				sb = new StringBuilder(heading + message);
 				
+				
 				emailpanel.textarea.setText(sb.toString());
 				emailpanel.textarea.setEditable(false);
 				emailpanel.textarea.setCaretPosition(0);
@@ -32901,13 +32917,11 @@ class Programs
 				//  If the message is a partitioned encoded string,
 				//  then remove the partitions and decode the string
 				
-				if (Number.isBase64(message
+				String message1 = message.trim().replaceAll("\n", "");
 				
-				    .trim().replaceAll("\n", "")))
+				if (Number.isBase64(message1))
 				
-					message = Convert.base64ToString(
-					message.trim().replaceAll("\n", ""));
-				
+				    message = Convert.base64ToString(message1);
 				
 				
 				//  If the decrypted message is an HTML document
@@ -32969,7 +32983,9 @@ class Programs
 				
 				sb.append(newlines);
 				
-				emailpanel.textarea.setText(sb.toString());
+				String str = sb.toString();
+				
+				emailpanel.textarea.setText(str);
 				
 				
 				//  Autowrap the text if any line width is > 80
@@ -32982,9 +32998,9 @@ class Programs
 				
 				boolean linewrap = false;
 				
-				String text = sb.toString();
+				str = sb.toString();
 				
-				char[] charray = text.toCharArray();
+				char[] charray = str.toCharArray();
 				
 				int j = 0;
 				
@@ -33416,9 +33432,18 @@ class Programs
 							String fontname = tokens[0].trim();
 							
 							int fontstyle = new Number(tokens[1].trim()).intValue();
-							int fontsize  = new Number(tokens[2].trim()).intValue();
 							
-							Font font1 = new Font(fontname, fontstyle, fontsize);
+							//  Test the font size
+							
+							int fontsize = new Number(tokens[2].trim()).intValue();
+							
+							if ((fontsize < 0) || (fontsize > 50))
+							
+							    fontsize = defaultfontsize;
+							
+							Font font1 = new Font(
+							
+							   fontname, fontstyle, fontsize);
 							
 							maxfontsize = font1.getSize();
 							
@@ -34925,20 +34950,12 @@ class Programs
 			
 			
 			
-			
 			private class FindListener implements ActionListener
 			{
-				public FindListener()
-				{
+				public FindListener() {  }
 				
-				}
-				
-				public void actionPerformed(ActionEvent e)
-				{
-				
-				}
+				public void actionPerformed(ActionEvent e) {  }
 			}
-			
 			
 			
 			
@@ -36238,8 +36255,7 @@ class Programs
 								sb.append(__.Size + " " + sizestr + " " + __.bytes + "\n\n");
 								
 								
-								
-								//  Append the attached file buttons  [ view ]  [ save ]
+								//  Append the attached file buttons [ view ]  [ save ]
 								
 								int numberoffiles = emailpanel.list1.getNumberOfFiles(index);
 								
@@ -36264,9 +36280,10 @@ class Programs
 								
 								
 								//  Decrypt the message if the message is encrypted
-								//
+								
 								//  (If the message is unencrypted the decryptMessage
-								//  method will return the plaintext)
+								//  method will return the plaintext, but if the message
+								//  is undecryptable it will return null.)
 								
 								String decryptedmessage = message;
 								
@@ -36278,17 +36295,9 @@ class Programs
 									
 									    emailpanel, message, index);
 								
+								if (decryptedmessage == null)
 								
-								if ((decryptedmessage == null) || decryptedmessage.isEmpty())
-								{
-									//  Decryption error: Wrong encryption key,
-									//  wrong decryption key, or defective ciphertext
-									
-									sb.append(__.decryptionerror + ": ");
-									sb.append(__.wrongencryptionordecryptionkey);
-									
-									continue;
-								}
+								    decryptedmessage = message;
 								
 								
 								//  Truncate the message if the message is long
@@ -36303,16 +36312,14 @@ class Programs
 									.substring(0, maxlength) + " ........";
 								
 								
-								
-								//  If the message is a partitioned encoded string,
-								//  then remove the partitions and decode the string
-								
-								if (Number.isBase64(decryptedmessage
-								
-								    .trim().replaceAll("\n", "")))
-								
-									decryptedmessage = Convert.base64ToString(
-									decryptedmessage.trim().replaceAll("\n", ""));
+								if ((decryptedmessage == null) || decryptedmessage.isEmpty())
+								{
+									//  Decryption error: Wrong encryption key,
+									//  wrong decryption key, or defective ciphertext
+									
+									sb.append(__.decryptionerror + ": ");
+									sb.append(__.wrongencryptionordecryptionkey);
+								}
 								
 								
 								//  Append the decrypted (or non-encrypted) message
@@ -36329,7 +36336,9 @@ class Programs
 									sb.append("\n\n\n\n");
 								}
 								
-								emailpanel.textarea.setText(sb.toString());
+								String text = sb.toString();
+								
+								emailpanel.textarea.setText(text);
 								
 								
 								
@@ -42193,7 +42202,7 @@ class PopMail
 	
 		numberofmessages = 20;
 		
-		final int linewidth = 76; // the partition size
+		final int linewidth = 78; // the partition size
 		
 		testmaillist = new String[numberofmessages];
 		
@@ -42379,7 +42388,7 @@ class PopMail
 				//  This line probably should be commented because
 				//  the encoding is redundant
 				
-				text = Convert.stringToBase64(text);
+				//  text = Convert.stringToBase64(text);
 				
 				
 				if (encrypt)
@@ -42392,13 +42401,11 @@ class PopMail
 				
 				//  Partition the base-64 text
 				
-				if (Number.isBase64(text) && (text.length() > 512)
+				if (Number.isBase64(text))
 				
-				    && Number.isBase64(text))
+				    text = Convert.partition(
 				
-					text = Convert.partition(
-					
-					    text.trim(), "\n", linewidth);
+					text.trim(), "\n", linewidth);
 				
 				
 				//  Concatenate the test header and message
@@ -50620,35 +50627,34 @@ class PublicKey
 	
 		size64,  //  x A1^x1 B A2^x2  mdl
 		
-		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  mdl
-		
 		size144, //  X1 A X2 (64 x 64)  non-modular lsd
 		
 		size120, //  Y = A (x) X  vector cross product / vcp
 		
+		size88,  //  rotate( A X1 ) X2   2 D multiplication
+		
+		
+		size150, //  X1 A X2  polynomial matrix lsd
 		
 		size96,  //  x A1^x1 B A2^x2  tesseract-dl / tdl
 		
-		size60,  //  A^x C B^x + ... + A^0 C B^0  m-pdl
-		
-		size88,  //  rotate( A X1 ) X2   2 D multiplication
+		size56,  //  A^x1 B^x2, B^x1 C^x2  polynomial mdl
 		
 		size112, //  x (M1^x1 [ A ] M2^x1 + M1^x2 [ B ] M2^x2)
 		         //  x (M1^x1 [ B ] M2^x1 + M1^x2 [ C ] M2^x2)
 		
 		
-		size56,  //  A^x1 B^x2, B^x1 C^x2  polynomial mdl
-		
-		size84,  //  X^-1 A^x X (4 x 4)  boustrophedonic lsdl
-		
-		size150, //  X1 A X2  polynomial matrix lsd
-		
-		size80,  //  A^-x1 B^x A^x1  quaternion / qdl
+		size60,  //  A^x C B^x + ... + A^0 C B^0  m-pdl
 		
 		size72,  //  x A1^x1 B A2^x2  cube-dl / cdl
 		
-		size108, //  A^x X (3 x 3)  mdl Latin square
+		size84,  //  X^-1 A^x X (4 x 4)  boustrophedonic lsdl
 		
+		size108, //  A^x X (3 x 3)  mdl latin square
+		
+		size80,  //  A^-x1 B^x A^x1  quaternion / qdl
+		
+		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  mdl
 		
 		
 		
@@ -50680,8 +50686,6 @@ class PublicKey
 		//  vcp  = vector cross product cipher A (x) X
 		//
 		//  ....   ....
-		//
-		//  ....   ....
 	};
 	
 	
@@ -50691,7 +50695,7 @@ class PublicKey
 	//  est public key cipher
 	//
 	//  (The knapsack cipher is slow because it
-	//  has to compute the vectors r[][] s[].)
+	//  has to compute the vector r[][] s[].)
 	
 	//  public key compute time (ms) ==
 	//
@@ -51269,7 +51273,14 @@ class PublicKey
 		
 		String str = document.trim();
 		
-		String[] lines = str.split("\n{2,}");
+		String[] lines;
+		
+		if (str.contains(Convert.base16Separator))
+		
+		     lines = str.split(Convert.base16Separator);
+		
+		else lines = str.split("\n{2,}");
+		
 		
 		
 		if (lines.length < 2) return false;
@@ -51296,9 +51307,9 @@ class PublicKey
 		
 		//  Verify that the cipherdata is random
 		
-		byte[] cipherdata = Convert.base64ToByteArray(
+		byte[] cipherdata = Convert
 		
-		    lines[lines.length -1]);
+		    .base64ToByteArray(lastline);
 		
 		if (!Cipher.isRandom(cipherdata))
 		
@@ -55322,7 +55333,8 @@ class PublicKey
 		//  Let A = [ a1 + a2 i + a3 j + a4 k ]  and
 		//      B = [ b1 + b2 i + b3 j + b4 k ]; then
 		//
-		//  C = A B == [ a1 + a2 i + a3 j + a4 k ] [ b1 + b2 i + b3 j + b4 k ]
+		//  C = A B == [ a1 + a2 i + a3 j + a4 k ]
+		//           * [ b1 + b2 i + b3 j + b4 k ]
 		//
 		//   == [ a1 b1    + a1 b2 i   + a1 b3 j   + a1 b4 k
 		//      + a2 b1 i  + a2 b2 ii  + a2 b3 ij  + a2 b4 ik
@@ -55697,14 +55709,6 @@ class PublicKey
 	//  End class Quaternion
 	
 	
-	
-	
-	
-	private class Octonion
-	{
-	
-	
-	}
 	
 	
 	
@@ -68739,7 +68743,8 @@ class Number implements Comparable<Number>
 		//  tests if a string is in base 64 and veri-
 		//  fies that the length is a multiple of 4
 		
-		if (((str.length() % 4) != 0) || str.isEmpty()) return false;
+		if (((str.length() % 4) != 0)
+		   || str.isEmpty()) return false;
 		
 		boolean bool = true;
 		
