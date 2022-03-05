@@ -67,17 +67,17 @@
 	encrypted emails.
 	
 	A few errors were also corrected in the software so the compiler's Xlint doesn't issue warnings
-	every time the program is compiled; errors in the Number class were corrected; errors in the user-
-	pass menu item and private key encryption menu item were corrected; the file compression was cor-
-	rected so that attached files are compressed to ~ 1/4 of their size except for files that are incom-
-	pressible; the sign out / log out method was modified so that if the email server or mail program
-	becomes unresponsive or the wifi loses its connection it will end the program in a few seconds so
-	the user doesn't have to close the terminal or open the System monitor to find and terminate the
+	every time the program is compiled; errors in the Number and Fourier classes were corrected; errors
+	in the userpass menu item and private key encryption menu item were corrected; the file compression
+	was corrected so that attached files are compressed to ~ 1/4 of their size except for files that are
+	incompressible; the sign out / log out method was modified so that if the email server or mail pro-
+	gram becomes unresponsive or the wifi loses its connection it will end the program in a few seconds
+	so the user doesn't have to close the terminal or open the System monitor to find and terminate the
 	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded
-	data with a base-16 separator to make it base-64; the public key ciphers were re-arranged; and er-
-	rors in the readMessage method were corrected so that the messages and attached files are detached
-	and displayed correctly for encrypted and unencrypted emails; the test mail feature and read all
-	method show that the messages and files are displayed correctly.
+	data with a base-16 separator to make it base-64; the public key ciphers were rearranged; and errors
+	in the readMessage method were corrected so that the messages and attached files are detached and
+	displayed correctly for encrypted and unencrypted emails; the test mail feature and read all method
+	show that the messages and files are displayed correctly.
 	
 	
 	
@@ -415,11 +415,12 @@
 	equation for the one-time signature key r = a ^ k (mod p), and a third equation for the signature
 	s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
 	
-	The integer discrete log cipher requires a public key vector y1 = a1^x1 a2^x2 and y2 = a2^x1 a3^x2
-	(mod p) instead of a public key number y = a ^ x (mod p) so that a cryptanalyst would have to solve
-	the discrete log problem to find the secret key agreement e = a1^(k1 x1) a2^(k1 x2 + k2 x1) a3^
-	(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a matrix-like cipher
-	because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use matrix arithmetic.
+	The integer discrete log cipher (modulo a prime) requires a public key vector y1 = a1^x1 a2^x2 and
+	y2 = a2^x1 a3^x2 (mod p) instead of a public key number y = a ^ x (mod p) so that a cryptanalyst
+	would have to solve the discrete log problem to find the public key agreement e = a1^(k1 x1) a2^
+	(k1 x2 + k2 x1) a3^(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a
+	matrix-like cipher because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use
+	matrix arithmetic.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because they are also broken by quantum computing. In

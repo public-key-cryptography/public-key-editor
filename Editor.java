@@ -99,17 +99,17 @@
 	encrypted emails.
 	
 	A few errors were also corrected in the software so the compiler's Xlint doesn't issue warnings
-	every time the program is compiled; errors in the Number class were corrected; errors in the user-
-	pass menu item and private key encryption menu item were corrected; the file compression was cor-
-	rected so that attached files are compressed to ~ 1/4 of their size except for files that are incom-
-	pressible; the sign out / log out method was modified so that if the email server or mail program
-	becomes unresponsive or the wifi loses its connection it will end the program in a few seconds so
-	the user doesn't have to close the terminal or open the System monitor to find and terminate the
+	every time the program is compiled; errors in the Number and Fourier classes were corrected; errors
+	in the userpass menu item and private key encryption menu item were corrected; the file compression
+	was corrected so that attached files are compressed to ~ 1/4 of their size except for files that are
+	incompressible; the sign out / log out method was modified so that if the email server or mail pro-
+	gram becomes unresponsive or the wifi loses its connection it will end the program in a few seconds
+	so the user doesn't have to close the terminal or open the System monitor to find and terminate the
 	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded
-	data with a base-16 separator to make it base-64; the public key ciphers were re-arranged; and er-
-	rors in the readMessage method were corrected so that the messages and attached files are detached
-	and displayed correctly for encrypted and unencrypted emails; the test mail feature and read all
-	method show that the messages and files are displayed correctly.
+	data with a base-16 separator to make it base-64; the public key ciphers were rearranged; and errors
+	in the readMessage method were corrected so that the messages and attached files are detached and
+	displayed correctly for encrypted and unencrypted emails; the test mail feature and read all method
+	show that the messages and files are displayed correctly.
 	
 	
 	
@@ -447,11 +447,12 @@
 	equation for the one-time signature key r = a ^ k (mod p), and a third equation for the signature
 	s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
 	
-	The integer discrete log cipher requires a public key vector y1 = a1^x1 a2^x2 and y2 = a2^x1 a3^x2
-	(mod p) instead of a public key number y = a ^ x (mod p) so that a cryptanalyst would have to solve
-	the discrete log problem to find the secret key agreement e = a1^(k1 x1) a2^(k1 x2 + k2 x1) a3^
-	(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a matrix-like cipher
-	because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use matrix arithmetic.
+	The integer discrete log cipher (modulo a prime) requires a public key vector y1 = a1^x1 a2^x2 and
+	y2 = a2^x1 a3^x2 (mod p) instead of a public key number y = a ^ x (mod p) so that a cryptanalyst
+	would have to solve the discrete log problem to find the public key agreement e = a1^(k1 x1) a2^
+	(k1 x2 + k2 x1) a3^(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a
+	matrix-like cipher because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use
+	matrix arithmetic.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because they are also broken by quantum computing. In
@@ -52304,8 +52305,8 @@ class PublicKey
 	
 	
 	
-	//  The public key encrypt method can use a random key + H(M) or the secret key agreement e
-	//  for message encryption. The default setting uses the secret key agreement or composite
+	//  The public key encrypt method can use a random key + H(M) or the public key agreement e
+	//  for message encryption. The default setting uses the public key agreement or composite
 	//  secret key instead of a random key to parametrize the private key cipher. A one-time
 	//  random encryption key would be redundant because the public key encrypt method chooses
 	//  a random number + H(M) for the one-time private key to generate the matching one-time
@@ -53054,9 +53055,9 @@ class PublicKey
 			//  Compute the static public key
 			
 			Matrix AX1 = A.multiply(X1) .mod(p);
-			Matrix AX2 = A.rotate(-1).multiply(X2).rotate(1) .mod(p);
+			Matrix AX2 = A.rotate(1).multiply(X2).rotate(-1) .mod(p);
 			
-			//  Matrix Y1 = AX1.rotate(-1).multiply(X2) .mod(p);
+			//  Matrix Y1 = AX1.rotate(1).multiply(X2) .mod(p);
 			Matrix Y2 = AX2.multiply(X1) .mod(p);
 			
 			
@@ -57237,9 +57238,9 @@ class PublicKey
 			//  Compute the secret key
 			
 			//  Matrix Temp1 = Z.multiply(X1) .mod(p);
-			Matrix Temp2 = Z.rotate(-1).multiply(X2).rotate(1) .mod(p);
+			Matrix Temp2 = Z.rotate(1).multiply(X2).rotate(-1) .mod(p);
 			
-			//  Matrix E1 = Temp1.rotate(-1).multiply(X2) .mod(p);
+			//  Matrix E1 = Temp1.rotate(1).multiply(X2) .mod(p);
 			Matrix E2 = Temp2.multiply(X1) .mod(p);
 			
 			
@@ -72068,7 +72069,9 @@ class Number implements Comparable<Number>
 		
 		Number number = this;
 		
-		if (number.signum() >= 0) number = number.add(0.5);
+		if (number.signum() >= 0)
+		
+		    number = number.add(0.5);
 		
 		else  number = number.subtract(0.5);
 		
@@ -72077,14 +72080,11 @@ class Number implements Comparable<Number>
 	
 	
 	
-	public Number round(int precision)
+	public Number round(int p)
 	{
 		//  rounds the number to the specified precision
 		//
-		//  (If precision == 0 then this method
-		//  is the same as round())
-		
-		final int p = precision;
+		//  If p == 0 then this method is the same as round()
 		
 		if (this.isComplex())
 		
@@ -72097,9 +72097,11 @@ class Number implements Comparable<Number>
 		
 		Number d = new Number(1) .setPrecision(p+1)
 		
-		    .divide( new Number(2) .pow(4*p+1) );
+		    .divide( new Number(2).pow(4*p+1) );
 		
-		if (number.signum() >= 0) number = number.add(d);
+		if (number.signum() >= 0)
+		
+		    number = number.add(d);
 		
 		else number = number.subtract(d);
 		
@@ -73867,7 +73869,7 @@ class Matrix
 	
 	public Matrix(int[] matrix, int rotation)
 	{
-		//  creates a circulant matrix
+		//  creates a circulant matrix from an array
 		
 		//  rotation =  0, +1, -1
 		
@@ -73890,7 +73892,7 @@ class Matrix
 	
 	public Matrix(Number[] matrix, int rotation)
 	{
-		//  creates a circulant matrix
+		//  creates a circulant matrix from an array
 		
 		//  rotation =  0, +1, -1
 		
@@ -76377,9 +76379,9 @@ class Matrix
 	
 	public Matrix rotate(int dir)
 	{
-		if (dir == 1) return rotate1();
+		if (dir == -1) return rotate1();
 		
-		else if (dir == -1)
+		else if (dir == 1)
 		
 		    return rotate1().rotate1().rotate1();
 		
@@ -78421,7 +78423,21 @@ class Convert
 	
 	
 	
-	public static double[] realToComplexArray(double[] array)
+	public static int[] realArrayToComplexArray(int[] array)
+	{
+		//  converts ints from real to complex
+		
+		int[] complex_array = new int[2*array.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    complex_array[2*i] = array[i];
+		
+		return complex_array;
+	}
+	
+	
+	public static double[] realArrayToComplexArray(double[] array)
 	{
 		//  converts doubles from real to complex
 		
@@ -78525,186 +78541,118 @@ class Convert
 class Fourier
 {
 
-	private static double[] dft(double[] array, int sign)
-	{
-	
-		//  The slow fourier transform has a quadratic O(n^2) running time
-		
-		//  This method is used to compute the Fourier transform for small arrays
-		//  or array sizes that are not a power of 2.
-		//
-		//  It can be used to limit the amount of recursion or reduce the number
-		//  of function calls in the recursive fft method (just as the Karatsuba
-		//  multiplication method limits the amount of recursion by calling the
-		//  quadratic multiplier below a minimum threshold), so that the program
-		//  doesn't hang or become unresponsive. For example, if the array size
-		//  is 1 M and the recursion threshold is 256, the number of function
-		//  calls is reduced from 1 M to 1 M / 256 == 4 K.
-		
-		
-		//  Example  Test the slow discrete fourier transform
-		//           (and inverse transform) method
-		//
-		//  double[] x = new double[] { 3, 1, 4, 1, 5, 9, 2, 6 };
-		//
-		//  double[] fourier = dft(Math.realToComplexArray(x), 1);
-		//
-		//  System.out.println(Arrays.toString(Convert.doubleArrayToFloatArray(fourier)));
-		//
-		//  float[] x1 = Convert.doubleArrayToFloatArray(dft(fourier, -1));
-		//
-		//  System.out.println(Arrays.toString(x1));
-		//
-		//  [ 31.0, 0.0, -4.1213202,   -7.192388, 2.0,  3.0,  0.121320345, -11.192389,
-		//    -3.0, 0.0,  0.121320345, 11.192389, 2.0, -3.0, -4.1213202,     7.192388 ]
-		//
-		//  [ 3.0, 0.0, 1.0, 0.0, 4.0, 0.0, 1.0, 0.0,
-		//    5.0, 0.0, 9.0, 0.0, 2.0, 0.0, 6.0, 0.0 ]
-		
-		
-		
-		int t = array.length / 2;
-		
-		double[] x = array;
-		
-		double[] y = new double[x.length];
-		
-		double[] cos_table = Math.cos_table(t);
-		double[] sin_table = Math.sin_table(t);
-		
-		
-		if (sign == 1)
-		{
-			for (int k = 0; k < t; k++)
-			for (int n = 0; n < t; n++)
-			{
-				//  Compute the real and imag components
-				
-				//  x(k) = the sum of x(n) w ^(k n)
-				
-				//      [ a cos(2 pi/N) - b sin(2 pi/N) ]
-				//  + i [ a sin(2 pi/N) + b cos(2 pi/N) ]
-				
-				int exp = (k*n) % t;
-				
-				y[2*k+0] += x[2*n+0] * cos_table[exp] - x[2*n+1] * sin_table[exp];
-				y[2*k+1] += x[2*n+0] * sin_table[exp] + x[2*n+1] * cos_table[exp];
-			}
-		}
-		
-		if (sign == -1)
-		{
-			for (int n = 0; n < t; n++)
-			for (int k = 0; k < t; k++)
-			{
-				//  Compute the real and imag components
-				
-				//  x(n) = the sum of 1/N  x(k) w ^(-k n)
-				//
-				//  ==  [  a cos(2 pi/N) + b sin(2 pi/N) ]
-				//  + i [ -a sin(2 pi/N) + b cos(2 pi/N) ]
-				
-				//  To compute the inverse dft, the exponent can be negated
-				//  or the sine can be negated.
-				//
-				//  Negating the exponent k*n or indexing the sine and cosine
-				//  tables in reverse is equivalent to negating the sine table
-				//  because  cos(-x) == cos(x)  and  sin(-x) == - sin(x).
-				
-				int exp = (((-k*n) % t) + t) % t; // negate the exponent k*n
-				
-				y[2*n+0] +=  x[2*k+0] * cos_table[exp] - x[2*k+1] * sin_table[exp];
-				y[2*n+1] +=  x[2*k+0] * sin_table[exp] + x[2*k+1] * cos_table[exp];
-			}
-			
-			for (int i = 0; i < y.length; i++) y[i] /= t;
-		}
-		
-		return y;
-	}
-	
-	
-	
-	
-	//  The Fast Fourier Transform (fft)
+
+
+	//  The Discrete Fourier Transform
 	//
-	//  The Fast Fourier Transform (fft) is an algorithm or method for
-	//  computing the Discrete Fourier Transform (dft) in linear log time
+	//  Any periodic function, curve, or set of numbers x(n) can be represented as the sum
+	//  of the sine and cosine functions over all the frequencies using the infinite series
 	//
-	//  The fft computes the same values as the dft.
-	//  (See the slow fourier transform or dft method.)
+	//  a0 cos 0 x + b0 sin 0 x + a1 cos 1 x + b1 sin 1 x + ... + ak cos k x + sin k x
+	//
+	//  == a[k] cos k x + b[k] sin k x  where the k = 0,1,2,3,..., N-1 for a finite series.
+	//
+	//  The series x[n] = a[k] cos(2 pi/N k x) + b[k] sin(2 pi/N k x) is called the Fourier
+	//  series of the function x(n), and the constants a[] and b[] are called the Fourier
+	//  coefficients.
+	//
+	//  The Fourier coefficients a[] and b[] represent the amplitudes of the sine and
+	//  cosine terms in the series, and the indexer k represents the frequencies of the
+	//  sine and cosine functions which range from 0 to N-1 where N is the size of the
+	//  array. The zeroth frequency or Fourier coefficient x[k = 0] is the sum or average
+	//  of all the values of x[n] which are the amplitudes of the function or curve.
+	//
+	//  The discrete Fourier transform decomposes an array of values x[n] into an array of
+	//  amplitudes of sines and cosines x[k], and the inverse Fourier transforms recomposes
+	//  or reconstructs the function x[n] from the amplitudes or coefficients of the sine
+	//  and cosine terms x[k].
+	//
+	//  The formulas for computing the Fourier transform and inverse transform are
+	//
+	//    x[k] = the sum of x[n] w ^ [k n] where w = exp(i 2 pi/N)
+	//
+	//    ==  [ x[n] real cos(2 pi/N k n) - x[n] imag sin(2 pi/N k n) ]
+	//    + i [ x[n] real sin(2 pi/N k n) + x[n] imag cos(2 pi/N k n) ]
+	//
+	//    x[n] = the sum of 1/N x[k] w ^ [-k n] where w = exp(i 2 pi/N)
+	//
+	//    ==  [ x[k] real cos(-2 pi/N k n) - x[k] imag sin(-2 pi/N k n) ]
+	//    + i [ x[k] real sin(-2 pi/N k n) + x[k] imag cos(-2 pi/N k n) ]
+	//
+	//    ==  [ x[k] real cos(2 pi/N k n) + x[k] imag sin(2 pi/N k n) ]
+	//    + i [-x[k] real sin(2 pi/N k n) + x[k] imag cos(2 pi/N k n) ]
+	//
+	//  Computing the Fourier transform requires a quadratic number of multiplications
+	//  because for each x[k] the index n has to be iterated from 0 to N-1 and for each
+	//  x[n] the index k has to be iterated from 0 to N-1. The Danielson Lanczos lemma can
+	//  be used to reduce the running time from O(n^2) to O(n log n) where n is the number
+	//  of elements in the array.
 	
-	
-	//  The user calls the public Fourier.transform() method, not the private fft method
-	//
-	//  The Fast Fourier Transform (fft) is an algorithm or method for computing
-	//  the Discrete Fourier Transform (dft), just as Karatsuba multiplication is
-	//  an algorithm for fast multiplication. The fft computes and returns the same
-	//  value or array of numbers as the dft method.
-	//
-	//  The Fast Fourier Transform requires only O(n log(n)) operations, where n is the
-	//  number of bits. The Slow Fourier Transform or dft requires O(n^2) operations.
 	
 	
 	
 	//  The only two public methods in the Fourier class
 	//  are the transform and multiply methods
 	
+	//  Set the minimum size or threshold for recursion and
+	//  set the min size for using the dft instead of the fft.
+	//  
+	//  the fft method is faster than the dft method if the number
+	//  of elements is > 64 but it may depend on the implementation.
+	//  (At 256 elements, the fft is 4 times as fast.)
+	//
+	//  Programs that use recursion instead of iteration set the
+	//  min size or threshold = 1 because the Fourier transform of
+	//  a one-element array or a single number equals itself. This
+	//  avoids using the dft method since the transform does not
+	//  have to be computed for a single number but it requires a
+	//  large number of simultaneous function calls.
+	
+	private static int minsize = 64;
+	
+	
+	
+	//  Example  Test the slow / quadratic discrete fourier
+	//           transform and inverse transform method
+	//
+	//  int[] intarray          = new int[] { 1, 2, 3, 4 };
+	//  double[] doublearray = new double[] { 1, 2, 3, 4 };
+	//
+	//     int[] x1_ = Convert.realArrayToComplexArray(intarray);
+	//  Number[] x1  = Convert.intArrayToNumberArray(x1_);
+	//  double[] x2  = Convert.realArrayToComplexArray(doublearray);
+	//
+	//  Number[] fourier1 = Fourier.transform(x1, 1);
+	//  double[] fourier2 = Fourier.transform(x2, 1);
+	//
+	//  System.out.println("Number[] x1 == " + Arrays.toString(fourier1));
+	//  System.out.println("double[] x2 == " + Arrays.toString(fourier2));
+	//
+	//  Number[] x3 = Fourier.transform(fourier1, -1);
+	//  double[] x4 = Fourier.transform(fourier2, -1);
+	//
+	//  System.out.println("Number[] x3 == " + Arrays.toString(x3));
+	//  System.out.println("double[] x4 == " + Arrays.toString(x4));
+	//
+	//
+	//  Number[] x1 == [ 10.000000000000000,  0.0, -2.0000000000000000, -2.0000000000000000,
+	//                   -2.000000000000000,  0.0, -2.0000000000000000,  2.0000000000000000 ]
+	//  double[] x2 == [  9.999999999939767,  0.0, -1.9999999999879536, -1.9999999999879536,
+	//                   -1.9999999999879536, 0.0, -1.9999999999879536,  1.9999999999879536 ]
+	//
+	//  Number[] x3 == [ 1.0000000000000000, 0.0,  2.0000000000000000, 0.0,  3.000000000000000, 0.0,  4.0000000000000000, 0.0 ]
+	//  double[] x4 == [ 0.9999999999879536, 0.0,  1.9999999999759073, 0.0,  2.999999999963861, 0.0,  3.9999999999518145, 0.0 ]
+	
+	
 	
 	public static double[] transform(double[] array, int sign)
 	{
 	
-		//  computes the discrete fourier transform or dft of a set of complex numbers
+		//  computes the discrete fourier transform
+		//  or dft of a set of complex numbers
 		
-		//  If the array is small use the slow / quadratic dft
-		//  (The slow dft allows sizes that are not a power of 2)
-		
-		if (array.length < 1024) return dft(array, sign);
-		
-		//  The fft or fast dft requires that the size be a power of 2
-		
-		if (!Math.isPowerOf2(array.length))
-		
-		    throw new IllegalArgumentException();
-		
-		double[] x = new double[array.length];
-		
-		for (int i = 0; i < array.length; i++)
-		
-		    x[i] = array[i];
-		
-		double[] d_array;
-		
-		if (sign == 1) d_array = fft(x, sign);
-		
-		else if (sign == -1)
-		{
-			for (int i = 0; i < x.length; i++)
-			
-			    x[i] /= (x.length/2);
-			
-			d_array = fft(x, sign);
-		}
-		
-		else
-		{	String message = "fourier sign must be 1 or -1";
-			
-			 throw new IllegalArgumentException(message);
-		}
-		
-		if (array.length > 4*1024*1024)
-		
-		    System.gc(); // call the garbage collector
-		
-		return d_array;
-	}
-	
-	
-	
-	public static Number[] transform(Number[] array, int sign)
-	{
-	
-		//  computes the discrete fourier transform or dft of a set of real numbers.
+		//  If the array is small use the quadratic / O(n^2) dft
+		//  (The slow dft also allows sizes that are not powers of 2)
 		
 		//  The inverse transform divides the array by the number of
 		//  elements, but some implementations divide both the transform
@@ -78712,83 +78660,83 @@ class Fourier
 		//  ments to make the transform symmetrical.
 		
 		
-		//  Example  Compute the Fourier transform of the integers
-		//
-		//  { 3, 1, 4, 1, 5, 9, 2, 6 }
-		//
-		//  Number[] array, fourier;
-		//
-		//  array = Convert.intArrayToNumberArray(
-		//
-		//	new int[] { 3, 1, 4, 1, 5, 9, 2, 6 });
-		//
-		//  fourier = Fourier.transform(array, 1);
-		//
-		//  //  array = Fourier.transform(fourier, -1);
-		//
-		//  System.out.println("\n\n" + Arrays.toString(fourier));
-		//
-		//  31.0   0     -4.1213203435596425   -7.1923881554251178
-		//   2.0   3.0    0.1213203435596425  -11.1923881554251178
-		//   3.0   0      0.1213203435596425   11.1923881554251178
-		//   2.0  -3.0   -4.1213203435596425    7.1923881554251178
-		//
-		//  The zeroth term is the zeroth frequency which is the sum
-		//  or average of the numbers in the data array.
-		//
-		//  Note that other math programs may divide the result of the
-		//  Fourier transform by the sqrt of the number of elements.
-		
-		
-		//  The array has to be a power of 2
-		
-		//  This restriction could be removed if
-		//  the array is padded to a power of 2
-		
-		if (!Math.isPowerOf2(array.length))
-		
-		    throw new IllegalArgumentException();
-		
-		
-		Number[] x = new Number[2*array.length];
+		double[] x = new double[array.length];
 		
 		for (int i = 0; i < array.length; i++)
-		{
-			x[2*i+0] = array[i].toReal();
-			x[2*i+1] = array[i].toImag();
-		}
 		
-		Number[] narray = fft(x, sign);
+		    x[i] = array[i];
+		
+		int len = array.length;
+		
+		double[] y = Math.isPowerOf2(len) && (len >= minsize) ?
+		
+		    fft(x, sign) : dft(x, sign);
+		
+		int t = y.length / 2;
+		
+		if (sign == -1)
+		
+		    for (int i = 0; i < y.length; i++)
+		
+			y[i] /= t;
+		
+		if (array.length > 4*1024*1024)
+		// call the garbage collector
+		    System.gc();
+		
+		return y;
+	}
+	
+	
+	
+	
+	public static Number[] transform(Number[] array, int sign)
+	{
+	
+		//  computes the discrete fourier transform
+		//  or dft of a set of real numbers.
+		
+		//  The inverse transform divides the array by the number of
+		//  elements, but some implementations divide both the transform
+		//  and the inverse transform by the sqrt of the number of ele-
+		//  ments to make the transform symmetrical.
 		
 		
-		Number[] narray1 = new Number[narray.length / 2];
+		Number[] x = new Number[array.length];
 		
-		for (int i = 0; i < narray1.length; i++)
+		for (int i = 0; i < array.length; i++)
 		
-		    narray1[i] = new Number(narray[2*i], narray[2*i+1]);
+		    x[i] = array[i];
 		
-		narray = narray1;
+		int len = array.length;
 		
+		Number[] y = Math.isPowerOf2(len) && (len >= minsize) ?
+		
+		    fft(x, sign) : dft(x, sign);
+		
+		int t = y.length / 2;
 		
 		if (sign == -1)
 		{
 			//  Divide the inverse fourier transform
 			//  by the number of complex numbers
 			
-			for (int i = 0; i < narray.length; i++)
+			for (int i = 0; i < y.length; i++)
 			
-			    narray[i] = narray[i] .divide(narray.length);
+			    y[i] = y[i] .divide(t);
+			
+			System.out.println();
 		}
 		
-		//  Set the precision
+		//  Set the precision to a double
 		
-		int p = 8;
+		int p = 16;
 		
-		for (int i = 0; i < narray.length; i++)
+		for (int i = 0; i < y.length; i++)
 		
-		    narray[i] = narray[i] .setPrecision(p);
+		    y[i] = y[i] .setPrecision(p);
 		
-		return narray;
+		return y;
 	}
 	
 	
@@ -78806,7 +78754,6 @@ class Fourier
 		
 		//  Example  Calculate 1234 x 5678 using
 		//           quadratic and fft multiplication
-		//
 		//
 		//  Quadratic multiplication
 		//
@@ -78826,7 +78773,7 @@ class Fourier
 		//     7   0   0   6   6   5   2
 		//
 		//
-		//  Discrete Fourier transform multiplication
+		//  Discrete Fourier Transform multiplication
 		//
 		//  int[] x = {  1, 2, 3, 4  }
 		//  int[] y = {  5, 6, 7, 8  }
@@ -78850,12 +78797,14 @@ class Fourier
 		//
 		//  This is the product of x and y except that the array is wrapped
 		//  around to the left by one digit. Rotate the array to the right by
-		//  one digit to get the product and then carry the digits divided by
-		//  the base to find the product
+		//  one digit and then carry the digits to find the product
 		//
-		//  x y == { 0,  5, 16, 34, 60, 61, 52, 32 };
+		//  x y == { 0, 5, 16, 34, 60, 61, 52, 32 }
 		//
-		//      == { 0   7   0   0   6   6   5   2 }
+		//          ==  5, 16, 34, 60, 61, 52, 32
+		//
+		//          ==  0  7  0  0  6  6  5  2
+		
 		
 		
 		//  The fft multiply method might run out of memory because the
@@ -78875,7 +78824,7 @@ class Fourier
 			
 			int[] temp = new int[length];
 			
-			for (int i = 0; i <  temp.length; i++) temp[i] = 0;
+			for (int i = 0; i < temp.length; i++) temp[i] = 0;
 			
 			for (int i = 0; i < array.length; i++)
 			
@@ -78968,13 +78917,243 @@ class Fourier
 	
 	
 	
+	//  Private methods
+	
+	
+	private static double[] dft(double[] array, int sign)
+	{
+	
+		//  The slow fourier transform has a quadratic O(n^2) running time
+		
+		//  This method is used to compute the Fourier transform for small arrays
+		//  or array sizes that are not a power of 2.
+		//
+		//  It can be used to limit the amount of recursion or reduce the number
+		//  of function calls in the recursive fft method (just as the Karatsuba
+		//  multiplication method limits the amount of recursion by calling the
+		//  quadratic multiplier below a minimum threshold), so that the program
+		//  doesn't hang or become unresponsive. For example, if the array size
+		//  is 1 M and the recursion threshold is 64, the number of function
+		//  calls is reduced from 1 M to 1 M / 64 == 16 K.
+		
+		
+		int t = array.length / 2;
+		
+		double[] x = array;
+		
+		double[] y = new double[x.length];
+		
+		double[] cos_table = Math.cos_table(t);
+		double[] sin_table = Math.sin_table(t);
+		
+		
+		if (sign == 1)
+		{
+			for (int k = 0; k < t; k++)
+			for (int n = 0; n < t; n++)
+			{
+				//  Compute the real and imag components
+				
+				//  x[k] = the sum of x[n] w ^ [k n] where w = exp(i 2 pi/N)
+				//
+				//  ==  [ x[n] real cos(2 pi/N k n) - x[n] imag sin(2 pi/N k n) ]
+				//  + i [ x[n] real sin(2 pi/N k n) + x[n] imag cos(2 pi/N k n) ]
+				
+				int exp = (k*n) % t;
+				
+				y[2*k+0] += x[2*n+0] * cos_table[exp] - x[2*n+1] * sin_table[exp];
+				y[2*k+1] += x[2*n+0] * sin_table[exp] + x[2*n+1] * cos_table[exp];
+			}
+		}
+		
+		
+		if (sign == -1)
+		{
+			for (int n = 0; n < t; n++)
+			for (int k = 0; k < t; k++)
+			{
+				//  Compute the real and imag components
+				
+				//  x[n] = the sum of 1/N x[k] w ^ [-k n] where w = exp(i 2 pi/N)
+				//
+				//  ==  [ x[k] real cos(2 pi/N k n) - x[k] imag sin(2 pi/N k n) ]
+				//  + i [ x[k] real sin(2 pi/N k n) + x[k] imag cos(2 pi/N k n) ]
+				
+				//  To compute the inverse dft, the exponent can be negated
+				//  or the sine can be negated.
+				//
+				//  Negating the exponent k*n or indexing the sine and cosine
+				//  tables in reverse is equivalent to negating the sine table
+				//  because  cos(-x) == cos(x)  and  sin(-x) == - sin(x).
+				
+				//  Negate the exponent k*n
+				
+				int exp = (((-k*n) % t) + t) % t;
+				
+				y[2*n+0] += x[2*k+0] * cos_table[exp] - x[2*k+1] * sin_table[exp];
+				y[2*n+1] += x[2*k+0] * sin_table[exp] + x[2*k+1] * cos_table[exp];
+			}
+		}
+		
+		return y;
+	}
+	
+	
+	
+	
+	private static Number[] dft(Number[] array, int sign)
+	{
+	
+		//  The slow fourier transform has a quadratic O(n^2) running time
+		
+		//  This method is used to compute the Fourier transform for small arrays
+		//  or array sizes that are not a power of 2.
+		//
+		//  It can be used to limit the amount of recursion or reduce the number
+		//  of function calls in the recursive fft method (just as the Karatsuba
+		//  multiplication method limits the amount of recursion by calling the
+		//  quadratic multiplier below a minimum threshold), so that the program
+		//  doesn't hang or become unresponsive. For example, if the array size
+		//  is 1 M and the recursion threshold is 256, the number of function
+		//  calls is reduced from 1 M to 1 M / 64 == 16 K.
+		
+		
+		int t = array.length / 2;
+		
+		Number[] x = array;
+		
+		Number[] y = new Number[x.length];
+		
+		for (int i = 0; i < y.length; i++)
+		
+		    y[i] = new Number(0);
+		
+		Number N = new Number(t);
+		
+		Number[] cos_table = Math.cos_table(N);
+		Number[] sin_table = Math.sin_table(N);
+		
+		
+		if (sign == 1)
+		{
+			for (int k = 0; k < t; k++)
+			for (int n = 0; n < t; n++)
+			{
+				//  Compute the real and imag components
+				
+				//  x[k] = the sum of x[n] w ^ [k n] where w = exp(i 2 pi/N)
+				//
+				//  ==  [ x[n] real cos(2 pi/N k n) - x[n] imag sin(2 pi/N k n) ]
+				//  + i [ x[n] real sin(2 pi/N k n) + x[n] imag cos(2 pi/N k n) ]
+				
+				int exp = (k*n) % t;
+				
+				y[2*k+0] = y[2*k+0] .add( x[2*n+0].multiply(cos_table[exp])
+				               .subtract( x[2*n+1].multiply(sin_table[exp]) ) );
+				
+				y[2*k+1] = y[2*k+1] .add( x[2*n+0].multiply(sin_table[exp])
+				                    .add( x[2*n+1].multiply(cos_table[exp]) ) );
+			}
+		}
+		
+		
+		if (sign == -1)
+		{
+			for (int n = 0; n < t; n++)
+			for (int k = 0; k < t; k++)
+			{
+				//  Compute the real and imag components
+				
+				//  x[n] = the sum of 1/N x(k) w ^ [-k n] where w = exp(i 2 pi/N)
+				//
+				//  ==  [ x[k] real cos(2 pi/N k n) - x[k] imag sin(2 pi/N k n) ]
+				//  + i [ x[k] real sin(2 pi/N k n) + x[k] imag cos(2 pi/N k n) ]
+				//
+				//  To compute the inverse dft, the exponent can be negated
+				//  or the sine can be negated.
+				//
+				//  Negating the exponent k*n or indexing the sine and cosine
+				//  tables in reverse is equivalent to negating the sine table
+				//  because  cos(-x) == cos(x)  and  sin(-x) == - sin(x).
+				
+				//  Negate the exponent k*n
+				
+				int exp = (((-k*n) % t) + t) % t;
+				
+				y[2*n+0] = y[2*n+0] .add( x[2*k+0].multiply(cos_table[exp])
+				               .subtract( x[2*k+1].multiply(sin_table[exp]) ) );
+				
+				y[2*n+1] = y[2*n+1] .add( x[2*k+0].multiply(sin_table[exp])
+				                    .add( x[2*k+1].multiply(cos_table[exp]) ) );
+			}
+		}
+		
+		return y;
+	}
+	
+	
+	
+	
+	
+	
+	//  The Fast Fourier Transform (fft)
+	//
+	//  The Fast Fourier Transform (fft) is an algorithm or method for
+	//  computing the Discrete Fourier Transform (dft) in linear log time
+	//
+	//  The fft computes the same values as the dft.
+	//  (See the slow fourier transform or dft method.)
+	
+	
+	//  The user calls the public Fourier.transform() method, not the private fft method,
+	//  just as a user calls the Number.multiply() method instead of the quadratic,
+	//  sesquilinear (Karatsuba), or linear log (fftmultiply) methods.
+	//
+	//  The Fast Fourier Transform (fft) is an algorithm or method for computing
+	//  the Discrete Fourier Transform (dft), just as Karatsuba multiplication is
+	//  an algorithm for fast multiplication. The fft computes and returns the same
+	//  value or array of numbers as the dft method.
+	//
+	//  The Fast Fourier Transform requires only O(n log(n)) operations, where n is the
+	//  number of bits. The Slow Fourier Transform or dft requires O(n^2) operations.
+	
+	
+	
+	
+	//  The Danielson-Lanczos lemma (1942) is used to compute
+	//  the dft in linear log time instead of quadratic time
+	//
+	//  The set of k equations
+	//
+	//  x(k) = x(n) w ^ (k n), where w = exp(i 2 pi/N), k = 0 to N-1
+	//
+	//  is equivalent to the set of k equations
+	//
+	//  x(k + 0 N/2) = y(k) + w(N) ^ k z(k),  k = 0 to N/2 -1
+	//  x(k + 1 N/2) = y(k) - w(N) ^ k z(k),  k = 0 to N/2 -1
+	//
+	//  in which
+	//
+	//  y(k) = x(2 n + 0) w(N/2) ^ (k n sign),  k = 0 to N/2 -1,  n = 0 to N/2 -1
+	//  z(k) = x(2 n + 1) w(N/2) ^ (k n sign),  k = 0 to N/2 -1,  n = 0 to N/2 -1
+	//
+	//  Computing y(k) or z(k) requires only one-quarter the number of multiplications
+	//  required to compute x(k) because k/2 * n/2 == k n / 4; therefore computing both
+	//  y(k) and z(k) requires half the number of multiplications required to compute x(k).
+	//
+	//  Since y(k) and z(k) have the same form as x(k), they can be computed recursively.
+	//  This reduces the number of multiplications for computing x(k) from O(n^2) to
+	//  O(n log n) where n is the size or number of bits.
+	
+	
+	
 	private static double[] fft(final double[] x, final int sign)
 	{
 	
 		//  The fast fourier transform method
 		
-		//  The iterative fft is around twice as fast as the
-		//  recursive fft and it also uses less memory.
+		//  The recursive fft is not used because the iterative fft
+		//  is faster than the recursive fft and uses less memory.
 		
 		return ffti(x, sign);
 		
@@ -78987,16 +79166,13 @@ class Fourier
 		//  as the fft, just as for some size a quadratic sorter is just as
 		//  fast as a linear log sorter, and for some size a quadratic multi-
 		//  plier is just as fast as a linear log multiplier.)
-		
-		
-		//  final int limit = 64;
 		//
-		//  return fftr(x, sign, limit);
+		//  return fftr(x, sign);
 	}
 	
 	
 	
-	private static Number[] fft(Number[] X, int sign)
+	private static Number[] fft(Number[] array, int sign)
 	{
 	
 		//  An iterative fast fourier transform method
@@ -79004,12 +79180,13 @@ class Fourier
 		
 		//  Swap the indices
 		
-		X = fftSwap(X);
-		
+		array = fftSwap(array);
 		
 		//  Create a sine and cosine table
 		
-		final int N = X.length / 2;
+		final int N = array.length / 2;
+		
+		//  N = the number of complex numbers
 		
 		final Number[] sin = Math.sin_table(new Number(N));
 		final Number[] cos = Math.cos_table(new Number(N));
@@ -79017,12 +79194,13 @@ class Fourier
 		
 		//  Compute the Fourier transform
 		
+		final Number[] X = array;
+		
 		for (int i = N; i > 1; i /= 2)
 		{
 			final Number[] x, y, z;
 			
 			x = new Number[4*N/i];
-			
 			y = new Number[2*N/i];
 			z = new Number[2*N/i];
 			
@@ -79031,12 +79209,11 @@ class Fourier
 			final int m = sin.length / n;
 			
 			
-			//  x[k+0 + 0N/2] = y[k] + exp(2 pi/N  k sign) z[k];
+			//  x[k+0 + 0N/2] = y[k] + exp(i 2 pi/N  k sign) z[k];
 			//
 			//               == y[k] + (cos(a k) + i sin(a k sign)) z[k]
 			//
-			//
-			//  x[k+0 + 1N/2] = y[k] - exp(2 pi/N  k sign) z[k];
+			//  x[k+0 + 1N/2] = y[k] - exp(i 2 pi/N  k sign) z[k];
 			//
 			//               == y[k] - (cos(a k) + i sin(a k sign)) z[k]
 			
@@ -79045,7 +79222,6 @@ class Fourier
 			//
 			//  x[2k+0 + 0N/2] = y[2k+0] + real((cos[k] + isin[k]) (z[2k+0] + iz[2k+1]));
 			//  x[2k+1 + 0N/2] = y[2k+1] + imag((cos[k] + isin[k]) (z[2k+0] + iz[2k+1]));
-			//
 			//  x[2k+0 + 1N/2] = y[2k+0] - real((cos[k] + isin[k]) (z[2k+0] + iz[2k+1]));
 			//  x[2k+1 + 1N/2] = y[2k+1] - imag((cos[k] + isin[k]) (z[2k+0] + iz[2k+1]));
 			
@@ -79062,26 +79238,25 @@ class Fourier
 				{
 					if (sign == 1)
 					{
-						x[k+0] = y[k+0]. add (
+						x[k+0] = y[k+0]. add(
 						
-						    (cos[k/2*m].multiply(z[k+0])). subtract
-						    (sin[k/2*m].multiply(z[k+1])) );
+						   (cos[k/2*m].multiply(z[k+0]). subtract(
+						    sin[k/2*m].multiply(z[k+1]))) );
 						
-						x[k+1] = y[k+1]. add (
+						x[k+1] = y[k+1]. add(
 						
-						    (cos[k/2*m].multiply(z[k+1])). add
-						    (sin[k/2*m].multiply(z[k+0])) );
+						   (cos[k/2*m].multiply(z[k+1]). add(
+						    sin[k/2*m].multiply(z[k+0]))) );
 						
+						x[k+0 + 2*n/2] = y[k+0]. subtract(
 						
-						x[k+0 + 2*n/2] = y[k+0]. subtract (
+						   (cos[k/2*m].multiply(z[k+0]). subtract(
+						    sin[k/2*m].multiply(z[k+1]))) );
 						
-						    (cos[k/2*m].multiply(z[k+0])). subtract
-						    (sin[k/2*m].multiply(z[k+1])) );
+						x[k+1 + 2*n/2] = y[k+1]. subtract(
 						
-						x[k+1 + 2*n/2] = y[k+1]. subtract (
-						
-						    (cos[k/2*m].multiply(z[k+1])). add
-						    (sin[k/2*m].multiply(z[k+0])) );
+						   (cos[k/2*m].multiply(z[k+1]). add(
+						    sin[k/2*m].multiply(z[k+0]))) );
 					}
 					
 					
@@ -79089,26 +79264,25 @@ class Fourier
 					{
 						//  Negate the sine
 						
-						x[k+0] = y[k+0]. add (
+						x[k+0] = y[k+0]. add(
 						
-						    (cos[k/2*m].multiply(z[k+0])). add
-						    (sin[k/2*m].multiply(z[k+1])) );
+						   (cos[k/2*m].multiply(z[k+0]). add(
+						    sin[k/2*m].multiply(z[k+1]))) );
 						
-						x[k+1] = y[k+1]. add (
+						x[k+1] = y[k+1]. add(
 						
-						    (cos[k/2*m].multiply(z[k+1])). subtract
-						    (sin[k/2*m].multiply(z[k+0])) );
+						   (cos[k/2*m].multiply(z[k+1]). subtract(
+						    sin[k/2*m].multiply(z[k+0]))) );
 						
+						x[k+0 + 2*n/2] = y[k+0]. subtract(
 						
-						x[k+0 + 2*n/2] = y[k+0]. subtract (
+						   (cos[k/2*m].multiply(z[k+0]). add(
+						    sin[k/2*m].multiply(z[k+1]))) );
 						
-						    (cos[k/2*m].multiply(z[k+0])). add
-						    (sin[k/2*m].multiply(z[k+1])) );
+						x[k+1 + 2*n/2] = y[k+1]. subtract(
 						
-						x[k+1 + 2*n/2] = y[k+1]. subtract (
-						
-						    (cos[k/2*m].multiply(z[k+1])). subtract
-						    (sin[k/2*m].multiply(z[k+0])) );
+						   (cos[k/2*m].multiply(z[k+1]). subtract(
+						    sin[k/2*m].multiply(z[k+0]))) );
 					}
 				}
 				
@@ -79148,21 +79322,19 @@ class Fourier
 		
 		//  Compute the fourier transform
 		//
-		//  x[k + 0 * N/2] = y[k] + exp(2 pi/N  k sign) z[k];
+		//  x[k + 0 * N/2] = y[k] + exp(i 2 pi/N k sign) z[k];
 		//
 		//                == y[k] + (cos(a k) + i sin(a k sign)) z[k]
 		//
-		//
-		//  x[k + 1 * N/2] = y[k] - exp(2 pi/N  k sign) z[k];
+		//  x[k + 1 * N/2] = y[k] - exp(i 2 pi/N k sign) z[k];
 		//
 		//                == y[k] - (cos(a k) + i sin(a k sign)) z[k]
 		//
 		//
-		//  Expand w into real and imaginary parts
+		//  Expand w into real and imag values
 		//
 		//  x[2k+0 + 0N/2] = y[2k+0] + real((cos[k] + i sin[k]) (z[2k+0] + i z[2k+1]));
 		//  x[2k+1 + 1N/2] = y[2k+1] + imag((cos[k] + i sin[k]) (z[2k+0] + i z[2k+1]));
-		//
 		//  x[2k+0 + 1N/2] = y[2k+0] - real((cos[k] + i sin[k]) (z[2k+0] + i z[2k+1]));
 		//  x[2k+1 + 1N/2] = y[2k+1] - imag((cos[k] + i sin[k]) (z[2k+0] + i z[2k+1]));
 		
@@ -79195,7 +79367,6 @@ class Fourier
 					{
 						x[k+0 + 0*n/2] = y[k+0] + (cos[k/2*m]*z[k+0] - sin[k/2*m]*z[k+1]);
 						x[k+1 + 0*n/2] = y[k+1] + (cos[k/2*m]*z[k+1] + sin[k/2*m]*z[k+0]);
-						
 						x[k+0 + 2*n/2] = y[k+0] - (cos[k/2*m]*z[k+0] - sin[k/2*m]*z[k+1]);
 						x[k+1 + 2*n/2] = y[k+1] - (cos[k/2*m]*z[k+1] + sin[k/2*m]*z[k+0]);
 					}
@@ -79206,7 +79377,6 @@ class Fourier
 						
 						x[k+0 + 0*n/2] = y[k+0] + (cos[k/2*m]*z[k+0] + sin[k/2*m]*z[k+1]);
 						x[k+1 + 0*n/2] = y[k+1] + (cos[k/2*m]*z[k+1] - sin[k/2*m]*z[k+0]);
-						
 						x[k+0 + 2*n/2] = y[k+0] - (cos[k/2*m]*z[k+0] + sin[k/2*m]*z[k+1]);
 						x[k+1 + 2*n/2] = y[k+1] - (cos[k/2*m]*z[k+1] - sin[k/2*m]*z[k+0]);
 					}
@@ -79224,100 +79394,20 @@ class Fourier
 	
 	
 	
-	private static double[] fftr(final double[] x, final int sign)
+	private static double[] fftr(final double[] x, int sign)
 	{
 	
 		//  A recursive fast fourier transform method
 		
-		
-		//  Test before recursion
-		
-		//  (the fourier transform of any number equals itself
-		//  because it only has the zeroth frequency which is
-		//  the sum or average of the numbers, and the sum or
-		//  average of one number equals itself)
-		
-		if (x.length / 2 == 1) return x;
-		
-		//  Initialize the y and z arrays
-		
-		double[] y = new double[x.length /2];
-		double[] z = new double[x.length /2];
-		
-		for (int i = 0; i < x.length/2 /2; i++)
-		{
-			y[2*i + 0] = x[4*i + 0];
-			y[2*i + 1] = x[4*i + 1];
-			
-			z[2*i + 0] = x[4*i + 2];
-			z[2*i + 1] = x[4*i + 3];
-		}
-		
-		//  Test before recursion
-		
-		y = fftr(y, sign);
-		z = fftr(z, sign);
-		
-		
-		//  n = the number of complex numbers
-		
-		final int n = x.length / 2;
-		
-		
-		//  Create a sine and cosine table
-		
-		final double[] sin = Math.sin_table(n);
-		final double[] cos = Math.cos_table(n);
-		
-		final int m = sin.length / n;
-		
-		
-		for (int k = 0; k < n; k+=2)
-		{
-			if (sign == 1)
-			{
-				x[k+0 + 0*n/2] = y[k+0] + (cos[k/2*m]*z[k+0] - sin[k/2*m]*z[k+1]);
-				x[k+1 + 0*n/2] = y[k+1] + (cos[k/2*m]*z[k+1] + sin[k/2*m]*z[k+0]);
-				
-				x[k+0 + 2*n/2] = y[k+0] - (cos[k/2*m]*z[k+0] - sin[k/2*m]*z[k+1]);
-				x[k+1 + 2*n/2] = y[k+1] - (cos[k/2*m]*z[k+1] + sin[k/2*m]*z[k+0]);
-			}
-			
-			else if (sign == -1)
-			{
-				x[k+0 + 0*n/2] = y[k+0] + (cos[k/2*m]*z[k+0] - sin[k/2*m]*-1.0D*z[k+1]);
-				x[k+1 + 0*n/2] = y[k+1] + (cos[k/2*m]*z[k+1] + sin[k/2*m]*-1.0D*z[k+0]);
-				
-				x[k+0 + 2*n/2] = y[k+0] - (cos[k/2*m]*z[k+0] - sin[k/2*m]*-1.0D*z[k+1]);
-				x[k+1 + 2*n/2] = y[k+1] - (cos[k/2*m]*z[k+1] + sin[k/2*m]*-1.0D*z[k+0]);
-			}
-		}
-		
-		return x;
-	}
-	
-	
-	
-	
-	private static double[] fftr(final double[] x, int sign, int limit)
-	{
-	
-		//  A recursive fast fourier transform method
-		
-		//  Recursion can be used to partition the work load
-		//  among multiple threads which run the iterative fft
-		//  or the slow / quadratic dft.
-		
-		//  Note that the recursive fft does not use fftSwap().
+		//  Note that the recursive fft does not use fftSwap.
 		//  Only the iterative fft uses the fftSwap method.
 		
 		//  Test before recursion
 		
-		if (x.length / 2 <= limit)
+		if (x.length / 2 <= minsize)
 		
-		   // return dft(x, sign);
+		    return dft(x, sign);
 		
-		      return ffti(x, sign);
 		
 		//  Initialize the y and z arrays
 		
@@ -79335,8 +79425,8 @@ class Fourier
 		
 		//  Test before recursion
 		
-		y = fftr(y, sign, limit);
-		z = fftr(z, sign, limit);
+		y = fftr(y, sign);
+		z = fftr(z, sign);
 		
 		
 		final int n = x.length / 2;
@@ -79357,7 +79447,6 @@ class Fourier
 			{
 				x[k+0 + 0*n/2] = y[k+0] + (cos[k/2*m]*z[k+0] - sin[k/2*m]*z[k+1]);
 				x[k+1 + 0*n/2] = y[k+1] + (cos[k/2*m]*z[k+1] + sin[k/2*m]*z[k+0]);
-				
 				x[k+0 + 2*n/2] = y[k+0] - (cos[k/2*m]*z[k+0] - sin[k/2*m]*z[k+1]);
 				x[k+1 + 2*n/2] = y[k+1] - (cos[k/2*m]*z[k+1] + sin[k/2*m]*z[k+0]);
 			}
@@ -79366,7 +79455,6 @@ class Fourier
 			{
 				x[k+0 + 0*n/2] = y[k+0] + (cos[k/2*m]*z[k+0] - sin[k/2*m]*-1.0D*z[k+1]);
 				x[k+1 + 0*n/2] = y[k+1] + (cos[k/2*m]*z[k+1] + sin[k/2*m]*-1.0D*z[k+0]);
-				
 				x[k+0 + 2*n/2] = y[k+0] - (cos[k/2*m]*z[k+0] - sin[k/2*m]*-1.0D*z[k+1]);
 				x[k+1 + 2*n/2] = y[k+1] - (cos[k/2*m]*z[k+1] + sin[k/2*m]*-1.0D*z[k+0]);
 			}
@@ -79411,7 +79499,6 @@ class Fourier
 				{
 					y[2*k + 0] = x[j + 4*k + 0];
 					y[2*k + 1] = x[j + 4*k + 1];
-					
 					z[2*k + 0] = x[j + 4*k + 2];
 					z[2*k + 1] = x[j + 4*k + 3];
 				}
@@ -79450,7 +79537,6 @@ class Fourier
 				{
 					y[2*k + 0] = x[j + 4*k + 0];
 					y[2*k + 1] = x[j + 4*k + 1];
-					
 					z[2*k + 0] = x[j + 4*k + 2];
 					z[2*k + 1] = x[j + 4*k + 3];
 				}
@@ -79476,7 +79562,9 @@ class Fourier
 	{
 		Number[] x = new Number[array.length];
 		
-		for (int i = 0; i < x.length; i++) x[i] = array[i];
+		for (int i = 0; i < x.length; i++)
+		
+		    x[i] = array[i];
 		
 		int N = x.length / 2;
 		
@@ -79487,13 +79575,12 @@ class Fourier
 			Number[] y = new Number[N/i];
 			Number[] z = new Number[N/i];
 			
-			for (int j = 0; j < 2*N; j += 2*N / i)
+			for (int j = 0; j < 2*N; j += 2*N/i)
 			{
-				for (int k = 0; k < y.length / 2; k++)
+				for (int k = 0; k < y.length/2; k++)
 				{
 					y[2*k + 0] = x[j + 4*k + 0];
 					y[2*k + 1] = x[j + 4*k + 1];
-					
 					z[2*k + 0] = x[j + 4*k + 2];
 					z[2*k + 1] = x[j + 4*k + 3];
 				}
@@ -79532,7 +79619,21 @@ class Fourier
 	}
 	
 	
-	private static double[] realToComplexArray(double[] array)
+	private static int[] intArrayToComplexArray(int[] array)
+	{
+		//  converts ints from real to complex
+		
+		int[] complex_array = new int[2*array.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    complex_array[2*i] = array[i];
+		
+		return complex_array;
+	}
+	
+	
+	private static double[] realArrayToComplexArray(double[] array)
 	{
 		//  converts doubles from real to complex
 		
@@ -79770,7 +79871,7 @@ class Fourier
 
 
 //  These classes are included as an example to illustrate how encryption
-//  can be done using compound / composite / multiple public keys.
+//  can be done using composite / multiple public keys.
 //
 //  The SSLSocket and SSLServerSocket classes can be excerpted and used
 //  in any program that is open source and has a free or copyleft license
