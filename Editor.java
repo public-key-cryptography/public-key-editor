@@ -1,4 +1,4 @@
-	
+ 	
 	
 	
 	/************************************************
@@ -11,13 +11,11 @@
 	
 	
 	
-	A java text editor and email client for public key
-	cryptography and encryption.
-	
-	The ciphers use hypercomplex and hyper-dimensional numbers
-	(including vectors, quaternions, matrices, cubes, and tes-
-	seracts), polynomials, multi-variable, multi-equation, and
-	multi-dimensional arithmetic, and Merkle-Hellman knapsacks.
+	A java text editor and email client for public key cryptography
+	and encryption. The ciphers use hypercomplex and hyper-dimensional
+	numbers (including vectors, quaternions, matrices, cubes, and tes-
+	seracts), polynomials, multi-variable, multi-equation, and multi-
+	dimensional arithmetic, and Merkle-Hellman knapsacks.
 	
 	
 	github.com/public-key-cryptography
@@ -233,9 +231,9 @@
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but
-	could also return the message state number after each message size such as 1 size 0 \n 2 size 2
-	\n 3 size 1 ... This would be backward compatible with the Pop protocol because it would only
-	display a number if a user changes the state of a message.
+	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
+	\n, 3 size 1 \n, ... This would be backward compatible with the POP mail protocol because it would
+	only display a number if a user changes the state of a message.
 	
 	Or the email headers could include a stat:0,1,2,...,9 or stat=0,1,2,...,9 variable so that the
 	mail program or email header class could parse the header for the message state just as it parses
@@ -401,36 +399,6 @@
 	functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
 	nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
 	
-	Even with quantum computing or a polynomial-time algorithm, the Rabin cipher might still be un-
-	breakable if the key size is large enough. For example, if a classical algorithm exists for factor-
-	ing numbers and has a running time of O(n^4) (or O(n^3.58)) which is the same time as prime number
-	generation, then for a 1 megabit number the algorithm would require (10^6)^4 or a septillion multi-
-	plications which could require 10^27 to 10^30 (or 10^26 to 10^29) operations.
-	
-	If the factorization algorithm requires a matrix then there would also be large space requirements
-	unless the matrix is sparse because a 10^6 x 10^6 matrix that has a 10^6 modulus would occupy 10^18
-	bits or 10^17 bytes which is a hundred petabytes of memory. (A 512 K-bit number would reduce the
-	storage space to only ten petabytes or 10,000 terabytes of memory.)
-	
-	A quantum computer could reduce the running time to O(n^2.58) or O(n^2 log n) for large numbers
-	which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the factors f1 =
-	(a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-residue.
-	For example, if n = 77, a quantum computer would compute the order of a^x (mod n) or lambda(n) =
-	lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^
-	(lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The factors can be solved
-	by this method for any modulus n because at least half of the bases are quadratic non-residues or
-	non-squares modulo n.
-	
-	A quantum computer can only attack the integer factorization problem by solving the unit discrete
-	log problem a^x == 1 (mod n), not by solving the quadratic residue problem x^2 == 1 (mod n) because
-	the solution to a^x == 1 is unambiguous whereas the quadratic equation x^2 == 1 has multiple or 2^k
-	solutions where k is the number of prime powers in the modulus. The equation x^2 == 1 (mod n) is
-	the difference of squares problem x^2 - 1 == k n which factors into (x + 1) (x - 1) == k n. This
-	implies that (x + 1) and (x - 1) each contains a factor of n. (The trivial solutions x == 1 and x
-	== -1 don't factor the modulus n because there is no modular reduction which means that the modulus
-	could be any number since k n == 0. If n = 77, then the solution is x1 == 43 and x2 == - x1 ==
-	77 - 43 == 34 because 43^2 == 34^2 == 1 (mod 77))
-	
 	The Rabin cipher was included in the public key class to test the software for asymmetrical public
 	key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are
 	symmetrical which means that they use the same methods for public key generation and public key
@@ -447,18 +415,12 @@
 	equation for the one-time signature key r = a ^ k (mod p), and a third equation for the signature
 	s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
 	
-	The integer discrete log cipher (modulo a prime) requires a public key vector y1 = a1^x1 a2^x2 and
-	y2 = a2^x1 a3^x2 (mod p) instead of a public key number y = a ^ x (mod p) so that a cryptanalyst
-	would have to solve the discrete log problem to find the public key agreement e = a1^(k1 x1) a2^
-	(k1 x2 + k2 x1) a3^(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a
-	matrix-like cipher because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use
-	matrix arithmetic.
-	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
-	(mod p) are not included in the software because they are also broken by quantum computing. In
-	addition, the complexity of elliptic curves makes the ciphers vulnerable to attack without solving
-	the ecdlp or underlying math problem if the parameters a, b, and p are not chosen correctly, and
-	nobody knows how to choose the parameters of the curves to protect against all unknown attacks.
+	(mod p) are not included in the software because the elliptic curve discrete log function has a
+	periodicity. In addition, the complexity of elliptic curves makes the ciphers vulnerable to attack
+	without solving the ecdlp or underlying math problem if the parameters a, b, and p are not chosen
+	correctly, and nobody knows how to choose the parameters of the curves to protect against all un-
+	known attacks.
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included
 	in the public key class because they are not secure for any key size.
@@ -2088,8 +2050,8 @@ class Programs
 		
 		private float fontsize = textfont.getSize();
 		
-		private int width  = (int) d.getWidth() * 5/8;
-		private int height = (int) d.getHeight()* 5/6;
+		private int width  = (int) d.getWidth() * 55/64;
+		private int height = (int) d.getHeight()* 1/1;
 		
 		private boolean showhidebuttons = true;
 		
@@ -10038,7 +10000,7 @@ class Programs
 		
 		private class EncryptDirectoryListener implements ActionListener
 		{
-			EncryptDecryptDirectory ed = new EncryptDecryptDirectory(frame);
+			EncryptDirectory ed = new EncryptDirectory(frame);
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -10068,7 +10030,7 @@ class Programs
 		
 		private class DecryptDirectoryListener implements ActionListener
 		{
-			EncryptDecryptDirectory dd = new EncryptDecryptDirectory(frame);
+			EncryptDirectory dd = new EncryptDirectory(frame);
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -16989,7 +16951,7 @@ class Programs
 		
 		private class EncryptDirectoryListener implements ActionListener
 		{
-			EncryptDecryptDirectory ed = new EncryptDecryptDirectory(frame);
+			EncryptDirectory ed = new EncryptDirectory(frame);
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -17019,7 +16981,7 @@ class Programs
 		
 		private class DecryptDirectoryListener implements ActionListener
 		{
-			EncryptDecryptDirectory dd = new EncryptDecryptDirectory(frame);
+			EncryptDirectory dd = new EncryptDirectory(frame);
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -19133,7 +19095,7 @@ class Programs
 		
 		private class EncryptDirectoryListener implements ActionListener
 		{
-			EncryptDecryptDirectory ed = new EncryptDecryptDirectory(frame);
+			EncryptDirectory ed = new EncryptDirectory(frame);
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -19163,7 +19125,7 @@ class Programs
 		
 		private class DecryptDirectoryListener implements ActionListener
 		{
-			EncryptDecryptDirectory dd = new EncryptDecryptDirectory(frame);
+			EncryptDirectory dd = new EncryptDirectory(frame);
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -39061,7 +39023,7 @@ class RenameFileListener implements ActionListener
 
 
 
-class EncryptDecryptDirectory
+class EncryptDirectory
 {
 
 
@@ -39128,7 +39090,7 @@ class EncryptDecryptDirectory
 	private boolean test;
 	
 	
-	public EncryptDecryptDirectory(JFrame frame)
+	public EncryptDirectory(JFrame frame)
 	{
 		this.frame = frame;
 		
@@ -40227,7 +40189,7 @@ class EncryptDecryptDirectory
 	}
 }
 
-//  End class EncryptDecryptDirectory
+//  End class EncryptDirectory
 
 
 
@@ -44785,7 +44747,7 @@ class Documents
 		
 		JScrollPane scrollpane;
 		
-		int rows = 28, cols = 44;
+		int rows = 32, cols = 44;
 		
 		
 		//  If any line contains more than max line chars set
@@ -50237,12 +50199,19 @@ class PublicKey
 	//  least common remainder x = lcr(x mod q[], q[]) where x mod q[] is the set of solutions to the re-
 	//  duced discrete log problems.
 	//
-	//  The integer discrete log cipher requires more than one variable for the public key and more than
-	//  one exponentiation for the secret key. For the integer discrete log cipher the public key is the
-	//  array y = { y1 = a^x1 b^x2, y2 = b^x^1 c^x2 (mod p) } and the secret key is the number e == y1^k1
-	//  y2^k2 == a^(k1 x1) b^(k1 x + k2 x1) c^(k2 x2) (mod p). If only one variable is used, then the prob-
-	//  lem of computing the secret key e = a^(k x) (mod p) reduces to the integer log multiplication prob-
-	//  lem instead of the integer log extraction problem.
+	//  The integer discrete log cipher (modulo a prime) requires a public key vector y1 = a1^x1 a2^x2 and
+	//  y2 = a2^x1 a3^x2 (mod p) instead of a public key number y = a ^ x (mod p) so that a cryptanalyst
+	//  would have to solve the discrete log problem to find the public key agreement e = a1^(k1 x1) a2^
+	//  (k1 x2 + k2 x1) a3^(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a
+	//  matrix-like cipher because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use
+	//  matrix arithmetic. This cipher can still be broken by quantum computing because the function has a
+	//  periodicity and the solution is unambiguous.
+	//
+	//  The complex integer discrete log cipher y = x (a1 + i b1) ^ (p-1) ^ x1 (mod p) where p = 3 mod 4,
+	//  (p+1)/4 is prime, and e == y^k (real) / y^k (imag) may not be breakable by quantum computing because
+	//  the function is not periodic. The multi-variable cipher y1 = x (a1 + i b1) ^ (p-1) ^ x1 (a2 + i b2)
+	//  ^ (p-1) ^ x2; y2 = x (a2 + i b2) ^ (p-1) ^ x1 (a3 + i b3) ^ (p-1) ^ x3; e = y1^k1 y2^k2 (real) /
+	//  y1^k2 y2^k2 (imag) is not susceptible to quantum computing because the solution is ambiguous.
 	//
 	//  Elliptic curve ciphers, 1x1 polynomial matrix discrete log ciphers, integer log ciphers, and the
 	//  Rabin / factorization cipher are not used in the public key class because these ciphers are suscept-
@@ -59413,12 +59382,14 @@ class Signature
 	
 	
 	
-	//  A Latin square / circulant matrix discrete log
-	//  digital signature algorithm
+	//  A complex integer algorithm or Latin square /
+	//  circulant matrix algorithm for digital signatures
 	//
-	//  This cipher is used as an example and was used to test
-	//  the Signature class. The Latin square discrete log sig-
-	//  nature cipher could be replaced by another matrix cipher.
+	//  A1 = (a1 + i b1) ^ (p-1) (mod p = 3 mod 4)
+	//  A2 = (a2 + i b2) ^ (p-1) (mod p = 3 mod 4)  or
+	//
+	//  A1 = { { a1, b1 }, { b1, a1 } }
+	//  B1 = { { a2, b2 }, { b2, a2 } }
 	//
 	//             x1   x2
 	//  Y  =  x  A1   A2    (mod p)  static signature key
@@ -59426,10 +59397,13 @@ class Signature
 	//             k1   k2
 	//  R  =  k  A1   A2    (mod p)  one-time signature key
 	//
-	//  s1  =  k1 m + x1 r (mod q = p-1)  signature equation
-	//  s2  =  k2 m + x2 r (mod q = p-1)  signature equation
+	//  s1  =  k1 m + x1 r (mod q)  signature equation
+	//  s2  =  k2 m + x2 r (mod q)  signature equation
 	//
-	//  where r is a hash or integer value
+	//  where q = p+1 = 4*prime for complex integers or
+	//        q = p-1 for Latin squares / matrices
+	//
+	//  and r is a hash or integer value
 	//  of R such as r = (r11||r12) mod q
 	//
 	//    m   r        s1   s2
@@ -59560,11 +59534,17 @@ class Signature
 	//  Class members
 	
 	
-	//  Latin square discrete log
-	//  digital signature cipher
+	//  A Latin square / circulant matrix discrete log
+	//  digital signature algorithm
 	//
 	//             x1   x2
 	//  Y  =  x  A1   A2    (mod p)
+	
+	//  This cipher is used as an example and was used to test
+	//  the Signature class. The Latin square discrete log sig-
+	//  nature algorithm could be replaced by another matrix or
+	//  complex integer algorithm.
+	//
 	
 	final public static String lsdl120 = "lsdl120";
 	
@@ -59623,7 +59603,7 @@ class Signature
 	//  one out of every septillion squared numbers
 	//  or pairs of { x1, x2 } is a solution.
 	//
-	//                           120-40         120+40
+	//                          120-40         120+40
 	//  p = q r + 1  where r = 2      and q ~ 2
 	//
 	//  Number r = new Number(2).pow(120 - 40);
@@ -59701,7 +59681,7 @@ class Signature
 		
 		//  Generate the signature key
 		
-		if (cipher.equalsIgnoreCase("")); // do nothing
+		if (cipher.equalsIgnoreCase("")) ; // do nothing
 		
 		else  generateKey();
 	}
@@ -78550,41 +78530,41 @@ class Fourier
 	//
 	//  a0 cos 0 x + b0 sin 0 x + a1 cos 1 x + b1 sin 1 x + ... + ak cos k x + sin k x
 	//
-	//  == a[k] cos k x + b[k] sin k x  where the k = 0,1,2,3,..., N-1 for a finite series.
+	//  == a[k] cos k x + b[k] sin k x  where the k = 0,1,2,3,...,N-1 for a finite series.
 	//
-	//  The series x[n] = a[k] cos(2 pi/N k x) + b[k] sin(2 pi/N k x) is called the Fourier
-	//  series of the function x(n), and the constants a[] and b[] are called the Fourier
-	//  coefficients.
+	//  The series a[k] cos(2 pi/N k x) + b[k] sin(2 pi/N k x) is called the Fourier series
+	//  of the function x(n) and the constants a[] and b[] are called the Fourier coefficients.
 	//
-	//  The Fourier coefficients a[] and b[] represent the amplitudes of the sine and
-	//  cosine terms in the series, and the indexer k represents the frequencies of the
-	//  sine and cosine functions which range from 0 to N-1 where N is the size of the
-	//  array. The zeroth frequency or Fourier coefficient x[k = 0] is the sum or average
-	//  of all the values of x[n] which are the amplitudes of the function or curve.
+	//  The Fourier coefficients a[] and b[] represent the amplitudes of the sine and cosine
+	//  terms in the series, and the indexer k represents the integer multiples of the fre-
+	//  quencies of the sine and cosine functions which range from 0 to N-1 where N is the
+	//  size of the array. The zeroth frequency or Fourier coefficient x[k = 0] is the sum or
+	//  average of all the values of x[n] which are the amplitudes of the function or curve.
 	//
 	//  The discrete Fourier transform decomposes an array of values x[n] into an array of
 	//  amplitudes of sines and cosines x[k], and the inverse Fourier transforms recomposes
 	//  or reconstructs the function x[n] from the amplitudes or coefficients of the sine
-	//  and cosine terms x[k].
+	//  and cosine terms x[k]. The Fourier transform is useful for extracting the frequency
+	//  components of a function or curve x(n) or x[n].
 	//
 	//  The formulas for computing the Fourier transform and inverse transform are
 	//
-	//    x[k] = the sum of x[n] w ^ [k n] where w = exp(i 2 pi/N)
+	//  x[k] = the sum of x[n] w ^ [k n] where w = exp(i 2 pi/N)
 	//
-	//    ==  [ x[n] real cos(2 pi/N k n) - x[n] imag sin(2 pi/N k n) ]
-	//    + i [ x[n] real sin(2 pi/N k n) + x[n] imag cos(2 pi/N k n) ]
+	//  ==  [ x[n] real cos(2 pi/N k n) - x[n] imag sin(2 pi/N k n) ]
+	//  + i [ x[n] real sin(2 pi/N k n) + x[n] imag cos(2 pi/N k n) ]
 	//
-	//    x[n] = the sum of 1/N x[k] w ^ [-k n] where w = exp(i 2 pi/N)
+	//  x[n] = the sum of 1/N x[k] w ^ [-k n] where w = exp(i 2 pi/N)
 	//
-	//    ==  [ x[k] real cos(-2 pi/N k n) - x[k] imag sin(-2 pi/N k n) ]
-	//    + i [ x[k] real sin(-2 pi/N k n) + x[k] imag cos(-2 pi/N k n) ]
+	//  ==  [ x[k] real cos(-2 pi/N k n) - x[k] imag sin(-2 pi/N k n) ]
+	//  + i [ x[k] real sin(-2 pi/N k n) + x[k] imag cos(-2 pi/N k n) ]
 	//
-	//    ==  [ x[k] real cos(2 pi/N k n) + x[k] imag sin(2 pi/N k n) ]
-	//    + i [-x[k] real sin(2 pi/N k n) + x[k] imag cos(2 pi/N k n) ]
+	//  ==  [ x[k] real cos(2 pi/N k n) + x[k] imag sin(2 pi/N k n) ]
+	//  + i [-x[k] real sin(2 pi/N k n) + x[k] imag cos(2 pi/N k n) ]
 	//
 	//  Computing the Fourier transform requires a quadratic number of multiplications
 	//  because for each x[k] the index n has to be iterated from 0 to N-1 and for each
-	//  x[n] the index k has to be iterated from 0 to N-1. The Danielson Lanczos lemma can
+	//  x[n] the index k has to be iterated from 0 to N-1. The Danielson-Lanczos lemma can
 	//  be used to reduce the running time from O(n^2) to O(n log n) where n is the number
 	//  of elements in the array.
 	
@@ -78594,21 +78574,42 @@ class Fourier
 	//  The only two public methods in the Fourier class
 	//  are the transform and multiply methods
 	
-	//  Set the minimum size or threshold for recursion and
-	//  set the min size for using the dft instead of the fft.
-	//  
-	//  the fft method is faster than the dft method if the number
-	//  of elements is > 64 but it may depend on the implementation.
-	//  (At 256 elements, the fft is 4 times as fast.)
-	//
-	//  Programs that use recursion instead of iteration set the
-	//  min size or threshold = 1 because the Fourier transform of
-	//  a one-element array or a single number equals itself. This
-	//  avoids using the dft method since the transform does not
-	//  have to be computed for a single number but it requires a
-	//  large number of simultaneous function calls.
 	
-	private static int minsize = 64;
+	//  The fft method is faster than the dft method if the number
+	//  of elements is > 64 but it may depend on the implementation.
+	//  (At 1024 elements, the fft is 16 times as fast and at 1 M
+	//  elements the fft is 16 K times as fast as the dft.)
+	//
+	//  Programs that use recursion instead of iteration set the min
+	//  size or threshold = 1 because the Fourier transform of a one-
+	//  element array or a single number equals itself. This avoids
+	//  using the dft method since the transform does not have to be
+	//  computed for a single number, but the dft is still required
+	//  for array lengths that are not a power of 2.
+	
+	//  Iteration is used instead of recursion because it is twice as
+	//  fast and it doesn't require any function calls, but recursion
+	//  can be enabled for testing by commenting the return ffti (x,
+	//  sign) and uncommenting the return fftr(x, sign).
+	//
+	//  Testing the ffti and fftr methods using the following code
+	//  shows that iteration is only twice as fast as recursion.
+	//  Setting the minsize = 1 requires as many function calls as
+	//  the number of elements in the array but the code is just as
+	//  fast even for large array sizes.
+	//
+	//  final int arraysize = 1024*1024;
+	//  double[] array = new double[arraysize];
+	//  for (int i = 0; i < array.length; i++) array[i] = i;
+	//  array = Convert.realArrayToComplexArray(array);
+	//  for (int i = 0; i < 16; i++) Fourier.transform(array, 1);
+	
+	
+	
+	//  Set the minimum size or threshold for recursion and for
+	//  using the dft instead of the fft.
+	
+	private static int minsize = 1;
 	
 	
 	
@@ -78648,8 +78649,8 @@ class Fourier
 	public static double[] transform(double[] array, int sign)
 	{
 	
-		//  computes the discrete fourier transform
-		//  or dft of a set of complex numbers
+		//  computes the discrete fourier transform or dft of a
+		//  set of complex numbers
 		
 		//  If the array is small use the quadratic / O(n^2) dft
 		//  (The slow dft also allows sizes that are not powers of 2)
@@ -78693,13 +78694,13 @@ class Fourier
 	public static Number[] transform(Number[] array, int sign)
 	{
 	
-		//  computes the discrete fourier transform
-		//  or dft of a set of real numbers.
-		
-		//  The inverse transform divides the array by the number of
-		//  elements, but some implementations divide both the transform
-		//  and the inverse transform by the sqrt of the number of ele-
-		//  ments to make the transform symmetrical.
+		//  computes the discrete fourier transform or dft of a set of real
+		//  or complex numbers using the fast / fft or slow / quadratic dft.
+		//
+		//  The inverse transform divides the array by the number of ele-
+		//  ments, but some implementations divide both the transform and
+		//  the inverse transform by the sqrt of the number of elements
+		//  to make the transform symmetrical.
 		
 		
 		Number[] x = new Number[array.length];
@@ -78724,13 +78725,11 @@ class Fourier
 			for (int i = 0; i < y.length; i++)
 			
 			    y[i] = y[i] .divide(t);
-			
-			System.out.println();
 		}
 		
-		//  Set the precision to a double
+		//  Set the precision
 		
-		int p = 16;
+		int p = 8;
 		
 		for (int i = 0; i < y.length; i++)
 		

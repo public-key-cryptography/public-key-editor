@@ -201,9 +201,9 @@
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but
-	could also return the message state number after each message size such as 1 size 0 \n 2 size 2
-	\n 3 size 1 ... This would be backward compatible with the Pop protocol because it would only
-	display a number if a user changes the state of a message.
+	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
+	\n, 3 size 1 \n, ... This would be backward compatible with the POP mail protocol because it would
+	only display a number if a user changes the state of a message.
 	
 	Or the email headers could include a stat:0,1,2,...,9 or stat=0,1,2,...,9 variable so that the
 	mail program or email header class could parse the header for the message state just as it parses
@@ -369,36 +369,6 @@
 	functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
 	nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
 	
-	Even with quantum computing or a polynomial-time algorithm, the Rabin cipher might still be un-
-	breakable if the key size is large enough. For example, if a classical algorithm exists for factor-
-	ing numbers and has a running time of O(n^4) (or O(n^3.58)) which is the same time as prime number
-	generation, then for a 1 megabit number the algorithm would require (10^6)^4 or a septillion multi-
-	plications which could require 10^27 to 10^30 (or 10^26 to 10^29) operations.
-	
-	If the factorization algorithm requires a matrix then there would also be large space requirements
-	unless the matrix is sparse because a 10^6 x 10^6 matrix that has a 10^6 modulus would occupy 10^18
-	bits or 10^17 bytes which is a hundred petabytes of memory. (A 512 K-bit number would reduce the
-	storage space to only ten petabytes or 10,000 terabytes of memory.)
-	
-	A quantum computer could reduce the running time to O(n^2.58) or O(n^2 log n) for large numbers
-	which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the factors f1 =
-	(a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-residue.
-	For example, if n = 77, a quantum computer would compute the order of a^x (mod n) or lambda(n) =
-	lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^
-	(lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The factors can be solved
-	by this method for any modulus n because at least half of the bases are quadratic non-residues or
-	non-squares modulo n.
-	
-	A quantum computer can only attack the integer factorization problem by solving the unit discrete
-	log problem a^x == 1 (mod n), not by solving the quadratic residue problem x^2 == 1 (mod n) because
-	the solution to a^x == 1 is unambiguous whereas the quadratic equation x^2 == 1 has multiple or 2^k
-	solutions where k is the number of prime powers in the modulus. The equation x^2 == 1 (mod n) is
-	the difference of squares problem x^2 - 1 == k n which factors into (x + 1) (x - 1) == k n. This
-	implies that (x + 1) and (x - 1) each contains a factor of n. (The trivial solutions x == 1 and x
-	== -1 don't factor the modulus n because there is no modular reduction which means that the modulus
-	could be any number since k n == 0. If n = 77, then the solution is x1 == 43 and x2 == - x1 ==
-	77 - 43 == 34 because 43^2 == 34^2 == 1 (mod 77))
-	
 	The Rabin cipher was included in the public key class to test the software for asymmetrical public
 	key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are
 	symmetrical which means that they use the same methods for public key generation and public key
@@ -415,18 +385,12 @@
 	equation for the one-time signature key r = a ^ k (mod p), and a third equation for the signature
 	s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
 	
-	The integer discrete log cipher (modulo a prime) requires a public key vector y1 = a1^x1 a2^x2 and
-	y2 = a2^x1 a3^x2 (mod p) instead of a public key number y = a ^ x (mod p) so that a cryptanalyst
-	would have to solve the discrete log problem to find the public key agreement e = a1^(k1 x1) a2^
-	(k1 x2 + k2 x1) a3^(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a
-	matrix-like cipher because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use
-	matrix arithmetic.
-	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
-	(mod p) are not included in the software because they are also broken by quantum computing. In
-	addition, the complexity of elliptic curves makes the ciphers vulnerable to attack without solving
-	the ecdlp or underlying math problem if the parameters a, b, and p are not chosen correctly, and
-	nobody knows how to choose the parameters of the curves to protect against all unknown attacks.
+	(mod p) are not included in the software because the elliptic curve discrete log function has a
+	periodicity. In addition, the complexity of elliptic curves makes the ciphers vulnerable to attack
+	without solving the ecdlp or underlying math problem if the parameters a, b, and p are not chosen
+	correctly, and nobody knows how to choose the parameters of the curves to protect against all un-
+	known attacks.
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included
 	in the public key class because they are not secure for any key size.
