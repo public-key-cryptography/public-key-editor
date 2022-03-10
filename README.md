@@ -258,11 +258,12 @@
 	
 	A public key Y is created by using a public parameter A to encrypt a private variable X. The sim-
 	plest public key function is Y = A X. This is similar to private key encryption except that A is
-	chosen to be a non-invertible public parameter instead of a secret message, and X is a one-time
-	private key instead of a reusable key. Also, instead of A being encrypted by the private key X, the
-	private key X is encrypted by the public parameter A. In public key cryptography the variables are
-	reversed; the private key X is the plaintext or plaindata and the public key Y is the ciphertext,
-	cipherdata or cipher.
+	a non-invertible public parameter instead of a secret message, and X is the secret message encrypt-
+	ed by the public parameter A. In private key cryptography A would be a plaintext message encrypted
+	by a secret key matrix X, but in public key cryptography X is the plaintext message encrypted by
+	the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher. Because the
+	encryption key A is public, the security of public key cryptography is based entirely on the non-
+	invertibility of the function instead of the secrecy of the private key.
 	
 	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A send-
 	er who wants to send an encrypted message computes the one-time public key Y = A K if the private
@@ -280,14 +281,20 @@
 	the matrix has to be pre- or post-multiplied by the inverse of the divisor, and the divisor has to
 	be an invertible or non-singular matrix.)
 	
-	The ciphers can also be generalized by using multi-dimensional multiplication instead of using only
+	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of
 	one-dimensional multiplication. For example, for 2 D multiplication, matrices can multiplied from
-	left to right and from top to bottom.
+	left to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional
+	algebra instead of one-dimensional algebra by using points on a plane a0 + a1 i instead of points
+	on a line, points in a cube a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which
+	is a quaternion), or points in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2
+	== 1 and i j == k, j k == i, k i == j, ... Matrices of multi-dimensional points can also use multi-
+	dimensional arithmetic in addition to multi-dimensional algebra.
 	
-	The equations can be generalized further by using a symmetric matrix of matrices A[][] =
-	{ { A1, A2 } { A2, A3 } }, reducing the 2x2 block matrix to a 2x1 block matrix or public key vector
-	Y[] = { A1^x1 A2^x2, A2^x1 A3^x2 }, and then reducing the public key vector Y[] to a 1x1 block ma-
-	trix or secret key E = Y[1]^k1 Y2[2]^k2 == A1^(k1 x1) A2^(k1 x2 + k2 x1) A3^(k2 x2).
+	Ciphers can also be generalized by using a symmetric matrix of matrices A[][] = { { A1, A2 }
+	{ A2, A3 } } as a public parameter or blank public key, reducing the 2x2 block matrix to a 2x1
+	block matrix or public key vector Y[] = { A1^x1 A2^x2, A2^x1 A3^x2 } where x1, x2 are the private
+	keys, and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1]^k1
+	Y2[2]^k2 == A1^(k1 x1) A2^(k1 x2 + k2 x1) A3^(k2 x2).
 	
 	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Be-
 	fore they were called matrices, rectangular arrays of numbers were referred to as blocks. A block

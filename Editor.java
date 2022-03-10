@@ -288,11 +288,12 @@
 	
 	A public key Y is created by using a public parameter A to encrypt a private variable X. The sim-
 	plest public key function is Y = A X. This is similar to private key encryption except that A is
-	chosen to be a non-invertible public parameter instead of a secret message, and X is a one-time
-	private key instead of a reusable key. Also, instead of A being encrypted by the private key X, the
-	private key X is encrypted by the public parameter A. In public key cryptography the variables are
-	reversed; the private key X is the plaintext or plaindata and the public key Y is the ciphertext,
-	cipherdata or cipher.
+	a non-invertible public parameter instead of a secret message, and X is the secret message encrypt-
+	ed by the public parameter A. In private key cryptography A would be a plaintext message encrypted
+	by a secret key matrix X, but in public key cryptography X is the plaintext message encrypted by
+	the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher. Because the
+	encryption key A is public, the security of public key cryptography is based entirely on the non-
+	invertibility of the function instead of the secrecy of the private key.
 	
 	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A send-
 	er who wants to send an encrypted message computes the one-time public key Y = A K if the private
@@ -310,14 +311,20 @@
 	the matrix has to be pre- or post-multiplied by the inverse of the divisor, and the divisor has to
 	be an invertible or non-singular matrix.)
 	
-	The ciphers can also be generalized by using multi-dimensional multiplication instead of using only
+	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of
 	one-dimensional multiplication. For example, for 2 D multiplication, matrices can multiplied from
-	left to right and from top to bottom.
+	left to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional
+	algebra instead of one-dimensional algebra by using points on a plane a0 + a1 i instead of points
+	on a line, points in a cube a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which
+	is a quaternion), or points in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2
+	== 1 and i j == k, j k == i, k i == j, ... Matrices of multi-dimensional points can also use multi-
+	dimensional arithmetic in addition to multi-dimensional algebra.
 	
-	The equations can be generalized further by using a symmetric matrix of matrices A[][] =
-	{ { A1, A2 } { A2, A3 } }, reducing the 2x2 block matrix to a 2x1 block matrix or public key vector
-	Y[] = { A1^x1 A2^x2, A2^x1 A3^x2 }, and then reducing the public key vector Y[] to a 1x1 block ma-
-	trix or secret key E = Y[1]^k1 Y2[2]^k2 == A1^(k1 x1) A2^(k1 x2 + k2 x1) A3^(k2 x2).
+	Ciphers can also be generalized by using a symmetric matrix of matrices A[][] = { { A1, A2 }
+	{ A2, A3 } } as a public parameter or blank public key, reducing the 2x2 block matrix to a 2x1
+	block matrix or public key vector Y[] = { A1^x1 A2^x2, A2^x1 A3^x2 } where x1, x2 are the private
+	keys, and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1]^k1
+	Y2[2]^k2 == A1^(k1 x1) A2^(k1 x2 + k2 x1) A3^(k2 x2).
 	
 	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Be-
 	fore they were called matrices, rectangular arrays of numbers were referred to as blocks. A block
@@ -5156,7 +5163,7 @@ class Programs
 					textarea3  = new JTextArea(1, 6);
 					
 					textarea3.setEditable(false);
-					textarea3.setForeground(Color.gray);
+					textarea3.setForeground(new Color(0x080808));
 					textarea3.setBackground(new JPanel()
 					    .getBackground());
 					
@@ -5499,7 +5506,6 @@ class Programs
 				}
 				
 				
-				
 				private void setColor()
 				{
 					if (textareapanel == null) return;
@@ -5516,18 +5522,16 @@ class Programs
 				}
 				
 				
-				
 				private void setFont(Font font)
 				{
 					//  Set the font of the find box
 					
 					Font font1 = font.deriveFont((float)
-					
 					    Math.min(font.getSize(), 24));
 					
 					textfield1.setFont(font1);
 					textfield2.setFont(font1);
-					textarea3 .setFont(font1);
+					textarea3 .setFont(labelfont);
 				}
 			}
 			
@@ -50207,11 +50211,11 @@ class PublicKey
 	//  matrix arithmetic. This cipher can still be broken by quantum computing because the function has a
 	//  periodicity and the solution is unambiguous.
 	//
-	//  The complex integer discrete log cipher y = x (a1 + i b1) ^ (p-1) ^ x1 (mod p) where p = 3 mod 4,
-	//  (p+1)/4 is prime, and e == y^k (real) / y^k (imag) may not be breakable by quantum computing because
-	//  the function is not periodic. The multi-variable cipher y1 = x (a1 + i b1) ^ (p-1) ^ x1 (a2 + i b2)
-	//  ^ (p-1) ^ x2; y2 = x (a2 + i b2) ^ (p-1) ^ x1 (a3 + i b3) ^ (p-1) ^ x3; e = y1^k1 y2^k2 (real) /
-	//  y1^k2 y2^k2 (imag) is not susceptible to quantum computing because the solution is ambiguous.
+	//  The complex integer discrete log cipher y = (x c) ^ (p-1) ^ x1 (mod p) where c = a + i b, p = 3
+	//  mod 4, (p+1)/4 is prime, and e == y^k (real) / y^k (imag) may not be breakable by quantum comput-
+	//  ing because the function is not periodic. The cipher y1 = u1^x1 u2^x2, y2 = u2^x1 u3^x2 where u1
+	//  = a1 + i b1, u2 = a2 + i b2 + j c2, u3 = a3 + i b3 + j c3 + ... may also be unbreakable because it
+	//  uses multi-dimensional algebra.
 	//
 	//  Elliptic curve ciphers, 1x1 polynomial matrix discrete log ciphers, integer log ciphers, and the
 	//  Rabin / factorization cipher are not used in the public key class because these ciphers are suscept-
@@ -50639,6 +50643,7 @@ class PublicKey
 		//  size... //  matrix / Latin square knapsack
 		
 		//  size4x128,  //  Rabin / fact cipher (not used)
+		
 		
 		
 		
@@ -59379,14 +59384,17 @@ class Signature
 	//  ( r = a )  ( y = a )  ==  a               (mod p)
 	//
 	//  The signature is the quadruple { m, r, s, y }
-	
-	
-	
-	//  A complex integer algorithm or Latin square /
-	//  circulant matrix algorithm for digital signatures
 	//
-	//  A1 = (a1 + i b1) ^ (p-1) (mod p = 3 mod 4)
-	//  A2 = (a2 + i b2) ^ (p-1) (mod p = 3 mod 4)  or
+	//  For a complex integer algorithm, y = x1 c ^ x (mod p)
+	//  where c = a + b i  or for multi-dimensional algebra
+	//  such as 3 D algebra y = u2 c3 ^ x where u2 = x1 + x2 i
+	//  and c3 = a1 + a2 i + a3 j.
+	
+	
+	
+	
+	//  A Latin square / circulant matrix algorithm
+	//  for digital signatures
 	//
 	//  A1 = { { a1, b1 }, { b1, a1 } }
 	//  B1 = { { a2, b2 }, { b2, a2 } }
@@ -59400,8 +59408,7 @@ class Signature
 	//  s1  =  k1 m + x1 r (mod q)  signature equation
 	//  s2  =  k2 m + x2 r (mod q)  signature equation
 	//
-	//  where q = p+1 = 4*prime for complex integers or
-	//        q = p-1 for Latin squares / matrices
+	//  where q = p-1 for Latin squares / matrices
 	//
 	//  and r is a hash or integer value
 	//  of R such as r = (r11||r12) mod q
@@ -59542,9 +59549,8 @@ class Signature
 	
 	//  This cipher is used as an example and was used to test
 	//  the Signature class. The Latin square discrete log sig-
-	//  nature algorithm could be replaced by another matrix or
-	//  complex integer algorithm.
-	//
+	//  nature algorithm could be replaced by another matrix
+	//  algorithm.
 	
 	final public static String lsdl120 = "lsdl120";
 	
@@ -70769,8 +70775,8 @@ class Number implements Comparable<Number>
 		
 		//  Set the min and max size for the Karatsuba multiplier
 		
-		final int karatsize1 = 64;      //  64 ints   ~ 2 K bits
-		final int karatsize2 = 64*1024; //  64 K ints ~ 2 M bits
+		final int karatsize1 = 64;      //  64 ints ~   2 K bits
+		final int karatsize2 = 8*1024; //  8 K ints ~ 256 K bits
 		
 		//  product == multiplicand x multiplier
 		
@@ -78703,6 +78709,8 @@ class Fourier
 		//  to make the transform symmetrical.
 		
 		
+		final int p = 8;
+		
 		Number[] x = new Number[array.length];
 		
 		for (int i = 0; i < array.length; i++)
@@ -78729,8 +78737,6 @@ class Fourier
 		
 		//  Set the precision
 		
-		int p = 8;
-		
 		for (int i = 0; i < y.length; i++)
 		
 		    y[i] = y[i] .setPrecision(p);
@@ -78738,6 +78744,40 @@ class Fourier
 		return y;
 	}
 	
+	
+	
+	
+	//  This code tests the fft multiply method.
+	//  The fft multiply method works for 16 K ints
+	//  (== 512 K bits) but larger sizes cause the
+	//  inverter / divider to throw an arithmetic ex-
+	//  ception because the precision used in the
+	//  inverse method is not correct.
+	//
+	//
+	//  final int size = 16*1024;
+	//
+	//  int[] array1 = new int[size];
+	//  int[] array2 = new int[size];
+	//
+	//  for (int i = 0; i < size; i++)
+	//  {
+	//	array1[i] = Math.random(0x7fffffff);
+	//	array2[i] = Math.random(0x7fffffff);
+	//  }
+	//
+	//  Number a = new Number(array1);
+	//  Number b = new Number(array2);
+	//
+	//  Number c = a .multiply(b);
+	//
+	//  System.out.println(a.bitCount() + " bits");
+	//
+	//  Number a1 = c.divide(b);
+	//
+	//  boolean bool = a1.equals(a);
+	//
+	//  System.out.println(bool);
 	
 	
 	public static int[] multiply(int[] x, int[] y)
@@ -78783,7 +78823,7 @@ class Fourier
 		//  int[] a = {  1, 0, 2, 0, 3, 0, 4, 0,   0, 0, 0, 0, 0, 0, 0, 0 };
 		//  int[] b = {  5, 0, 6, 0, 7, 0, 8, 0,   0, 0, 0, 0, 0, 0, 0, 0 };
 		//
-		//  compute the fourier transforms  A = Fourier(a) and B = Fourier(B);
+		//  compute the fourier transforms A = Fourier(a) and B = Fourier(B);
 		//  compute the inner product C of the complex vectors A and B;
 		//  compute the inverse Fourier transform of C; round the elements
 		//  to the nearest integer by adding 1/2 to get
@@ -78902,8 +78942,6 @@ class Fourier
 		int int0 = array[array.length -1];
 		
 		array = Math.shiftRight(array, 8);
-		
-		array[0] = int0;
 		
 		
 		//  Remove the leading zeros
