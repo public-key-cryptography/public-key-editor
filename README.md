@@ -155,7 +155,7 @@
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
 	If the directory or folder name has a space character, then you have to use the back slash '\' before
-	the space char to escape it. For example, the folder My Documents would be written My\ Documents in
+	the space char to escape it. For example, a folder named My Documents would be written My\ Documents in
 	the command line.
 	
 	
@@ -194,9 +194,13 @@
 	and then email clients could retrieve the recipient's key from the POP mail server by connecting
 	to the server and then sending a request such as RETR followed by the recipient's address, or
 	just sending the recipient's address to the POP mail server, and the email server would reply by
-	returning the public key. For private email servers that don't have a website the server would
-	have to allow the client / user to send the public key to the server after logging in to the ac-
-	count using a command such as SEND or using no command to send the key.
+	returning the public key.
+	
+	For private email servers that don't have a website the server would have to allow the client /
+	user to send the public key to the server after logging in to the account using a command such as
+	SEND or using no command to send the key. If the client / user is logged in to a POP mail account
+	and the server receives several bytes of data it would verify that the key is valid by removing
+	the hyphens and testing if the data is in base 16 or only contains the chars 0 to f. 
 	
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
@@ -208,7 +212,8 @@
 	Or the email headers could include a stat:0,1,2,...,9 or stat=0,1,2,...,9 variable so that the
 	mail program or email header class could parse the header for the message state just as it parses
 	the header for the from: and date: fields. (The subject field in the header is empty except for
-	messages that are sent unencrypted.)
+	messages that are sent unencrypted.) The email client could check both the headers and the list
+	strings for the message states because different email providers could use different protocols.
 	
 	The client program could also store the email hashes and message states in a file but then the
 	user would have to use the same computer or store the mail folder / directory on a USB storage
@@ -260,10 +265,10 @@
 	plest public key function is Y = A X. This is similar to private key encryption except that A is
 	a non-invertible public parameter instead of a secret message, and X is the secret message encrypt-
 	ed by the public parameter A. In private key cryptography A would be a plaintext message encrypted
-	by a secret key matrix X, but in public key cryptography X is the plaintext message encrypted by
-	the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher. Because the
-	encryption key A is public, the security of public key cryptography is based entirely on the non-
-	invertibility of the function instead of the secrecy of the private key.
+	by a secret key matrix X, but in public key cryptography the private key X is the plaintext message
+	encrypted by the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher.
+	Because the encryption key A is public, the security of public key cryptography is based entirely
+	on the non-invertibility of the function instead of the secrecy of the private key.
 	
 	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A send-
 	er who wants to send an encrypted message computes the one-time public key Y = A K if the private
@@ -282,13 +287,13 @@
 	be an invertible or non-singular matrix.)
 	
 	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of
-	one-dimensional multiplication. For example, for 2 D multiplication, matrices can multiplied from
-	left to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional
-	algebra instead of one-dimensional algebra by using points on a plane a0 + a1 i instead of points
-	on a line, points in a cube a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which
-	is a quaternion), or points in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2
-	== 1 and i j == k, j k == i, k i == j, ... Matrices of multi-dimensional points can also use multi-
-	dimensional arithmetic in addition to multi-dimensional algebra.
+	one-dimensional multiplication. For example, for 2 D multiplication, matrices can be multiplied
+	from left to right and from top to bottom. Ciphers can be generalized further to use multi-dimen-
+	sional algebra by using points on a plane a0 + a1 i instead of points on a line, points in a cube
+	a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which is a quaternion), or points
+	in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2 == 1 and i j == k, j k == i,
+	k i == j, ... Matrices of multi-dimensional points can also use multi-dimensional arithmetic in
+	addition to multi-dimensional algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices A[][] = { { A1, A2 }
 	{ A2, A3 } } as a public parameter or blank public key, reducing the 2x2 block matrix to a 2x1
@@ -368,21 +373,16 @@
 	the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
 	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem is susceptible to quantum and
-	classical computing.
-	
-	A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
-	tory problem to be a public key cipher. It only has to be harder to invert than to compute. Some
-	functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
-	nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
+	class because the factorization and integer discrete log problem are susceptible to quantum
+	computing.
 	
 	The Rabin cipher was included in the public key class to test the software for asymmetrical public
 	key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are
 	symmetrical which means that they use the same methods for public key generation and public key
 	agreement. This cipher is not used or enabled because it requires large prime number generation
 	which is probabilistic and could slow the decryption for some private keys or passphrases. It also
-	requires fast algorithms from the BigInteger class which may not be available in other programming
-	languages.
+	doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
+	and classical computing.
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there
 	is no need to factor the modulus or solve the discrete log problem. For example, the integer cipher
@@ -413,8 +413,8 @@
 	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only asymmet-
 	rical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
 	only public key cipher that uses a secret modulus. The knapsack cipher was also the world's first
-	quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but just like the
-	integer Diffie-Hellman cipher it has to be implemented correctly or else it doesn't work.
+	quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but it has to be
+	implemented correctly or else it doesn't work.
 	
 	For example, if the public random table r[][] or the private / secret key s[] equals zero, then the
 	static public key can be broken unless the cipher includes small random errors that are added to

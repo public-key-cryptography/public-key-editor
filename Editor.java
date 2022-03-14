@@ -185,7 +185,7 @@
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
 	If the directory or folder name has a space character, then you have to use the back slash '\' before
-	the space char to escape it. For example, the folder My Documents would be written My\ Documents in
+	the space char to escape it. For example, a folder named My Documents would be written My\ Documents in
 	the command line.
 	
 	
@@ -224,9 +224,13 @@
 	and then email clients could retrieve the recipient's key from the POP mail server by connecting
 	to the server and then sending a request such as RETR followed by the recipient's address, or
 	just sending the recipient's address to the POP mail server, and the email server would reply by
-	returning the public key. For private email servers that don't have a website the server would
-	have to allow the client / user to send the public key to the server after logging in to the ac-
-	count using a command such as SEND or using no command to send the key.
+	returning the public key.
+	
+	For private email servers that don't have a website the server would have to allow the client /
+	user to send the public key to the server after logging in to the account using a command such as
+	SEND or using no command to send the key. If the client / user is logged in to a POP mail account
+	and the server receives several bytes of data it would verify that the key is valid by removing
+	the hyphens and testing if the data is in base 16 or only contains the chars 0 to f. 
 	
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
@@ -238,7 +242,8 @@
 	Or the email headers could include a stat:0,1,2,...,9 or stat=0,1,2,...,9 variable so that the
 	mail program or email header class could parse the header for the message state just as it parses
 	the header for the from: and date: fields. (The subject field in the header is empty except for
-	messages that are sent unencrypted.)
+	messages that are sent unencrypted.) The email client could check both the headers and the list
+	strings for the message states because different email providers could use different protocols.
 	
 	The client program could also store the email hashes and message states in a file but then the
 	user would have to use the same computer or store the mail folder / directory on a USB storage
@@ -290,10 +295,10 @@
 	plest public key function is Y = A X. This is similar to private key encryption except that A is
 	a non-invertible public parameter instead of a secret message, and X is the secret message encrypt-
 	ed by the public parameter A. In private key cryptography A would be a plaintext message encrypted
-	by a secret key matrix X, but in public key cryptography X is the plaintext message encrypted by
-	the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher. Because the
-	encryption key A is public, the security of public key cryptography is based entirely on the non-
-	invertibility of the function instead of the secrecy of the private key.
+	by a secret key matrix X, but in public key cryptography the private key X is the plaintext message
+	encrypted by the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher.
+	Because the encryption key A is public, the security of public key cryptography is based entirely
+	on the non-invertibility of the function instead of the secrecy of the private key.
 	
 	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A send-
 	er who wants to send an encrypted message computes the one-time public key Y = A K if the private
@@ -312,13 +317,13 @@
 	be an invertible or non-singular matrix.)
 	
 	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of
-	one-dimensional multiplication. For example, for 2 D multiplication, matrices can multiplied from
-	left to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional
-	algebra instead of one-dimensional algebra by using points on a plane a0 + a1 i instead of points
-	on a line, points in a cube a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which
-	is a quaternion), or points in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2
-	== 1 and i j == k, j k == i, k i == j, ... Matrices of multi-dimensional points can also use multi-
-	dimensional arithmetic in addition to multi-dimensional algebra.
+	one-dimensional multiplication. For example, for 2 D multiplication, matrices can be multiplied
+	from left to right and from top to bottom. Ciphers can be generalized further to use multi-dimen-
+	sional algebra by using points on a plane a0 + a1 i instead of points on a line, points in a cube
+	a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which is a quaternion), or points
+	in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2 == 1 and i j == k, j k == i,
+	k i == j, ... Matrices of multi-dimensional points can also use multi-dimensional arithmetic in
+	addition to multi-dimensional algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices A[][] = { { A1, A2 }
 	{ A2, A3 } } as a public parameter or blank public key, reducing the 2x2 block matrix to a 2x1
@@ -398,21 +403,16 @@
 	the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
 	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem is susceptible to quantum and
-	classical computing.
-	
-	A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
-	tory problem to be a public key cipher. It only has to be harder to invert than to compute. Some
-	functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
-	nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
+	class because the factorization and integer discrete log problem are susceptible to quantum
+	computing.
 	
 	The Rabin cipher was included in the public key class to test the software for asymmetrical public
 	key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are
 	symmetrical which means that they use the same methods for public key generation and public key
 	agreement. This cipher is not used or enabled because it requires large prime number generation
 	which is probabilistic and could slow the decryption for some private keys or passphrases. It also
-	requires fast algorithms from the BigInteger class which may not be available in other programming
-	languages.
+	doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
+	and classical computing.
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there
 	is no need to factor the modulus or solve the discrete log problem. For example, the integer cipher
@@ -443,8 +443,8 @@
 	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only asymmet-
 	rical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
 	only public key cipher that uses a secret modulus. The knapsack cipher was also the world's first
-	quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but just like the
-	integer Diffie-Hellman cipher it has to be implemented correctly or else it doesn't work.
+	quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but it has to be
+	implemented correctly or else it doesn't work.
 	
 	For example, if the public random table r[][] or the private / secret key s[] equals zero, then the
 	static public key can be broken unless the cipher includes small random errors that are added to
@@ -524,7 +524,7 @@ public class Editor
 		
 		EventQueue.invokeLater( new Runnable()
 		{
-			//  invokeLater "Causes runnable to have its run method
+			//  invokeLater "causes runnable to have its run method
 			//  called in the dispatch thread of the system EventQueue.
 			//  This will happen after all pending events are processed."
 			
@@ -1865,8 +1865,9 @@ class Programs
 	private byte[] signatureSK; // signature secret key
 	private byte[] filekey; // file key
 	
-	//  the last directory used by File->Open or File->Save
-	//  so the user doesn't have to keep changing directories
+	//  save the last directory used by File->Open or File->Save
+	//  in the directory variable so the user doesn't have to
+	//  keep changing directories
 	
 	private String directory;
 	
@@ -5225,10 +5226,6 @@ class Programs
 								
 								matchcase = true;
 							}
-							
-							if (!textfield2.isVisible())
-							
-							     textfield1.requestFocusInWindow();
 						}
 					});
 					
@@ -7876,7 +7873,7 @@ class Programs
 			
 			for (TextAreaPanel textareapanel : textareapanellist)
 			
-			    textareapanel.textarea.setFont(font);
+			     textareapanel.textarea.setFont(font);
 			
 			this.font = font;
 			
@@ -7923,7 +7920,38 @@ class Programs
 			
 			for (JMenuItem menuitem : menuitems)
 			
-			    if (menuitem != null) menuitem.setFont(menuitemfont);
+			    if (menuitem != null) menuitem
+			
+				.setFont(menuitemfont);
+		}
+		
+		
+		
+		
+		private class TextBoldListener
+		
+			extends MouseAdapter implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				String fontname = font.getName();
+				int fontstyle = font.getStyle();
+				int fontsize = font.getSize();
+				
+				if (fontstyle == Font.PLAIN)
+				
+				    font = new Font(fontname, Font.BOLD, fontsize);
+				
+				if (fontstyle == Font.BOLD)
+				
+				    font = new Font(fontname, Font.PLAIN, fontsize);
+				
+				setFont1(font);
+				
+				if (textareapanel != null)
+				
+				    textareapanel.textarea.requestFocusInWindow();
+			}
 		}
 		
 		
@@ -7945,7 +7973,6 @@ class Programs
 			private final int k = 16;
 			
 			//  1/16 magnification per click
-			
 			
 			
 			public void actionPerformed(ActionEvent e)
@@ -8145,34 +8172,6 @@ class Programs
 		
 		
 		
-		private class TextBoldListener
-		
-			extends MouseAdapter implements ActionListener
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				String fontname = font.getName();
-				int fontstyle = font.getStyle();
-				int fontsize = font.getSize();
-				
-				if (fontstyle == Font.PLAIN)
-				
-				    font = new Font(fontname, Font.BOLD, fontsize);
-				
-				if (fontstyle == Font.BOLD)
-				
-				    font = new Font(fontname, Font.PLAIN, fontsize);
-				
-				setFont1(font);
-				
-				if (textareapanel != null)
-				
-				    textareapanel.textarea.requestFocusInWindow();
-			}
-		}
-		
-		
-		
 		private class FontTypeListener implements ActionListener
 		{
 		
@@ -8181,6 +8180,8 @@ class Programs
 			private String fontname;
 			
 			private int style;
+			
+			private JCheckBox stylebox;
 			
 			private final boolean[] ok
 			
@@ -8195,7 +8196,15 @@ class Programs
 				
 				    font.getStyle() : Font.PLAIN;
 				
-				getFontType(font);
+				JDialog dialog = getFontDialog(font);
+				
+				//  JDialog setVisible() blocks
+				//  until the dialog is disposed
+				
+				dialog.setVisible(true);
+				
+				
+				//  Set the new font
 				
 				if ((fontname != null) && !fontname.isEmpty())
 				
@@ -8217,28 +8226,42 @@ class Programs
 					Object obj = e.getSource();
 					
 					if (obj instanceof JTextField)
+					{
+						fontname = ((JTextField) obj).getText();
+						
+						displayFont();
+					}
 					
-					    fontname = ((JTextField) obj).getText();
+					if (obj instanceof JCheckBox)
+					{
+						style = stylebox.isSelected() ?
+						
+						    Font.BOLD : Font.PLAIN;
+						
+						displayFont();
+					}
 					
-					displayFont();
+					if (obj instanceof JLabel)
+					{
+						stylebox.setSelected(!stylebox.isSelected());
+						
+						style = stylebox.isSelected() ?
+						
+						    Font.BOLD : Font.PLAIN;
+						
+						displayFont();
+					}
 				}
 			}
 			
 			
-			private class KeyListener extends KeyAdapter
+			private JDialog getFontDialog(final Font font)
 			{
-				public void keyReleased(KeyEvent e)
-				{
-					displayFont();
-				}
-			}
-			
-			
-			private void getFontType(final Font font)
-			{
-				//  Select a font type from a message dialog and
-				//  show the user what each font type looks like as
+				//  The font dialog allows the user to select a font type
+				//  and shows the user what each font type looks like as
 				//  the arrow key is pressed or the mouse is clicked
+				
+				JLabel stylelabel, fontlabel;
 				
 				GraphicsEnvironment ge;
 				
@@ -8260,9 +8283,9 @@ class Programs
 					textfields[i] .setEditable(false);
 					textfields[i] .setForeground(foreground);
 					textfields[i] .setBackground(background);
+					textfields[i] .addMouseListener(mouselistener);
 					textfields[i] .setFont(new Font(
 					     fonts[i], fontstyle, font.getSize()));
-					textfields[i].addMouseListener(mouselistener);
 				}
 				
 				JScrollPane scrollpane = new JScrollPane();
@@ -8281,21 +8304,6 @@ class Programs
 				scrollpane.setViewportView(vbox);
 				
 				
-				JCheckBox stylebox = new JCheckBox();
-				
-				stylebox.setSelected(style == Font.BOLD);
-				
-				stylebox.addMouseListener(new MouseAdapter()
-				{
-					public void mouseClicked(MouseEvent e)
-					{
-						style = stylebox.isSelected() ?
-						
-						    Font.BOLD : Font.PLAIN;
-						
-						displayFont();
-					}
-				});
 				
 				
 				//      [ OK ] [ Cancel ]
@@ -8311,10 +8319,17 @@ class Programs
 				//  |________________________|
 				//  |________________________|
 				
-				JLabel stylelabel = new JLabel(__.bold);
-				JLabel  fontlabel = new JLabel(font.getName());
+				
+				stylebox = new JCheckBox();
+				stylelabel = new JLabel(__.bold);
+				 fontlabel = new JLabel(font.getName());
 				JButton okbutton = new JButton(__.OK);
 				JButton cancelbutton = new JButton(__.cancel);
+				
+				stylebox.setSelected(style == Font.BOLD);
+				
+				stylebox  .addMouseListener(mouselistener);
+				stylelabel.addMouseListener(mouselistener);
 				
 				stylelabel.setFont(font);
 				 fontlabel.setFont(font);
@@ -8346,6 +8361,9 @@ class Programs
 				
 				dialog.setTitle(title);
 				
+				//  Clicking ok or cancel or pressing
+				//  the escape key closes the dialog
+				
 				okbutton .addActionListener( new ActionListener()
 				{ public void actionPerformed(ActionEvent e)
 				{ ok[0] = true;  dialog.dispose(); } } );
@@ -8356,8 +8374,8 @@ class Programs
 				
 				KeyAdapter closelistener = new KeyAdapter()
 				{ public void keyPressed(KeyEvent e)
-				{ if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				  || (e.getKeyChar() == '\n')) dialog.dispose(); } };
+				{ if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				  dialog.dispose(); } };
 				
 				
 				scrollpane.addKeyListener(closelistener);
@@ -8372,7 +8390,7 @@ class Programs
 				dialog.setPreferredSize(d);
 				dialog.pack();
 				
-				dialog.setVisible(true);
+				return dialog;
 			}
 			
 			
@@ -16415,6 +16433,7 @@ class Programs
 		
 		
 		
+		
 		private class FontTypeListener implements ActionListener
 		{
 		
@@ -16423,6 +16442,8 @@ class Programs
 			private String fontname;
 			
 			private int style;
+			
+			private JCheckBox stylebox;
 			
 			private final boolean[] ok
 			
@@ -16437,11 +16458,19 @@ class Programs
 				
 				    font.getStyle() : Font.PLAIN;
 				
-				getFontType(font);
+				JDialog dialog = getFontDialog(font);
+				
+				//  JDialog setVisible() blocks
+				//  until the dialog is disposed
+				
+				dialog.setVisible(true);
+				
+				
+				//  Set the new font
 				
 				if ((fontname != null) && !fontname.isEmpty())
 				
-				    font = new Font(fontname, style, fontsize);
+				    font = new Font(fontname, style, (int) fontsize);
 				
 				fontname  = font.getName();
 				fontstyle = font.getStyle();
@@ -16459,28 +16488,42 @@ class Programs
 					Object obj = e.getSource();
 					
 					if (obj instanceof JTextField)
+					{
+						fontname = ((JTextField) obj).getText();
+						
+						displayFont();
+					}
 					
-					    fontname = ((JTextField) obj).getText();
+					if (obj instanceof JCheckBox)
+					{
+						style = stylebox.isSelected() ?
+						
+						    Font.BOLD : Font.PLAIN;
+						
+						displayFont();
+					}
 					
-					displayFont();
+					if (obj instanceof JLabel)
+					{
+						stylebox.setSelected(!stylebox.isSelected());
+						
+						style = stylebox.isSelected() ?
+						
+						    Font.BOLD : Font.PLAIN;
+						
+						displayFont();
+					}
 				}
 			}
 			
 			
-			private class KeyListener extends KeyAdapter
+			private JDialog getFontDialog(final Font font)
 			{
-				public void keyReleased(KeyEvent e)
-				{
-					displayFont();
-				}
-			}
-			
-			
-			private void getFontType(final Font font)
-			{
-				//  Select a font type from a message dialog and
-				//  show the user what each font type looks like as
+				//  The font dialog allows the user to select a font type
+				//  and shows the user what each font type looks like as
 				//  the arrow key is pressed or the mouse is clicked
+				
+				JLabel stylelabel, fontlabel;
 				
 				GraphicsEnvironment ge;
 				
@@ -16523,21 +16566,6 @@ class Programs
 				scrollpane.setViewportView(vbox);
 				
 				
-				JCheckBox stylebox = new JCheckBox();
-				
-				stylebox.setSelected(style == Font.BOLD);
-				
-				stylebox.addMouseListener(new MouseAdapter()
-				{
-					public void mouseClicked(MouseEvent e)
-					{
-						style = stylebox.isSelected() ?
-						
-						    Font.BOLD : Font.PLAIN;
-						
-						displayFont();
-					}
-				});
 				
 				
 				//      [ OK ] [ Cancel ]
@@ -16553,10 +16581,17 @@ class Programs
 				//  |________________________|
 				//  |________________________|
 				
-				JLabel stylelabel = new JLabel(__.bold);
-				JLabel  fontlabel = new JLabel(font.getName());
+				
+				stylebox = new JCheckBox();
+				stylelabel = new JLabel(__.bold);
+				 fontlabel = new JLabel(font.getName());
 				JButton okbutton = new JButton(__.OK);
 				JButton cancelbutton = new JButton(__.cancel);
+				
+				stylebox.setSelected(style == Font.BOLD);
+				
+				stylebox  .addMouseListener(mouselistener);
+				stylelabel.addMouseListener(mouselistener);
 				
 				stylelabel.setFont(font);
 				 fontlabel.setFont(font);
@@ -16568,10 +16603,10 @@ class Programs
 				hbox1.add(Box.createHorizontalStrut(10));
 				hbox1.add(cancelbutton);
 				
-				hbox2.add(stylebox); hbox2.add(stylelabel);
-				hbox2.add(Box.createHorizontalStrut(10));
+				hbox2.add(stylebox);
+				hbox2.add(stylelabel);
+				hbox2.add(Box.createHorizontalStrut(20));
 				hbox2.add(fontlabel);
-				
 				
 				vbox = Box.createVerticalBox();
 				
@@ -16588,6 +16623,9 @@ class Programs
 				
 				dialog.setTitle(title);
 				
+				//  Clicking ok or cancel or pressing
+				//  the escape key closes the dialog
+				
 				okbutton .addActionListener( new ActionListener()
 				{ public void actionPerformed(ActionEvent e)
 				{ ok[0] = true;  dialog.dispose(); } } );
@@ -16598,8 +16636,8 @@ class Programs
 				
 				KeyAdapter closelistener = new KeyAdapter()
 				{ public void keyPressed(KeyEvent e)
-				{ if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				  || (e.getKeyChar() == '\n')) dialog.dispose(); } };
+				{ if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				  dialog.dispose(); } };
 				
 				
 				scrollpane.addKeyListener(closelistener);
@@ -16614,7 +16652,7 @@ class Programs
 				dialog.setPreferredSize(d);
 				dialog.pack();
 				
-				dialog.setVisible(true);
+				return dialog;
 			}
 			
 			
@@ -28574,6 +28612,8 @@ class Programs
 				
 				private int style;
 				
+				private JCheckBox stylebox;
+				
 				private final boolean[] ok
 				
 				   = new boolean[] { false };
@@ -28587,7 +28627,15 @@ class Programs
 					
 					    font.getStyle() : Font.PLAIN;
 					
-					getFontType(font);
+					JDialog dialog = getFontDialog(font);
+					
+					//  JDialog setVisible() blocks
+					//  until the dialog is disposed
+					
+					dialog.setVisible(true);
+					
+					
+					//  Set the new font
 					
 					if ((fontname != null) && !fontname.isEmpty())
 					
@@ -28609,28 +28657,42 @@ class Programs
 						Object obj = e.getSource();
 						
 						if (obj instanceof JTextField)
+						{
+							fontname = ((JTextField) obj).getText();
+							
+							displayFont();
+						}
 						
-						    fontname = ((JTextField) obj).getText();
+						if (obj instanceof JCheckBox)
+						{
+							style = stylebox.isSelected() ?
+							
+							    Font.BOLD : Font.PLAIN;
+							
+							displayFont();
+						}
 						
-						displayFont();
+						if (obj instanceof JLabel)
+						{
+							stylebox.setSelected(!stylebox.isSelected());
+							
+							style = stylebox.isSelected() ?
+							
+							    Font.BOLD : Font.PLAIN;
+							
+							displayFont();
+						}
 					}
 				}
 				
 				
-				private class KeyListener extends KeyAdapter
+				private JDialog getFontDialog(final Font font)
 				{
-					public void keyReleased(KeyEvent e)
-					{
-						displayFont();
-					}
-				}
-				
-				
-				private void getFontType(final Font font)
-				{
-					//  Select a font type from a message dialog and
-					//  show the user what each font type looks like as
+					//  The font dialog allows the user to select a font type
+					//  and shows the user what each font type looks like as
 					//  the arrow key is pressed or the mouse is clicked
+					
+					JLabel stylelabel, fontlabel;
 					
 					GraphicsEnvironment ge;
 					
@@ -28652,8 +28714,9 @@ class Programs
 						textfields[i] .setEditable(false);
 						textfields[i] .setForeground(emailpanel.foreground);
 						textfields[i] .setBackground(emailpanel.background);
-						textfields[i] .setFont(new Font(fonts[i], fontstyle, font.getSize()));
 						textfields[i] .addMouseListener(mouselistener);
+						textfields[i] .setFont(new Font(
+						     fonts[i], fontstyle, font.getSize()));
 					}
 					
 					JScrollPane scrollpane = new JScrollPane();
@@ -28672,21 +28735,6 @@ class Programs
 					scrollpane.setViewportView(vbox);
 					
 					
-					JCheckBox stylebox = new JCheckBox();
-					
-					stylebox.setSelected(style == Font.BOLD);
-					
-					stylebox.addMouseListener(new MouseAdapter()
-					{
-						public void mouseClicked(MouseEvent e)
-						{
-							style = stylebox.isSelected() ?
-							
-							    Font.BOLD : Font.PLAIN;
-							
-							displayFont();
-						}
-					});
 					
 					
 					//      [ OK ] [ Cancel ]
@@ -28703,10 +28751,16 @@ class Programs
 					//  |________________________|
 					
 					
-					JLabel stylelabel = new JLabel(__.bold);
-					JLabel  fontlabel = new JLabel(font.getName());
+					stylebox = new JCheckBox();
+					stylelabel = new JLabel(__.bold);
+					 fontlabel = new JLabel(font.getName());
 					JButton okbutton = new JButton(__.OK);
 					JButton cancelbutton = new JButton(__.cancel);
+					
+					stylebox.setSelected(style == Font.BOLD);
+					
+					stylebox  .addMouseListener(mouselistener);
+					stylelabel.addMouseListener(mouselistener);
 					
 					stylelabel.setFont(font);
 					 fontlabel.setFont(font);
@@ -28714,26 +28768,20 @@ class Programs
 					Box hbox1 = Box.createHorizontalBox();
 					Box hbox2 = Box.createHorizontalBox();
 					
-					Component hstrut11 = Box.createHorizontalStrut(10);
-					hbox1.add(okbutton); hbox1.add(hstrut11);
+					hbox1.add(okbutton);
+					hbox1.add(Box.createHorizontalStrut(10));
 					hbox1.add(cancelbutton);
 					
-					Component hstrut21 = Box.createHorizontalStrut(20);
-					Component hstrut22 = Box.createHorizontalStrut(20);
-					
-					hbox2.add(stylebox); hbox2.add(stylelabel);
-					hbox2.add(hstrut21);  hbox2.add(fontlabel);
-					
-					
-					Component vstrut1 = Box.createVerticalStrut(10);
-					Component vstrut2 = Box.createVerticalStrut(10);
-					Component vstrut3 = Box.createVerticalStrut(10);
+					hbox2.add(stylebox);
+					hbox2.add(stylelabel);
+					hbox2.add(Box.createHorizontalStrut(20));
+					hbox2.add(fontlabel);
 					
 					vbox = Box.createVerticalBox();
 					
-					vbox.add(vstrut1); vbox.add(hbox1);
-					vbox.add(vstrut2); vbox.add(hbox2);
-					vbox.add(vstrut3); vbox.add(scrollpane);
+					vbox.add(Box.createVerticalStrut(10)); vbox.add(hbox1);
+					vbox.add(Box.createVerticalStrut(10)); vbox.add(hbox2);
+					vbox.add(Box.createVerticalStrut(10)); vbox.add(scrollpane);
 					
 					
 					boolean modal = true;
@@ -28743,6 +28791,9 @@ class Programs
 					JDialog dialog = new JDialog(frame, modal);
 					
 					dialog.setTitle(title);
+					
+					//  Clicking ok or cancel or pressing
+					//  the escape key closes the dialog
 					
 					okbutton .addActionListener( new ActionListener()
 					{ public void actionPerformed(ActionEvent e)
@@ -28754,8 +28805,8 @@ class Programs
 					
 					KeyAdapter closelistener = new KeyAdapter()
 					{ public void keyPressed(KeyEvent e)
-					{ if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
-					   || (e.getKeyChar() == '\n')) dialog.dispose(); } };
+					{ if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+					  dialog.dispose(); } };
 					
 					
 					scrollpane.addKeyListener(closelistener);
@@ -28770,7 +28821,7 @@ class Programs
 					dialog.setPreferredSize(d);
 					dialog.pack();
 					
-					dialog.setVisible(true);
+					return dialog;
 				}
 				
 				
@@ -38685,6 +38736,7 @@ class FileChooser extends JFileChooser
 		setFont(this.getComponents());
 	}
 	
+	
 	private void setFont(Component[] comps)
 	{
 		for (Component comp : comps)
@@ -39031,10 +39083,10 @@ class EncryptDirectory
 {
 
 
-	//  The user should also have the option to convert the directory
-	//  to a tar file, but if this option is used to encrypt and decrypt
-	//  the directory, then the encryption is not parallelizable, and the
-	//  entire directory has to be decrypted just to read one file.
+	//  The user could also have the option to convert the directory to
+	//  a tar file, but if this option is used to encrypt and decrypt
+	//  the directory, then the encryption is not parallelizable, and
+	//  the entire directory has to be decrypted just to read one file.
 	//  
 	//  If the user opens an encrypted file, the program sets the title
 	//  of the frame to the decrypted file name but does not rename the
@@ -39114,6 +39166,9 @@ class EncryptDirectory
 		testbutton.addActionListener(new ActionListener()
 		{    public void actionPerformed(ActionEvent e)
 		     {  if (running) return;
+			// Set test = true so the
+			// encrypt/decrypt methods
+			// only test the files
 			test = true;
 			filearea.setText("");
 			canceled = false;
@@ -39434,7 +39489,7 @@ class EncryptDirectory
 						
 						String keyhash = Convert.partition(
 						
-						    str .substring(0, 16), " ", 4);
+						    str.substring(0, 16), " ", 4);
 						
 						keyhashlabel.setText(keyhash);
 					}
@@ -39558,6 +39613,8 @@ class EncryptDirectory
 		
 		         filearrays[i][j] = files[size*i + j];
 		
+		//  Add the runnable R1 to the thread array
+		
 		for (int i = 0; i < tarray.length; i++)
 		
 		    tarray[i] = new Thread(new R1(filearrays[i]));
@@ -39596,7 +39653,9 @@ class EncryptDirectory
 		}
 		
 		String message = "\n" + numberoffiles + " " + __.files
+		
 		   + "  " + totalbytes/1024/1024 + " " + "M" + __.bytes
+		
 		   + "  " + seconds + " " + __.seconds;
 		
 		message += "\n" + __.encrypteddirectory + " " + directory;
@@ -39812,6 +39871,8 @@ class EncryptDirectory
 		
 		         filearrays[i][j] = files[size*i + j];
 		
+		//  Add the runnable R2 to the thread array
+		
 		for (int i = 0; i < tarray.length; i++)
 		
 		    tarray[i] = new Thread(new R2(filearrays[i]));
@@ -39841,9 +39902,11 @@ class EncryptDirectory
 		
 		if (canceled) { append(__.canceled); running = false; return; }
 		
-		String message = "\n" + numberoffiles + " " + __.files + "  " +
+		String message = "\n" + numberoffiles + " " + __.files
 		
-		  totalbytes/1024/1024 + " " + "M" + __.bytes + "  " + seconds + " " + __.seconds;
+		   + "  " + totalbytes/1024/1024 + " " + "M" + __.bytes
+		
+		   + "  " + seconds + " " + __.seconds;
 		
 		message += "\n" + __.decrypteddirectory + " " + directory;
 		
@@ -50121,13 +50184,13 @@ class PublicKey
 	
 	
 	//  All ciphers in the public key class are based on hypercomplex numbers. Hypercomplex numbers are
-	//  multi-dimensional arrays of numbers that include vectors, matrices, cubes, tesseracts, and quatern-
-	//  ions.
+	//  multi-dimensional arrays of numbers that include vectors, quaternions, matrices, cubes, and tes-
+	//  seracts.
 	//
 	//  The matrix ciphers are based on the multivariate functions X1 A X2, X^-1 A^x X, A^-x B^x1 A^x, and
-	//  A^x1 B^x2. The vector ciphers are based on the knapsack problem, the problem of factoring or unmulti-
-	//  plying the vector cross product Y = A (x) X, and the quaternion and polynomial discrete log problem
-	//  X^-1 A^x X. (Matrix and linear algebra books use different letters for these functions such as
+	//  A^x1 B^x2. The vector ciphers are based on the knapsack problem, the problem of factoring or unmul-
+	//  tiplying the vector cross product Y = A (x) X, and the quaternion and polynomial discrete log prob-
+	//  lem X^-1 A^x X. (Matrix and linear algebra books use different letters for these functions such as
 	//  P^-1 D P and C = A (x) B or W = U (x) V instead of X^-1 A X and Y = A (x) X.)
 	//
 	//  The vector ciphers and non-exponential matrix ciphers can be modular or non-modular, and the matrix,
@@ -50145,8 +50208,8 @@ class PublicKey
 	//  teger cipher y = a^x (mod p) is a special case of the matrix discrete log cipher Y = A^x (mod p) in
 	//  which A is an integer or a 1 x 1 matrix. The matrix discrete log cipher Y = A^x (mod p) is a special
 	//  case of the X^-1 A^x X cipher where X is the identity or unit matrix, and the linear multiplication
-	//  cipher Y = A X is a special case of the non-linear cipher Y = X1 A^x X2 in which X1 is the unit matrix
-	//  and the exponent equals 1.
+	//  cipher Y = A X is a special case of the non-linear cipher Y = X1 A^x X2 in which X1 is the unit ma-
+	//  trix and the exponent equals 1.
 	//
 	//  All the commutative one-way functions or symmetric public key ciphers used in the public key class
 	//  derive from the general matrix function X1 A^x X2 (or B^x1 A^x B^x2) including A^x, A^x X, A X,
@@ -50171,13 +50234,13 @@ class PublicKey
 	//  then the 1x1 block array is reduced to a 1x1 block or matrix.)
 	//
 	//  The vector cross product cipher uses arrays of integers, polynomials, commutative Latin squares, or
-	//  powers of a matrix (cube or tesseract) for public key generation Y = A (x) X where the public key
-	//  vector Y represents the area of a parallelogram formed by the two sides A and X. Then it uses the
-	//  dot product instead of the cross product to compute the secret key number E = Y * K which represents
-	//  the volume of the parallelepiped formed by the product of the public vector Y and the private vector
-	//  K. (The implementation of the vector cross product cipher is asymmetric because it requires different
-	//  public key and secret key generation methods, but unlike the factorization and Merkle-Hellman / knap-
-	//  sack ciphers it uses two commutative functions instead of a one-way / invertible function.)
+	//  powers of a matrix, cube, or tesseract for public key generation Y = A (x) X where the public key vec-
+	//  tor Y represents the area of a parallelogram formed by the two sides A and X. Then it uses the dot
+	//  product instead of the cross product to compute the secret key number E = Y * K which represents the
+	//  volume of the parallelepiped formed by the product of the public vector Y and the private vector K.
+	//  (The implementation of the vector cross product cipher is asymmetrical because it requires different
+	//  public key generation and public key agreement methods, but unlike the Merkle-Hellman or factoriza-
+	//  ciphers it uses two commutative functions instead of a one-way / invertible function.)
 	//
 	//  A secret matrix, vector, or hypercomplex number can be reduced to a secret key or number by concaten-
 	//  ating the elements or removing the commas or delimiters. For example, the array { 1, 2, 3, 4 } or the
@@ -50204,24 +50267,52 @@ class PublicKey
 	//  duced discrete log problems.
 	//
 	//  The integer discrete log cipher (modulo a prime) requires a public key vector y1 = a1^x1 a2^x2 and
-	//  y2 = a2^x1 a3^x2 (mod p) instead of a public key number y = a ^ x (mod p) so that a cryptanalyst
+	//  y2 = a2^x1 a3^x2 (mod p) instead of a public key number y = a^x (mod p) so that a cryptanalyst
 	//  would have to solve the discrete log problem to find the public key agreement e = a1^(k1 x1) a2^
 	//  (k1 x2 + k2 x1) a3^(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a
 	//  matrix-like cipher because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use
 	//  matrix arithmetic. This cipher can still be broken by quantum computing because the function has a
-	//  periodicity and the solution is unambiguous.
-	//
-	//  The complex integer discrete log cipher y = (x c) ^ (p-1) ^ x1 (mod p) where c = a + i b, p = 3
-	//  mod 4, (p+1)/4 is prime, and e == y^k (real) / y^k (imag) may not be breakable by quantum comput-
-	//  ing because the function is not periodic. The cipher y1 = u1^x1 u2^x2, y2 = u2^x1 u3^x2 where u1
-	//  = a1 + i b1, u2 = a2 + i b2 + j c2, u3 = a3 + i b3 + j c3 + ... may also be unbreakable because it
-	//  uses multi-dimensional algebra.
+	//  periodicity and the solution is unambiguous or the function has a one-to-one mapping.
 	//
 	//  Elliptic curve ciphers, 1x1 polynomial matrix discrete log ciphers, integer log ciphers, and the
-	//  Rabin / factorization cipher are not used in the public key class because these ciphers are suscept-
-	//  ible to quantum computing. The Rabin cipher also is not enabled because it uses large prime number
-	//  generation which is probabilistic and could slow the public key encryption and decryption in other
-	//  programming languages that don't use the same big integer algorithms.
+	//  Rabin / factorization cipher are not used in the public key class because these ciphers are broken
+	//  or are susceptible to quantum computing.
+	//
+	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
+	//  tory problem to be a public key cipher. It only has to be harder to invert than to compute. Some
+	//  functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
+	//  nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
+	//
+	//  Even with quantum computing or a polynomial-time algorithm, the Rabin cipher might still be un-
+	//  breakable if the key size is large enough. For example, if a classical algorithm for factoring num-
+	//  bers has a running time of O(n^4) (or O(n^3.58)) which is the same time as prime number generation,
+	//  then for a 1 megabit number the algorithm would require (10^6)^4 or a septillion multiplications
+	//  which could require 10^27 to 10^30 (or 10^26 to 10^29) operations.
+	//
+	//  If the factorization algorithm requires a matrix then there would also be large space requirements
+	//  unless the matrix is sparse because a 10^6 x 10^6 matrix that has a 10^6 modulus would occupy 10^18
+	//  bits or 10^17 bytes which is a hundred petabytes of memory. (A 512 K-bit number would reduce the
+	//  storage space to only ten petabytes or 10,000 terabytes of memory.)
+	//
+	//  A quantum computer could reduce the running time to O(n^2.58) or O(n^2 log n) for large numbers
+	//  which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the factors f1 =
+	//  (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-residue.
+	//  For example, if n = 77, a quantum computer would compute the order of a^x (mod n) or lambda(n) =
+	//  lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^
+	//  (lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7.
+	//
+	//  A quantum computer can only attack the integer factorization problem by solving the unit discrete
+	//  log problem a^x == 1 (mod n), not by solving the quadratic residue problem x^2 == 1 (mod n) because
+	//  the solution to a^x == 1 is unambiguous or the function has a one-to-one mapping whereas the qua-
+	//  dratic equation x^2 == 1 has multiple or 2^k solutions where k is the number of prime powers in the
+	//  modulus. The equation x^2 == 1 (mod n) is the difference of squares problem x^2 - 1 == k n which
+	//  factors into (x + 1) (x - 1) == k n. This implies that (x + 1) and (x - 1) each contains a factor
+	//  of n. (The trivial solutions x == 1 and x == -1 don't factor the modulus n because there is no mod-
+	//  ular reduction which means that the modulus could be any number since k n == 0. If n = 77, then the
+	//  solution is x1 == 43 and x2 == - x1 == 77 - 43 == 34 because 43^2 == 34^2 == 1 (mod 77))
+	
+	
+	
 	
 	
 	
@@ -52290,7 +52381,7 @@ class PublicKey
 	
 	public static String encrypt(String message, String[] y, PublicKey[] onetimepublickey)
 	
-		throws Exception  //  ArithmeticException, NullPointerException
+		throws Exception // ArithmeticException, NullPointerException
 	{
 		return encrypt(message, y, onetimepublickey, false);
 	}
@@ -53110,7 +53201,7 @@ class PublicKey
 			Cube A2x2 = A2 .modPow(x2, p);
 			
 			
-			//  Compute the public key
+			//  Compute the public key cube
 			
 			Cube Y = A1x1 .multiply(B) .mod(p)
 			
@@ -53195,7 +53286,7 @@ class PublicKey
 			Tesseract A2x2 = A2 .modPow(x2, p);
 			
 			
-			//  Compute the public key
+			//  Compute the public key tesseract
 			
 			Tesseract Y = A1x1 .multiply(B) .mod(p)
 			
@@ -54104,13 +54195,16 @@ class PublicKey
 			Vector X = new Vector( new Number[] { x[0], x[1], x[2] } );
 			
 			
-			//  Compute the recipient's static public key
+			//  Compute the recipient's static
+			//  public key vector / parallelogram
 			
 			Vector Y = A .cross(X) .mod(p);
 			
 			
 			//  Either the sender or the receiver can negate
 			//  the value of the secret key, but not both
+			//  (This code is not used because the negation
+			//  is done in the secret key agreement method)
 			
 			if ((publickey == null) || publickey.isEmpty()) {  }
 			
@@ -55183,11 +55277,11 @@ class PublicKey
 		
 		public String toIntegerString(int digits, int radix)
 		{
-			//  converts a tesseract to an integer string by
-			//  padding and concatenating the elements
+			//  converts a tesseract to an integer string
+			//  by padding and concatenating the elements
 			
-			//  This method is used for cryptography to convert a
-			//  public key / tesseract to a public key string.
+			//  This method is used for cryptography to convert
+			//  a public key / tesseract to a public key string.
 			
 			//  The digits variable is the minimum number of digits.
 			//  The left side will be padded with zeros if necessary.
@@ -55287,11 +55381,9 @@ class PublicKey
 	
 		//  Quaternion Algebra / The Algebra of Quaternions / Four-dimensional algebra (1843)
 		//
-		//  A quaternion is a four-element hypercomplex number { a0, a1 i, a2 j, a3 k }.
+		//  A quaternion is a four-element hypercomplex number a0 + a1 i + a2 j + a3 k.
 		//
-		//  A four-dimensional / hypercomplex number has a three-dimensional complex vector.
-		//
-		//  Multiplication of the basis or set of unit vectors { 1, i, j, k } is defined by
+		//  Multiplication of the basis or set of unit vectors { i, j, k } is defined by
 		//
 		//  i j ==  k,  j k ==  i,  k i ==  j,  j i == - k,  k j == - i,  i k == - j, and
 		//
@@ -55928,7 +56020,7 @@ class PublicKey
 	
 	
 	
-	//  matrices of polynomials
+	//  Matrices of polynomials
 	
 	//  these methods should be wrapped, packaged or encapsulated in a class
 	
@@ -56189,8 +56281,8 @@ class PublicKey
 	//  (a - b).
 	//
 	//  The Rabin cipher can work with any exponent > 1 by choosing a prime factor
-	//  in the modulus that has the same integer in the totient so that e and
-	//  phi(n) are co-composite or (e, phi(n)) != 1.
+	//  in the modulus that has the same integer in the totient so that e and phi(n)
+	//  are co-composite or (e, phi(n)) != 1.
 	
 	
 	
@@ -56698,7 +56790,6 @@ class PublicKey
 			for (int i  = 0; i  < k;  i ++)
 			
 			    t1_m[i1] = t1_m[i1] .add(t1[i1][i].multiply(m[i]));
-			
 			
 			
 			//  Append the vector products t1[][] m[]
@@ -57309,6 +57400,8 @@ class PublicKey
 			Cube A2x2 = A2.modPow(x2, p);
 			
 			
+			//  Compute the secret cube
+			
 			Cube E = A1x1 .multiply(Z) .mod(p)
 			
 			    .multiply(A2x2) .mod(p)
@@ -57413,11 +57506,11 @@ class PublicKey
 			Tesseract A2x2 = A2.modPow(x2, p);
 			
 			
+			//  Compute the secret tesseract
+			
 			Tesseract E = A1x1 .multiply(Z) .mod(p)
 			
-			    .multiply(A2x2) .mod(p)
-			
-				.multiply(x0) .mod(p);
+			    .multiply(A2x2) .mod(p) .multiply(x0) .mod(p);
 			
 			
 			//  Reduce E modulo F8 and return the secret key
@@ -57544,7 +57637,10 @@ class PublicKey
 			    { x[0], x[1], x[2] } );
 			
 			
-			//  Compute the secret key
+			//  Compute the secret volume of the parallelepiped
+			//
+			//  == the parallelogram Z times the private vector X
+			//  or the parallelogram Y times the private vector K
 			//
 			//  E  =  Z * X  ==  - Y * K
 			
@@ -68505,13 +68601,23 @@ class Number implements Comparable<Number>
 	public Number inverse()
 	{
 	
-		//  computes the inverse u == 1 / v using the quadratically
-		//  convergent iterative formula u = u (2 - v u)
+		//  computes the inverse u == 1 / v using the formula u = u (2 - v u)
 		//
 		//  This iteration requires only a few multi-precision multiplications.
+		//  Instead of converging linearly by 1 bit, 1 digit, or 1 int per iter-
+		//  ation like the quadratic divider, Newton's iteration converges expo-
+		//  nentially faster by doubling the number of digits per iteration.
 		//
-		//  If the number of bits is small, this method calls the quadratic
-		//  divider because it may be faster.
+		//  This means that instead of requiring O(n) multi-precision multipli-
+		//  cations or O(n^2) single-precision operations to do a division,
+		//  inversion requires only O(log2(n)) multi-precision multiplications
+		//  or O(n log n) single-precision operations. (For example, for a 1 M
+		//  bit number, the number of multi-precision multiplications is about
+		//  log2(1 M / 32 bits) == log2(1 M) - log2(32) == 20 - 5 == 15.)
+		//
+		//  By computing the inverse of a divisor, a quotient of two numbers
+		//  can be computed by multiplying the inverse by the dividend because
+		//  q = a / b == a * (1 / b) == a * inverse(b).
 		
 		
 		if (this.isComplex())
@@ -78540,6 +78646,8 @@ class Fourier
 	//
 	//  The series a[k] cos(2 pi/N k x) + b[k] sin(2 pi/N k x) is called the Fourier series
 	//  of the function x(n) and the constants a[] and b[] are called the Fourier coefficients.
+	//  (The number 2 pi/N is the step size because 2 pi is the circumference of a unit circle
+	//  and N is the number of elements in the array.)
 	//
 	//  The Fourier coefficients a[] and b[] represent the amplitudes of the sine and cosine
 	//  terms in the series, and the indexer k represents the integer multiples of the fre-
@@ -78568,11 +78676,15 @@ class Fourier
 	//  ==  [ x[k] real cos(2 pi/N k n) + x[k] imag sin(2 pi/N k n) ]
 	//  + i [-x[k] real sin(2 pi/N k n) + x[k] imag cos(2 pi/N k n) ]
 	//
+	//  Some implementations divide the transform and inverse transform by 1/sqrt(N) in-
+	//  stead of dividing the inverse transform by 1/N to make the formulas symmetrical.
+	//  
 	//  Computing the Fourier transform requires a quadratic number of multiplications
-	//  because for each x[k] the index n has to be iterated from 0 to N-1 and for each
-	//  x[n] the index k has to be iterated from 0 to N-1. The Danielson-Lanczos lemma can
-	//  be used to reduce the running time from O(n^2) to O(n log n) where n is the number
-	//  of elements in the array.
+	//  because for each x[k] the index n has to be iterated from 0 to N-1, and for each
+	//  x[n] the index k has to be iterated from 0 to N-1. This means that there are two
+	//  indexers or a double loop for computing the Fourier transform. The Danielson-Lanc-
+	//  zos lemma can be used to reduce the running time from O(n^2) to O(n log n) where n
+	//  is the number of elements in the array.
 	
 	
 	
@@ -78604,16 +78716,16 @@ class Fourier
 	//  the number of elements in the array but the code is just as
 	//  fast even for large array sizes.
 	//
-	//  final int arraysize = 1024*1024;
-	//  double[] array = new double[arraysize];
+	//  final int size = 1024*1024;
+	//  double[] array = new double[size];
 	//  for (int i = 0; i < array.length; i++) array[i] = i;
 	//  array = Convert.realArrayToComplexArray(array);
 	//  for (int i = 0; i < 16; i++) Fourier.transform(array, 1);
 	
 	
 	
-	//  Set the minimum size or threshold for recursion and for
-	//  using the dft instead of the fft.
+	//  Set the minimum size or threshold for recursion
+	//  and for using the dft instead of the fft
 	
 	private static int minsize = 1;
 	
@@ -78700,8 +78812,8 @@ class Fourier
 	public static Number[] transform(Number[] array, int sign)
 	{
 	
-		//  computes the discrete fourier transform or dft of a set of real
-		//  or complex numbers using the fast / fft or slow / quadratic dft.
+		//  computes the discrete fourier transform or dft of a set of
+		//  complex numbers using the fast / fft or slow / quadratic dft.
 		//
 		//  The inverse transform divides the array by the number of ele-
 		//  ments, but some implementations divide both the transform and
@@ -78962,16 +79074,8 @@ class Fourier
 	
 		//  The slow fourier transform has a quadratic O(n^2) running time
 		
-		//  This method is used to compute the Fourier transform for small arrays
-		//  or array sizes that are not a power of 2.
-		//
-		//  It can be used to limit the amount of recursion or reduce the number
-		//  of function calls in the recursive fft method (just as the Karatsuba
-		//  multiplication method limits the amount of recursion by calling the
-		//  quadratic multiplier below a minimum threshold), so that the program
-		//  doesn't hang or become unresponsive. For example, if the array size
-		//  is 1 M and the recursion threshold is 64, the number of function
-		//  calls is reduced from 1 M to 1 M / 64 == 16 K.
+		//  This method computes the Fourier transform for small
+		//  arrays or array sizes that are not a power of 2.
 		
 		
 		int t = array.length / 2;
@@ -79043,16 +79147,8 @@ class Fourier
 	
 		//  The slow fourier transform has a quadratic O(n^2) running time
 		
-		//  This method is used to compute the Fourier transform for small arrays
-		//  or array sizes that are not a power of 2.
-		//
-		//  It can be used to limit the amount of recursion or reduce the number
-		//  of function calls in the recursive fft method (just as the Karatsuba
-		//  multiplication method limits the amount of recursion by calling the
-		//  quadratic multiplier below a minimum threshold), so that the program
-		//  doesn't hang or become unresponsive. For example, if the array size
-		//  is 1 M and the recursion threshold is 256, the number of function
-		//  calls is reduced from 1 M to 1 M / 64 == 16 K.
+		//  This method computes the Fourier transform for small
+		//  arrays or array sizes that are not a power of 2.
 		
 		
 		int t = array.length / 2;
@@ -79221,12 +79317,12 @@ class Fourier
 		
 		//  Create a sine and cosine table
 		
-		final int N = array.length / 2;
+		int N = array.length / 2;
 		
 		//  N = the number of complex numbers
 		
-		final Number[] sin = Math.sin_table(new Number(N));
-		final Number[] cos = Math.cos_table(new Number(N));
+		Number[] sin = Math.sin_table(new Number(N));
+		Number[] cos = Math.cos_table(new Number(N));
 		
 		
 		//  Compute the Fourier transform
@@ -79349,12 +79445,12 @@ class Fourier
 		
 		//  Create a sine and cosine table
 		
-		final int N = array.length / 2;
+		int N = array.length / 2;
 		
 		//  N = the number of complex numbers
 		
-		final double[] sin = Math.sin_table(N);
-		final double[] cos = Math.cos_table(N);
+		double[] sin = Math.sin_table(N);
+		double[] cos = Math.cos_table(N);
 		
 		
 		//  Compute the fourier transform
@@ -79455,7 +79551,6 @@ class Fourier
 		{
 			y[2*i + 0] = x[4*i + 0];
 			y[2*i + 1] = x[4*i + 1];
-			
 			z[2*i + 0] = x[4*i + 2];
 			z[2*i + 1] = x[4*i + 3];
 		}
@@ -79473,10 +79568,10 @@ class Fourier
 		
 		//  Create a sine and cosine table
 		
-		final double[] sin = Math.sin_table(n);
-		final double[] cos = Math.cos_table(n);
+		double[] sin = Math.sin_table(n);
+		double[] cos = Math.cos_table(n);
 		
-		final int m = sin.length / n;
+		int m = sin.length / n;
 		
 		for (int k = 0; k < n; k+=2)
 		{
