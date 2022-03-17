@@ -73,11 +73,11 @@
 	incompressible; the sign out / log out method was modified so that if the email server or mail pro-
 	gram becomes unresponsive or the wifi loses its connection it will end the program in a few seconds
 	so the user doesn't have to close the terminal or open the System monitor to find and terminate the
-	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded
-	data with a base-16 separator to make it base-64; the public key ciphers were rearranged; and errors
-	in the readMessage method were corrected so that the messages and attached files are detached and
-	displayed correctly for encrypted and unencrypted emails; the test mail feature and read all method
-	show that the messages and files are displayed correctly.
+	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded da-
+	ta with a base-16 separator to make it base-64; the public key ciphers were rearranged; errors in
+	the readMessage method were corrected so that the messages and attached files are detached and dis-
+	played correctly for encrypted and unencrypted emails; and a public key padding error was corrected
+	so the decryption method removes the padding / space chars appended to the message.
 	
 	
 	
@@ -292,8 +292,8 @@
 	sional algebra by using points on a plane a0 + a1 i instead of points on a line, points in a cube
 	a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which is a quaternion), or points
 	in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2 == 1 and i j == k, j k == i,
-	k i == j, ... Matrices of multi-dimensional points can also use multi-dimensional arithmetic in
-	addition to multi-dimensional algebra.
+	k i == j, ... Matrices of multi-dimensional points such as quaternions can also use multi-dimen-
+	sional arithmetic in addition to multi-dimensional algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices A[][] = { { A1, A2 }
 	{ A2, A3 } } as a public parameter or blank public key, reducing the 2x2 block matrix to a 2x1
@@ -373,24 +373,28 @@
 	the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
 	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem are susceptible to quantum
-	computing.
+	class because the factorization and integer discrete log problem are susceptible to quantum comput-
+	ing. The Rabin cipher was included in the public key class to test the software for asymmetrical
+	public key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ci-
+	phers are symmetrical which means that they use the same methods for public key generation and pub-
+	lic key agreement.
 	
-	The Rabin cipher was included in the public key class to test the software for asymmetrical public
-	key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are
-	symmetrical which means that they use the same methods for public key generation and public key
-	agreement. This cipher is not used or enabled because it requires large prime number generation
-	which is probabilistic and could slow the decryption for some private keys or passphrases. It also
-	doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
-	and classical computing.
+	It doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
+	computing. The Rabin cipher can never be broken because factorization will always be harder than
+	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
+	rithm is O(n^3) multi-precision multiplications or O(n^4.58) single-precision multiplications or op-
+	erations. A 1 M bit key would only require O(1) == O(n^0) multi-precision multiplications or O(n^
+	1.58) single-precision multiplications for encryption. (No key size is secure for RSA because the
+	coprime root extraction problem is completely broken. This means that the function can be inverted
+	as fast as it can be computed.)
 	
-	If an integer cipher is not based on the integer factorization / discrete log problem, then there
-	is no need to factor the modulus or solve the discrete log problem. For example, the integer cipher
-	y = a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken because the cipher is based on log multiplica-
-	tion instead of log extraction. The integer digital signature algorithm is based on the discrete log
-	problem or dlp because it uses one equation for the static signature key y = a ^ x (mod p), another
-	equation for the one-time signature key r = a ^ k (mod p), and a third equation for the signature
-	s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
+	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
+	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
+	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken because the cipher is based on log multiplication in-
+	stead of log extraction. The integer digital signature algorithm is based on the discrete log problem
+	or dlp because it uses one equation for the static signature key y = a ^ x (mod p), another equation
+	for the one-time signature key r = a ^ k (mod p), and a third equation for the signature s = k m +
+	x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a

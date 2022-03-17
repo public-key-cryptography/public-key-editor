@@ -103,11 +103,11 @@
 	incompressible; the sign out / log out method was modified so that if the email server or mail pro-
 	gram becomes unresponsive or the wifi loses its connection it will end the program in a few seconds
 	so the user doesn't have to close the terminal or open the System monitor to find and terminate the
-	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded
-	data with a base-16 separator to make it base-64; the public key ciphers were rearranged; and errors
-	in the readMessage method were corrected so that the messages and attached files are detached and
-	displayed correctly for encrypted and unencrypted emails; the test mail feature and read all method
-	show that the messages and files are displayed correctly.
+	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded da-
+	ta with a base-16 separator to make it base-64; the public key ciphers were rearranged; errors in
+	the readMessage method were corrected so that the messages and attached files are detached and dis-
+	played correctly for encrypted and unencrypted emails; and a public key padding error was corrected
+	so the decryption method removes the padding / space chars appended to the message.
 	
 	
 	
@@ -322,8 +322,8 @@
 	sional algebra by using points on a plane a0 + a1 i instead of points on a line, points in a cube
 	a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which is a quaternion), or points
 	in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2 == 1 and i j == k, j k == i,
-	k i == j, ... Matrices of multi-dimensional points can also use multi-dimensional arithmetic in
-	addition to multi-dimensional algebra.
+	k i == j, ... Matrices of multi-dimensional points such as quaternions can also use multi-dimen-
+	sional arithmetic in addition to multi-dimensional algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices A[][] = { { A1, A2 }
 	{ A2, A3 } } as a public parameter or blank public key, reducing the 2x2 block matrix to a 2x1
@@ -403,24 +403,28 @@
 	the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
 	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem are susceptible to quantum
-	computing.
+	class because the factorization and integer discrete log problem are susceptible to quantum comput-
+	ing. The Rabin cipher was included in the public key class to test the software for asymmetrical
+	public key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ci-
+	phers are symmetrical which means that they use the same methods for public key generation and pub-
+	lic key agreement.
 	
-	The Rabin cipher was included in the public key class to test the software for asymmetrical public
-	key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are
-	symmetrical which means that they use the same methods for public key generation and public key
-	agreement. This cipher is not used or enabled because it requires large prime number generation
-	which is probabilistic and could slow the decryption for some private keys or passphrases. It also
-	doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
-	and classical computing.
+	It doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
+	computing. The Rabin cipher can never be broken because factorization will always be harder than
+	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
+	rithm is O(n^3) multi-precision multiplications or O(n^4.58) single-precision multiplications or op-
+	erations. A 1 M bit key would only require O(1) == O(n^0) multi-precision multiplications or O(n^
+	1.58) single-precision multiplications for encryption. (No key size is secure for RSA because the
+	coprime root extraction problem is completely broken. This means that the function can be inverted
+	as fast as it can be computed.)
 	
-	If an integer cipher is not based on the integer factorization / discrete log problem, then there
-	is no need to factor the modulus or solve the discrete log problem. For example, the integer cipher
-	y = a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken because the cipher is based on log multiplica-
-	tion instead of log extraction. The integer digital signature algorithm is based on the discrete log
-	problem or dlp because it uses one equation for the static signature key y = a ^ x (mod p), another
-	equation for the one-time signature key r = a ^ k (mod p), and a third equation for the signature
-	s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
+	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
+	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
+	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken because the cipher is based on log multiplication in-
+	stead of log extraction. The integer digital signature algorithm is based on the discrete log problem
+	or dlp because it uses one equation for the static signature key y = a ^ x (mod p), another equation
+	for the one-time signature key r = a ^ k (mod p), and a third equation for the signature s = k m +
+	x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
@@ -2837,7 +2841,7 @@ class Programs
 			
 			
 			
-			//  Set the font of the textareapanel in the tabbedpane
+			//  Set the font of the textareapanel
 			
 			defaultfont = this.getFont();
 			
@@ -2862,7 +2866,7 @@ class Programs
 			
 			
 			
-			//  Create a new TextAreaPanel to be added to the tabbedpane
+			//  Create a new TextAreaPanel
 			
 			newlistener.run();
 			
@@ -8243,7 +8247,8 @@ class Programs
 					
 					if (obj instanceof JLabel)
 					{
-						stylebox.setSelected(!stylebox.isSelected());
+						 stylebox.setSelected(
+						!stylebox.isSelected());
 						
 						style = stylebox.isSelected() ?
 						
@@ -16505,7 +16510,8 @@ class Programs
 					
 					if (obj instanceof JLabel)
 					{
-						stylebox.setSelected(!stylebox.isSelected());
+						 stylebox.setSelected(
+						!stylebox.isSelected());
 						
 						style = stylebox.isSelected() ?
 						
@@ -25799,7 +25805,7 @@ class Programs
 				colorbuttonlistener.init();
 				
 				
-				//  Create a new EmailPanel to be added to the JTabbedPane
+				//  Create a new EmailPanel
 				
 				newlistener.run();
 			}
@@ -28674,7 +28680,8 @@ class Programs
 						
 						if (obj instanceof JLabel)
 						{
-							stylebox.setSelected(!stylebox.isSelected());
+							 stylebox.setSelected(
+							!stylebox.isSelected());
 							
 							style = stylebox.isSelected() ?
 							
@@ -39124,7 +39131,7 @@ class EncryptDirectory
 	
 	private int maxfontsize = 22;
 	
-	private JCheckBox checkbox = new JCheckBox();
+	private JCheckBox checkbox;
 	
 	private JTextArea filearea;
 	
@@ -39137,7 +39144,7 @@ class EncryptDirectory
 	
 	private JButton[] buttons;
 	
-	private boolean canceled; // stop requested
+	private boolean canceled;
 	
 	private int numberoffiles;
 	
@@ -39155,12 +39162,16 @@ class EncryptDirectory
 		decryptbutton = new JButton(__.decrypt);
 		 cancelbutton = new JButton(__.cancel);
 		
+		checkbox = new JCheckBox();
+		
 		buttons = new JButton[]
 		
 		    { testbutton, encryptbutton,
 		   decryptbutton,  cancelbutton };
 		
-		for (JButton button : buttons) button.setFont(font);
+		for (JButton button : buttons) button.setFont(
+		
+		    button.getFont().deriveFont(18.0f));
 		
 		
 		testbutton.addActionListener(new ActionListener()
@@ -39305,7 +39316,9 @@ class EncryptDirectory
 			
 			while ((str.length() % 8) != 0) str = "0" + str;
 			
-			String keyhash = Convert.partition(str.substring(0, 16), " ", 4);
+			String keyhash = Convert.partition(
+			
+			    str.substring(0, 16), " ", 4);
 			
 			String title = directory.toString();
 			
@@ -39409,6 +39422,13 @@ class EncryptDirectory
 			label3.setFont(font);
 			label4.setFont(font);
 			
+			label1.addMouseListener(new MouseAdapter()
+			{ public void mouseClicked(MouseEvent e)
+			{ Object obj = e.getSource();
+			if (obj instanceof JLabel)
+			    checkbox.setSelected(
+			   !checkbox.isSelected()); }});
+			
 			JButton keybutton = new JButton();
 			
 			keybutton.setEnabled(false);
@@ -39421,7 +39441,11 @@ class EncryptDirectory
 			hbox3 = Box.createHorizontalBox();
 			hbox4 = Box.createHorizontalBox();
 			
+			Component hstrut = Box
+			    .createHorizontalStrut(2);
+			
 			hbox1.add(checkbox);
+			hbox1.add(hstrut);
 			hbox1.add(label1);
 			hbox2.add(label2);
 			hbox3.add(label3);
@@ -50188,10 +50212,10 @@ class PublicKey
 	//  seracts.
 	//
 	//  The matrix ciphers are based on the multivariate functions X1 A X2, X^-1 A^x X, A^-x B^x1 A^x, and
-	//  A^x1 B^x2. The vector ciphers are based on the knapsack problem, the problem of factoring or unmul-
-	//  tiplying the vector cross product Y = A (x) X, and the quaternion and polynomial discrete log prob-
-	//  lem X^-1 A^x X. (Matrix and linear algebra books use different letters for these functions such as
-	//  P^-1 D P and C = A (x) B or W = U (x) V instead of X^-1 A X and Y = A (x) X.)
+	//  A^x1 B^x2. The vector ciphers are based on the knapsack problem, the vector cross product problem
+	//  Y = A (x) X, and the quaternion and polynomial discrete log problem X^-1 A^x X. (Matrix and linear
+	//  algebra books use different letters for these functions such as P^-1 D P and C = A (x) B or W =
+	//  U (x) V instead of X^-1 A X and Y = A (x) X.)
 	//
 	//  The vector ciphers and non-exponential matrix ciphers can be modular or non-modular, and the matrix,
 	//  vector, and quaternion ciphers can use one or multiple equations. Unlike integer ciphers such as the
@@ -50275,8 +50299,8 @@ class PublicKey
 	//  periodicity and the solution is unambiguous or the function has a one-to-one mapping.
 	//
 	//  Elliptic curve ciphers, 1x1 polynomial matrix discrete log ciphers, integer log ciphers, and the
-	//  Rabin / factorization cipher are not used in the public key class because these ciphers are broken
-	//  or are susceptible to quantum computing.
+	//  Rabin / factorization cipher are not used in the public key class because these ciphers are sus-
+	//  ceptible to quantum computing.
 	//
 	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
 	//  tory problem to be a public key cipher. It only has to be harder to invert than to compute. Some
@@ -50289,11 +50313,6 @@ class PublicKey
 	//  then for a 1 megabit number the algorithm would require (10^6)^4 or a septillion multiplications
 	//  which could require 10^27 to 10^30 (or 10^26 to 10^29) operations.
 	//
-	//  If the factorization algorithm requires a matrix then there would also be large space requirements
-	//  unless the matrix is sparse because a 10^6 x 10^6 matrix that has a 10^6 modulus would occupy 10^18
-	//  bits or 10^17 bytes which is a hundred petabytes of memory. (A 512 K-bit number would reduce the
-	//  storage space to only ten petabytes or 10,000 terabytes of memory.)
-	//
 	//  A quantum computer could reduce the running time to O(n^2.58) or O(n^2 log n) for large numbers
 	//  which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the factors f1 =
 	//  (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-residue.
@@ -50301,15 +50320,10 @@ class PublicKey
 	//  lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^
 	//  (lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7.
 	//
-	//  A quantum computer can only attack the integer factorization problem by solving the unit discrete
-	//  log problem a^x == 1 (mod n), not by solving the quadratic residue problem x^2 == 1 (mod n) because
-	//  the solution to a^x == 1 is unambiguous or the function has a one-to-one mapping whereas the qua-
-	//  dratic equation x^2 == 1 has multiple or 2^k solutions where k is the number of prime powers in the
-	//  modulus. The equation x^2 == 1 (mod n) is the difference of squares problem x^2 - 1 == k n which
-	//  factors into (x + 1) (x - 1) == k n. This implies that (x + 1) and (x - 1) each contains a factor
-	//  of n. (The trivial solutions x == 1 and x == -1 don't factor the modulus n because there is no mod-
-	//  ular reduction which means that the modulus could be any number since k n == 0. If n = 77, then the
-	//  solution is x1 == 43 and x2 == - x1 == 77 - 43 == 34 because 43^2 == 34^2 == 1 (mod 77))
+	//  If the factorization algorithm requires a matrix then there would also be large space requirements
+	//  unless the matrix is sparse because a 10^6 x 10^6 matrix that has a 10^6 modulus would occupy 10^18
+	//  bits or 10^17 bytes which is a hundred petabytes of memory. (A 512 K-bit number would reduce the
+	//  storage space to only ten petabytes or 10,000 terabytes of memory.)
 	
 	
 	
@@ -50680,6 +50694,11 @@ class PublicKey
 	final static int receive_decrypt = 1; // receiver / static key
 	final static int    send_encrypt = 2; //  sender / one-time key
 	
+	
+	//  The padding chars appended to the message
+	
+	final static char c1 = '\n'; // single pad char
+	final static char c = ' '; // multiple pad char
 	
 	
 	
@@ -51886,15 +51905,15 @@ class PublicKey
 		
 		if (Cipher.isPadded(plaintext.getBytes()))
 		{
-			char c = '\n'; int index = 0;
+			int index = 0;
 			
 			int length = plaintext.length();
 			
 			while (plaintext.charAt(length -1 - index) == c) index++;
 			
-			if (plaintext.charAt(length -1) == ' ') index++;
+			if (plaintext.charAt(length -1 - index) == c1) index++;
 			
-			plaintext = plaintext .substring(0, length -1 -index);
+			plaintext = plaintext .substring(0, length - index);
 		}
 		
 		if (!Cipher.isEncrypted(plaintext.getBytes()))
@@ -52328,15 +52347,15 @@ class PublicKey
 		
 		if (Cipher.isPadded(plaintext.getBytes()))
 		{
-			char c = '\n'; int index = 0;
+			int index = 0;
 			
 			int length = plaintext.length();
 			
 			while (plaintext.charAt(length -1 - index) == c) index++;
 			
-			if (plaintext.charAt(length -1) == ' ') index++;
+			if (plaintext.charAt(length -1 - index) == c) index++;
 			
-			plaintext = plaintext .substring(0, length -1 -index);
+			plaintext = plaintext .substring(0, length - index);
 		}
 		
 		if (!Cipher.isEncrypted(plaintext.getBytes()))
@@ -52446,10 +52465,6 @@ class PublicKey
 		//  for less expansion.
 		
 		
-		char c = ' '; // multiple pad char
-		
-		char c1 = '\n'; // single pad char
-		
 		if (c1 == c) throw new Exception();
 		
 		String plaintext = new String(message) + c1;
@@ -52464,6 +52479,9 @@ class PublicKey
 		if      (plaintext.length() < ( 64*1024)) multiplier = 1.00;
 		else if (plaintext.length() < (256*1024)) multiplier = 0.50;
 		else                                      multiplier = 0.25;
+		
+		//  Use a random pad length < the size of the
+		//  multiplier to hide the size of the message
 		
 		int padlength = 16 + (int) (plaintext.length()
 		
@@ -56266,23 +56284,6 @@ class PublicKey
 	//  the composite residue from a set of reduced residues and moduli but he
 	//  did not provide a method for solving the problem. One of two treatises
 	//  by Nicomachus that has survived is called Introductio Arithmetica.
-	
-	
-	
-	//  The Rabin / factorization cipher c = m ^ e (mod n) where (e, phi(n)) != 1
-	//  is equivalent to factorization because there is an e to 1 mapping of m to c.
-	//  This means that if the co-composite root extraction problem can be solved,
-	//  then the modulus n can be factored by choosing an m1, computing c = m1 ^ e
-	//  (mod n), and then solving for m1. Because there is a many-to-one mapping,
-	//  there is a 1/e chance that the solution will be the same m1, and a 1 - 1/e
-	//  chance that the solution be a different m2. Since m1^e == m2^e (mod n),
-	//  m1^e - m2^e == 0 (mod n) or m1^e - m2^e == k n, this implies that m1 - m2
-	//  contains a factor of the modulus n because any a^x - b^x contains a factor
-	//  (a - b).
-	//
-	//  The Rabin cipher can work with any exponent > 1 by choosing a prime factor
-	//  in the modulus that has the same integer in the totient so that e and phi(n)
-	//  are co-composite or (e, phi(n)) != 1.
 	
 	
 	
@@ -78744,11 +78745,11 @@ class Fourier
 	//  Number[] fourier1 = Fourier.transform(x1, 1);
 	//  double[] fourier2 = Fourier.transform(x2, 1);
 	//
-	//  System.out.println("Number[] x1 == " + Arrays.toString(fourier1));
-	//  System.out.println("double[] x2 == " + Arrays.toString(fourier2));
-	//
 	//  Number[] x3 = Fourier.transform(fourier1, -1);
 	//  double[] x4 = Fourier.transform(fourier2, -1);
+	//
+	//  System.out.println("Number[] x1 == " + Arrays.toString(fourier1));
+	//  System.out.println("double[] x2 == " + Arrays.toString(fourier2));
 	//
 	//  System.out.println("Number[] x3 == " + Arrays.toString(x3));
 	//  System.out.println("double[] x4 == " + Arrays.toString(x4));
