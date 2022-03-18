@@ -106,8 +106,10 @@
 	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded da-
 	ta with a base-16 separator to make it base-64; the public key ciphers were rearranged; errors in
 	the readMessage method were corrected so that the messages and attached files are detached and dis-
-	played correctly for encrypted and unencrypted emails; and a public key padding error was corrected
-	so the decryption method removes the padding / space chars appended to the message.
+	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
+	the decryption method removes the padding / space chars appended to the message; another Xlint error
+	was corrected; and the mail class is being upgraded to save the message states in the mail directory
+	and to send and retrieve users' public keys.
 	
 	
 	
@@ -262,11 +264,11 @@
 	
 	Public and private key ciphers used by the software
 	
-	The program uses matrix discrete log ciphers for public key agreement and a hash cipher for private
-	key encryption. The public key agreement or secret key is hashed to generate a sequence of random
-	numbers which is used as a one-time pad. The ciphertext is computed by adding the one-time pad to
-	the the plaintext, and then the plaintext is recovered by subtracting the one-time pad from the
-	ciphertext.
+	The program uses hypercomplex and hyper-dimensional ciphers for public key agreement and a hash ci-
+	pher for private key encryption. The public key agreement or secret key is hashed to generate a se-
+	quence of random numbers which is used as a one-time pad. The ciphertext is computed by adding the
+	one-time pad to the plaintext, and then the plaintext is recovered by subtracting the one-time pad
+	from the ciphertext.
 	
 	The hash cipher is unbreakable because cryptographic hash functions are non-invertible. Even if the
 	hash function could be inverted it wouldn't break the cipher because there are 2^768 pre-images for
@@ -7023,7 +7025,6 @@ class Programs
 					
 					public void keyReleased(KeyEvent e)
 					{
-					
 						int keychar = e.getKeyChar();
 						int keycode = e.getKeyCode();
 						
@@ -7038,7 +7039,6 @@ class Programs
 					
 					public void keyTyped(KeyEvent e)
 					{
-					
 						int keycode = e.getKeyCode();
 						int keychar = e.getKeyChar();
 						
@@ -7161,7 +7161,6 @@ class Programs
 			}
 			
 			
-			
 			public void setColor()
 			{
 				if (textareapanel == null) return;
@@ -7177,7 +7176,6 @@ class Programs
 				currentlinefield.setBackground(background);
 				currentlinefield.setCaretColor(foreground);
 			}
-			
 			
 			
 			public void setFont(Font font)
@@ -16475,7 +16473,7 @@ class Programs
 				
 				if ((fontname != null) && !fontname.isEmpty())
 				
-				    font = new Font(fontname, style, (int) fontsize);
+				    font = new Font(fontname, style, fontsize);
 				
 				fontname  = font.getName();
 				fontstyle = font.getStyle();
@@ -21008,7 +21006,16 @@ class Programs
 		private boolean testmail = false;
 		
 		private boolean mailcopytoself = true;
-				
+		
+		//  these variables will be set to true if email
+		//  service providers upgrade their software to
+		//  allow users to send and retrieve public keys
+		//  or change message states
+		
+		//////////////////////////////////////////////
+		private boolean sendretrievepublickey = false;
+		private boolean changemessagestate = false;
+		//////////////////////////////////////////////
 		
 		private String  testpassphrase = "recipient's passphrase";
 		private String replypassphrase = "sender's passphrase--";
@@ -21068,6 +21075,29 @@ class Programs
 		
 		final private Font defaultfont = font;
 		
+		
+		//  Define the message states 0 to 9
+		
+		private enum MessageState
+		{
+			unread,  // new envelope gold star
+			read,    // opened envelope
+			replied, // curved left arrow
+			delete,  // trash can or an x
+			important, // red exclamation point
+			urgent,  // red circular clock
+			spam,    // trash can
+			star,    // star
+			save,    // save
+		}
+		
+		//  The msg state numbers to send to the server
+		//  and / or save in the message state file
+		//
+		//  MessageState. unread.ordinal() == 0,
+		//  MessageState.   read.ordinal() == 1,
+		//  MessageState.replied.ordinal() == 2,
+		//  ...    ...    ...    ...
 		
 		
 		
@@ -22393,11 +22423,9 @@ class Programs
 						if ((recipientskey == null) || recipientskey.isEmpty())
 						{
 						
-							//  Use the recipient's POP mail server
-							//  to retrieve the recipient's public key
-							
-							//  The email service providers should upgrade their POP mail servers
-							//  to store and retrieve users' public keys.
+							//  Use the recipient's POP mail server to retrieve the recipient's
+							//  public key. (The email service providers should upgrade their
+							//  POP mail servers to store and retrieve users' public keys.
 							//  
 							//  Retrieving the recipient's public key would not require authen-
 							//  tication but saving or storing the public key would require au-
@@ -22410,7 +22438,6 @@ class Programs
 							//  email settings.
 							
 							
-							
 							//  Connect to the recipient's pop mail server
 							//  (such as pop.example.com 995) and issue the command
 							//
@@ -22421,32 +22448,37 @@ class Programs
 							//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 							//  xxxxxxxxx0123456789abcdefxxxxxxxxxxxxxxxx
 							//  xxxxxxxxxxxxxxxxxxxxxxxxx................
-							//  .
+							//  . (end of message char)
 							
 							
-							/****************
 							
-							//  This code will be implemented if the email server
-							//  programs are upgraded to store and retrieve keys
-							
-							int portno = 995;
-							
-							PopMail popmail = new PopMail(tostring, portno);
-							
-							String publickey = popmail.retrieve(tostring);
-							
-							//  xxxxxxxxxx0123456789abcdefxxxxxxxxxx ...  or
-							//  xxxxxxxxxx-xxxxxxxxxxxx-xxxxxxxxxxxx ...
-							
-							if ((publickey != null) && !publickey.isEmpty()
-							
-							  && PublicKey.isValidKey(publickey))
-							
-								recipientskey = publickey;
-							
-							****************/
-							
-							
+							if (sendretrievepublickey)
+							{
+								//  This code will be implemented if the email server
+								//  programs are upgraded to store and retrieve keys
+								
+								int portno = 995;
+								
+								PopMail popmail = new PopMail(tostring, portno);
+								
+								String publickey = popmail.retrieve(tostring);
+								
+								//  xxxxxxxxxx0123456789abcdefxxxxxxxxxx ...  or
+								//  xxxxxxxxxx-xxxxxxxxxxxx-xxxxxxxxxxxx ...
+								
+								if ((publickey != null) && !publickey.isEmpty()
+								
+								  && PublicKey.isValidKey(publickey))
+								
+									recipientskey = publickey;
+							}
+						}
+						
+						
+						
+						if ((recipientskey == null) || recipientskey.isEmpty())
+						{
+						
 							//  If the public key is not in the recipient's public key direc-
 							//  tory search the public key ring for the recipient's public key
 							
@@ -22617,19 +22649,22 @@ class Programs
 						}
 						
 						
-						//  Save the new public key ring
+						//  Save the new key ring or update
+						//  the existing public key ring
 						
 						savePublicKeys(useraddr, keyring);
 						
 						
+						//  If there is a public key to encrypt to then
+						//  set encrypt = true or else encrypt = false
 						
 						if ((recipientskey != null) && !recipientskey.isEmpty()
 						
 						   && (recipientskeyaddress != null)
 						   &&  recipientskeyaddress.equals(tostring))
 						
-						      encrypt = true;  else encrypt = false;
-						
+						      encrypt = true; 
+						 else encrypt = false;
 						
 						
 						//  Display the Send Message JOptionPane dialog
@@ -25249,25 +25284,38 @@ class Programs
 			ImageIcon senticon    = Icons.get(Icons.mail_send_32x32);  // postage stamp
 			ImageIcon attachicon  = Icons.get(Icons.attachment);  // paper + paper clip
 			
-			//  icon popup menu (the subject / message key decrypt thread will change the unread
-			//  and read icons to plaintext_unread and plaintext_read icons if the messages are
-			//  unencrypted)
+			
+			//  icon popup menu (the list / decrypt thread will change the icons)
 			
 			ImageIcon  unreadicon = Icons.get(Icons.unread_mail_32x32);  // new envelope gold star
 			ImageIcon    readicon = Icons.get(Icons.read_mail_32x32);    // opened envelope
 			ImageIcon repliedicon = Icons.get(Icons.mail_replied_32x32); // curved left arrow
 			
-			//  ImageIcon  deleteicon = Icons.get(Icons.delete_32x32);     // red circle around (x)
-			
-			ImageIcon  deleteicon = Icons.get(Icons.trash_32x32);          // trash can
+			//  ImageIcon  deleteicon = Icons.get(Icons.delete_32x32);   // red circle around (x)
+			ImageIcon  deleteicon = Icons.get(Icons.trash_32x32);        // trash can
 			
 			ImageIcon  importicon = Icons.get(Icons.mail_important_32x32); // red exclamation point
-			ImageIcon  urgenticon = Icons.get(Icons.urgent_32x32);         // red circular clock
-			ImageIcon    spamicon = Icons.get(Icons.trash_32x32);          // trash can
+			ImageIcon  urgenticon = Icons.get(Icons.urgent_32x32);       // red circular clock
+			ImageIcon    spamicon = Icons.get(Icons.trash_32x32);        // trash can
 			
-			ImageIcon    staricon = Icons.get(Icons.star_32x32);           // star icon
-			ImageIcon    saveicon = Icons.get(Icons.save_24x24);           // save icon
+			ImageIcon    staricon = Icons.get(Icons.star_32x32);         // star icon
+			ImageIcon    saveicon = Icons.get(Icons.save_24x24);         // save icon
 			
+			
+			//  these image icons correspond to the MessageState enum
+			
+			private ImageIcon[] imageicons2 = new ImageIcon[]
+			{
+				unreadicon,
+				readicon,
+				repliedicon,
+				deleteicon,
+				importicon,
+				urgenticon,
+				spamicon,
+				staricon,
+				saveicon,
+			};
 			
 			
 			
@@ -26883,7 +26931,7 @@ class Programs
 						{
 							public void actionPerformed(ActionEvent e)
 							{
-								//  If the listpane has the focus, then the up and down
+								//  If the listpanel has the focus, then the up and down
 								//  arrows scroll the pane, but if the list button has the
 								//  focus, then the arrows highlight the email headers.
 								
@@ -29615,11 +29663,8 @@ class Programs
 					}
 					
 					final JList<String> list;
-					
 					final JScrollPane scrollpane;
-					
 					final DefaultListModel<String> emailmodel;
-					
 					//  final DefaultListModel<String> publickeymodel;
 					
 					emailmodel = new DefaultListModel<String>();
@@ -29632,18 +29677,14 @@ class Programs
 					}
 					
 					list = new JList<String>(emailmodel);
-					
 					scrollpane = new JScrollPane(list);
-					
 					list.setVisibleRowCount(4);
-					
 					
 					JButton deletebutton = new JButton(__.del);
 					
 					Box hbox = Box.createHorizontalBox();
 					
 					hbox.add(scrollpane);
-					
 					hbox.add(deletebutton);
 					
 					
@@ -29655,8 +29696,7 @@ class Programs
 							
 							if (choice == -1) return;
 							
-							emailmodel.remove(choice);
-							
+							   emailmodel.remove(choice);
 							publickeyring.remove(choice);
 						}
 					});
@@ -29690,7 +29730,7 @@ class Programs
 					if (result == JOptionPane.CLOSED_OPTION) return;
 					
 					
-					//  Save the public key ring
+					//  Update the public key ring
 					
 					savePublicKeys(useraddr, publickeyring);
 				}
@@ -30067,9 +30107,14 @@ class Programs
 			private class IconListener implements ActionListener
 			{
 			
-				private int number;
+				private int m; // message number
 				
-				//  the mouse listener sets the number
+				private MessageState msgstate;
+				
+				//  the mouse listener sets the indexer
+				//  so the icon listener knows the icon number
+				
+				public void setNumber(int m) { this.m = m; }
 				
 				public void actionPerformed(ActionEvent e)
 				{
@@ -30077,33 +30122,30 @@ class Programs
 					{
 						String str = ((JMenuItem) e.getSource()).getText();
 						
-						// (the subject thread will change the unread and read icons
-						//  to plaintext_unread and plaintext_read icons if the messages
-						//  are unencrypted)
-						
-						//  unreadicon  // new envelope gold star
-						//  readicon    // opened envelope
-						//  repliedicon // curved left arrow
-						//  deleteicon  // trash can or an x
-						//  importicon  // red exclamation point
-						//  urgenticon  // red circular clock
-						//  staricon    // star icon
-						//  saveicon    // save icon
-						
-						     JLabel label = emailpanel.listpanel.iconlabels2[number];
+						     JLabel label = emailpanel.listpanel.iconlabels2[m];
 						ImageIcon[] icons = emailpanel.listpanel.imageicons2;
+						
+						//  Set the message state
+						
+						//  Set the message state and the message icon
+						
+						if (str.equalsIgnoreCase(__.unread))    { msgstate = MessageState.unread;    icons[m] =  unreadicon; }
+						if (str.equalsIgnoreCase(__.read))      { msgstate = MessageState.  read;    icons[m] =    readicon; }
+						if (str.equalsIgnoreCase(__.repliedto)) { msgstate = MessageState.replied;   icons[m] = repliedicon; }
+						if (str.equalsIgnoreCase(__.delete))    { msgstate = MessageState.delete;    icons[m] =  deleteicon; }
+						if (str.equalsIgnoreCase(__.important)) { msgstate = MessageState.important; icons[m] =  importicon; }
+						if (str.equalsIgnoreCase(__.urgent))    { msgstate = MessageState.urgent;    icons[m] =  urgenticon; }
+						if (str.equalsIgnoreCase(__.spam))      { msgstate = MessageState.spam;      icons[m] =    spamicon; }
+						if (str.equalsIgnoreCase(__.star))      { msgstate = MessageState.star;      icons[m] =    staricon; }
+						if (str.equalsIgnoreCase(__.save))      { msgstate = MessageState.save;      icons[m] =    saveicon; }
+						
+						//  Set the message state in the arraylist1
+						
+						emailpanel.list1.setMessageState(m, msgstate);
 						
 						//  Change the icon label to the popup menu item
 						
-						if (str.equalsIgnoreCase(__.unread))    { label.setIcon(unreadicon);  icons[number] =  unreadicon; }
-						if (str.equalsIgnoreCase(__.read))      { label.setIcon(readicon);    icons[number] =    readicon; }
-						if (str.equalsIgnoreCase(__.repliedto)) { label.setIcon(repliedicon); icons[number] = repliedicon; }
-						if (str.equalsIgnoreCase(__.delete))    { label.setIcon(deleteicon);  icons[number] =  deleteicon; }
-						if (str.equalsIgnoreCase(__.important)) { label.setIcon(importicon);  icons[number] =  importicon; }
-						if (str.equalsIgnoreCase(__.urgent))    { label.setIcon(urgenticon);  icons[number] =  urgenticon; }
-						if (str.equalsIgnoreCase(__.spam))      { label.setIcon(spamicon);    icons[number] =    spamicon; }
-						if (str.equalsIgnoreCase(__.star))      { label.setIcon(staricon);    icons[number] =    staricon; }
-						if (str.equalsIgnoreCase(__.save))      { label.setIcon(saveicon);    icons[number] =    saveicon; }
+						label.setIcon(icons[m]);
 						
 						setFont1(font);
 						
@@ -30115,8 +30157,8 @@ class Programs
 						
 						//  Check or uncheck the delete box
 						
-						emailpanel.list1.setDeleteBox(number, delete);
-						emailpanel.listpanel.checkboxes[number].setSelected(delete);
+						emailpanel.list1.setDeleteBox(m, delete);
+						emailpanel.listpanel.checkboxes[m].setSelected(delete);
 						
 						
 						//  if the user likes an email or the email is important and
@@ -30129,16 +30171,16 @@ class Programs
 						
 						if (str.equalsIgnoreCase(__.save))
 						{
-							String message = emailpanel.list1.getMessage(number);
+							String message = emailpanel.list1.getMessage(m);
 							
 							if ((message == null) || message.isEmpty())
 							{
-								readMessage(emailpanel, number);
+								readMessage(emailpanel, m);
 								
-								message = emailpanel.list1.getMessage(number);
+								message = emailpanel.list1.getMessage(m);
 							}
 							
-							String from = emailpanel.list1.getFrom(number);
+							String from = emailpanel.list1.getFrom(m);
 							
 							if ((message != null) && !message.isEmpty())
 							
@@ -30147,14 +30189,17 @@ class Programs
 								.saveMessage(message, from);
 						}
 						
+						
 						//  Send a command to the POP mail server such as STAT m n where m
 						//  is the msg no and n is a digit that represents the message state
 						//  if pop mail servers are upgraded to allow users to change the
 						//  state of the messages.
 						
-						//  ...
+						if (changemessagestate)
 						
-						//  ...
+						    try { emailpanel.popmail.stat(m, msgstate.ordinal()); }
+						
+						    catch (IOException ex) { System.out.println(ex); }
 					}
 				}
 			}
@@ -30814,9 +30859,10 @@ class Programs
 							if ((emailpanel.listpanel.iconlabels2[i] == e.getSource())
 							 && (emailpanel.listpanel.imageicons2[i] != senticon))
 							{
-								//  Show a popup menu to change the icon
+								//  Set the message number of the icon to be changed
+								//  and then show a popup menu to change the icon
 								
-								iconlistener.number = i;
+								iconlistener.setNumber(i);
 								
 								iconpopupmenu.show(emailpanel.listpanel
 								
@@ -33268,10 +33314,12 @@ class Programs
 				
 				File file = new File(filename);
 				
-				byte[] fileinput = null;
+				String plaintext = null;
 				
 				if (file.exists())
 				{
+					byte[] fileinput = null;
+					
 					try { fileinput = DataStream.read(file); }
 					
 					catch (IOException ex)
@@ -33292,15 +33340,14 @@ class Programs
 						//  Return false if file did not decrypt
 						
 						if (fileinput == null) return false;
+						
+						//  Convert the decrypted byte[] to String
+						
+						plaintext = new String(fileinput);
 					}
 				}
 				
 				else return false;
-				
-				
-				//  Convert the decrypted byte array to string
-				
-				String plaintext = new String(fileinput);
 				
 				
 				
@@ -34628,16 +34675,10 @@ class Programs
 						editbutton.setToolTipText(__.edit);
 						
 						editbutton.addActionListener( new ActionListener()
-						{
-							public void actionPerformed(ActionEvent e)
-							{
-								for (int i = 0; i < editbuttons.length; i++)
-								
-								if (e.getSource() == editbuttons[i])
-								
-								   { textareas[i].setEditable(true); break; }
-							}
-						} );
+						{ public void actionPerformed(ActionEvent e)
+						{ for (int i = 0; i < editbuttons.length; i++)
+						  if (e.getSource() == editbuttons[i])
+						  { textareas[i].setEditable(true); break; } } } );
 						
 						
 						
@@ -34683,7 +34724,6 @@ class Programs
 						panel.add(textlabel, gbc);
 						
 						
-						
 						//  Add a large inset to the left and right mar-
 						//  gin of each text area's scrollpane so the
 						//  user can scroll through all the messages us-
@@ -34713,18 +34753,11 @@ class Programs
 					closebutton.setFont(labelfont);
 					
 					closebutton.addActionListener(new ActionListener()
-					{
-						public void actionPerformed(ActionEvent e)
-					    	{
-							deleteCheckedMessages();
-							
-							saveEditedMessages();
-							
-							dialog.dispose();
-							
-							dialog = null;
-						}
-					});
+					{ public void actionPerformed(ActionEvent e)
+					{ deleteCheckedMessages();
+					  saveEditedMessages();
+					  dialog.dispose();
+					  dialog = null; } });
 					
 					
 					//  Add the vertical box to the scrollpane
@@ -35164,12 +35197,10 @@ class Programs
 									newpopmail[0] = true;
 									
 									
-									//  Set the textarea for communication between
-									//  the client and server
+									//  Set the textarea for communication
+									//  between the client and server
 									
-									emailpanel.popmail
-									
-									    .setTextArea(emailpanel.poptextarea);
+									emailpanel.popmail.setTextArea(emailpanel.poptextarea);
 									
 									
 									//  Set the popmail testmail variable
@@ -35280,26 +35311,25 @@ class Programs
 									
 									int numberofmessages = number_totalbytes[0];
 									
-									//  Change the listbutton to inbox and no.of msgs
+									//  Change the listbutton to inbox and no of msgs
 									
 									emailpanel.listbutton.setText(
 									
 									    __.Inbox + " " + numberofmessages);
 									
 									
-									//  The number of messages on the server may be
-									//  less than the messages per screen
+									//  The number of messages on the server may
+									//  be less than the messages per screen
 									
 									final int t = Math.min(numberofmessages,
 									
 									    emailpanel.messagesperscreen);
 									
 									
-									//  Find the msg no (msno) and bytes in each message
+									//  LIST the message numbers and bytes
 									
-									String[] listarray = null;
+									String[] listarray = emailpanel.popmail.list();
 									
-									listarray = emailpanel.popmail.list();
 									
 									
 									//  Create a list1 object to store the headers and messages
@@ -35320,8 +35350,9 @@ class Programs
 									//  one-time public keys and the one-time encryption key.
 									
 									
+									//  Set the no of top lines to read
 									
-									final int n = 128;
+									final int toplines = 128;
 									
 									for (int i = 0; i < t; i++)
 									{
@@ -35332,7 +35363,7 @@ class Programs
 										
 										String poptop;
 										
-										poptop = emailpanel.popmail.top(i, n);
+										poptop = emailpanel.popmail.top(i, toplines);
 										
 										
 										emailpanel.poptextarea.repaint();
@@ -35424,23 +35455,33 @@ class Programs
 										emailpanel.list1 .setFrom(i, from);
 										emailpanel.list1 .setSubject(i, subj);
 										
-										//  Store the server number and size or number of octets
+										//  Store the server number and size
 										
-										String[] number_bytes = listarray[i].split(" {1,}");
+										tokens = listarray[i].split(" {1,}");
 										
-										String numberstr = number_bytes[0];
-										String bytestr   = number_bytes[1];
+										String numberstr, bytestr;
+										String msgstatestr = "0";
 										
-										int number, bytes;
+										numberstr = tokens[0];
+										bytestr   = tokens[1];
+										
+										if (tokens.length > 2)
+										    msgstatestr = tokens[2];
+										
+										int number, bytes, msgstate;
 										
 										try
 										{	number = Integer.parseInt(numberstr);
 											bytes  = Integer.parseInt(bytestr);
+											
+											if (tokens.length > 2) msgstate
+											    = Integer.parseInt(msgstatestr);
 										}
 										
 										catch (NumberFormatException ex)
-										
 										    { ex.printStackTrace(); continue; }
+										
+										
 										
 										//  Store the server message number and number of bytes
 										//
@@ -35448,13 +35489,21 @@ class Programs
 										//  the ascending / descending message order and translating the
 										//  index number to the server message number. The other classes
 										//  don't know anything about ascending / descending message
-										//  order or server message numbers, except for the display
+										//  order or server message numbers, except for the list panel
 										//  code below that shows the user the server msno.)
 										
 										//  Set the server message number
 										
 										emailpanel.list1.setServerMessageNumber(i, i);
 										emailpanel.list1.setNumberOfBytes(i, bytes);
+										
+										
+										//  Use the hash of (the from address + bytes) as a key
+										//  and search a treemap for the message state value.
+										//  If a value exists for the message state then set the
+										//  image icon to show the message state.
+										
+										//  ...    ...    ...
 									}
 									
 									}
@@ -35548,11 +35597,10 @@ class Programs
 								//
 								//  ...    ...     ...    ...    ...     ...      ...
 								
-								//  (Long email addresses and subjects are truncated, shortened or
+								//  Long email addresses and subjects are truncated, shortened or
 								//  abbreviated so that one message that has a long email address
 								//  cannot widen the from column and push the subject column or
-								//  message column to the right)
-								
+								//  message column to the right
 								
 								
 								
@@ -35582,7 +35630,8 @@ class Programs
 									String from = emailpanel.list1.getFrom(i);
 									String subj = emailpanel.list1.getSubject(i);
 									
-									if (from == null) from = "";  if (subj == null) subj = "";
+									if (from == null) from = "";
+									if (subj == null) subj = "";
 									
 									
 									//  Skip the self-addressed email messages (if the user hides them)
@@ -35646,7 +35695,7 @@ class Programs
 									emailpanel.listpanel.subjlabels[i]  .setText(subj);
 									
 									
-									//  Set the icon 1 labels
+									//  Set the icon 1 label
 									
 									if (emailpanel.list1.getNumberOfFiles(i) > 0)
 									{
@@ -35654,37 +35703,21 @@ class Programs
 										emailpanel.listpanel.imageicons1[i] = attachicon;
 									}
 									
-									//  Set the icon 2 labels
+									//  Set the icon 2 label
 									
-									if ( ((emailpanel.list1.getMessage(i) == null)
-									    || emailpanel.list1.getMessage(i).isEmpty())
-									
-									    && (emailpanel.listpanel.iconlabels2[i].getIcon() == null))
+									if (emailpanel.listpanel.iconlabels2[i].getIcon() == null)
 									{
-										emailpanel.listpanel.iconlabels2[i].setIcon(unreadicon);
-										emailpanel.listpanel.imageicons2[i] = unreadicon;
+										int stateno = 0;
+										
+										Enum<MessageState> state = emailpanel.list1.getMessageState(i);
+										if (state != null) stateno = state.ordinal();
+										
+										ImageIcon imageicon = imageicons2[stateno];
+										
+										emailpanel.listpanel.iconlabels2[i].setIcon(imageicon);
+										emailpanel.listpanel.imageicons2[i] = imageicon;
 									}
 									
-									else
-									{	int numberofciphers = emailpanel.list1.getNumberOfCiphers(i);
-										
-										if ((emailpanel.listpanel.iconlabels2[i].getIcon() == unreadicon)
-										
-										  && (emailpanel.list1.getMessage(i) != null)
-										  && !emailpanel.list1.getMessage(i).isEmpty())
-										{
-											if (numberofciphers > 0)
-											{
-												emailpanel.listpanel.iconlabels2[i].setIcon(readicon);
-												emailpanel.listpanel.imageicons2[i] = readicon;
-											}
-											
-											else
-											{	emailpanel.listpanel.iconlabels2[i].setIcon(plaintext_readicon);
-												emailpanel.listpanel.imageicons2[i] = plaintext_readicon;
-											}
-										}
-									}
 									
 									//  Set the sent icon for self-addresses messages
 									
@@ -36931,19 +36964,17 @@ class Programs
 			private ArrayList<Integer> messagestartpos;
 			private ArrayList<Integer> messageendpos;
 			
-			//  deletebox could be renamed delete
-			
-			//  messages to be deleted from the server are displayed;
-			//  messages deleted from the server are removed
+			//  deletebox could be renamed delete;
+			//  checked messages to be deleted from the server are displayed;
+			//  messages that have been deleted from the server are hidden;
 			
 			private ArrayList<Boolean> deletebox;
 			private ArrayList<Boolean> deleted;
 			
-			
-			
 			private ArrayList<String> tops;
 			private ArrayList<String> headers;
 			private ArrayList<String> messages;
+			private ArrayList<Enum<MessageState>> states;
 			
 			private ArrayList<String> date;
 			private ArrayList<String> from;
@@ -37001,6 +37032,7 @@ class Programs
 				tops     = new ArrayList<String>();
 				headers  = new ArrayList<String>();
 				messages = new ArrayList<String>();
+				states   = new ArrayList<Enum<MessageState>>();
 				
 				date     = new ArrayList<String>();
 				from     = new ArrayList<String>();
@@ -37043,6 +37075,7 @@ class Programs
 					tops    .add(new String());
 					headers .add(new String());
 					messages.add(new String());
+					states  .add(null);
 					
 					date     .add(new String());
 					from     .add(new String());
@@ -37081,6 +37114,7 @@ class Programs
 				tops     .remove(index);
 				headers  .remove(index);
 				messages .remove(index);
+				states   .remove(index);
 				
 				numberoffiles   .remove(index);
 				numberofciphers .remove(index);
@@ -37142,6 +37176,11 @@ class Programs
 			private String getMessage(int index)
 			{
 				return messages.get(index);
+			}
+			
+			private Enum<MessageState> getMessageState(int index)
+			{
+				return states.get(index);
 			}
 			
 			private int getServerMessageNumber(int index)
@@ -37299,6 +37338,11 @@ class Programs
 			private void setMessage(int index, String message)
 			{
 				this.messages.set(index, message);
+			}
+			
+			private void setMessageState(int index, Enum<MessageState> state)
+			{
+				this.states.set(index, state);
 			}
 			
 			private void setServerMessageNumber(int index, Integer msno)
@@ -37540,16 +37584,9 @@ class Programs
 		
 			JFrame frame, Color foreground, Color background, Font font,
 			
-				String incomingmailserver,
-				String outgoingmailserver,
-				
-				int incomingmailport,
-				int outgoingmailport,
-				
-				String maildirectory,
-				
-				int messagesperscreen,
-				
+				String incomingmailserver, String outgoingmailserver,
+				int incomingmailport, int outgoingmailport,
+				String maildirectory, int messagesperscreen,
 				boolean ascending)
 		{
 		
@@ -37736,11 +37773,11 @@ class Programs
 		
 		
 		
-		private PublicKeyRing readPublicKeys(String from)
+		private PublicKeyRing readPublicKeys(String user)
 		{
 		
 			//  The public key file name suffix equals the hash of the
-			//  (passphrase + from address) so that there is one public key
+			//  (passphrase + user address) so that there is one public key
 			//  file for each user name.
 			
 			//  (If the user has more than one email account, then the public
@@ -37763,7 +37800,7 @@ class Programs
 			if (!dir.exists() || !dir.isDirectory()) return null;
 			
 			
-			String filename = passphraseToFilePath(SP + from, __.publickeys);
+			String filename = passphraseToFilePath(SP + user, __.publickeys);
 			
 			if (filename == null)  return null;
 			
@@ -37837,7 +37874,7 @@ class Programs
 				
 				        continue;
 				
-				//  Add to public key to the key ring
+				//  Add the public key to the key ring
 				
 				if (line.contains("@") && !line1.contains("@"))
 				{
@@ -37859,11 +37896,36 @@ class Programs
 		
 		
 		
+		private TreeMap<String, Integer> readMessageStates(String user)
+		{
+			TreeMap<String, Integer> treemap;
+			
+			treemap = new TreeMap<String, Integer>();
+			
+			//  ...   ...
+			
+			return null;
+		}
 		
-		private boolean savePublicKeys(String from, PublicKeyRing keyring)
+		private boolean saveMessageStates(
+		
+			String user, TreeMap<String, Integer> messagestates)
+		{
+			//  Each message state can be saved as the hash of
+			//  (the from address + the number of bytes) followed
+			//  by a double space and then the message state 0 to 9
+			//  and a newline char \n
+			
+			//  ...   ...
+			
+			return false;
+		}
+		
+		
+		private boolean savePublicKeys(String user, PublicKeyRing keyring)
 		{
 			//  The public key file name suffix equals the hash of the
-			//  (passphrase + from address) so that there is one public
+			//  (passphrase + user address) so that there is one public
 			//  key file for each user name.
 			
 			if ((SP == null) || SP.isEmpty() || (maildirectory == null)
@@ -37885,7 +37947,8 @@ class Programs
 				{
 					String[] name_key = keyring.get(i);
 					
-					String name = name_key[0];  String key = name_key[1];
+					String name = name_key[0];
+					String  key = name_key[1];
 					
 					if (!name.isEmpty()) { list.add("\n"); list.add(name); }
 					if (! key.isEmpty()) { list.add("\n"); list.add(key); list.add("\n"); }
@@ -37903,7 +37966,9 @@ class Programs
 			
 			if ((SP == null) || SP.isEmpty()) return false;
 			
-			String filename = passphraseToFilePath(SP + from, __.publickeys);
+			String filename = passphraseToFilePath(
+			
+			    SP + user, __.publickeys);
 			
 			
 			File file = new File(filename);
@@ -37943,7 +38008,7 @@ class Programs
 				return true;
 			}
 			
-			else    return false;
+			else return false;
 		}
 		
 		
@@ -41052,8 +41117,9 @@ class FileEncryptor
 		throws IOException, FileNotFoundException
 	{
 		//  decrypts a file using the decryption key
-		//
 		//  The last modified time is not changed by this method
+		
+		//  If the file is null or not encrypted then return false
 		
 		if ((file == null) || !Cipher.isEncrypted(file)) return false;
 		
@@ -41590,7 +41656,7 @@ class FileNameEncryptor
 		
 		byte[] k = Cipher.hash(Math.xor(Math.xor(m, filekey), iv));
 		
-		byte[] namebytes = name .getBytes();
+		byte[] namebytes = name.getBytes();
 		
 		byte[] namebytes1 = Math.xor(namebytes, k);
 		
@@ -41736,26 +41802,13 @@ class JDraggableTabbedPane extends JTabbedPane implements
 	}
 	
 	
-	public JDraggableTabbedPane()
-	{
-		super();
-		
-		init();
-	}
+	public JDraggableTabbedPane() { super(); init(); }
 	
-	public JDraggableTabbedPane(int tabplacement)
-	{
-		super(tabplacement);
-		
-		init();
-	}
+	public JDraggableTabbedPane(int tabplace) { super(tabplace); init(); }
 	
-	public JDraggableTabbedPane(int tabplacement, int tablayout)
-	{
-		super(tabplacement, tablayout);
-		
-		init();
-	}
+	public JDraggableTabbedPane(int tabplace, int tablayout)
+	
+	    { super(tabplace, tablayout); init(); }
 	
 	
 	public void setDragEnabled(boolean enabled)
@@ -41806,9 +41859,7 @@ class JDraggableTabbedPane extends JTabbedPane implements
 	public void dropActionChanged(DragSourceDragEvent e) {  }
 	public void dragOver(DragSourceDragEvent e) {  }
 	public void dragEnter(DragSourceDragEvent e) {  }
-	
 	public void dragExit(DragSourceEvent e) {  }
-	
 	public void dragDropEnd(DragSourceDropEvent e) {  }
 	
 	
@@ -41933,7 +41984,6 @@ class JDraggableTabbedPane extends JTabbedPane implements
 		
 		isenabled1 = isEnabledAt(index1);
 		isenabled2 = isEnabledAt(index2);
-		
 		
 		if (index1 < index2) { remove(index1); remove(index2 -1); }
 		if (index1 > index2) { remove(index2); remove(index1 -1); }
@@ -42650,9 +42700,9 @@ class PopMail
 		
 		String response = readLine(in);
 		
-		if (response.trim().startsWith("+OK"))
+		return response.trim().startsWith("+OK") ?
 		
-		   return true;  else return false;
+		   true : false;
 	}
 	
 	
@@ -42951,6 +43001,24 @@ class PopMail
 	}
 	
 	
+	public boolean stat(int n, int state) throws IOException
+	{
+		//  sends STAT msg.no. msg.state
+		
+		int msno = n; // msg no.
+		
+		writeLine(out, "STAT " + (msno + 1) + " " + state);
+		
+		if (testmail)  return true;
+		
+		String response = readLine(in);
+		
+		return response.trim().startsWith("+OK") ?
+		
+		   true : false;
+	}
+	
+	
 	
 	
 	public String top(int n, int numberoflines) throws IOException, Exception
@@ -43028,9 +43096,9 @@ class PopMail
 		
 		String response = readLine(in);
 		
-		if (response.trim().startsWith("+OK"))
+		return response.trim().startsWith("+OK") ?
 		
-		   return true;  else return false;
+		   true : false;
 	}
 	
 	
@@ -43050,9 +43118,9 @@ class PopMail
 		
 		out = null;  socket = null;
 		
-		if (response.trim().startsWith("+OK"))
+		return response.trim().startsWith("+OK") ?
 		
-		   return true; else return false;
+		   true : false;
 	}
 	
 	

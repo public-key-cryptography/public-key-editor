@@ -76,8 +76,10 @@
 	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded da-
 	ta with a base-16 separator to make it base-64; the public key ciphers were rearranged; errors in
 	the readMessage method were corrected so that the messages and attached files are detached and dis-
-	played correctly for encrypted and unencrypted emails; and a public key padding error was corrected
-	so the decryption method removes the padding / space chars appended to the message.
+	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
+	the decryption method removes the padding / space chars appended to the message; another Xlint error
+	was corrected; and the mail class is being upgraded to save the message states in the mail directory
+	and to send and retrieve users' public keys.
 	
 	
 	
@@ -232,11 +234,11 @@
 	
 	Public and private key ciphers used by the software
 	
-	The program uses matrix discrete log ciphers for public key agreement and a hash cipher for private
-	key encryption. The public key agreement or secret key is hashed to generate a sequence of random
-	numbers which is used as a one-time pad. The ciphertext is computed by adding the one-time pad to
-	the the plaintext, and then the plaintext is recovered by subtracting the one-time pad from the
-	ciphertext.
+	The program uses hypercomplex and hyper-dimensional ciphers for public key agreement and a hash ci-
+	pher for private key encryption. The public key agreement or secret key is hashed to generate a se-
+	quence of random numbers which is used as a one-time pad. The ciphertext is computed by adding the
+	one-time pad to the plaintext, and then the plaintext is recovered by subtracting the one-time pad
+	from the ciphertext.
 	
 	The hash cipher is unbreakable because cryptographic hash functions are non-invertible. Even if the
 	hash function could be inverted it wouldn't break the cipher because there are 2^768 pre-images for
