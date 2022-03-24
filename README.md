@@ -78,8 +78,9 @@
 	the readMessage method were corrected so that the messages and attached files are detached and dis-
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
 	the decryption method removes the padding / space chars appended to the message; another Xlint error
-	was corrected; and the mail class is being upgraded to save the message states in the mail directory
-	and to send and retrieve users' public keys.
+	was corrected; the SavedEmails class was modified to sort the emails in chronological order and to
+	save and display the messages and attached files; and the mail class is being upgraded to save the
+	message states in the mail directory and to send and retrieve users' public keys.
 	
 	
 	
@@ -282,8 +283,8 @@
 	The cipher Y = A X doesn't work for integers or matrices (1 x 1 or n x n dimensional objects) be-
 	cause A can be inverted to solve for X = A^-1 Y; even if A is a singular matrix the equation can
 	still be solved for X. But the equation can be generalized to Y = X A X so that A is non-invertible
-	and immovable because matrix multiplication is not generally commutative. Multiplication is com-
-	mutative only for 0-dimensional numbers. (Also, because multiplication is non-commutative, there is
+	and immovable because matrix multiplication is not generally commutative. Multiplication is commu-
+	tative only for 0-dimensional numbers. (Also, because multiplication is non-commutative, there is
 	no division operation for matrices except for integers or scalars; to divide a matrix by a matrix,
 	the matrix has to be pre- or post-multiplied by the inverse of the divisor, and the divisor has to
 	be an invertible or non-singular matrix.)
@@ -298,10 +299,10 @@
 	sional arithmetic in addition to multi-dimensional algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices A[][] = { { A1, A2 }
-	{ A2, A3 } } as a public parameter or blank public key, reducing the 2x2 block matrix to a 2x1
-	block matrix or public key vector Y[] = { A1^x1 A2^x2, A2^x1 A3^x2 } where x1, x2 are the private
-	keys, and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1]^k1
-	Y2[2]^k2 == A1^(k1 x1) A2^(k1 x2 + k2 x1) A3^(k2 x2).
+	{ A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1 block matrix or public
+	key vector Y[] = { A1^x1 A2^x2, A2^x1 A3^x2 } where x1, x2 are the private keys, and then reducing
+	the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1]^k1 Y2[2]^k2 == A1^(k1 x1)
+	A2^(k1 x2 + k2 x1) A3^(k2 x2).
 	
 	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Be-
 	fore they were called matrices, rectangular arrays of numbers were referred to as blocks. A block
@@ -353,19 +354,19 @@
 	black box in sub-exponential time by trying only the square root of the number of combinations,
 	and there may be another quantum or classical algorithm that can find keys in polynomial time.)
 	
-	The RSA / coprime root extraction cipher c = m ^ e (mod n) where (e, phi(n)) == 1 (e and phi(n)
-	are coprime) is not included or allowed in the public key class because coprime root extraction is
-	not equivalent to integer factorization or based on any hard math problem. The problem with this
-	cipher is that there is a one-to-one correspondence of the private keys m to the public keys c
-	which makes the function invertible without factoring or unmultiplying the modulus n. This is why
-	RSA was rejected for digital signature standards and for encryption.
+	The RSA / coprime root extraction cipher c = m ^ e (mod n) where (e, phi(n)) == 1 (e and phi(n) are
+	coprime) is not included or allowed in the public key class because coprime root extraction is not
+	equivalent to integer factorization or based on any hard math problem. The problem with this cipher
+	is that there is a one-to-one correspondence of the private keys m to the public keys c which makes
+	the function invertible without factoring or unmultiplying the modulus n. This is why RSA was re-
+	jected for digital signature standards and for encryption.
 	
-	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite) is equiva-
-	lent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had thought
-	of using coprime root extraction as a public key cipher but he knew that it wasn't equivalent to
-	factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the
-	same number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime
-	with the totient.
+	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite) is equivalent
+	to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had thought of us-
+	ing coprime root extraction as a public key cipher but he knew that it wasn't equivalent to factor-
+	ization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the same
+	number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime with the
+	totient.
 	
 	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squar-
 	ing and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the mes-
@@ -411,10 +412,10 @@
 	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod n), b = c[] (m[] mod p) where
 	c[] is the recipient's static public key and b is the sender's one-time public key is included in
 	the public key class because the cipher is quantum resistant, but the cipher is not enabled by
-	default because the key size is large. The knapsack key size is around 6 K to 8 K bits (1 K byte),
-	1.5 to 2 K chars, or 30 to 40 lines per key. This could be a problem for public keys that are
-	printed on web pages because the keys occupy a lot of space, but it doesn't matter for keys that
-	are stored on email servers.
+	default because the key size is large. The knapsack key size is around 6 K to 8 K bits, 1 K byte,
+	2 K chars, or 30 to 40 lines per key. This could be a problem for public keys that are printed on
+	web pages because the keys occupy a lot of space, but it doesn't matter for keys that are stored
+	on email servers.
 	
 	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only asymmet-
 	rical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
@@ -427,8 +428,8 @@
 	the static key. Moreover, if the one-time public key has a small solution set, then a cryptanalyst
 	can find the sender's private key m[] by solving the knapsack problem and trying all the solutions.
 	(Note that the multiplier r0 can be public because a cryptanalyst can find it anyway since one of
-	the equations has to start with a[0] = 1 and r[0][] = 0; a[] has to start with 1 because a[] is
-	a superincreasing sequence and the knapsack density has to equal 1.)
+	the equations has to start with a[0] = 1 and r[0][] = 0; a[] has to start with 1 because a[] is a
+	superincreasing sequence and the knapsack density has to equal 1.)
 	
 	Even if a cryptanalyst knows how to solve the general or non-superincreasing knapsack problem it
 	won't break the one-time public key b = c[] m[] because the cipher was designed to resist this
