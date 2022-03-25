@@ -79,8 +79,8 @@
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
 	the decryption method removes the padding / space chars appended to the message; another Xlint error
 	was corrected; the SavedEmails class was modified to sort the emails in chronological order and to
-	save and display the messages and attached files; and the mail class is being upgraded to save the
-	message states in the mail directory and to send and retrieve users' public keys.
+	view, save, or delete the attached files; and the mail class is being upgraded to save the message
+	states in the mail directory and to send and retrieve users' public keys.
 	
 	
 	
