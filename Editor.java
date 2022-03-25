@@ -109,8 +109,8 @@
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
 	the decryption method removes the padding / space chars appended to the message; another Xlint error
 	was corrected; the SavedEmails class was modified to sort the emails in chronological order and to
-	save and display the messages and attached files; and the mail class is being upgraded to save the
-	message states in the mail directory and to send and retrieve users' public keys.
+	view, save, or delete the attached files; and the mail class is being upgraded to save the message
+	states in the mail directory and to send and retrieve users' public keys.
 	
 	
 	
@@ -1493,6 +1493,7 @@ class __
 	
 	viewattachedfile = "[ view ]",
 	saveattachedfile = "[ save ]",
+	deleattachedfile = "[ x ]",
 	
 	insert = "insert", prepend = "prepend", append = "append",
 	
@@ -30196,8 +30197,6 @@ class Programs
 						{
 							String message = emailpanel.list1.getMessage(msno);
 							
-							final int numberoffiles = emailpanel.list1.getNumberOfFiles(msno);
-							
 							if ((message == null) || message.isEmpty())
 							{
 								//  the message may have to be downloaded
@@ -30209,6 +30208,8 @@ class Programs
 							}
 							
 							String from = emailpanel.list1.getFrom(msno);
+							
+							final int numberoffiles = emailpanel.list1.getNumberOfFiles(msno);
 							
 							if ((message != null) && !message.isEmpty())
 							{
@@ -31460,7 +31461,6 @@ class Programs
 				if (filedesc.length() > maxdesclength)
 				
 				    filedesc = filedesc .substring(0, maxdesclength);
-				
 				
 				
 				//  Determine if the file is a text document,
@@ -34025,6 +34025,7 @@ class Programs
 			
 			
 			
+			
 			private class SavedEmails
 			{
 			
@@ -34055,6 +34056,7 @@ class Programs
 				
 				
 				private JDialog dialog;
+				private JButton closebutton;
 				
 				private JPanel[] panels;
 				private JLabel[] datelabels;
@@ -34070,7 +34072,9 @@ class Programs
 				private int[] numberoffiles;
 				private int[][] viewpos;
 				private int[][] savepos;
+				private int[][] delepos;
 				
+				private Boolean[] edited;
 				private Boolean[] encrypted;
 				
 				private JScrollPane scrollpane;
@@ -34379,8 +34383,8 @@ class Programs
 						
 						this.numberoffiles[index] = numberoffiles;
 						
-						filedescs[index] = new  String[numberoffiles];
-						filedatas[index] = new byte[numberoffiles][];
+						filedescs[index] = new String[numberoffiles];
+						filedatas[index] = new   byte[numberoffiles][];
 						
 						for (int i = 0; i < numberoffiles; i++)
 						{
@@ -34393,7 +34397,6 @@ class Programs
 				
 				private void displayMessage(int index)
 				{
-					
 					//  Construct a message string to display the message
 					
 					StringBuilder sb = new StringBuilder("");
@@ -34418,7 +34421,8 @@ class Programs
 						
 						sb.append(__.AttachedFile + "  ");
 						sb.append(__.viewattachedfile + "  ");
-						sb.append(__.saveattachedfile);
+						sb.append(__.saveattachedfile + "  ");
+						sb.append(__.deleattachedfile);
 						
 						if (i < numberoffiles -1)
 						
@@ -34426,22 +34430,9 @@ class Programs
 						else sb.append("\n");
 					}
 					
-					
-					//  Disable the edit button until the code is
-					//  modified to remove the attached files heading
-					
-					if (numberoffiles > 0)
-					
-					    editbuttons[index].setEnabled(false);
-					
+					if (!sb.toString().isBlank()) sb.append("\n\n");
 					
 					//  Display the heading and message
-					
-					sb.append("\n\n");
-					
-					String heading = sb.toString();
-					
-					sb = new StringBuilder(heading);
 					
 					sb.append(messages[index]);
 					
@@ -34455,19 +34446,23 @@ class Programs
 					//  Find and set the caret positions of
 					//  __.viewattachedfile = "[ view ]",
 					//  __.saveattachedfile = "[ save ]",
+					//  __.deleattachedfile = "[ x ]",
 					
 					if (numberoffiles > 0)
 					{
 						viewpos[index] = new int[numberoffiles];
 						savepos[index] = new int[numberoffiles];
+						delepos[index] = new int[numberoffiles];
 						
 						viewpos[index][0] = text.indexOf(__.viewattachedfile);
 						savepos[index][0] = text.indexOf(__.saveattachedfile);
+						delepos[index][0] = text.indexOf(__.deleattachedfile);
 						
 						for (int i = 1; i < numberoffiles; i++)
 						{
 							viewpos[index][i] = text.indexOf(__.viewattachedfile, viewpos[index][i-1] + 1);
 							savepos[index][i] = text.indexOf(__.saveattachedfile, savepos[index][i-1] + 1);
+							delepos[index][i] = text.indexOf(__.deleattachedfile, delepos[index][i-1] + 1);
 						}
 					}
 				}
@@ -34585,10 +34580,7 @@ class Programs
 						
 						    Cipher.passphraseToKey(oldpassphrase));
 						
-						if (plaindata == null)
-						{
-							continue;
-						}
+						if (plaindata == null)  continue;
 						
 						
 						//  Encrypt the plaindata
@@ -34722,11 +34714,7 @@ class Programs
 				{
 					public void windowClosing(WindowEvent e)
 					{
-						deleteCheckedMessages();
-						
-						dialog.dispose();
-						
-						dialog = null;
+						closebutton.doClick();
 					}
 				}
 				
@@ -34745,17 +34733,36 @@ class Programs
 				{
 					for (int i = 0; i < textareas.length; i++)
 					
-					if (textareas[i].isEditable() || !encrypted[i])
+					if (edited[i] || !encrypted[i])
 					{
-						String filename = dirname
+						if (textareas[i].isEditable())
+						    editbuttons[i].doClick();
 						
-						    + File.separator + filenames[i];
+						String filename = dirname +
+						
+						    File.separator + filenames[i];
 						
 						File file = new File(filename);
 						
-						String message = textareas[i].getText();
+						String text = messages[i];
 						
-						saveMessage(message, file);
+						int numberoffiles = this.numberoffiles[i];
+						
+						if (numberoffiles > 0)
+						{
+							text = Convert.stringToBase64(text);
+							
+							text = text + "\n\n";
+							
+							for (int j = 0; j < numberoffiles; j++)
+							
+							    text += Convert.   stringToBase64(filedescs[i][j])
+							 + "\n\n" + Convert.byteArrayToBase64(filedatas[i][j]) + "\n\n";
+							
+							text = text .trim();
+						}
+						
+						saveMessage(text, file);
 					}
 				}
 				
@@ -34829,10 +34836,12 @@ class Programs
 					scrollpanes = new JScrollPane[t];
 					  textareas = new JTextArea[t];
 					   messages = new String[t];
+					     edited = new Boolean[t];
 					  encrypted = new Boolean[t];
 					 textlabels = new JLabel[t];
 					    viewpos = new int[t][];
 					    savepos = new int[t][];
+					    delepos = new int[t][];
 					numberoffiles = new int[t];
 					
 					filedescs = new String[t][];
@@ -34847,6 +34856,7 @@ class Programs
 						editbuttons[i] = null;
 						  textareas[i] = null;
 						scrollpanes[i] = null;
+						     edited[i] = null;
 						  encrypted[i] = null;
 					         textlabels[i] = null;
 					}
@@ -34859,6 +34869,7 @@ class Programs
 						  deleteboxes[i] = new JCheckBox();
 						  editbuttons[i] = new JButton();
 						    textareas[i] = new JTextArea(rows, columns);
+						       edited[i] = Boolean.valueOf(false);
 						    encrypted[i] = Boolean.valueOf(false);
 						   textlabels[i] = new JLabel();
 						
@@ -34878,13 +34889,15 @@ class Programs
 						
 						if (!emailpanel.reverse_colors)
 						{
-							textarea.setForeground(emailpanel.foreground);
 							textarea.setBackground(emailpanel.background);
+							textarea.setForeground(emailpanel.foreground);
+							textarea.setCaretColor(emailpanel.foreground);
 						}
 						
 						else
-						{	textarea.setForeground(emailpanel.background);
-							textarea.setBackground(emailpanel.foreground);
+						{	textarea.setBackground(emailpanel.foreground);
+							textarea.setForeground(emailpanel.background);
+							textarea.setCaretColor(emailpanel.background);
 						}
 						
 						JScrollPane scrollpane = new JScrollPane(textarea);
@@ -34921,10 +34934,25 @@ class Programs
 						editbutton.setToolTipText(__.edit);
 						
 						editbutton.addActionListener(new ActionListener()
-						{ public void actionPerformed(ActionEvent e)
-						{ for (int i = 0; i < editbuttons.length; i++)
-						  if (e.getSource() == editbuttons[i])
-						  { textareas[i].setEditable(true); break; } } });
+						{   public void actionPerformed(ActionEvent e)
+						    {   for (int i = 0; i < editbuttons.length; i++)
+							{   if (e.getSource() == editbuttons[i])
+							    {   edited[i] = Boolean.valueOf(true);
+								JTextArea textarea = textareas[i];
+								textarea.setEditable(!textarea.isEditable());
+								if (textarea.isEditable() && (numberoffiles[i] > 0))
+								{   textarea.setText(messages[i]);
+								    textarea.setCaretPosition(0); 
+								}
+								else if (!textarea.isEditable())
+								{   messages[i] = textarea.getText();
+								    displayMessage(i);
+								}
+								break;
+							    }
+							}
+						    }
+						});
 						
 						
 						
@@ -34994,7 +35022,7 @@ class Programs
 					
 					String closebuttontext = __.close;
 					
-					JButton closebutton = new JButton(closebuttontext);
+					closebutton = new JButton(closebuttontext);
 					
 					closebutton.setFont(labelfont);
 					
@@ -35068,6 +35096,7 @@ class Programs
 				{
 					int viewwidth = __.viewattachedfile.length();
 					int savewidth = __.saveattachedfile.length();
+					int delewidth = __.deleattachedfile.length();
 					
 					public void mouseClicked(MouseEvent e)
 					{
@@ -35100,6 +35129,62 @@ class Programs
 									
 									saveAttachedFile(filedescs[index][i], filedatas[index][i]);
 							        }
+								
+								else if ( (cp >= delepos[index][i]) && (cp < delepos[index][i] + delewidth -1) )
+								{
+									//  Delete the attached file(s)
+									
+									String str = __.deletefile + " ?";
+									
+									int choice = JOptionPane.showConfirmDialog(
+									
+									    dialog, str, "", JOptionPane.YES_NO_CANCEL_OPTION,
+									
+										JOptionPane.WARNING_MESSAGE, null);
+									
+									if (choice == JOptionPane.YES_OPTION)
+									{
+										filedescs[index][i] = null;
+										filedatas[index][i] = null;
+										
+										int t = numberoffiles[index];
+										
+										String[] filedescs1 = new String[t-1];
+										byte[][] filedatas1 = new   byte[t-1][];
+										
+										int[] viewpos1 = new int[t-1];
+										int[] savepos1 = new int[t-1];
+										int[] delepos1 = new int[t-1];
+										
+										for (int j = 0, k = 0; j < t; j++)
+										
+										if ((filedescs[index][j] != null)
+										 && (filedatas[index][j] != null))
+										{
+											filedescs1[k] = filedescs[index][j];
+											filedatas1[k] = filedatas[index][j];
+											
+											viewpos1[k] = viewpos[index][j];
+											savepos1[k] = savepos[index][j];
+											delepos1[k] = delepos[index][j]; k++;
+										}
+										
+										filedescs[index] = filedescs1;
+										filedatas[index] = filedatas1;
+										
+										viewpos[index] = viewpos1;
+										savepos[index] = savepos1;
+										delepos[index] = delepos1;
+										
+										numberoffiles[index]--;
+										
+										edited[index] = true;
+										
+										displayMessage(index);
+										
+										break;
+									}
+								}
 							}
 						}
 						
