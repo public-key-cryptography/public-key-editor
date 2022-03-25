@@ -97,7 +97,7 @@
 	Downloading the Java Development Kit (JDK)
 	
 	To download the JDK, go to jdk.java.net
-	Click on the link that says  Ready for use: JDK 17.
+	Click on the link that says  Ready for use: JDK 18.
 	
 	Then click on a tar file link that says tar.gz.
 	Choose the correct file for your processor architecture
@@ -107,7 +107,7 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-17.0.2_linux-x64_bin.tar.gz
+	openjdk-18_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
@@ -115,21 +115,21 @@
 	
 	Installing the Java Development Kit (JDK) and running the Java Editor program
 	
-	0.  Download the file openjdk-17.0.2_linux-x64_bin.tar.gz  from the website jdk.java.net/17.
+	0.  Download the file openjdk-18_linux-x64_bin.tar.gz  from the website jdk.java.net/18.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-17.0.2_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-17.0.2_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-17.0.2/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -143,17 +143,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-17.0.2_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-18_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-17.0.2_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-17.0.2_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-17.0.2/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java
 	
 	or for the email client
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-17.0.2_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-17.0.2_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-17.0.2/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -168,12 +168,12 @@
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-17.0.2/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-18/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-17.0.2/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-17.0.2/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-18/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-18/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	
