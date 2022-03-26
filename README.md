@@ -77,10 +77,13 @@
 	ta with a base-16 separator to make it base-64; the public key ciphers were rearranged; errors in
 	the readMessage method were corrected so that the messages and attached files are detached and dis-
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
-	the decryption method removes the padding / space chars appended to the message; another Xlint error
-	was corrected; the SavedEmails class was modified to sort the emails in chronological order and to
-	view, save, or delete the attached files; and the mail class is being upgraded to save the message
-	states in the mail directory and to send and retrieve users' public keys.
+	the decryption method removes the padding / space chars appended to the message; the SavedEmails
+	class was modified to sort the emails in chronological order and to view, save, or delete the at-
+	tached files and edit the messages; an error in the saveAttachedFile method which called the view-
+	AttachedFile was corrected because the method was modified for the SavedEmails class; the mouse-
+	listener was modified so that the view or save attached file dialog box doesn't appear if a saved
+	message is being edited; and the mail class is being upgraded to save the message states in the
+	mail directory or email server and to send and retrieve users' public keys.
 	
 	
 	
@@ -101,7 +104,7 @@
 	
 	Then click on a tar file link that says tar.gz.
 	Choose the correct file for your processor architecture
-	which should be x64 for Intel or aarch for Arm processor.
+	which should be x64 for Intel or Aarch for Arm processor.
 	
 	A dialog box appears that says read or save file.
 	Click on the button that says Save File.
@@ -412,10 +415,10 @@
 	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod n), b = c[] (m[] mod p) where
 	c[] is the recipient's static public key and b is the sender's one-time public key is included in
 	the public key class because the cipher is quantum resistant, but the cipher is not enabled by
-	default because the key size is large. The knapsack key size is around 6 K to 8 K bits, 1 K byte,
-	2 K chars, or 30 to 40 lines per key. This could be a problem for public keys that are printed on
-	web pages because the keys occupy a lot of space, but it doesn't matter for keys that are stored
-	on email servers.
+	default in the passphrase dialog because the key size is large. The knapsack key size is around
+	6 K to 8 K bits, 1 K byte, 2 K chars, or 30 to 40 lines per key. This could be a problem for public
+	keys that are printed on web pages because the keys occupy a lot of space, but it doesn't matter
+	for keys that are stored on email servers.
 	
 	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only asymmet-
 	rical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
