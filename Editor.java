@@ -48,9 +48,10 @@
 	
 	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
 	lows multiple users synchronous access to an email account from different computers which is useful
-	for some companies or organizations because POP mail accounts can only be accessed from one device
-	at a time. Imap also allows users to change the state of the messages on the server, but the POP
-	mail protocol could be amended or the email servers could be upgraded to include this feature.
+	for some companies or organizations that have to reply to large numbers of emails because POP mail
+	accounts can only be accessed from one device at a time. Imap also allows users to change the state
+	of the messages on the server, but the POP mail protocol could be amended or the email servers could
+	be upgraded to include this feature.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -452,7 +453,7 @@
 	
 	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only asymmet-
 	rical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
-	only public key cipher that uses a secret modulus. The knapsack cipher was also the world's first
+	only public key cipher that uses a private modulus. The knapsack cipher was also the world's first
 	quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but it has to be
 	implemented correctly or else it doesn't work.
 	
@@ -21121,7 +21122,7 @@ class Programs
 		//  MessageState. unread.ordinal() == 0,
 		//  MessageState.   read.ordinal() == 1,
 		//  MessageState.replied.ordinal() == 2,
-		//  ...    ...    ...    ...
+		//  ...       ...       ...       ...
 		
 		
 		
@@ -21204,9 +21205,9 @@ class Programs
 			
 			//  An object to hold the recipients' keys
 			
-			private PublicKeyRing
+			private PublicKeyRing publickeyring
 			
-			    publickeyring = new PublicKeyRing();
+			    = new PublicKeyRing();
 			
 			private String recipientskey;
 			private String recipientskeyaddress;
@@ -25461,7 +25462,7 @@ class Programs
 			String readallheader1 = "   [ x ]      " + __.reply + "   ";
 			
 			
-			//          10           20            30            40          50
+			//          10            20            30            40          50
 			//          |             |             |             |
 			//       delete         reply          prev          next
 			//      |              |              |             |
@@ -26674,7 +26675,7 @@ class Programs
 			
 				private static final long serialVersionUID = 1L;
 				
-				private JLabel emaillabel;
+				private     JLabel emaillabel;
 				private JTextField emailfield;
 				
 				
@@ -26748,6 +26749,13 @@ class Programs
 				private JScrollPane popscrollpane;
 				
 				private JTextArea poptextarea;
+				
+				
+				//  a tree map for reading and saving the message states
+				//  the hash(from + bytes) is mapped to an integer 0 to 9
+				
+				private TreeMap<String, Integer> msgstatestreemap
+				  = new TreeMap<String, Integer>();
 				
 				
 				
@@ -28278,11 +28286,11 @@ class Programs
 								
 								//  Delete or rename the usernames file
 								
-								String filename = passphraseToFilePath(
+								String filepath = passphraseToFilePath(
 								
 								    oldpassphrase, __.usernames);
 								
-								File file = new File(filename);
+								File file = new File(filepath);
 								
 								if (file.exists()) file.delete();
 								
@@ -30136,7 +30144,7 @@ class Programs
 			
 				private int msno; // message number
 				
-				private MessageState msgstate;
+				private Enum<MessageState> msgstate;
 				
 				//  the mouse listener sets the indexer
 				//  so the icon listener knows the icon number
@@ -30152,8 +30160,6 @@ class Programs
 						     JLabel label = emailpanel.listpanel.iconlabels2[msno];
 						ImageIcon[] icons = emailpanel.listpanel.imageicons2;
 						
-						//  Set the message state
-						
 						//  Set the message state and the message icon
 						
 						if (str.equalsIgnoreCase(__.unread))    { msgstate = MessageState.unread;    icons[msno] =  unreadicon; }
@@ -30168,7 +30174,7 @@ class Programs
 						
 						//  Set the message state in the arraylist1
 						
-						emailpanel.list1.setMessageState(msno, msgstate);
+						emailpanel.list1.setMessageState(msno, msgstate.ordinal());
 						
 						//  Change the icon label to the popup menu item
 						
@@ -30211,8 +30217,7 @@ class Programs
 							}
 							
 							String from = emailpanel.list1.getFrom(msno);
-							
-							final int numberoffiles = emailpanel.list1.getNumberOfFiles(msno);
+							  int bytes = emailpanel.list1.getNumberOfBytes(msno);
 							
 							if ((message != null) && !message.isEmpty())
 							{
@@ -30230,6 +30235,27 @@ class Programs
 									
 									savedemails.saveMessage(message, filetext, from);
 								}
+							}
+							
+							if (msgstate != null)
+							{
+								//  Set the icon to the new message state
+								
+								ImageIcon imageicon = imageicons2[msgstate.ordinal()];
+								
+								emailpanel.listpanel.iconlabels2[msno].setIcon(imageicon);
+								emailpanel.listpanel.imageicons2[msno] = imageicon;
+								
+								
+								//  Update the msgstatestreemap
+								
+								String key = Cipher.hash2(from + bytes);
+								
+								System.out.println("from == " + from);
+								
+								if ((emailpanel.msgstatestreemap != null)
+								 && !emailpanel.msgstatestreemap.containsKey(key))
+								     emailpanel.msgstatestreemap.put(key, msgstate.ordinal());
 							}
 						}
 						
@@ -30272,7 +30298,8 @@ class Programs
 				
 				JLabel label = new JLabel("");
 				
-				PopupFactory factory = PopupFactory.getSharedInstance();
+				PopupFactory factory =
+				PopupFactory.getSharedInstance();
 				
 				private Popup deletepopup;
 				private Popup replypopup;
@@ -31852,8 +31879,8 @@ class Programs
 				String from    = emailheader.from;
 				String subject = emailheader.subject;
 				
-				if    (date == null)    date = "";
-				if    (from == null)    from = "";
+				if (date == null) date = "";
+				if (from == null) from = "";
 				if (subject == null) subject = "";
 				
 				
@@ -31862,6 +31889,7 @@ class Programs
 				emailpanel.list1.setDate   (msno, date);
 				emailpanel.list1.setFrom   (msno, from);
 				emailpanel.list1.setSubject(msno, subject);
+				
 				emailpanel.list1.setHeader (msno, header);
 				emailpanel.list1.setMessage(msno, message);
 				
@@ -32814,10 +32842,11 @@ class Programs
 			private void displayMessage(EmailPanel emailpanel, int msno)
 			{
 			
-				//  Constructs a string to display a message
-				//  and set the message text area
+				//  Constructs a file header and message string
+				//  and displays the message in the text area
 				//
-				//  This method does not decrypt messages
+				//  This method does not decrypt messages but it
+				//  decodes files that are encoded in base 64
 				
 				
 				String date     = emailpanel.list1.getDate(msno);
@@ -33325,13 +33354,13 @@ class Programs
 				
 				
 				
-				String filename = passphraseToFilePath(SP, __.usernames);
+				String filepath = passphraseToFilePath(SP, __.usernames);
 				
-				System.out.println("file name == " + filename);
+				System.out.println("file path == " + filepath);
 				
-				if (filename == null)  return false;
+				if (filepath == null) return false;
 				
-				File file = new File(filename);
+				File file = new File(filepath);
 				
 				String plaintext = null;
 				
@@ -33666,6 +33695,24 @@ class Programs
 				}
 				
 				
+				//  Set the saved message states for each email panel
+				
+				for (int i = 0; i < tabbedpane.getTabCount(); i++)
+				{
+					EmailPanel emailpanel = (EmailPanel)
+					
+					    tabbedpane.getComponentAt(i);
+					
+					try { readMessageStates(
+					
+					    emailpanel.username, emailpanel.msgstatestreemap); }
+					
+					catch (IllegalArgumentException ex)
+					
+					    { ex.printStackTrace(); }
+				}
+				
+				
 				//  Set the colors for each email panel
 				
 				for (int i = 0; i < tabbedpane.getTabCount(); i++)
@@ -33814,6 +33861,10 @@ class Programs
 						//  Save the email panels as they appear in the tabbed pane
 						
 						EmailPanel emailpanel = (EmailPanel) tabbedpane.getComponentAt(i);
+						
+						//  Save the message states treemap for each email panel
+						
+						saveMessageStates(emailpanel.username, emailpanel.msgstatestreemap);
 						
 						String email = emailpanel.emailfield.getText().trim();
 						
@@ -33969,9 +34020,9 @@ class Programs
 				
 				if ((SP == null) || SP.isEmpty()) return false;
 				
-				String filename = passphraseToFilePath(SP, __.usernames);
+				String filepath = passphraseToFilePath(SP, __.usernames);
 				
-				File file = new File(filename);
+				File file = new File(filepath);
 				
 				if (!file.exists())
 				
@@ -34055,9 +34106,11 @@ class Programs
 				//  |            message text 4            | |
 				//  |                                      | |
 				//  |______________________________________|_|
+				//  |________________________________________|
 				
 				
 				private JDialog dialog;
+				private JTextField findfield;
 				private JButton closebutton;
 				
 				private JPanel[] panels;
@@ -34399,18 +34452,19 @@ class Programs
 				
 				private void displayMessage(int index)
 				{
-					//  Construct a message string to display the message
+					//  Constructs a file header and message string
+					//  and displays the message in the text area
 					
 					StringBuilder sb = new StringBuilder("");
 					
 					//  Append the view attached file == [ view ]
-					//     and the save attached file == [ save ]
+					//         the save attached file == [ save ]
 					//
-					//  1. Attached File  [ view ]  [ save ]
+					//  1. Attached File  [ view ]  [ save ]  [ x ]
 					//
-					//  2. Attached File  [ view ]  [ save ]
+					//  2. Attached File  [ view ]  [ save ]  [ x ]
 					//
-					//  3. Attached File  [ view ]  [ save ]
+					//  3. Attached File  [ view ]  [ save ]  [ x ]
 					
 					int numberoffiles = this.numberoffiles[index];
 					
@@ -34672,6 +34726,10 @@ class Programs
 					for (JTextArea textarea : textareas)
 					
 					    textarea.setFont(font);
+					
+					findfield.setFont(font);
+					
+					dialog.pack();
 				}
 				
 				
@@ -34775,7 +34833,7 @@ class Programs
 					
 					Box vbox = Box.createVerticalBox();
 					
-					JTextField findfield = new JTextField(20);
+					findfield = new JTextField(20);
 					
 					findfield.setFont(font);
 					
@@ -35141,6 +35199,16 @@ class Programs
 									
 									String str = __.deletefile + " ?";
 									
+									String filedesc = filedescs[index][i];
+									
+									int maxfilename = 36;
+									
+									if (filedesc.length() > maxfilename) filedesc
+									
+									    = filedesc.substring(0, maxfilename) + "..";
+									
+									str += "\n" + filedesc;
+									
 									int choice = JOptionPane.showConfirmDialog(
 									
 									    dialog, str, "", JOptionPane.YES_NO_CANCEL_OPTION,
@@ -35149,6 +35217,8 @@ class Programs
 									
 									if (choice == JOptionPane.YES_OPTION)
 									{
+										//  Delete the file desc and file data
+										
 										filedescs[index][i] = null;
 										filedatas[index][i] = null;
 										
@@ -35905,6 +35975,7 @@ class Programs
 										bytestr   = tokens[1];
 										
 										if (tokens.length > 2)
+										
 										    msgstatestr = tokens[2];
 										
 										int number, bytes, msgstate;
@@ -35913,8 +35984,11 @@ class Programs
 										{	number = Integer.parseInt(numberstr);
 											bytes  = Integer.parseInt(bytestr);
 											
-											if (tokens.length > 2) msgstate
-											    = Integer.parseInt(msgstatestr);
+											if (tokens.length > 2)
+											{
+												msgstate = Integer.parseInt(msgstatestr);
+												emailpanel.list1.setMessageState(i, msgstate);
+											}
 										}
 										
 										catch (NumberFormatException ex)
@@ -35935,29 +36009,6 @@ class Programs
 										
 										emailpanel.list1.setServerMessageNumber(i, i);
 										emailpanel.list1.setNumberOfBytes(i, bytes);
-										
-										
-										//  Use the hash of (the from address + bytes) as a key
-										//  and search a treemap for the message state value.
-										//  If a value exists for the message state then set the
-										//  image icon to show the message state.
-										
-										String key = Cipher.hash2(from + bytes);
-										
-										Integer stateno = null;
-										
-										//  if (msgstatetreemap.contains(key))
-										//
-										//      statno = msgstatetreemap.get(key);
-										//
-										//  if (stateno != null)
-										//
-										//  	//  Set the image icon to the
-										//	//  previous message state
-										//
-										//	...    ... 
-										//
-										//	...    ...
 									}
 									
 									}
@@ -36157,21 +36208,42 @@ class Programs
 										emailpanel.listpanel.imageicons1[i] = attachicon;
 									}
 									
+									
 									//  Set the icon 2 label
 									
-									if (emailpanel.listpanel.iconlabels2[i].getIcon() == null)
+									ImageIcon imageicon = imageicons2[MessageState.unread.ordinal()];
+									
+									emailpanel.listpanel.iconlabels2[i].setIcon(imageicon);
+									emailpanel.listpanel.imageicons2[i] = imageicon;
+									
+									//  Use the hash of (the from address + bytes) as a key
+									//  and search a treemap for the message state value.
+									//  If a value exists for the message state then set the
+									//  image icon to show the saved message state.
+									
+									int bytes = emailpanel.list1.getNumberOfBytes(i);
+									
+									String key = Cipher.hash2(from + bytes);
+									
+									Integer stateno = null;
+									
+									if (emailpanel.msgstatestreemap != null)
+									if (emailpanel.msgstatestreemap.containsKey(key))
+									
+									    stateno = emailpanel.msgstatestreemap.get(key);
+									
+									if (stateno != null)
 									{
-										int stateno = 0;
+										//  Set the list1 message state variable and the
+										//  icon to the previously saved message state
 										
-										Enum<MessageState> state = emailpanel.list1.getMessageState(i);
-										if (state != null) stateno = state.ordinal();
+										//  Set the icon 2 label
 										
-										ImageIcon imageicon = imageicons2[stateno];
+										imageicon = imageicons2[stateno];
 										
 										emailpanel.listpanel.iconlabels2[i].setIcon(imageicon);
 										emailpanel.listpanel.imageicons2[i] = imageicon;
 									}
-									
 									
 									//  Set the sent icon for self-addresses messages
 									
@@ -37427,7 +37499,7 @@ class Programs
 			private ArrayList<String> headers;
 			private ArrayList<String> messages;
 			
-			private ArrayList<Enum<MessageState>> states;
+			private ArrayList<Integer> states;
 			
 			//  message start and end positions
 			//  are used by the read all thread
@@ -37496,7 +37568,7 @@ class Programs
 				tops     = new ArrayList<String>();
 				headers  = new ArrayList<String>();
 				messages = new ArrayList<String>();
-				states   = new ArrayList<Enum<MessageState>>();
+				states   = new ArrayList<Integer>();
 				
 				date     = new ArrayList<String>();
 				from     = new ArrayList<String>();
@@ -37643,7 +37715,7 @@ class Programs
 				return messages.get(index);
 			}
 			
-			private Enum<MessageState> getMessageState(int index)
+			private Integer getMessageState(int index)
 			{
 				return states.get(index);
 			}
@@ -37826,7 +37898,7 @@ class Programs
 				this.messages.set(index, message);
 			}
 			
-			private void setMessageState(int index, Enum<MessageState> state)
+			private void setMessageState(int index, Integer state)
 			{
 				this.states.set(index, state);
 			}
@@ -37925,7 +37997,7 @@ class Programs
 			int numberoffiles = filedatalist.size();
 			
 			//  a single iterator is used for the file no.
-			//  (there is no message no)
+			//  (there is no message number)
 			
 			for (int i = 0; i < numberoffiles; i++)
 			{
@@ -38331,6 +38403,17 @@ class Programs
 			//  /home/user/Mail/public keys 12345678
 			//  /home/user/Mail/message states 12345678
 			
+			
+			if ((SP == null) || SP.isEmpty() || (maildirectory == null)
+			
+			    || maildirectory.isEmpty()) return null;
+			
+			//  If the directory does not exist, make a new directory
+			
+			File dir = new File(maildirectory);
+			
+			if (!dir.exists() || !dir.isDirectory()) dir.mkdir();
+			
 			String fileno = Cipher.hash2(passphrase) .substring(0, 8);
 			
 			String path = maildirectory + File.separator + desc + " " + fileno;
@@ -38340,45 +38423,27 @@ class Programs
 		
 		
 		
-		private TreeMap<String, Integer> readMessageStates(String user)
+		private boolean readMessageStates(
+		
+			String user, TreeMap<String, Integer> treemap)
 		{
-			//  Read the message states from file and
-			//  store the key value pairs in a tree map
+			//  Reads the message states from file and
+			//  stores the key value pairs in the tree map
 			
 			//  Read the file of hashes and msg states
 			//  and then for each key value pair use the
 			//  put method to save the message state
 			//
-			//  String key = null;
-			//  String value = null;
-			//
-			//  msgstatetreeamp.put(key, value);
+			//  msgstatestreeamp.put(key, value);
 			
 			
-			//  The public key file name suffix equals the hash of the
-			//  (passphrase + user address) so that there is one public key
-			//  file for each user name.
-			
-			//  (If the user has more than one email account, then the public
-			//  keys will be in a separate file for each account.)
-			
-			
-			if ((SP == null) || SP.isEmpty() || (maildirectory == null)
-			
-			    || maildirectory.isEmpty()) return null;
-			
-			File dir = new File(maildirectory);
-			
-			if (!dir.exists() || !dir.isDirectory()) return null;
-			
-			
-			String filename = passphraseToFilePath(
+			String filepath = passphraseToFilePath(
 			
 			    SP + user, __.messagestates.toLowerCase());
 			
-			if (filename == null)  return null;
+			if (filepath == null)  return false;
 			
-			File file = new File(filename);
+			File file = new File(filepath);
 			
 			byte[] fileinput = null;
 			
@@ -38390,7 +38455,7 @@ class Programs
 				{
 					System.out.println(ex);
 					
-					return null;
+					return false;
 				}
 				
 				if (Cipher.isEncrypted(file))
@@ -38403,11 +38468,11 @@ class Programs
 					
 					//  Return if file did not decrypt
 					
-					if (fileinput == null) return null;
+					if (fileinput == null) return false;
 				}
 			}
 			
-			else return null;
+			else return false;
 			
 			
 			//  Convert the decrypted byte array to string
@@ -38416,10 +38481,7 @@ class Programs
 			
 			
 			//  Read the key value pairs or the hashes
-			//  and message states into a tree map
-			
-			TreeMap<String, Integer> treemap = new
-			TreeMap<String, Integer>();
+			//  and message states into the tree map
 			
 			Scanner sc = new Scanner(plaintext);
 			
@@ -38444,59 +38506,123 @@ class Programs
 				
 				if (tokens.length != 2) continue;
 				
-				String key   = tokens[0];
-				Integer value = Integer
-				    .valueOf(tokens[1]);
+				String key = tokens[0];
+				String val = tokens[1];
 				
 				//  Add the key value pair to the tree map
 				
-				treemap.put(key, value);
+				Integer stateno;
+				
+				try { stateno = Integer.valueOf(val); }
+				
+				catch (NumberFormatException ex) { continue; }
+				
+				treemap.put(key, stateno);
 			}
 			
-			return treemap;
+			return true;
 		}
+		
 		
 		
 		private boolean saveMessageStates(
 		
-			String user, TreeMap<String, Integer> messagestatestreemap)
+			String user, TreeMap<String, Integer> treemap)
 		{
-			//  Save the message states to file
+			//  The message states file name suffix equals the hash of
+			//  (the passphrase + user address) so that there is one
+			//  message states file for each user name.
 			
-			//  Each message state can be saved as the hash of
-			//  (the from address + the number of bytes) followed
-			//  by a double space and then the message state 0 to 9
-			//  and a newline char \n
+			//  Each message state can be saved as the hash of (the
+			//  from address + the number of bytes) followed by a double
+			//  space and then the message state 0 to 9 and a newline
+			//  char \n. (The ordinal numbers are saved instead of the
+			//  enum strings because the message state names could change
+			//  in future versions of the program, and the email servers
+			//  will also save the message states as integers.)
 			
 			//  Extract the keyset and values
 			
-			Set<String>         keyset = messagestatestreemap.keySet();
-			Collection<Integer> values = messagestatestreemap.values();
+			Set<String>         keyset = treemap.keySet();
+			Collection<Integer> values = treemap.values();
 			
-			ArrayList<String>     keylist = new ArrayList<String>();
-			ArrayList<Integer> valueslist = new ArrayList<Integer>();
+			ArrayList<String>    keylist = new ArrayList<String>();
+			ArrayList<Integer> valuelist = new ArrayList<Integer>();
 			
-			for (String  k : keyset)    keylist.add(k);
-			for (Integer v : values) valueslist.add(v);
+			for (String  k : keyset)   keylist.add(k);
+			for (Integer v : values) valuelist.add(v);
 			
-			//   ...   ...
 			
-			//   ...   ...
+			//  Add the message states to an array list
+			
+			ArrayList<String> list = new ArrayList<String>();
+			
+			for (int i = 0; i < keylist.size(); i++)
+			{
+				String  key =   keylist.get(i);
+				Integer val = valuelist.get(i);
+				
+				list.add(key + "  " + String.valueOf(val));
+			}
+			
+			
+			//  Define the file path
+			
+			if ((SP == null) || SP.isEmpty()) return false;
+			
+			String filepath = passphraseToFilePath(
+			
+			    SP + user, __.messagestates.toLowerCase());
+			
+			
+			File file = new File(filepath);
+			
+			if (!file.exists())
+			{
+				try { file.createNewFile(); }
+				
+				catch (IOException ex)
+				
+				    { System.out.println(ex); }
+			}
+			
+			
+			if (file.exists())
+			{
+				//  Save the list to file
+				
+				StringBuilder sb = new StringBuilder("");
+				
+				for (String str : list)
+				
+				    { sb.append(str); sb.append("\n"); }
+				
+				String str = sb.toString();
+				
+				byte[] cipherdata = Cipher.encrypt(str.getBytes(),
+				
+				    Cipher.passphraseToKey(SP));
+				
+				try { DataStream.write(file, cipherdata); }
+				
+				catch (IOException ex)
+				{
+					System.out.println(ex);
+					
+					return false;
+				}
+				
+				return true;
+			}
 			
 			return false;
 		}
 		
 		
+		
 		private PublicKeyRing readPublicKeys(String user)
 		{
 		
-			//  The public key file name suffix equals the hash of the
-			//  (passphrase + user address) so that there is one public key
-			//  file for each user name.
-			
-			//  (If the user has more than one email account, then the public
-			//  keys will be in a separate file for each account.)
-			
 			//  The RetrieveMailFrame does not read or write individual public keys.
 			//  The SendMailFrame reads and writes one public key for each username
 			//  or from address each time the user clicks the Send button.
@@ -38505,22 +38631,13 @@ class Programs
 			//  user can view the list of public keys and delete them individually.
 			
 			
-			if ((SP == null) || SP.isEmpty() || (maildirectory == null)
-			
-			    || maildirectory.isEmpty()) return null;
-			
-			File dir = new File(maildirectory);
-			
-			if (!dir.exists() || !dir.isDirectory()) return null;
-			
-			
-			String filename = passphraseToFilePath(
+			String filepath = passphraseToFilePath(
 			
 			    SP + user, __.publickeys.toLowerCase());
 			
-			if (filename == null)  return null;
+			if (filepath == null)  return null;
 			
-			File file = new File(filename);
+			File file = new File(filepath);
 			
 			byte[] fileinput = null;
 			
@@ -38618,19 +38735,9 @@ class Programs
 			//  (passphrase + user address) so that there is one public
 			//  key file for each user name.
 			
-			if ((SP == null) || SP.isEmpty() || (maildirectory == null)
-			
-			    || maildirectory.isEmpty()) return false;
-			
-			//  If the directory does not exist, make a new directory
-			
-			File dir = new File(maildirectory);
-			
-			if (!dir.exists() || !dir.isDirectory()) dir.mkdir();
-			
 			//  Add the public keys to an array list
 			
-			ArrayList<Object> list = new ArrayList<Object>();
+			ArrayList<String> list = new ArrayList<String>();
 			
 			try
 			{	for (int i = 0; i < keyring.size(); i++)
@@ -38653,23 +38760,24 @@ class Programs
 			}
 			
 			
+			//  Define the file path
+			
 			if ((SP == null) || SP.isEmpty()) return false;
 			
-			String filename = passphraseToFilePath(
+			String filepath = passphraseToFilePath(
 			
 			    SP + user, __.publickeys.toLowerCase());
 			
 			
-			File file = new File(filename);
+			File file = new File(filepath);
 			
 			if (!file.exists())
 			{
 				try { file.createNewFile(); }
 				
 				catch (IOException ex)
-				{
-					System.out.println(ex);
-				}
+				
+				    { System.out.println(ex); }
 			}
 			
 			
@@ -38679,7 +38787,7 @@ class Programs
 				
 				String str = "";
 				
-				for (Object obj : list) str += obj + "\n";
+				for (String str1 : list) str += str1 + "\n";
 				
 				byte[] cipherdata = Cipher.encrypt(str.getBytes(),
 				
@@ -38882,12 +38990,12 @@ class Programs
 	
 	//  Methods and inner classes of the Programs class that are
 	//  shared by the TextFrame and TableFrame classes could be
-	//  placed here or outside the Programs class to avoid replica-
-	//  tion of code. Some classes such as the FontSize and FontType
-	//  classes would have to be rewritten so that the variables
+	//  placed here or outside the Programs class to avoid repli-
+	//  cation of code. Some classes such as the FontSize and Font-
+	//  Type classes would have to be rewritten so the variables
 	//  could be passed by reference (such as inside an array)
-	//  instead of by value which just creates a copy instead of
-	//  a pointer to a variable.
+	//  instead of by value which just creates a copy instead
+	//  of a pointer to a variable.
 	
 	//  ...
 	
@@ -43096,7 +43204,7 @@ class PopMail
 		
 		String desc1 = "This is an attached image file example";
 		String desc2 = "This is an attached text file example";
-		String desc3 = "Periodic table of the elements -- attached file example";
+		String desc3 = "Periodic table of the elements -- file example";
 		
 		filetext01 = Convert.stringToBase64(desc1) + "\n\n" + filetext01;
 		filetext02 = Convert.stringToBase64(desc2) + "\n\n" + filetext02;
@@ -63989,7 +64097,7 @@ class Math
 	
 	public static double cosh(double u)
 	{
-		//  returns the hyperbolic cosine function
+		//  returns the hyperbolic cosine
 		//
 		//  cosh(u) =  1/2 ( e^u + e^-u )
 		
@@ -66487,7 +66595,7 @@ class Math
 	
 	public static double sinh(double u)
 	{
-		//  returns the hyperbolic sine function
+		//  returns the hyperbolic sine
 		//
 		//  sinh(u) =  1/2 ( e^u - e^-u )
 		
@@ -68266,7 +68374,7 @@ class Number implements Comparable<Number>
 	
 	public Number cosh()
 	{
-		//  returns the hyperbolic cosine function
+		//  returns the hyperbolic cosine
 		//
 		//  cosh(u)  =  1/2 ( e^u + e^-u )
 		//
@@ -73233,7 +73341,7 @@ class Number implements Comparable<Number>
 	
 	public Number sinh()
 	{
-		//  returns the hyperbolic sine function
+		//  returns the hyperbolic sine
 		//
 		//  sinh(u) = 1/2 ( e^u - e^-u )
 		

@@ -18,9 +18,10 @@
 	
 	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
 	lows multiple users synchronous access to an email account from different computers which is useful
-	for some companies or organizations because POP mail accounts can only be accessed from one device
-	at a time. Imap also allows users to change the state of the messages on the server, but the POP
-	mail protocol could be amended or the email servers could be upgraded to include this feature.
+	for some companies or organizations that have to reply to large numbers of emails because POP mail
+	accounts can only be accessed from one device at a time. Imap also allows users to change the state
+	of the messages on the server, but the POP mail protocol could be amended or the email servers could
+	be upgraded to include this feature.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -422,7 +423,7 @@
 	
 	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only asymmet-
 	rical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
-	only public key cipher that uses a secret modulus. The knapsack cipher was also the world's first
+	only public key cipher that uses a private modulus. The knapsack cipher was also the world's first
 	quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but it has to be
 	implemented correctly or else it doesn't work.
 	
