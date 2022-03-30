@@ -110,11 +110,8 @@
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
 	the decryption method removes the padding / space chars appended to the message; the SavedEmails
 	class was modified to sort the emails in chronological order and to view, save, or delete the at-
-	tached files and edit the messages; an error in the saveAttachedFile method which called the view-
-	AttachedFile was corrected because the method was modified for the SavedEmails class; the mouse-
-	listener was modified so that the view or save attached file dialog box doesn't appear if a saved
-	message is being edited; and the mail class is being upgraded to save the message states in the
-	mail directory or email server and to send and retrieve users' public keys.
+	tached files and edit the messages; and the mail class was modified to save the message states in
+	the user's mail directory.
 	
 	
 	
@@ -252,9 +249,10 @@
 	messages that are sent unencrypted.) The email client could check both the headers and the list
 	strings for the message states because different email providers could use different protocols.
 	
-	The client program could also store the email hashes and message states in a file but then the
-	user would have to use the same computer or store the mail folder / directory on a USB storage
-	device. This feature hasn't been implemented yet.
+	The client program stores the message hashes and message states in a file but the user has to use
+	the same computer or store the mail folder / directory on a USB storage device to view the message
+	states. (The program uses the hash of the from address + the number of bytes because the program
+	doesn't know the hash of the email messages from the List screen.)
 	
 	Until the problem of storing public keys on email servers is solved, email encryption will not be-
 	come widely used. A few hundred thousand to a few million people might use encryption by copying
@@ -21103,6 +21101,9 @@ class Programs
 		
 		//  Define the message states 0 to 9
 		
+		//  The msg state numbers to send to the server
+		//  and / or save in the message states file
+		
 		private enum MessageState
 		{
 			unread,  // new envelope gold star
@@ -21115,14 +21116,6 @@ class Programs
 			star,    // star
 			save,    // save
 		}
-		
-		//  The msg state numbers to send to the server
-		//  and / or save in the message state file
-		//
-		//  MessageState. unread.ordinal() == 0,
-		//  MessageState.   read.ordinal() == 1,
-		//  MessageState.replied.ordinal() == 2,
-		//  ...       ...       ...       ...
 		
 		
 		
@@ -30193,6 +30186,9 @@ class Programs
 						emailpanel.list1.setDeleteBox(msno, delete);
 						emailpanel.listpanel.checkboxes[msno].setSelected(delete);
 						
+						String from = emailpanel.list1.getFrom(msno);
+						  int bytes = emailpanel.list1.getNumberOfBytes(msno);
+						
 						
 						//  if the user likes an email or the email is important and
 						//  the user sets icon / str == save, then save the message as
@@ -30216,9 +30212,6 @@ class Programs
 								message = emailpanel.list1.getMessage(msno);
 							}
 							
-							String from = emailpanel.list1.getFrom(msno);
-							  int bytes = emailpanel.list1.getNumberOfBytes(msno);
-							
 							if ((message != null) && !message.isEmpty())
 							{
 								SavedEmails savedemails = new
@@ -30236,27 +30229,26 @@ class Programs
 									savedemails.saveMessage(message, filetext, from);
 								}
 							}
+						}
+						
+						
+						if (msgstate != null)
+						{
+							//  Set the icon to the new message state
 							
-							if (msgstate != null)
-							{
-								//  Set the icon to the new message state
-								
-								ImageIcon imageicon = imageicons2[msgstate.ordinal()];
-								
-								emailpanel.listpanel.iconlabels2[msno].setIcon(imageicon);
-								emailpanel.listpanel.imageicons2[msno] = imageicon;
-								
-								
-								//  Update the msgstatestreemap
-								
-								String key = Cipher.hash2(from + bytes);
-								
-								System.out.println("from == " + from);
-								
-								if ((emailpanel.msgstatestreemap != null)
-								 && !emailpanel.msgstatestreemap.containsKey(key))
-								     emailpanel.msgstatestreemap.put(key, msgstate.ordinal());
-							}
+							ImageIcon imageicon = imageicons2[msgstate.ordinal()];
+							
+							emailpanel.listpanel.iconlabels2[msno].setIcon(imageicon);
+							emailpanel.listpanel.imageicons2[msno] = imageicon;
+							
+							
+							//  Update the msgstatestreemap
+							
+							String key = Cipher.hash2(from + bytes);
+							
+							System.out.println("from == " + from);
+							
+							emailpanel.msgstatestreemap.put(key, msgstate.ordinal());
 						}
 						
 						
@@ -45214,260 +45206,251 @@ class Documents
 	"ause the window has no frame, you have to click the menu item a second time to c" +
 	"lose / hide the window.\n\n\n\n5. Click the List button to list the messages.\n\n" +
 	"The list displays the message number, the number of kilobytes, the sender, the s" +
-	"ubject, and the first few words of each message. Messages that contain attached " +
-	"image files or music files may contain a large number of bytes because images an" +
-	"d music files consume a lot of memory.\n\nIf you are using the test mail feature" +
-	", the list may take several seconds to appear if you are using only a single- or" +
-	" dual-core processor because the program has to encrypt several messages for the" +
-	" test.\n\nMany users leave hundreds of messages on the server by not deleting th" +
-	"em (except for spam) and then just download the newest 10, 20, 50, or 100 messag" +
-	"es by choosing the number of messages field in the settings dialog box. You can " +
-	"choose the number of messages from the drop-down / combo box, or you can choose " +
-	"your own number such as 15 or 25 by erasing one of the numbers and then typing i" +
-	"n a new number. If the server is slow, choosing a smaller number allows the List" +
-	" button to display the tops of the messages faster.\n\nIf you want to update the" +
-	" list screen because you are expecting a new message to arrive, then you have to" +
-	" click the Sign out button and then click the List button. Otherwise the List bu" +
-	"tton will keep re-displaying the same list stored on your computer. If the progr" +
-	"am is closed and then reopened, the memory cache will disappear and the program " +
-	"will have to retrieve the messages from the server, just as if the user had clic" +
-	"ked the Sign out button. (Closing the window may not close the program if there " +
-	"is also a text editor window opened. If a text editor window is opened, closing " +
-	"the Mail program just hides the window from view.)\n\nDepending on the service p" +
-	"rovider and the number of messages on the server, you may have to change the ord" +
-	"er of the messages to ascending or descending. Some email service providers enum" +
-	"erate the messages in ascending order (newest messages first, oldest messages la" +
-	"st), but other providers enumerate them in descending order (oldest messages fir" +
-	"st, newest messages last). If you have a lot of new messages to read and delete," +
-	" you can choose which order to read them, and you can change back and forth to r" +
-	"ead and/or delete the oldest or newest by changing the settings box to ascending" +
-	" or descending, and then clicking the Sign out and List buttons to reload the me" +
-	"ssages.\n\nThe icons on the list screen could be changed from unread to read, re" +
-	"plied to / answered, etc, but this feature has no effect on the server because P" +
-	"OP3 does not currently allow the user to change the state or status of a message" +
-	". If some email service providers upgrade their software to allow users to chang" +
-	"e the state of a message on the server, then this feature could be implemented. " +
-	"The client program could then send a command to read the state of all the messag" +
-	"es on the server and display the correct icons on the list screen.\n\n\n\n6. Cho" +
-	"ose the message that you want to retrieve, view or read by clicking on the sende" +
-	"r's address or the subject line. You can return to the list screen by clicking t" +
-	"he List button or by pressing the Backspace <-- button on the keyboard.\n\nOnce " +
-	"a message has been retrieved, the program will store a temporary copy in volatil" +
-	"e memory so the program does not have to download the same message more than onc" +
-	"e (unless you click Sign out).\n\nA message may take one to two seconds to appea" +
-	"r if you are using only a single- or dual-core processor because the program has" +
-	" to decrypt the message before it can display it.\n\n(On the message screen, you" +
-	" can click on the from line or subject line to view the email header. If the sen" +
-	"der is using the same program, you will notice that the email header doesn't hav" +
-	"e a subject line for encrypted messages because the program doesn't include a pl" +
-	"aintext subject except for messages that are sent unencrypted.)\n\nYou can chang" +
-	"e the font size to make your messages easier to read by holding down the control" +
-	" (Ctrl) key and pressing the + or - key, or by holding down Ctrl and using the s" +
-	"croll wheel on the mouse.\n\nYou can also change the font type by clicking the V" +
-	"iew -> Font Type menu item and then using the down arrow key until you find a fo" +
-	"nt that you like. Clicking OK changes the display to the new font, but closing t" +
-	"he font dialog box without clicking OK (by clicking CANCEL, clicking the 'x', or" +
-	" pressing the escape button) restores the original font.\n\n\n\n7. Reply to a me" +
-	"ssage by clicking on the reply label at the top of the message (where it says \"" +
-	" delete  reply  prev  next \").\n\nA reply window appears that has the to, from," +
-	" and subject fields, and the sender's message filled in. You can type your mess" +
-	"age and then click the Send button.\n\nIf a message box appears that says \"user" +
-	" domain does not match server domain\", you will have to click on Edit -> Passwo" +
-	"rd / Settings or use Ctrl + P to open the settings dialog box; click inside the " +
-	"outgoing mail server combo box; erase the existing outgoing server and type your" +
-	" server domain name and port number (such as mydomain.com 465, or mail.mydomain." +
-	"com 465, or whatever the server name is) where mydomain is the name after the '@" +
-	"' sign in the from address. If you use the email address myname@example.com to t" +
-	"est the program, then you can choose mail.example.com 465 as the server domain.\n" +
-	"\nIf no reply key was included in the message, a dialog box will prompt you to f" +
-	"ind the recipient's public key and copy it to the clipboard. You can ignore this" +
-	" message and click again on the Send button if you want to send a plaintext mess" +
-	"age that is not encrypted.\n\nIf a reply key was included in the message, an ico" +
-	"n showing two public keys on a key ring will appear next to the To: field. If yo" +
-	"u click on the public key icon, a message box will appear displaying the recipie" +
-	"nt's 32-digit public key hash. (If you have a document such as a business card t" +
-	"hat has the recipient's public key hash, you can verify that the recipient's pub" +
-	"lic key is correct by comparing the two numbers.)\n\nIf you click the Send butto" +
-	"n, a confirmation dialog box appears that says \"Yes\", \"Attach File / Dir\", a" +
-	"nd \"Cancel\". You can click the Attach File / Directory button to attach up to " +
-	"10 files to your email. If you click the Attach File / Dir button, a file choose" +
-	"r dialog box appears. Choose the file or folder that you want to attach, and the" +
-	"n click Yes to send the message.\n\n(Note that you if you want to attach a file " +
-	"or folder that is inside another folder or directory, you have to select the top" +
-	" folder and then use the enter button or double-click on the folder name to navi" +
-	"gate to the subdirectory or file. If you just select a folder and click the butt" +
-	"on on the dialog box instead of pressing the enter key, it will assume that you " +
-	"want to attach the entire folder or directory.)\n\nYou can close the send mail f" +
-	"rame and try replying to another message. If a test message does not include a r" +
-	"eply key, you can create a fake reply key by clicking the Edit -> Print Public K" +
-	"ey menu item, and then using the recipient's name displayed in the to: field of " +
-	"the send mail window as the public key email address. The public key that appear" +
-	"s in a new window will automatically be copied to the clipboard. Close the publi" +
-	"c key window and use the fake key to test the mail program by clicking on the Se" +
-	"nd button. A public key icon should appear next to the to: field indicating that" +
-	" the recipient's key was found on the clipboard. (If the address on the clipboar" +
-	"d key does not match the address in the to: field, then the program will not rec" +
-	"ognize the public key. If the clipboard key doesn't have an email address, then " +
-	"the program will display the key hash and ask you to confirm the key.)\n\nWhenev" +
-	"er you send an encrypted message to someone, the recipient's public key gets sav" +
-	"ed to a public key file in the Mail directory (usually /home/username/Mail or wh" +
-	"atever directory is listed in the settings dialog box). If you have more than on" +
-	"e username (such as a personal and business address), then there will be more th" +
-	"an one public key file because the public keys are stored according to your user" +
-	"name or email address.\n\nIf you want to send a message to a recipient without r" +
-	"eplying to an email, click on the File -> Send Mail menu item to open a Send Mai" +
-	"l frame. The from: address will automatically be filled in with your email addre" +
-	"ss. Then you can type your message and enter the recipient's address in the to: " +
-	"field. When you click the Send button, the public key icon will appear next to t" +
-	"he to: field if a public key has been used before for that recipient. If a publi" +
-	"c key hasn't been used before, you have to find and copy the recipient's key to " +
-	"the clipboard and then click the Send button again. (If the address on the publi" +
-	"c key does not match the address in the to: field, the Mail program will display" +
-	" an error message that says \"Address on clipboard public key does not match add" +
-	"ress in to: field\".)\n\nYou can view the public key files (and delete public ke" +
-	"ys) by clicking on View -> View Public Keys menu item. If you change the tabbed " +
-	"pane to a different tab / username and then click the View Public Keys menu item" +
-	", a different set of public keys will appear corresponding to that username / em" +
-	"ail address. You can also view the encrypted public key file by opening the file" +
-	" using the Java text editor and entering the passphrase. (Every file that is sav" +
-	"ed by the Mail program is automatically encrypted using the same passphrase in t" +
-	"he passphrase / settings dialog box.)\n\nBecause the recipients' public keys are" +
-	" saved in a public key file, you only have to find, copy and paste a public key " +
-	"once for each recipient. The next time you send an email to the same recipient, " +
-	"the Mail program will find the key for you and display the public key icon next " +
-	"to the to: address. In future versions of the program the software will retrieve" +
-	" the public key from the recipient's email server every time you send a message," +
-	" but the email servers first have to be upgraded to allow users to store their p" +
-	"ublic keys.\n\nIf you have an Intel processor and you are sending an important m" +
-	"essage, then you may want to use the virtual keyboard to type your message becau" +
-	"se Intel processors have a back door that may allow someone to access your keybo" +
-	"ard and computer. The virtual keyboard can be opened only from the Send Mail Fra" +
-	"me by clicking the Edit -> Keyboard menu item. (The Send Mail Frame can be opene" +
-	"d from the Java Mail Frame by clicking on File -> Send Mail or by replying to a " +
-	"message.)\n\n\n\nThe problem of finding or obtaining the recipient's public key " +
-	"every time you want to send a message to a new recipient is only a temporary pro" +
-	"blem. Email service providers can solve this problem by allowing users to copy a" +
-	"nd paste their public keys into a text area on their website. Then whenever some" +
-	"one wants to send an email to one of their email clients, the sender would conne" +
-	"ct to the recipient's POP mail server (such as pop.mail.com 995) and request the" +
-	" public key.\n\nIf POP mail servers are upgraded to store users' public keys, us" +
-	"ers won't have to think about encrypting their email or exchanging public keys. " +
-	"The email program will know whether or not the user has stored a public key on t" +
-	"he email server and will prompt the user to choose or write down a random number" +
-	" which will be used to encrypt and decrypt email. People who want to send email " +
-	"will not have to request the public key from the recipient because the client pr" +
-	"ogram will send a request to the recipient's POP mail server to retrieve the pub" +
-	"lic key.\n\nIf a POP mail server replaces a user's key with a fake key to do a m" +
-	"an-in-the-middle attack, the client program will be able to alert the sender tha" +
-	"t the public key has changed because it can keep a list of all the previously us" +
-	"ed keys. If the sender is requesting a key for the first time, the sender will k" +
-	"now the key is fake if the user has published his or her key hash on a website o" +
-	"r on a business card, because the sender can view the public key hash before sen" +
-	"ding a message.\n\nIt is more likely that some users will accidentally misspell " +
-	"an email address and send a message to the wrong recipient than receive a fake k" +
-	"ey from a POP mail server, but this problem has nothing to do with cryptography " +
-	"or encryption.\n\nRetrieving the recipient's public key from the server could be" +
-	" done by sending a retrieve command such as RETR to the POP mail server which wo" +
-	"uld respond with +OK username because RETR is usually followed by a message numb" +
-	"er. Then the sender would transmit the recipient's username encoded in base 64 s" +
-	"uch as cmVjaXBpZW50QGV4YW1wbGUuY29t which is recipient@example.com encoded in ba" +
-	"se 64. (You can verify this using the Java text editor by selecting the encoded " +
-	"text and then clicking Edit -> Convert Text -> Base64.) If the email account and" +
-	" public key exist, the server would respond by sending a message such as +OK fol" +
-	"lowed by the public key digits. Otherwise it would respond with a message such a" +
-	"s \"-ERR username or public key not found\".\n\nPOP mail servers could also incl" +
-	"ude a command so the user would not have to use a web browser to copy and paste " +
-	"the public key. The client program would know if a public key is stored on the s" +
-	"erver because the POP mail server could respond to the user's login by including" +
-	" information such as the first 16 digits of the user's public key hash. If there" +
-	" is no public key information for the user, the client program could prompt the " +
-	"user to choose a random passphrase and then it would use the hash of the passphr" +
-	"ase and email address to generate the public key and send it to the server.\n\n\n" +
-	"\n8. Mark any messages for deletion by checking the box [ x ] next to the server" +
-	" message number.\n\nYou can mark and unmark a message for deletion by clicking o" +
-	"n the check box [  ]. The checked messages will not be deleted from the server u" +
-	"ntil the Delete button is clicked.\n\nAfter you click the Delete button, the del" +
-	"eted message numbers disappear from the list and from the server. Clicking the L" +
-	"ist button doesn't re-number them because the server doesn't re-number them. You" +
-	" have to click the Sign out button and then click the List button to re-number t" +
-	"he list.\n\n\n\n9. You can add an additional username / email address to the mai" +
-	"l program by clicking File -> New.\n\nWhen the new tab appears, enter another em" +
-	"ail address. Then open the settings dialog box and select the incoming server fo" +
-	"r the new tab.\n\nYou can change the colors of the tabs so that your personal em" +
-	"ail appears in one color and your business email appears in another color.\n\nYo" +
-	"u can delete a username by clicking File -> Close. This opens a dialog box which" +
-	" gives you the option either to close the tab or to delete the username. (Closin" +
-	"g the tab just hides the tab from view, but the username still exists and will r" +
-	"eappear when the window or program is closed and reopened. Deleting the tab dele" +
-	"tes the username from memory when the mail settings are encrypted and saved to d" +
-	"isk.)\n\n\n\n10. You can restore the tabbed email panes by opening the passphras" +
-	"e dialog box, typing or confirming your passphrase, and clicking OK.\n\nTry clos" +
-	"ing the mail program window (and the text editor window), and then reopen the pr" +
-	"ogram. Click the List button to open the Passphrase / Settings dialog box (or cl" +
-	"ick Edit -> Passphrase). When the dialog box appears, confirm that the passphras" +
-	"e is correct, or enter your passphrase, and click OK. If the passphrase is corre" +
-	"ct, your email addresses should appear automatically when you click OK. The sele" +
-	"cted tab or email address will be the tab that was last selected before the prog" +
-	"ram / window was closed.\n\nEach time you close the mail program window, the tab" +
-	"bed panes and settings will be encrypted and saved to disk using the hash of the" +
-	" public key as the file suffix and your passphrase as the file encryption key.\n" +
-	"\nNote that if you create a public key using a different passphrase, the passphr" +
-	"ase dialog box will display the last passphrase that was used. This may not be t" +
-	"he passphrase that you want.\n\nIf you click OK and your email addresses do not " +
-	"appear in the tabbed pane, open the dialog box, enter the correct passphrase, an" +
-	"d then click OK and your email addresses should appear.\n\n\n\n11. Create a publ" +
-	"ic key for each user name by clicking on Edit -> Print Public Key in the Mail pr" +
-	"ogram. Use the same passphrase and a different email address to generate the pub" +
-	"lic key.\n\nIf you want to be able to receive encrypted email, you can publish y" +
-	"our public key on a webpage or you can email it to someone who wants to send you" +
-	" an encrypted message. (Eventually this problem will be solved by the email serv" +
-	"ice providers if they upgrade their software to allow users to send / store and " +
-	"retrieve public keys.)\n\nWhen you create your public key from the mail program " +
-	"it is also copied to the clipboard. You can then use the clipboard to paste it o" +
-	"nto a public or private website.\n\nThe Edit -> Print Public Key menu item displ" +
-	"ays the public key and the 32-digit public key hash. You can write your 32-digit" +
-	" public key hash (or just the first 24 or 28 digits) onto documents or business " +
-	"cards so that other people who write to you can verify that they downloaded the " +
-	"correct public key before sending a message.\n\nThe public key hash method hashe" +
-	"s the digits so that the key format can change without breaking the hash (unless" +
-	" the number of ciphers changes). The public key hash only hashes the digits whic" +
-	"h means that the email address is not included in the public key hash.\n\nIf you" +
-	" include your email address in the passphrase address field then the address wil" +
-	"l be printed on the public key. You can delete the address from the printed key " +
-	"using the backspace or delete key.\n\nIt makes no difference whether you type an" +
-	" email address onto a public key or erase an address from a public key. The send" +
-	"er will still be able to copy the public key to the clipboard, click in the to f" +
-	"ield and press enter, and the email program will still decrypt the message becau" +
-	"se it will generate two private keys (using the passphrase and the passphrase + " +
-	"email address) and it will try one or both private keys until it decrypts the me" +
-	"ssage.\n\n\n\n12.  Write down your secret passphrase, usernames, and user passwo" +
-	"rds.\n\nIf you lose this information, you will not be able to access your email " +
-	"accounts or decrypt your emails.\n\nYou can save your passphrase in a file by ty" +
-	"ping your passphrase on the first line of the dialog box, or you can type your p" +
-	"assphrase on the second line every time you close / exit and restart the program" +
-	". If you store your passphrase by typing it on the first line, you never have to" +
-	" retype it, but then if you lose your laptop computer, someone can get access to" +
-	" all your email accounts and your emails. If you type your passphrase on the sec" +
-	"ond line of the passphrase dialog box, then your emails are secure even if your " +
-	"laptop is lost, stolen, or confiscated, but you have to keep retyping your passp" +
-	"hrase every time you close / exit and restart the program.\n\nOne option is to t" +
-	"ype your passphrase on the second line of the dialog box and then minimize the w" +
-	"indow when you are not using it. Closing your laptop or locking the screen will " +
-	"protect it because laptops and desktops usually require a short password to log " +
-	"in. If your laptop is lost, the passphrase will disappear because it is stored i" +
-	"n volatile memory, unless someone can guess the login password. If someone tries" +
-	" to bypass the login password by booting the computer from a USB flash drive, th" +
-	"ey can get access to any unencrypted files on the hard disk but the passphrase w" +
-	"ill disappear from volatile memory because the computer has to be restarted.\n\n" +
-	"You can also use two passphrases, a long passphrase which you type on the first " +
-	"line and then a shorter passphrase which you type on the second line. You only h" +
-	"ave to retype the second passphrase because the first passphrase is stored in a " +
-	"file in the home directory.\n\nAnother option for protecting your email passphra" +
-	"se is to encrypt your home directory. If your operating system encrypts your hom" +
-	"e directory for you, then you don't have to worry about storing your email passp" +
-	"hrase because the passphrase file is located in the home directory. Encrypting t" +
-	"he home directory also prevents someone from reading your unencrypted files and " +
-	"documents by booting the computer from a live Linux USB device.\n\n";
+	"ubject, and the first few words of each message.\n\nIf you are using the test ma" +
+	"il feature, the list may take several seconds to appear if you are using only a " +
+	"single- or dual-core processor because the program has to encrypt several messag" +
+	"es for the test.\n\nMany users leave hundreds of messages on the server by not d" +
+	"eleting them (except for spam) and then just download the newest 10, 20, 50, or " +
+	"100 messages by choosing the number of messages field in the settings dialog box" +
+	". You can choose the number of messages from the drop-down / combo box, or you c" +
+	"an choose your own number such as 15 or 25 by erasing one of the numbers and the" +
+	"n typing in a new number. If the server is slow, choosing a smaller number allow" +
+	"s the List button to display the tops of the messages faster.\n\nIf you want to " +
+	"update the list screen because you are expecting a new message to arrive, then y" +
+	"ou have to click the Sign out button and then click the List button. Otherwise t" +
+	"he List button will keep re-displaying the same list stored on your computer. If" +
+	" the program is closed and then reopened, the memory cache will disappear and th" +
+	"e program will have to retrieve the messages from the server, just as if the use" +
+	"r had clicked the Sign out button. (Closing the window may not close the program" +
+	" if there is also a text editor window opened. If a text editor window is open, " +
+	"closing the Mail program just hides the window from view.)\n\nDepending on the s" +
+	"ervice provider and the number of messages on the server, you may have to change" +
+	" the order of the messages to ascending or descending. Some email service provid" +
+	"ers enumerate the messages in ascending order (newest messages first, oldest mes" +
+	"sages last), but other providers enumerate them in descending order (oldest mess" +
+	"ages first, newest messages last). If you have a lot of new messages to read and" +
+	" delete, you can choose which order to read them, and you can change back and fo" +
+	"rth to read and/or delete the oldest or newest by changing the settings box to a" +
+	"scending or descending, and then clicking the Sign out and List buttons to reloa" +
+	"d the messages.\n\n\n\n6. Choose the message that you want to retrieve, view or " +
+	"read by clicking on the sender's address or the subject line. You can return to " +
+	"the list screen by clicking the List button or by pressing the Backspace <-- but" +
+	"ton on the keyboard.\n\nOnce a message has been retrieved, the program will stor" +
+	"e a temporary copy in volatile memory so the program does not have to download t" +
+	"he same message more than once (unless you click Sign out).\n\nA message may tak" +
+	"e one to two seconds to appear if you are using only a single- or dual-core proc" +
+	"essor because the program has to decrypt the message before it can display it.\n" +
+	"\nYou can change the font size to make your messages easier to read by holding d" +
+	"own the control (Ctrl) key and pressing the + or - key, or by holding down Ctrl " +
+	"and using the scroll wheel on the mouse. You can also change the font type by cl" +
+	"icking the View -> Font Type menu item and then using the down arrow key until y" +
+	"ou find a font that you like. Clicking OK changes the display to the new font, b" +
+	"ut closing the font dialog box without clicking OK (by clicking CANCEL, clicking" +
+	" the 'x', or pressing the escape button) restores the original font.\n\nThe icon" +
+	"s on the list screen can be changed from unread to read, replied to / answered, " +
+	"important, urgent, etc. The message states will be stored in the mail directory " +
+	"on the client computer but not on the server because POP3 does not allow the use" +
+	"r to change the state of a message.\n\n\n\n7. Reply to a message by clicking on " +
+	"the reply label at the top of the message (where it says \" delete  reply  prev " +
+	" next \").\n\nA reply window appears that has the to, from, and subject fields, " +
+	"and the sender's message filled in. You can type your message and then click the" +
+	" Send button.\n\nIf a message box appears that says \"user domain does not match" +
+	" server domain\", you will have to click on Edit -> Password / Settings or use C" +
+	"trl + P to open the settings dialog box; click inside the outgoing mail server c" +
+	"ombo box; erase the existing outgoing server and type your server domain name an" +
+	"d port number (such as mydomain.com 465, or mail.mydomain.com 465, or whatever t" +
+	"he server name is) where mydomain is the name after the '@' sign in the from add" +
+	"ress. If you use the email address myname@example.com to test the program, then " +
+	"you can choose mail.example.com 465 as the server domain.\n\nIf no reply key was" +
+	" included in the message, a dialog box will prompt you to find the recipient's p" +
+	"ublic key and copy it to the clipboard. You can ignore this message and click ag" +
+	"ain on the Send button if you want to send a plaintext message that is not encry" +
+	"pted.\n\nIf a reply key was included in the message, an icon showing two public " +
+	"keys on a key ring will appear next to the To: field. If you click on the public" +
+	" key icon, a message box will appear displaying the recipient's 32-digit public " +
+	"key hash. (If you have a document such as a business card that has the recipient" +
+	"'s public key hash, you can verify that the recipient's public key is correct by" +
+	" comparing the two numbers.)\n\nIf you click the Send button, a confirmation dia" +
+	"log box appears that says \"Yes\", \"Attach File / Dir\", and \"Cancel\". You ca" +
+	"n click the Attach File / Directory button to attach up to 10 files to your emai" +
+	"l. If you click the Attach File / Dir button, a file chooser dialog box appears." +
+	" Choose the file or folder that you want to attach, and then click Yes to send t" +
+	"he message.\n\n(Note that you if you want to attach a file or folder that is ins" +
+	"ide another folder or directory, you have to select the top folder and then use " +
+	"the enter button or double-click on the folder name to navigate to the subdirect" +
+	"ory or file. If you just select a folder and click the button on the dialog box " +
+	"instead of pressing the enter key, it will assume that you want to attach the en" +
+	"tire folder or directory.)\n\nYou can close the send mail frame and try replying" +
+	" to another message. If a test message does not include a reply key, you can cre" +
+	"ate a fake reply key by clicking the Edit -> Print Public Key menu item, and the" +
+	"n using the recipient's name displayed in the to: field of the send mail window " +
+	"as the public key email address. The public key that appears in a new window wil" +
+	"l automatically be copied to the clipboard. Close the public key window and use " +
+	"the fake key to test the mail program by clicking on the Send button. A public k" +
+	"ey icon should appear next to the to: field indicating that the recipient's key " +
+	"was found on the clipboard. (If the address on the clipboard key does not match " +
+	"the address in the to: field, then the program will not recognize the public key" +
+	". If the clipboard key doesn't have an email address, then the program will disp" +
+	"lay the key hash and ask you to confirm the key.)\n\nWhenever you send an encryp" +
+	"ted message to someone, the recipient's public key gets saved to a public key fi" +
+	"le in the Mail directory (usually /home/username/Mail or whatever directory is l" +
+	"isted in the settings dialog box). If you have more than one username (such as a" +
+	" personal and business address), then there will be more than one public key fil" +
+	"e because the public keys are stored according to your username or email address" +
+	".\n\nIf you want to send a message to a recipient without replying to an email, " +
+	"click on the File -> Send Mail menu item to open a Send Mail frame. The from: ad" +
+	"dress will automatically be filled in with your email address. Then you can type" +
+	" your message and enter the recipient's address in the to: field. When you click" +
+	" the Send button, the public key icon will appear next to the to: field if a pub" +
+	"lic key has been used before for that recipient. If a public key hasn't been use" +
+	"d before, you have to find and copy the recipient's key to the clipboard and the" +
+	"n click the Send button again. (If the address on the public key does not match " +
+	"the address in the to: field, the Mail program will display an error message tha" +
+	"t says \"Address on clipboard public key does not match address in to: field\".)" +
+	"\n\nYou can view the public key files (and delete public keys) by clicking on Vi" +
+	"ew -> View Public Keys menu item. If you change the tabbed pane to a different t" +
+	"ab / username and then click the View Public Keys menu item, a different set of " +
+	"public keys will appear corresponding to that username / email address. You can " +
+	"also view the encrypted public key file by opening the file using the Java text " +
+	"editor and entering the passphrase. (Every file that is saved by the Mail progra" +
+	"m is automatically encrypted using the same passphrase in the passphrase / setti" +
+	"ngs dialog box.)\n\nBecause the recipients' public keys are saved in a public ke" +
+	"y file, you only have to find, copy and paste a public key once for each recipie" +
+	"nt. The next time you send an email to the same recipient, the Mail program will" +
+	" find the key for you and display the public key icon next to the to: address. I" +
+	"n future versions of the program the software will retrieve the public key from " +
+	"the recipient's email server every time you send a message, but the email server" +
+	"s first have to be upgraded to allow users to store their public keys.\n\nIf you" +
+	" have an Intel processor and you are sending an important message, then you may " +
+	"want to use the virtual keyboard to type your message because Intel processors h" +
+	"ave a back door that may allow someone to access your keyboard and computer. The" +
+	" virtual keyboard can be opened only from the Send Mail Frame by clicking the Ed" +
+	"it -> Keyboard menu item. (The Send Mail Frame can be opened from the Java Mail " +
+	"Frame by clicking on File -> Send Mail or by replying to a message.)\n\n\n\nThe " +
+	"problem of finding or obtaining the recipient's public key every time you want t" +
+	"o send a message to a new recipient is only a temporary problem. Email service p" +
+	"roviders can solve this problem by allowing users to copy and paste their public" +
+	" keys into a text area on their website. Then whenever someone wants to send an " +
+	"email to one of their email clients, the sender would connect to the recipient's" +
+	" POP mail server (such as pop.mail.com 995) and request the public key.\n\nIf PO" +
+	"P mail servers are upgraded to store users' public keys, users won't have to thi" +
+	"nk about encrypting their email or exchanging public keys. The email program wil" +
+	"l know whether or not the user has stored a public key on the email server and w" +
+	"ill prompt the user to choose or write down a random number which will be used t" +
+	"o encrypt and decrypt email. People who want to send email will not have to requ" +
+	"est the public key from the recipient because the client program will send a req" +
+	"uest to the recipient's POP mail server to retrieve the public key.\n\nIf a POP " +
+	"mail server replaces a user's key with a fake key to do a man-in-the-middle atta" +
+	"ck, the client program will be able to alert the sender that the public key has " +
+	"changed because it can keep a list of all the previously used keys. If the sende" +
+	"r is requesting a key for the first time, the sender will know the key is fake i" +
+	"f the user has published his or her key hash on a website or on a business card," +
+	" because the sender can view the public key hash before sending a message.\n\nIt" +
+	" is more likely that some users will accidentally misspell an email address and " +
+	"send a message to the wrong recipient than receive a fake key from a POP mail se" +
+	"rver, but this problem has nothing to do with cryptography or encryption.\n\nRet" +
+	"rieving the recipient's public key from the server could be done by sending a re" +
+	"trieve command such as RETR to the POP mail server which would respond with +OK " +
+	"username because RETR is usually followed by a message number. Then the sender w" +
+	"ould transmit the recipient's username encoded in base 64 such as cmVjaXBpZW50QG" +
+	"V4YW1wbGUuY29t which is recipient@example.com encoded in base 64. (You can verif" +
+	"y this using the Java text editor by selecting the encoded text and then clickin" +
+	"g Edit -> Convert Text -> Base64.) If the email account and public key exist, th" +
+	"e server would respond by sending a message such as +OK followed by the public k" +
+	"ey digits. Otherwise it would respond with a message such as \"-ERR username or " +
+	"public key not found\".\n\nPOP mail servers could also include a command so the " +
+	"user would not have to use a web browser to copy and paste the public key. The c" +
+	"lient program would know if a public key is stored on the server because the POP" +
+	" mail server could respond to the user's login by including information such as " +
+	"the first 16 digits of the user's public key hash. If there is no public key inf" +
+	"ormation for the user, the client program could prompt the user to choose a rand" +
+	"om passphrase and then it would use the hash of the passphrase and email address" +
+	" to generate the public key and send it to the server.\n\n\n\n8. Mark any messag" +
+	"es for deletion by checking the box [ x ] next to the server message number.\n\n" +
+	"You can mark and unmark a message for deletion by clicking on the check box [  ]" +
+	". The checked messages will not be deleted from the server until the Delete butt" +
+	"on is clicked.\n\nAfter you click the Delete button, the deleted message numbers" +
+	" disappear from the list and from the server. Clicking the List button doesn't r" +
+	"e-number them because the server doesn't re-number them. You have to click the S" +
+	"ign out button and then click the List button to re-number the list.\n\n\n\n9. Y" +
+	"ou can add an additional username / email address to the mail program by clickin" +
+	"g File -> New.\n\nWhen the new tab appears, enter another email address. Then op" +
+	"en the settings dialog box and select the incoming server for the new tab.\n\nYo" +
+	"u can change the colors of the tabs so that your personal email appears in one c" +
+	"olor and your business email appears in another color.\n\nYou can delete a usern" +
+	"ame by clicking File -> Close. This opens a dialog box which gives you the optio" +
+	"n either to close the tab or to delete the username. (Closing the tab just hides" +
+	" the tab from view, but the username still exists and will reappear when the win" +
+	"dow or program is closed and reopened. Deleting the tab deletes the username fro" +
+	"m memory when the mail settings are encrypted and saved to disk.)\n\n\n\n10. You" +
+	" can restore the tabbed email panes by opening the passphrase dialog box, typing" +
+	" or confirming your passphrase, and clicking OK.\n\nTry closing the mail program" +
+	" window (and the text editor window), and then reopen the program. Click the Lis" +
+	"t button to open the Passphrase / Settings dialog box (or click Edit -> Passphra" +
+	"se). When the dialog box appears, confirm that the passphrase is correct, or ent" +
+	"er your passphrase, and click OK. If the passphrase is correct, your email addre" +
+	"sses should appear automatically when you click OK. The selected tab or email ad" +
+	"dress will be the tab that was last selected before the program / window was clo" +
+	"sed.\n\nEach time you close the mail program window, the tabbed panes and settin" +
+	"gs will be encrypted and saved to disk using the hash of the public key as the f" +
+	"ile suffix and your passphrase as the file encryption key.\n\nNote that if you c" +
+	"reate a public key using a different passphrase, the passphrase dialog box will " +
+	"display the last passphrase that was used. This may not be the passphrase that y" +
+	"ou want.\n\nIf you click OK and your email addresses do not appear in the tabbed" +
+	" pane, open the dialog box, enter the correct passphrase, and then click OK and " +
+	"your email addresses should appear.\n\n\n\n11. Create a public key for each user" +
+	" name by clicking on Edit -> Print Public Key in the Mail program. Use the same " +
+	"passphrase and a different email address to generate the public key.\n\nIf you w" +
+	"ant to be able to receive encrypted email, you can publish your public key on a " +
+	"webpage or you can email it to someone who wants to send you an encrypted messag" +
+	"e. (Eventually this problem will be solved by the email service providers if the" +
+	"y upgrade their software to allow users to send / store and retrieve public keys" +
+	".)\n\nWhen you create your public key from the mail program it is also copied to" +
+	" the clipboard. You can then use the clipboard to paste it onto a public or priv" +
+	"ate website.\n\nThe Edit -> Print Public Key menu item displays the public key a" +
+	"nd the 32-digit public key hash. You can write your 32-digit public key hash (or" +
+	" just the first 24 or 28 digits) onto documents or business cards so that other " +
+	"people who write to you can verify that they downloaded the correct public key b" +
+	"efore sending a message.\n\nThe public key hash method hashes the digits so that" +
+	" the key format can change without breaking the hash (unless the number of ciphe" +
+	"rs changes). The public key hash only hashes the digits which means that the ema" +
+	"il address is not included in the public key hash.\n\nIf you include your email " +
+	"address in the passphrase address field then the address will be printed on the " +
+	"public key. You can delete the address from the printed key using the backspace " +
+	"or delete key.\n\nIt makes no difference whether you type an email address onto " +
+	"a public key or erase an address from a public key. The sender will still be abl" +
+	"e to copy the public key to the clipboard, click in the to field and press enter" +
+	", and the email program will still decrypt the message because it will generate " +
+	"two private keys (using the passphrase and the passphrase + email address) and i" +
+	"t will try one or both private keys until it decrypts the message.\n\n\n\n12.  W" +
+	"rite down your secret passphrase, usernames, and user passwords.\n\nIf you lose " +
+	"this information, you will not be able to access your email accounts or decrypt " +
+	"your emails.\n\nYou can save your passphrase in a file by typing your passphrase" +
+	" on the first line of the dialog box, or you can type your passphrase on the sec" +
+	"ond line every time you close / exit and restart the program. If you store your " +
+	"passphrase by typing it on the first line, you never have to retype it, but then" +
+	" if you lose your laptop computer, someone can get access to all your email acco" +
+	"unts and your emails. If you type your passphrase on the second line of the pass" +
+	"phrase dialog box, then your emails are secure even if your laptop is lost, stol" +
+	"en, or confiscated, but you have to keep retyping your passphrase every time you" +
+	" close / exit and restart the program.\n\nOne option is to type your passphrase " +
+	"on the second line of the dialog box and then minimize the window when you are n" +
+	"ot using it. Closing your laptop or locking the screen will protect it because l" +
+	"aptops and desktops usually require a short password to log in. If your laptop i" +
+	"s lost, the passphrase will disappear because it is stored in volatile memory, u" +
+	"nless someone can guess the login password. If someone tries to bypass the login" +
+	" password by booting the computer from a USB flash drive, they can get access to" +
+	" any unencrypted files on the hard disk but the passphrase will disappear from v" +
+	"olatile memory because the computer has to be restarted.\n\nYou can also use two" +
+	" passphrases, a long passphrase which you type on the first line and then a shor" +
+	"ter passphrase which you type on the second line. You only have to retype the se" +
+	"cond passphrase because the first passphrase is stored in a file in the home dir" +
+	"ectory.\n\nAnother option for protecting your email passphrase is to encrypt you" +
+	"r home directory. If your operating system encrypts your home directory for you," +
+	" then you don't have to worry about storing your email passphrase because the pa" +
+	"ssphrase file is located in the home directory. Encrypting the home directory al" +
+	"so prevents someone from reading your unencrypted files and documents by booting" +
+	" the computer from a live Linux USB device.\n\n";
 	
 	
 	static String howtousepopmail2 = "";
