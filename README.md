@@ -80,11 +80,8 @@
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
 	the decryption method removes the padding / space chars appended to the message; the SavedEmails
 	class was modified to sort the emails in chronological order and to view, save, or delete the at-
-	tached files and edit the messages; an error in the saveAttachedFile method which called the view-
-	AttachedFile was corrected because the method was modified for the SavedEmails class; the mouse-
-	listener was modified so that the view or save attached file dialog box doesn't appear if a saved
-	message is being edited; and the mail class is being upgraded to save the message states in the
-	mail directory or email server and to send and retrieve users' public keys.
+	tached files and edit the messages; and the mail class was modified to save the message states in
+	the user's mail directory.
 	
 	
 	
@@ -222,9 +219,10 @@
 	messages that are sent unencrypted.) The email client could check both the headers and the list
 	strings for the message states because different email providers could use different protocols.
 	
-	The client program could also store the email hashes and message states in a file but then the
-	user would have to use the same computer or store the mail folder / directory on a USB storage
-	device. This feature hasn't been implemented yet.
+	The client program stores the message hashes and message states in a file but the user has to use
+	the same computer or store the mail folder / directory on a USB storage device to view the message
+	states. (The program uses the hash of the from address + the number of bytes because the program
+	doesn't know the hash of the email messages from the List screen.)
 	
 	Until the problem of storing public keys on email servers is solved, email encryption will not be-
 	come widely used. A few hundred thousand to a few million people might use encryption by copying
