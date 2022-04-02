@@ -80,8 +80,13 @@
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
 	the decryption method removes the padding / space chars appended to the message; the SavedEmails
 	class was modified to sort the emails in chronological order and to view, save, or delete the at-
-	tached files and edit the messages; and the mail class was modified to save the message states in
-	the user's mail directory.
+	tached files and edit the messages; the mail class was modified to save the message states in the
+	user's mail directory by clicking on the message icons; an icon / font size error was corrected;
+	a file description error was corrected that caused the delete attached files to display the file
+	descriptions in base-64 for unencrypted emails; a passphrase substring error was corrected in the
+	mail class; and an error that caused the icons to reset to the unread state if a message was deleted
+	was corrected.
+	
 	
 	
 	
@@ -212,12 +217,6 @@
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
 	\n, 3 size 1 \n, ... This would be backward compatible with the POP mail protocol because it would
 	only display a number if a user changes the state of a message.
-	
-	Or the email headers could include a stat:0,1,2,...,9 or stat=0,1,2,...,9 variable so that the
-	mail program or email header class could parse the header for the message state just as it parses
-	the header for the from: and date: fields. (The subject field in the header is empty except for
-	messages that are sent unencrypted.) The email client could check both the headers and the list
-	strings for the message states because different email providers could use different protocols.
 	
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
