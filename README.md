@@ -38,17 +38,18 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to
 	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
 	as RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as
-	factorization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-
-	Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
+	factorization or discrete logarithms. The software includes 16 public key ciphers (including 14
+	Diffie-Merkle-Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital sig-
+	nature algorithm.
 	
-	The email text, file attachments, and file descriptions are each encoded in base-64 to remove spe-
-	cial characters such as newlines, carriage returns, and end of message or end of file chars, and
-	then the encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base
-	64 to remove special characters from the encryption method. This expands the data to (4/3)^2 = 16/9
-	the size because base-64 encoding maps 6 bits of data to 8-bit chars and two encodings are used to
-	package the data. (The public key encryption method includes a base-64 encoding because it has to
-	encode the cipherdata to attach the one-time public keys.) Other protocols may use one encoding but
-	this would only reduce the expansion to 3/4 the size.
+	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
+	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
+	remove special characters from the encryption method such as newlines, carriage returns, and end
+	of message or end of file chars. This expands the data to (4/3)^2 = 16/9 the size because base-64
+	encoding maps 6 bits of data to 8-bit chars and two encodings are used to package the data. (The
+	public key encryption method includes a base-64 encoding because it has to encode the cipherdata to
+	attach the one-time public keys.) Other protocols may use one encoding but this would only reduce
+	the expansion to 3/4 the size.
 	
 	The text editor and email program were written to test the public key software and to show develop-
 	ers how to use and implement the public key ciphers in other programs, but anybody who knows how to
@@ -81,11 +82,17 @@
 	the decryption method removes the padding / space chars appended to the message; the SavedEmails
 	class was modified to sort the emails in chronological order and to view, save, or delete the at-
 	tached files and edit the messages; the mail class was modified to save the message states in the
-	user's mail directory by clicking on the message icons; an icon / font size error was corrected;
-	a file description error was corrected that caused the delete attached files to display the file
-	descriptions in base-64 for unencrypted emails; a passphrase substring error was corrected in the
-	mail class; and an error that caused the icons to reset to the unread state if a message was deleted
-	was corrected.
+	user's mail directory by clicking on the message icons; an icon / font size error was corrected; a
+	file description error was corrected that caused the delete attached files to display the file de-
+	scriptions in base-64 for unencrypted emails; a passphrase substring error was corrected in the mail
+	class; the sendmailframe font size was adjusted to make it the same size as the retrievemail frame
+	font size and a line of code was removed from the mouse wheel listener that changed the size of the
+	frame instead of the font if the control button was pressed and the mouse wheel was scrolled; an
+	error in the readMessageStates method was corrected; and the SavedEmails class was modified to ap-
+	pend the sender's from address to the saved messages even if they have attached files; and the
+	ViewSavedEmailsListener class was modified so that it creates only one instance of the SavedEmails
+	class or opens only one dialog box even if the user clicks more than once on the view saved emails
+	menu item.
 	
 	
 	
@@ -171,6 +178,11 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
+	If the jdk is not installed in your computer, you first have to untar the openjdk-18 using the command
+	
+	 cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
+	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
@@ -180,6 +192,11 @@
 	
 	cd; /usr/jdk/jdk-18/bin/java -cp ./EditorClassFiles Editor   or
 	    /usr/jdk/jdk-18/bin/java -cp /home/username/EditorClassFiles Editor
+	
+	
+	To remove or delete the jdk directory from your computer, use the command
+	
+	sudo rm -r -f /usr/jdk
 	
 	
 	
@@ -209,7 +226,7 @@
 	user to send the public key to the server after logging in to the account using a command such as
 	SEND or using no command to send the key. If the client / user is logged in to a POP mail account
 	and the server receives several bytes of data it would verify that the key is valid by removing
-	the hyphens and testing if the data is in base 16 or only contains the chars 0 to f. 
+	the hyphens and testing if the data is in base 16 or only contains the chars 0 to f.
 	
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
@@ -221,7 +238,7 @@
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
 	states. (The program uses the hash of the from address + the number of bytes because the program
-	doesn't know the hash of the email messages from the List screen.)
+	doesn't know the hashes of the email messages from the List screen.)
 	
 	Until the problem of storing public keys on email servers is solved, email encryption will not be-
 	come widely used. A few hundred thousand to a few million people might use encryption by copying

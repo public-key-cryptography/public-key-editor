@@ -68,17 +68,18 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to
 	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
 	as RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as
-	factorization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-
-	Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
+	factorization or discrete logarithms. The software includes 16 public key ciphers (including 14
+	Diffie-Merkle-Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital sig-
+	nature algorithm.
 	
-	The email text, file attachments, and file descriptions are each encoded in base-64 to remove spe-
-	cial characters such as newlines, carriage returns, and end of message or end of file chars, and
-	then the encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base
-	64 to remove special characters from the encryption method. This expands the data to (4/3)^2 = 16/9
-	the size because base-64 encoding maps 6 bits of data to 8-bit chars and two encodings are used to
-	package the data. (The public key encryption method includes a base-64 encoding because it has to
-	encode the cipherdata to attach the one-time public keys.) Other protocols may use one encoding but
-	this would only reduce the expansion to 3/4 the size.
+	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
+	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
+	remove special characters from the encryption method such as newlines, carriage returns, and end
+	of message or end of file chars. This expands the data to (4/3)^2 = 16/9 the size because base-64
+	encoding maps 6 bits of data to 8-bit chars and two encodings are used to package the data. (The
+	public key encryption method includes a base-64 encoding because it has to encode the cipherdata to
+	attach the one-time public keys.) Other protocols may use one encoding but this would only reduce
+	the expansion to 3/4 the size.
 	
 	The text editor and email program were written to test the public key software and to show develop-
 	ers how to use and implement the public key ciphers in other programs, but anybody who knows how to
@@ -111,11 +112,17 @@
 	the decryption method removes the padding / space chars appended to the message; the SavedEmails
 	class was modified to sort the emails in chronological order and to view, save, or delete the at-
 	tached files and edit the messages; the mail class was modified to save the message states in the
-	user's mail directory by clicking on the message icons; an icon / font size error was corrected;
-	a file description error was corrected that caused the delete attached files to display the file
-	descriptions in base-64 for unencrypted emails; a passphrase substring error was corrected in the
-	mail class; and an error that caused the icons to reset to the unread state if a message was deleted
-	was corrected.
+	user's mail directory by clicking on the message icons; an icon / font size error was corrected; a
+	file description error was corrected that caused the delete attached files to display the file de-
+	scriptions in base-64 for unencrypted emails; a passphrase substring error was corrected in the mail
+	class; the sendmailframe font size was adjusted to make it the same size as the retrievemail frame
+	font size and a line of code was removed from the mouse wheel listener that changed the size of the
+	frame instead of the font if the control button was pressed and the mouse wheel was scrolled; an
+	error in the readMessageStates method was corrected; and the SavedEmails class was modified to ap-
+	pend the sender's from address to the saved messages even if they have attached files; and the
+	ViewSavedEmailsListener class was modified so that it creates only one instance of the SavedEmails
+	class or opens only one dialog box even if the user clicks more than once on the view saved emails
+	menu item.
 	
 	
 	
@@ -201,6 +208,11 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
+	If the jdk is not installed in your computer, you first have to untar the openjdk-18 using the command
+	
+	 cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
+	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
@@ -210,6 +222,11 @@
 	
 	cd; /usr/jdk/jdk-18/bin/java -cp ./EditorClassFiles Editor   or
 	    /usr/jdk/jdk-18/bin/java -cp /home/username/EditorClassFiles Editor
+	
+	
+	To remove or delete the jdk directory from your computer, use the command
+	
+	sudo rm -r -f /usr/jdk
 	
 	
 	
@@ -239,7 +256,7 @@
 	user to send the public key to the server after logging in to the account using a command such as
 	SEND or using no command to send the key. If the client / user is logged in to a POP mail account
 	and the server receives several bytes of data it would verify that the key is valid by removing
-	the hyphens and testing if the data is in base 16 or only contains the chars 0 to f. 
+	the hyphens and testing if the data is in base 16 or only contains the chars 0 to f.
 	
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
@@ -251,7 +268,7 @@
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
 	states. (The program uses the hash of the from address + the number of bytes because the program
-	doesn't know the hash of the email messages from the List screen.)
+	doesn't know the hashes of the email messages from the List screen.)
 	
 	Until the problem of storing public keys on email servers is solved, email encryption will not be-
 	come widely used. A few hundred thousand to a few million people might use encryption by copying
@@ -815,7 +832,7 @@ class __
 	screencolor = "Screen Color",
 	swapcolors = "Swap Colors",
 	
-	reverse_colors = "reverse colors",
+	reverse_colors = "Reverse colors",
 	
 	textscreencolor = "Text / Screen Color",
 	
@@ -1286,7 +1303,7 @@ class __
 	
 	messagestates = "message states",
 	
-	clientservercommunication =
+	clientservercomm =
 	
 	  "Client/Server Communication",
 	
@@ -1834,8 +1851,7 @@ class __
 		"arrow keys to change the image size.)\n\n" +
 		
 		"If the (decrypted or unencrypted) message starts with a line that has the word " +
-		"HTML or html in it, a popup window will display the document. The popup window " +
-		"just displays a document; it doesn't respond to mouse clicks.\n\n" +
+		"HTML or html in it, a popup window will display the document.\n\n" +
 		
 		"A few unencrypted and undecryptable messages are included to test the mail pro" +
 		"gram because some messages may be sent unencrypted or may be encrypted to the " +
@@ -2221,7 +2237,7 @@ class Programs
 		hashpublickeymenuitem, hashstringmenuitem;
 		
 		JMenuItem fontsizemenuitem, fonttypemenuitem,
-		boldmenuitem, textscreencolormenuitem,
+		boldmenuitem, colormenuitem,
 		linewrapmenuitem, wordlinecountmenuitem,
 		showhidebuttonsmenuitem,
 		imageviewermenuitem, tableeditormenuitem,
@@ -2637,9 +2653,9 @@ class Programs
 			
 			viewmenu.addSeparator();
 			
-			textscreencolormenuitem = new JMenuItem(__.textscreencolor, textscreencoloricon);
-			textscreencolormenuitem.addActionListener(colorlistener);
-			viewmenu.add(textscreencolormenuitem);
+			colormenuitem = new JMenuItem(__.textscreencolor, textscreencoloricon);
+			colormenuitem.addActionListener(colorlistener);
+			viewmenu.add(colormenuitem);
 			
 			viewmenu.addSeparator();
 			
@@ -2830,7 +2846,7 @@ class Programs
 				hashmenuitem, hashfilemenuitem, hashpublickeymenuitem,
 				
 				fontsizemenuitem, fonttypemenuitem, boldmenuitem,
-				textscreencolormenuitem, linewrapmenuitem,
+				colormenuitem, linewrapmenuitem,
 				wordlinecountmenuitem, showhidebuttonsmenuitem,
 				
 				htmleditorpanemenuitem,	tableeditormenuitem, imageviewermenuitem,
@@ -3029,7 +3045,7 @@ class Programs
 			
 			private boolean filechanged = false;
 			private boolean encrypted = false;
-			private boolean gotoline  = false;
+			private boolean gotoline = false;
 			private boolean indenting = false;
 			private boolean autoindent = true;
 			private boolean linewrap = true;
@@ -3155,7 +3171,7 @@ class Programs
 				hashpublickeymenuitem,
 				
 				fontsizemenuitem, fonttypemenuitem, boldmenuitem,
-				textscreencolormenuitem, linewrapmenuitem,
+				colormenuitem, linewrapmenuitem,
 				wordlinecountmenuitem, // showhidebuttonsmenuitem,
 				
 				htmleditorpanemenuitem,
@@ -5499,7 +5515,7 @@ class Programs
 								else findPrevious(text1, matchcase);
 							}
 							
-							else if (e.getSource() == textfield2)
+							else if ((e.getSource() == textfield2) && (textareapanel != null))
 							{
 								String text = textareapanel.textarea.getSelectedText();
 								
@@ -8219,6 +8235,7 @@ class Programs
 				
 				//  JDialog setVisible() blocks
 				//  until the dialog is disposed
+				//  because modal is set to true
 				
 				dialog.setVisible(true);
 				
@@ -10085,10 +10102,8 @@ class Programs
 					dd.setBackground(textarea.getBackground());
 				}
 				
-				//  Set the dialog file key,
-				//  decrypt the directory, and
-				//  update the file key if the 
-				//  user changes the key
+				//  Set the dialog file key, decrypt the directory,
+				//  and update the file key if the key changes
 				
 				dd.setFileKey(filekey);
 				
@@ -11790,7 +11805,6 @@ class Programs
 	public class TableFrame extends JFrame
 	{
 	
-	
 		private static final long serialVersionUID = 1L;
 		
 		private String version = "0.0";
@@ -11936,7 +11950,7 @@ class Programs
 		autosummenuitem, transposemenuitem;
 		
 		JMenuItem fontsizemenuitem, fonttypemenuitem,
-		boldmenuitem, textscreencolormenuitem,
+		boldmenuitem, colormenuitem,
 		showgridmenuitem, enablesortingmenuitem,
 		enablereorderingmenuitem, setautoresizemenuitem;
 		
@@ -12277,11 +12291,11 @@ class Programs
 			
 			viewmenu.addSeparator();
 			
-			textscreencolormenuitem = new JMenuItem(
+			colormenuitem = new JMenuItem(
 			    __.textscreencolor, textscreencoloricon);
-			textscreencolormenuitem.addActionListener(colorlistener);
-			textscreencolormenuitem.setFont(menuitemfont);
-			viewmenu.add(textscreencolormenuitem);
+			colormenuitem.addActionListener(colorlistener);
+			colormenuitem.setFont(menuitemfont);
+			viewmenu.add(colormenuitem);
 			
 			viewmenu.addSeparator();
 			
@@ -12779,7 +12793,7 @@ class Programs
 				
 				fontsizemenuitem, fonttypemenuitem,
 				
-				boldmenuitem, textscreencolormenuitem,
+				boldmenuitem, colormenuitem,
 				
 				showgridmenuitem, enablereorderingmenuitem,
 				
@@ -16480,6 +16494,7 @@ class Programs
 				
 				//  JDialog setVisible() blocks
 				//  until the dialog is disposed
+				//  because modal is set to true
 				
 				dialog.setVisible(true);
 				
@@ -21233,7 +21248,7 @@ class Programs
 			selectallmenuitem, copymenuitem, findmenuitem;
 			
 			JMenuItem fontsizemenuitem, fonttypemenuitem,
-			textboldmenuitem, textscreencolormenuitem,
+			textboldmenuitem, colormenuitem,
 			keyboardmenuitem;
 			
 			
@@ -21722,8 +21737,6 @@ class Programs
 				
 				this.setFocusTraversalPolicy(new LayoutFocusTraversalPolicy()
 				{
-					private static final long serialVersionUID = 1L;
-					
 					public Component getComponentAfter(
 					
 						Container focusCycleRoot, Component comp)
@@ -21836,7 +21849,7 @@ class Programs
 				{
 					if (e.getSource() instanceof JFrame)
 					{
-						fontsize = frameSizeToFontSize(frame) + 1;
+						fontsize = frameSizeToFontSize(frame) - 3;
 						
 						font = font.deriveFont(fontsize);
 						
@@ -22680,7 +22693,7 @@ class Programs
 						   && (recipientskeyaddress != null)
 						   &&  recipientskeyaddress.equals(tostring))
 						
-						      encrypt = true; 
+						      encrypt = true;
 						 else encrypt = false;
 						
 						
@@ -25222,11 +25235,8 @@ class Programs
 		
 		
 		
-		
-		
 		public class RetrieveMailFrame extends JFrame
 		{
-		
 		
 			private static final long serialVersionUID = 1L;
 			
@@ -25282,15 +25292,6 @@ class Programs
 			//  A regular envelope icon will be displayed next to messages that are received.
 			//
 			//  A paper clip icon will be displayed next to messages that have file attachments.
-			//
-			//  The other icons might not be used unless some POP mail servers allow users to
-			//  set and read the state of messages (for example by overloading the STAT command
-			//  to associate code numbers such as 0 to 9 with message numbers which could repre-
-			//  sent the state of the message such as unread = 0, read = 1, replied to = 2, ...
-			//
-			//  The client program could also store the email hashes and message states but then
-			//  the user would have to use the same computer or use a mail folder / directory on
-			//  a USB storage device.)
 			
 			
 			ImageIcon plaintext_unreadicon = Icons.get(Icons.new_); // paper + gold star
@@ -25381,7 +25382,7 @@ class Programs
 			
 			JMenuItem fontsizemenuitem,
 			fonttypemenuitem, boldmenuitem,
-			textscreencolormenuitem,
+			colormenuitem,
 			clientservermenuitem,
 			showkeyboardmenuitem,
 			showemailsmenuitem,
@@ -25520,6 +25521,7 @@ class Programs
 				int tabplacement = JTabbedPane.TOP;
 				
 				tabbedpane = new JDraggableTabbedPane(tabplacement);
+				tabbedpane.setTabPlacement(tabplacement);
 				tabbedpane.setDragEnabled(true);
 				tabbedpane.setFocusTraversalPolicy();
 				
@@ -25761,15 +25763,15 @@ class Programs
 				viewmenu.addSeparator();
 				
 				
-				textscreencolormenuitem = new JMenuItem(__.textscreencolor, coloricon);
-				textscreencolormenuitem.addActionListener(colorlistener);
-				viewmenu.add(textscreencolormenuitem);
+				colormenuitem = new JMenuItem(__.textscreencolor, coloricon);
+				colormenuitem.addActionListener(colorlistener);
+				viewmenu.add(colormenuitem);
 				
 				viewmenu.addSeparator();
 				
 				
 				ImageIcon clientservericon = Icons.get(Icons.network_transmit);
-				clientservermenuitem = new JMenuItem(__.clientservercommunication, clientservericon);
+				clientservermenuitem = new JMenuItem(__.clientservercomm, clientservericon);
 				clientservermenuitem.addActionListener(clientserverlistener);
 				viewmenu.add(clientservermenuitem);
 				
@@ -25845,23 +25847,19 @@ class Programs
 				{
 					newmenuitem, sendmailmenuitem, closemenuitem, exitmenuitem,
 					
-					undeletemenuitem, checkallmenuitem, copymenuitem, 
+					undeletemenuitem, checkallmenuitem, copymenuitem,
 					
-					setprogramtitlemenuitem, settabtitlemenuitem,
+					setprogramtitlemenuitem, settabtitlemenuitem, findmenuitem,
 					
-					findmenuitem, replykeysettingsmenuitem,
+					replykeysettingsmenuitem, passphrasemenuitem, userpassmenuitem,
 					
-					passphrasemenuitem, userpassmenuitem, randomtextmenuitem,
+					randomtextmenuitem, newpublickeymenuitem, fontsizemenuitem,
 					
-					newpublickeymenuitem, fontsizemenuitem, fonttypemenuitem,
+					fonttypemenuitem, boldmenuitem, colormenuitem,
 					
-					boldmenuitem, textscreencolormenuitem,
+					clientservermenuitem, showkeyboardmenuitem, showemailsmenuitem,
 					
-					clientservermenuitem, showkeyboardmenuitem,
-					
-					showemailsmenuitem, viewpublickeysmenuitem,
-					
-					viewsavedemailsmenuitem, aboutmenuitem,
+					viewpublickeysmenuitem, viewsavedemailsmenuitem, aboutmenuitem,
 					
 					howtousepopmailmenuitem, testmailmenuitem,
 				};
@@ -25894,6 +25892,8 @@ class Programs
 			private class ListPanel extends JPanel
 			{
 			
+				private static final long serialVersionUID = 1L;
+				
 				private JCheckBox[] checkboxes;
 				
 				private JLabel[] msnolabels;
@@ -25920,8 +25920,6 @@ class Programs
 				private int msno, numberofmessages;
 				
 				private Color foreground, background;
-				
-				private static final long serialVersionUID = 1L;
 				
 				public ListPanel(int t)
 				{
@@ -26315,6 +26313,8 @@ class Programs
 			private class ListPanel extends JPanel
 			{
 			
+				private static final long serialVersionUID = 1L;
+				
 				private JCheckBox[] checkboxes;
 				
 				private JLabel[] msnolabels;
@@ -26334,8 +26334,6 @@ class Programs
 				private int msno, numberofmessages;
 				
 				private Color foreground, background;
-				
-				private static final long serialVersionUID = 1L;
 				
 				public ListPanel(int t)
 				{
@@ -26663,7 +26661,6 @@ class Programs
 			
 			private class EmailPanel extends JPanel
 			{
-			
 			
 				private static final long serialVersionUID = 1L;
 				
@@ -27473,27 +27470,21 @@ class Programs
 				{
 					//  newmenuitem, exitmenuitem,
 					
-					sendmailmenuitem, closemenuitem,
+					sendmailmenuitem, closemenuitem, undeletemenuitem, checkallmenuitem,
 					
-					undeletemenuitem, checkallmenuitem, copymenuitem, 
+					copymenuitem, setprogramtitlemenuitem, settabtitlemenuitem,
 					
-					setprogramtitlemenuitem, settabtitlemenuitem,
+					findmenuitem, replykeysettingsmenuitem, passphrasemenuitem,
 					
-					findmenuitem, replykeysettingsmenuitem,
+					userpassmenuitem, randomtextmenuitem, newpublickeymenuitem,
 					
-					passphrasemenuitem, userpassmenuitem, randomtextmenuitem,
+					fontsizemenuitem, fonttypemenuitem, boldmenuitem,
 					
-					newpublickeymenuitem, fontsizemenuitem, fonttypemenuitem,
+					colormenuitem, clientservermenuitem, showkeyboardmenuitem,
 					
-					boldmenuitem, textscreencolormenuitem,
+					showemailsmenuitem, viewpublickeysmenuitem, viewsavedemailsmenuitem,
 					
-					clientservermenuitem, showkeyboardmenuitem,
-					
-					showemailsmenuitem, viewpublickeysmenuitem,
-					
-					viewsavedemailsmenuitem, aboutmenuitem,
-					
-					howtousepopmailmenuitem, testmailmenuitem,
+					aboutmenuitem, howtousepopmailmenuitem, testmailmenuitem,
 				};
 				
 				for (JMenuItem menuitem : menuitems)
@@ -27677,9 +27668,6 @@ class Programs
 					SendMailFrame sendmailframe;
 					
 					sendmailframe = new SendMailFrame();
-					
-					sendmailframe.setFont1(font
-					    .deriveFont((float) maxfontsize));
 					
 					sendmailframe.setReverseColors(
 					    emailpanel.reverse_colors);
@@ -28709,6 +28697,7 @@ class Programs
 					
 					//  JDialog setVisible() blocks
 					//  until the dialog is disposed
+					//  because modal is set to true
 					
 					dialog.setVisible(true);
 					
@@ -30221,7 +30210,7 @@ class Programs
 								
 								    savedemails.saveMessage(message, null, from);
 								
-								else // save the message and files
+								else // save the message and files (file text)
 								{
 									String filetext = emailpanel.list1.getFileText(msno);
 									
@@ -30893,7 +30882,6 @@ class Programs
 				
 				
 				
-				
 				public void mouseClicked(MouseEvent e)
 				{
 				
@@ -31408,8 +31396,6 @@ class Programs
 					{
 						if (rotation > 0) incrementSize(1.00f);
 						if (rotation < 0) decrementSize(1.00f);
-						
-						setFrameSize();
 					}
 				}
 			}
@@ -33235,10 +33221,6 @@ class Programs
 				
 				SendMailFrame sendmailframe = new SendMailFrame();
 				
-				sendmailframe.setFont1(font
-				
-				    .deriveFont((float) maxfontsize));
-				
 				sendmailframe.userpass   = emailpanel.userpass;
 				sendmailframe.authorized = emailpanel.authorized;
 				
@@ -33892,7 +33874,7 @@ class Programs
 						
 						if (!email.isEmpty())
 						{
-							list.add("\n" + __.email.toLowerCase());
+							list.add(__.email.toLowerCase());
 							list.add(email);
 						}
 						
@@ -33936,7 +33918,7 @@ class Programs
 							list.add(titlename);
 						}
 						
-						if ((incomingmailserver != null) 
+						if ((incomingmailserver != null)
 						 && !incomingmailserver.isEmpty())
 						{
 							list.add(__.incomingmailserver.toLowerCase());
@@ -34038,7 +34020,9 @@ class Programs
 				
 				for (Object object : list) str += object + "\n";
 				
-				byte[] cipherdata = Cipher.encrypt(str.getBytes(),
+				byte[] plaindata = str.getBytes();
+				
+				byte[] cipherdata = Cipher.encrypt(plaindata,
 				
 				    Cipher.passphraseToKey(SP));
 				
@@ -34067,7 +34051,13 @@ class Programs
 					
 					    (emailpanel.username == null)) return;
 					
-					savedemails = new SavedEmails(emailpanel.username);
+					if (savedemails == null)
+					
+					    savedemails = new SavedEmails(emailpanel.username);
+					
+					savedemails.setForeground(emailpanel.foreground);
+					savedemails.setBackground(emailpanel.background);
+					savedemails.setReverseColors(emailpanel.reverse_colors);
 					
 					savedemails.viewSavedEmails();
 				}
@@ -34132,6 +34122,8 @@ class Programs
 				private JScrollPane scrollpane;
 				
 				private boolean reverse_colors;
+				private Color foreground;
+				private Color background;
 				
 				private String dirname;
 				private String username;
@@ -34183,19 +34175,17 @@ class Programs
 					
 					//  Append the sender's address to the message
 					
-					if ((filetext == null) || filetext.isBlank())
+					message += "\n\n\n" + from;
 					
-					    message += "\n\n\n" + from;
+					if (!Number.isBase64(message))
 					
-					else // if ((filetext != null) && !filetext.isBlank())
+					    message = Convert.stringToBase64(message);
+					
+					if ((filetext != null) && !filetext.isBlank())
 					{
 						//  Convert the message to base 64 and append the file text
 						
 						if (message.trim().isEmpty()) message = "    ";
-						
-						if (!Number.isBase64(message))
-						
-						    message = Convert.stringToBase64(message);
 						
 						message += "\n\n" + filetext;
 					}
@@ -34227,9 +34217,11 @@ class Programs
 					
 					//  Encrypt the message and write to file
 					
+					byte[] plaindata = message.getBytes();
+					
 					byte[] cipherdata = Cipher.encrypt(
 					
-					    message.getBytes(), Cipher.passphraseToKey(SP));
+					    plaindata, Cipher.passphraseToKey(SP));
 					
 					try
 					{	//  Write the cipherdata to file
@@ -34389,6 +34381,10 @@ class Programs
 				
 				private void readMessage(String plaintext, int index)
 				{
+					if (Number.isBase64(plaintext))
+					
+					    plaintext = Convert.base64ToString(plaintext);
+					
 					String[] tokens = plaintext.split("\n\n");
 					
 					boolean attachedfiles = true;
@@ -34693,6 +34689,8 @@ class Programs
 				
 				public void setForeground(Color color)
 				{
+					this.foreground = color;
+					
 					if ((dialog == null) || (textareas == null)) return;
 					
 					for (JTextArea textarea : textareas)
@@ -34705,6 +34703,8 @@ class Programs
 				
 				public void setBackground(Color color)
 				{
+					this.background = color;
+					
 					if ((dialog == null) || (textareas == null)) return;
 					
 					for (JTextArea textarea : textareas)
@@ -34757,9 +34757,16 @@ class Programs
 					
 					dialog.setSize(width, height);
 					
-					//  setVisible is done last so the user doesn't
+					setFont1(font);
+					
+					setForeground(foreground);
+					setBackground(background);
+					
+					//  set visible is done last so the user doesn't
 					//  see a collapsed frame for a second until the
-					//  dialog frame is packed or resized.
+					//  dialog frame is packed or resized. (Note that
+					//  set visible doesn't block for this dialog box
+					//  because modal is false.)
 					
 					dialog.setVisible(true);
 					
@@ -34944,19 +34951,6 @@ class Programs
 						
 						textarea.addMouseListener(mouselistener1);
 						
-						if (!emailpanel.reverse_colors)
-						{
-							textarea.setBackground(emailpanel.background);
-							textarea.setForeground(emailpanel.foreground);
-							textarea.setCaretColor(emailpanel.foreground);
-						}
-						
-						else
-						{	textarea.setBackground(emailpanel.foreground);
-							textarea.setForeground(emailpanel.background);
-							textarea.setCaretColor(emailpanel.background);
-						}
-						
 						JScrollPane scrollpane = new JScrollPane(textarea);
 						
 						scrollpane.setHorizontalScrollBarPolicy(
@@ -35087,7 +35081,7 @@ class Programs
 					{ public void actionPerformed(ActionEvent e)
 					{ deleteCheckedMessages();
 					  saveEditedMessages();
-					  dialog.dispose();
+					  dialog.setVisible(false);
 					  dialog = null; } });
 					
 					
@@ -36225,8 +36219,8 @@ class Programs
 									
 									//  Use the hash of (the from address + bytes) as a key
 									//  and search a treemap for the message state value.
-									//  If a value exists for the message state then set the
-									//  image icon to show the saved message state.
+									//  If a value exists for the message state then set
+									//  the image icon to show the saved message state.
 									
 									int bytes = emailpanel.list1.getNumberOfBytes(i);
 									
@@ -38487,7 +38481,6 @@ class Programs
 			
 			String plaintext = new String(fileinput);
 			
-			
 			//  Read the key value pairs or the hashes
 			//  and message states into the tree map
 			
@@ -38499,16 +38492,9 @@ class Programs
 			
 			while (sc.hasNextLine())
 			{
-				String input = sc.nextLine().trim();
-				
-				line = input;
-				
-				if (!input.isEmpty()) break;
-			}
-			
-			while (sc.hasNextLine())
-			{
 				line = sc.nextLine();
+				
+				if (line.isEmpty()) continue;
 				
 				String[] tokens = line.split(" {1,}");
 				
@@ -38607,7 +38593,9 @@ class Programs
 				
 				String str = sb.toString();
 				
-				byte[] cipherdata = Cipher.encrypt(str.getBytes(),
+				byte[] plaindata = str.getBytes();
+				
+				byte[] cipherdata = Cipher.encrypt(plaindata,
 				
 				    Cipher.passphraseToKey(SP));
 				
@@ -38797,7 +38785,9 @@ class Programs
 				
 				for (String str1 : list) str += str1 + "\n";
 				
-				byte[] cipherdata = Cipher.encrypt(str.getBytes(),
+				byte[] plaindata = str.getBytes();
+				
+				byte[] cipherdata = Cipher.encrypt(plaindata,
 				
 				    Cipher.passphraseToKey(SP));
 				
@@ -39090,6 +39080,7 @@ class Undo
 	//  of memory and inconvenient for the user to undo changes if the
 	//  program pushed every key event onto the stack without first pop-
 	//  ping the previous change off the stack for multiple key events.
+	
 	
 	
 	private JTextArea textarea;
@@ -39603,11 +39594,11 @@ class SaveFile
 class FileChooser extends JFileChooser
 {
 
+	private static final long serialVersionUID = 1L;
+	
 	private Font font;
 	
 	public FileChooser() { super(); }
-	
-	private static final long serialVersionUID = 1L;
 	
 	private final float minsize = 14;
 	private final float maxsize = 20;
@@ -42867,8 +42858,6 @@ class JDraggableTabbedPane extends JTabbedPane implements
 		
 		this.setFocusTraversalPolicy(new LayoutFocusTraversalPolicy()
 		{
-			private static final long serialVersionUID = 1L;
-			
 			public Component getComponentAfter(
 			
 				Container focusCycleRoot, Component comp)
@@ -48204,14 +48193,10 @@ class DataStream
 class Gbc extends GridBagConstraints
 {
 
-	//  The Gbc class is a collection of mutator / setter methods
-	//  and a constructor for GridBagConstraints. (There could
-	//  be accessor methods to get the values of the members.)
-	//
-	//  This makes the GridBag class method more convenient to use
-	//  because the dimensions or constraints are set in pairs such
-	//  as { x, y }, { width, height }, { weightx, weighty }.
+	//  The Gbc class is a collection of mutator and accessor
+	//  methods for the GridBagConstraints class
 	
+	private static final long serialVersionUID = 1L;
 	
 	//  GridBagConstraint anchors
 	
@@ -48229,21 +48214,6 @@ class Gbc extends GridBagConstraints
 	public static final int none = GridBagConstraints.NONE;
 	
 	
-	private static final long serialVersionUID = 1L;
-	
-	
-	
-	public Gbc()
-	{
-		//  Initialize the variables to their default values
-		
-		this.insets = new Insets(0, 0, 0, 0);
-		
-		this.ipadx = 0;	   this.ipady = 0;
-		this.weightx = 0;  this.weighty = 0;
-	}
-	
-	
 	//  Methods to set the variables of the GridBagConstraints class
 	
 	public void setPosition(int gridx, int gridy)
@@ -48256,6 +48226,12 @@ class Gbc extends GridBagConstraints
 	{
 		this.gridwidth  = gridwidth;
 		this.gridheight = gridheight;
+	}
+	
+	public void setWeight(double weightx, double weighty)
+	{
+		this.weightx = weightx;
+		this.weighty = weighty;
 	}
 	
 	public void setAnchor(int anchor)
@@ -48281,10 +48257,45 @@ class Gbc extends GridBagConstraints
 		this.ipady = ipady;
 	}
 	
-	public void setWeight(double weightx, double weighty)
+	
+	
+	//  Methods to get the variables of the GridBagConstraints class
+	
+	public int[] getPosition()
 	{
-		this.weightx = weightx;
-		this.weighty = weighty;
+		return new int[] { this.gridx, this.gridy };
+	}
+	
+	public int[] getSize()
+	{
+		return new int[] { this.gridwidth, this.gridheight };
+	}
+	
+	public double[] getWeight()
+	{
+		return new double[] { this.weightx, this.weighty };
+	}
+	
+	public int getAnchor()
+	{
+		return this.anchor;
+	}
+	
+	public int getFill()
+	{
+		return this.fill;
+	}
+	
+	public Insets getInsets()
+	{
+		//  top, left, bottom, right
+		
+		return this.insets;
+	}
+	
+	public int[] getIpad()
+	{
+		return new int[] { this.ipadx, this.ipady };
 	}
 }
 
@@ -48325,8 +48336,6 @@ class Keyboard
 	
 	
 	
-	
-	private static final long serialVersionUID = 1L;
 	
 	private JTextComponent textcomp;
 	
@@ -48779,7 +48788,8 @@ class Keyboard
 //
 //  For the user's public key, use the String PublicKeyDialog .generatePublicKey(...)
 //  instead of the PassphraseDialog class because it prompts the user for a passphrase,
-//  creates the public key and converts it to a partitioned string.
+//  email address, and number of ciphers, and it converts the public key to a partitioned
+//  string that can be copied and pasted.
 //
 //  If the user only has to enter a passphrase, use the PassphraseDialog readPassphrase()
 //  or readDialogInput()
@@ -48945,14 +48955,11 @@ class PublicKeyDialog
 
 
 
-class PassphraseDialog
-
-
-	extends JPanel implements AncestorListener
+class PassphraseDialog extends JPanel implements AncestorListener
 {
 
+
 	private static final long serialVersionUID = 1L;
-	
 	
 	public static final int PASSPHRASE_ONLY = 0;
 	public static final int PASSPHRASE_EMAIL_ENCRYPT = 1;
@@ -51020,11 +51027,11 @@ class PublicKey
 	
 	
 	//  The encrypted encryption key k' is optional because the sender can use
-	//  the public key agreement as the encryption key. The default setting
-	//  uses the public key agreement as the encryption key because the one-
-	//  time public key z[] uses a one-time private key k[] which is a function
-	//  of the message and a random number which is also a function of the time.
-	//  byte[] onetimeprivatekey = Cipher.hash((message + randstr).getBytes());
+	//  the public key agreement as the encryption key. The default setting uses
+	//  the public key agreement as the encryption key because the one-time pub-
+	//  lic key z[] uses a one-time private key k[] which is a function of the
+	//  message hash and the time in nanoseconds. The random number generator is
+	//  initialized by Math.initRng(System.nanoTime()).
 	
 	
 	
@@ -51607,9 +51614,9 @@ class PublicKey
 		
 		//  Large ciphers
 		
-		size56x29,  //  integer knapsack
+		size56x29,  //  integer knapsack r0 a[] + r[][] s[] (mod n)
 		
-		size48x49,  //  integer knapsack (random errors)
+		size48x49,  //  integer knapsack + random errors
 		
 		//  size... //  quaternion knapsack
 		
@@ -60509,7 +60516,7 @@ class Signature
 	//  This cipher is used as an example and was used to test
 	//  the Signature class. The Latin square discrete log sig-
 	//  nature algorithm could be replaced by another matrix
-	//  algorithm.
+	//  signature algorithm.
 	
 	final public static String lsdl120 = "lsdl120";
 	
@@ -61959,11 +61966,11 @@ class Cipher
 	
 	public static String encrypt(String message, byte[] encryptionkey)
 	{
-		byte[] array1 = message.getBytes();
+		byte[] plaindata = message.getBytes();
 		
-		byte[] array2 = encrypt(array1, encryptionkey);
+		byte[] cipherdata = encrypt(plaindata, encryptionkey);
 		
-		String str = Convert.byteArrayToBase64(array2);
+		String str = Convert.byteArrayToBase64(cipherdata);
 		
 		return str;
 	}
@@ -61971,13 +61978,13 @@ class Cipher
 	
 	public static String decrypt(String message, byte[] encryptionkey)
 	{
-		byte[] array2 = Convert.base64ToByteArray(message);
+		byte[] cipherdata = Convert.base64ToByteArray(message);
 		
-		byte[] array1 = decrypt(array2, encryptionkey);
+		byte[] plaindata = decrypt(cipherdata, encryptionkey);
 		
-		if (array1 == null) return null;
+		if (plaindata == null) return null;
 		
-		String str = new String(array1);
+		String str = new String(plaindata);
 		
 		return str;
 	}
@@ -81326,6 +81333,21 @@ class SSLSocket extends Socket
 	//  empty constructor called by the super class
 	
 	public SSLSocket() {  }
+	
+	public SSLSocket(String address, int port) throws IOException
+	{
+		super(address, port);
+		
+		byte[] randkey = Number
+		
+		    .random(64, 16).toByteArray();
+		
+		this.privatekey = randkey;
+		
+		init();
+		
+		encrypted = exchangeClientKeys();
+	}
 	
 	public SSLSocket(String address, int port, byte[] privatekey) throws IOException
 	{
