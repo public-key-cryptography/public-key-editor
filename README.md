@@ -88,11 +88,10 @@
 	class; the sendmailframe font size was adjusted to make it the same size as the retrievemail frame
 	font size and a line of code was removed from the mouse wheel listener that changed the size of the
 	frame instead of the font if the control button was pressed and the mouse wheel was scrolled; an
-	error in the readMessageStates method was corrected; and the SavedEmails class was modified to ap-
-	pend the sender's from address to the saved messages even if they have attached files; and the
-	ViewSavedEmailsListener class was modified so that it creates only one instance of the SavedEmails
-	class or opens only one dialog box even if the user clicks more than once on the view saved emails
-	menu item.
+	error in the readMessageStates method was corrected; the SavedEmails class was modified to append
+	the sender's from address to the saved messages even if they have attached files; and the ViewSaved
+	EmailsListener class was modified so that it creates only one instance of the SavedEmails class or
+	opens only one dialog box even if the user clicks more than once on the view saved emails menu item.
 	
 	
 	
@@ -119,7 +118,7 @@
 	A dialog box appears that says read or save file.
 	Click on the button that says Save File.
 	
-	This should download and save the file
+`	This should download and save the file
 	openjdk-18_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
