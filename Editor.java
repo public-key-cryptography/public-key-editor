@@ -132,12 +132,14 @@
 	a few deprecated methods such as frame.pack() and filechooser.showDialog() were replaced even though
 	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
 	the find class was modified so that it doesn't show the number of occurences for an empty string;
-	and the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was
-	modified so that the modal variable is set to false so the constructor doesn't block and the program
+	
+	the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was mod-
+	ified so that the modal variable is set to false so the constructor doesn't block and the program
 	can use the object returned by the constructor to set the font, color, and other variables, and then
 	the modality is changed to true by the readPassphrase and readDialog methods so that the dialog.set
 	Visible method blocks until the user clicks the ok button and the passphrase size and email address
-	are validated.
+	are validated; and the file detection was corrected so that the program correctly displays html doc-
+	uments instead of trying to display them as image files which caused the dialog frame to collapse.
 	
 	
 	
@@ -1872,9 +1874,6 @@ class __
 		"keyboard. You can also change the size of an image by moving the mouse wheel if " +
 		"the caret / cursor is over the image. (If you don't have a mouse you can use the " +
 		"arrow keys to change the image size.)\n\n" +
-		
-		"If the (decrypted or unencrypted) message starts with a line that has the word " +
-		"HTML or html in it, a popup window will display the document.\n\n" +
 		
 		"A few unencrypted and undecryptable messages are included to test the mail pro" +
 		"gram because some messages may be sent unencrypted or may be encrypted to the " +
@@ -31517,114 +31516,132 @@ class Programs
 				
 				//  Test if the data contains text
 				
-				boolean textorhtml = true;
+				final String filetext = new String(filedata);
+				
+				boolean text = true;
+				boolean html = false;
+				boolean table = false;
 				
 				for (byte c : filedata)
 				
 				    if (!Character.isDefined(c))
 				
-					textorhtml = false;
+					text = false;
 				
 				
-				if (textorhtml)
+				if (filetext.startsWith("<") || filetext.startsWith("<!"))
+				{
+					int index = filetext.indexOf("\n");
+					
+					if (index != 0)
+					{
+						String substr = filetext.substring(0, index).toLowerCase();
+						
+						if (substr.contains("html") || substr.contains("doctype"))
+						
+						    html = true;
+					}
+				}
+				
+				if (isCSV(filetext))
+				{
+					table = true;
+					
+					text = false;
+				}
+				
+				
+				if (text)
 				{
 					//  Validate the text
 					
 					try
-					{	byte[] utf8Bytes = new String(filedata)
-						
-						    .getBytes("UTF8");
+					{	byte[] utf8Bytes = filetext.getBytes("UTF8");
 						
 						String str = new String(utf8Bytes, "UTF8");
 					}
 					
 					catch (UnsupportedEncodingException ex)
 					{
-						textorhtml = false;
+						text = false;
 						
 						System.out.println(ex);
 						
 						return;
 					}
+				}
+				
+				
+				//  If the document is html open an editor
+				//  pane to show the html document
+				
+				//  If the document is text open a text area
+				//  to display the text document
+				
+				//  If the document is a csv file open a
+				//  table editor to display the table
+				
+				
+				if (text) // Display the text document
+				{
+					System.out.println("text document");
 					
-					//  If the document is html open an editor
-					//  pane to show the html document
+					if (!emailpanel.reverse_colors)
 					
-					//  If the document is text open a text area
-					//  to display the text document
+					    Documents .display(frame, filedesc, filetext,
 					
-					//  If the document is a csv file open a
-					//  table editor to display the table
+						font, emailpanel.foreground, emailpanel.background);
 					
-					String document = new String(filedata);
+					else // if (reverse_colors)
 					
-					int pos = document.trim().indexOf("\n");
+					    Documents .display(frame, filedesc, filetext,
 					
-					if (pos == -1) pos = 0;
+						font, emailpanel.background, emailpanel.foreground);
+				}
+				
+				else if (table)
+				{
+					//  Open a table editor to display the table
 					
-					String line1 = document.trim().substring(0, pos);
+					System.out.println("table document");
 					
-					if (line1.contains("<") && line1.contains(">"))
+					tableframe = new Programs() .new TableFrame();
+					
+					tableframe.setData(filetext);
+					
+					tableframe.packTable();
+					
+					int index = tableframe.tabbedpane.getSelectedIndex();
+					
+					tableframe.tabbedpane.setTitleAt(index, filedesc);
+					
+					tableframe.setFont1(font);
+					
+					if (!emailpanel.reverse_colors)
 					{
-						if (line1.contains("html")    || line1.contains("HTML")
-						 || line1.contains("doctype") || line1.contains("DOCTYPE")
-						
-						 || line1.startsWith("<!"))
-						
-						    Documents .displayHTML(frame, filedesc, document,
-						
-							font, emailpanel.foreground, emailpanel.background);
+						tableframe.setForeground1(emailpanel.foreground);
+						tableframe.setBackground1(emailpanel.background);
 					}
 					
-					else if (isCSV(document))
+					else // if (emailpanel.reverse_colors)
 					{
-						//  Open a table editor to display the table
-						
-						tableframe = new Programs() .new TableFrame();
-						
-						tableframe.setData(document);
-						
-						tableframe.packTable();
-						
-						int index = tableframe.tabbedpane.getSelectedIndex();
-						
-						tableframe.tabbedpane.setTitleAt(index, filedesc);
-						
-						tableframe.setFont1(font);
-						
-						if (!emailpanel.reverse_colors)
-						{
-							tableframe.setForeground1(emailpanel.foreground);
-							tableframe.setBackground1(emailpanel.background);
-						}
-						
-						else // if (emailpanel.reverse_colors)
-						{
-							tableframe.setForeground1(emailpanel.background);
-							tableframe.setBackground1(emailpanel.foreground);
-						}
-					}
-					
-					else	//  Display the text document
-					{
-						if (!emailpanel.reverse_colors)
-						{
-						    Documents .display(frame, filedesc, document,
-						
-							font, emailpanel.foreground, emailpanel.background);
-						}
-						
-						else // if (reverse_colors)
-						{
-						    Documents .display(frame, filedesc, document,
-						
-							font, emailpanel.background, emailpanel.foreground);
-						}
+						tableframe.setForeground1(emailpanel.background);
+						tableframe.setBackground1(emailpanel.foreground);
 					}
 				}
 				
-				else
-				{	//  Display the image
+				else if (html) // Display the html document
+				{
+					Documents .displayHTML(frame, filedesc, filetext,
+					
+					    font, emailpanel.foreground, emailpanel.background);
+				}
+				
+				else // if (image)
+				{
+					//  Display the image
+					
+					System.out.println("image document");
 					
 					new Icons() .display(frame, filedesc, filedata);
 				}
@@ -45768,7 +45785,6 @@ class Documents
 		
 		int rows = 32, cols = 44;
 		
-		
 		//  If any line contains more than max line chars set
 		//  the line wrap to true. Otherwise the horizontal
 		//  scroll bar would become very small and difficult
@@ -45904,8 +45920,6 @@ class Documents
 		
 		dialog.setTitle(title);
 		
-		dialog.setLocationRelativeTo(frame);
-		
 		dialog.setSize(dialog.getPreferredSize());
 		
 		//  Center the dialog in the parent frame
@@ -45997,6 +46011,7 @@ class Documents
 		
 		vbox.add(scrollpane);
 		
+		
 		//  Create a horizontal box for the button
 		
 		Box hbox = Box.createHorizontalBox();
@@ -46083,7 +46098,7 @@ class Documents
 		
 		dialog.setLocationRelativeTo(frame);
 		
-		dialog.setSize(dialog.getPreferredSize());
+		dialog.pack();
 		
 		dialog.setVisible(true);
 		

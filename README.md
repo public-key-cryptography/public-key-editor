@@ -102,12 +102,14 @@
 	a few deprecated methods such as frame.pack() and filechooser.showDialog() were replaced even though
 	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
 	the find class was modified so that it doesn't show the number of occurences for an empty string;
-	and the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was
-	modified so that the modal variable is set to false so the constructor doesn't block and the program
+	
+	the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was mod-
+	ified so that the modal variable is set to false so the constructor doesn't block and the program
 	can use the object returned by the constructor to set the font, color, and other variables, and then
 	the modality is changed to true by the readPassphrase and readDialog methods so that the dialog.set
 	Visible method blocks until the user clicks the ok button and the passphrase size and email address
-	are validated.
+	are validated; and the file detection was corrected so that the program correctly displays html doc-
+	uments instead of trying to display them as image files which caused the dialog frame to collapse.
 	
 	
 	
