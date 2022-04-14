@@ -49,9 +49,16 @@
 	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
 	lows multiple users synchronous access to an email account from different computers which is useful
 	for some companies or organizations that have to reply to large numbers of emails because POP mail
-	accounts can only be accessed from one device at a time. Imap also allows users to change the state
-	of the messages on the server, but the POP mail protocol could be amended or the email servers could
-	be upgraded to include this feature.
+	accounts can only be accessed from one device at a time.
+	
+	Imap also allows users to change the state of the messages on the server, but the POP mail protocol
+	could be amended or the email servers could be upgraded to include this feature. POP mail servers
+	could also be upgraded to allow multiple users to retrieve and delete emails by assigning to each
+	message a hash or time stamp in milliseconds so that the retrieve and delete commands could use the
+	number assigned to the messages instead of the ordinal / cardinal numbers. Otherwise if two users
+	list the emails and then simultaneously try to delete the same message using the ordinal number,
+	the second user will delete the next consecutive message in the list, and the email messages on the
+	clients' computers will not correspond to messages on the server computer.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -119,9 +126,18 @@
 	font size and a line of code was removed from the mouse wheel listener that changed the size of the
 	frame instead of the font if the control button was pressed and the mouse wheel was scrolled; an
 	error in the readMessageStates method was corrected; the SavedEmails class was modified to append
-	the sender's from address to the saved messages even if they have attached files; and the ViewSaved
+	the sender's from address to the saved messages even if they have attached files; the ViewSaved-
 	EmailsListener class was modified so that it creates only one instance of the SavedEmails class or
-	opens only one dialog box even if the user clicks more than once on the view saved emails menu item.
+	opens only one dialog box even if the user clicks more than once on the view saved emails menu item;
+	a few deprecated methods such as frame.pack() and filechooser.showDialog() were replaced even though
+	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
+	the find class was modified so that it doesn't show the number of occurences for an empty string;
+	and the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was
+	modified so that the modal variable is set to false so the constructor doesn't block and the program
+	can use the object returned by the constructor to set the font, color, and other variables, and then
+	the modality is changed to true by the readPassphrase and readDialog methods so that the dialog.set
+	Visible method blocks until the user clicks the ok button and the passphrase size and email address
+	are validated.
 	
 	
 	
@@ -261,8 +277,14 @@
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
-	\n, 3 size 1 \n, ... This would be backward compatible with the POP mail protocol because it would
-	only display a number if a user changes the state of a message.
+	\n, 3 size 1 \n, ..., or  1 size timestamp msgstate \n, 2 size timestamp msgstate \n, 3 size time-
+	stamp msgstate \n, etcetera.
+	
+	This would be backward compatible with the POP mail protocol because it would only display a num-
+	ber if a user changes the state of a message. Also the client could retrieve and delete messages
+	using the ordinal / cardinal numbers or the time stamps. If multiple users want to retrieve and
+	delete the same messages simultaneously they would have to use a newer POP mail program that re-
+	trieves and deletes messages using the timestamps or message hashes.
 	
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
@@ -389,10 +411,11 @@
 	The ciphers in the public key class that have a many-to-one mapping of the private key X to the
 	public key Y may be unbreakable by classical and quantum computing because the solution is ambig-
 	uous and the private key X is only used once. Quantum computers are unable to solve math problems
-	that have ambiguous solutions because they wouldn't know which solution to solve for. Even if the
-	solution is unambiguous, it doesn't mean that a quantum computer can solve it; there has to be an
-	algorithm or method for solving it, or the same private key X would have to be used more than once
-	with a different public parameter A such as Y1 = A1 X and Y2 = A2 X.
+	that have ambiguous solutions because they wouldn't know which solution to solve for. This is why
+	a quantum computer can only attack the factorization problem by solving the discrete log problem.
+	Even if the solution is unambiguous, it doesn't mean that a quantum computer can solve it; there
+	has to be an algorithm or method for solving it, or the same private key X would have to be used
+	more than once with a different public parameter A such as Y1 = A1 X and Y2 = A2 X.
 	
 	Encryption ciphers are not used in the software because they have a one-to-one mapping (function)
 	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-
@@ -433,10 +456,11 @@
 	computing. The Rabin cipher can never be broken because factorization will always be harder than
 	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
 	rithm is O(n^3) multi-precision multiplications or O(n^4.58) single-precision multiplications or op-
-	erations. A 1 M bit key would only require O(1) == O(n^0) multi-precision multiplications or O(n^
-	1.58) single-precision multiplications for encryption. (No key size is secure for RSA because the
-	coprime root extraction problem is completely broken. This means that the function can be inverted
-	as fast as it can be computed.)
+	erations. The fastest algorithm could not be faster than prime number generation which requires O(
+	n^4) or O(n^3.58) operations. A 1 M bit key would only require O(1) == O(n^0) multi-precision multi-
+	plications or O(n^1.58 == log2(3) == log(3)/log(2)) single-precision multiplications for encryption.
+	(No key size is secure for RSA because the coprime root extraction problem is completely broken.
+	This means that the function can be inverted as fast as it can be computed.)
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
@@ -444,7 +468,9 @@
 	stead of log extraction. The integer digital signature algorithm is based on the discrete log problem
 	or dlp because it uses one equation for the static signature key y = a ^ x (mod p), another equation
 	for the one-time signature key r = a ^ k (mod p), and a third equation for the signature s = k m +
-	x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
+	x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus. This signature algorithm
+	is also not secure because the integer discrete log problem is just as broken as the integer factor-
+	ization problem.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
@@ -528,7 +554,6 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
-
 
 
 
@@ -696,7 +721,6 @@ class __
 	checkallkeycode = 'D'
 	
 	;
-	
 	
 	
 	
@@ -1905,7 +1929,7 @@ class Programs
 	private byte[] signatureSK; // signature secret key
 	private byte[] filekey; // file key
 	
-	//  save the last directory used by File->Open or File->Save
+	//  Save the last directory used by File->Open or File->Save
 	//  in the directory variable so the user doesn't have to
 	//  keep changing directories
 	
@@ -2090,8 +2114,6 @@ class Programs
 		
 		private Font font, defaultfont;
 		
-		private Color foreground, background, caretcolor;
-		
 		private String fontname = __.monospaced;
 		
 		private int fontstyle = Font.PLAIN;
@@ -2106,6 +2128,10 @@ class Programs
 		private String program = "Java Editor";
 		
 		private String titlename = "";
+		
+		private Color foreground;
+		private Color background;
+		private Color caretcolor;
 		
 		
 		
@@ -4871,7 +4897,13 @@ class Programs
 						
 						fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 						
-						int choice = fc.showDialog(frame, __.addfilename);
+						String title = __.addfilename;
+						
+						fc.setDialogTitle(title);
+						
+						fc.setApproveButtonText(title);
+						
+						int choice = fc.showDialog(frame, null);
 						
 						if (choice == JFileChooser.APPROVE_OPTION)
 						
@@ -5868,17 +5900,14 @@ class Programs
 					dialog.setResizable(false);
 					dialog.add(panel);
 					
-					//  Pack the frame
-					
-					dialog.setMinimumSize(
-					dialog.getPreferredSize());
-					
-					dialog.setAlwaysOnTop(true);
-					dialog.setVisible(false);
-					
 					dialog.setDefaultCloseOperation(
 					
 					    JFrame.HIDE_ON_CLOSE);
+					
+					dialog.setSize(dialog.getPreferredSize());
+					
+					dialog.setAlwaysOnTop(true);
+					dialog.setVisible(false);
 				}
 				
 				
@@ -5921,8 +5950,8 @@ class Programs
 					
 					//  Pack the frame
 					
-					dialog.setMinimumSize(
-					dialog.getPreferredSize());
+					dialog.setSize(dialog
+					   .getPreferredSize());
 				}
 			}
 			
@@ -6109,6 +6138,8 @@ class Programs
 				//  index / number of occurrences
 				
 				if (textareapanel == null) return "";
+				
+				if (text1.isEmpty()) return "";
 				
 				JTextArea textarea = textareapanel.textarea;
 				
@@ -8423,8 +8454,7 @@ class Programs
 				dialog.setResizable(false);
 				dialog.setDefaultCloseOperation(
 				    JDialog.DISPOSE_ON_CLOSE);
-				dialog.setPreferredSize(d);
-				dialog.pack();
+				dialog.setMinimumSize(d);
 				
 				return dialog;
 			}
@@ -9649,7 +9679,7 @@ class Programs
 					Box vbox = Box.createVerticalBox();
 					
 					vbox .add(label1);
-					vbox .add(Box.createVerticalStrut(10));
+					vbox .add(Box.createVerticalStrut(5));
 					vbox .add(label2);
 					
 					JOptionPane.showMessageDialog(frame, vbox,
@@ -9980,8 +10010,6 @@ class Programs
 				          .setBackground1(background)
 					
 					     .setFont1(font)
-					
-					       .setTitle(__.decryptmessage)
 					
 					         .showKeyboard(showkeyboard);
 				
@@ -15765,17 +15793,14 @@ class Programs
 					dialog.setResizable(false);
 					dialog.add(panel);
 					
-					//  Pack the frame
-					
-					dialog.setMinimumSize(
-					dialog.getPreferredSize());
-					
-					dialog.setAlwaysOnTop(true);
-					dialog.setVisible(false);
-					
 					dialog.setDefaultCloseOperation(
 					
 					    JFrame.HIDE_ON_CLOSE);
+					
+					dialog.setSize(dialog.getPreferredSize());
+					
+					dialog.setAlwaysOnTop(true);
+					dialog.setVisible(false);
 				}
 				
 				
@@ -15816,10 +15841,7 @@ class Programs
 					findbutton.setFont(font1);
 					replacebutton.setFont(font1);
 					
-					//  Pack the frame
-					
-					dialog.setMinimumSize(
-					dialog.getPreferredSize());
+					dialog.setSize(dialog.getPreferredSize());
 				}
 			}
 			
@@ -16152,7 +16174,7 @@ class Programs
 				Font font = tablepanel.table.getFont();
 				
 				JTextArea textarea = new JTextArea(message);
-
+				
 				textarea.setEditable(false);
 				textarea.setBackground(
 				    new JPanel().getBackground());
@@ -16682,8 +16704,7 @@ class Programs
 				dialog.setResizable(false);
 				dialog.setDefaultCloseOperation(
 				    JDialog.DISPOSE_ON_CLOSE);
-				dialog.setPreferredSize(d);
-				dialog.pack();
+				dialog.setMinimumSize(d);
 				
 				return dialog;
 			}
@@ -24539,7 +24560,8 @@ class Programs
 					
 					    font.deriveFont(font.getSize() + 4.0f));
 					
-					keyboardlistener.keyboardframe.pack();
+					keyboardlistener.keyboardframe.setSize(
+					keyboardlistener.keyboardframe.getPreferredSize());
 				}
 				
 				// ...
@@ -25209,7 +25231,8 @@ class Programs
 			public void setFont(Font font)
 			{
 				keyboard.setFont(font);
-				keyboardframe.pack();
+				keyboardframe.setSize(
+				keyboardframe.getPreferredSize());
 			}
 		}
 		
@@ -28885,8 +28908,7 @@ class Programs
 					dialog.setResizable(false);
 					dialog.setDefaultCloseOperation(
 					    JDialog.DISPOSE_ON_CLOSE);
-					dialog.setPreferredSize(d);
-					dialog.pack();
+					dialog.setMinimumSize(d);
 					
 					return dialog;
 				}
@@ -31448,6 +31470,7 @@ class Programs
 			
 			
 			
+			
 			private void viewAttachedFile(int msno, int fileno)
 			{
 				//  Displays an image, text, or html document
@@ -31457,6 +31480,19 @@ class Programs
 				
 				viewAttachedFile(filedesc, filedata);
 			}
+			
+			
+			private void saveAttachedFile(int msno, int fileno)
+			{
+				//  Saves an image, text, or html document
+				
+				String filedesc = emailpanel.list1.getFileDesc(msno, fileno);
+				byte[] filedata = emailpanel.list1.getFileData(msno, fileno);
+				
+				saveAttachedFile(filedesc, filedata);
+			}
+			
+			
 			
 			
 			private void viewAttachedFile(String filedesc, byte[] filedata)
@@ -31594,17 +31630,6 @@ class Programs
 				}
 			}
 			
-			
-			
-			private void saveAttachedFile(int msno, int fileno)
-			{
-				//  Saves an image, text, or html document
-				
-				String filedesc = emailpanel.list1.getFileDesc(msno, fileno);
-				byte[] filedata = emailpanel.list1.getFileData(msno, fileno);
-				
-				saveAttachedFile(filedesc, filedata);
-			}
 			
 			
 			private void saveAttachedFile(String filedesc, byte[] filedata)
@@ -34068,31 +34093,31 @@ class Programs
 			private class SavedEmails
 			{
 			
-				//   ________________________________________
-				//  |       ________________________       | |
-				//  |      |________________________|      | |
-				//  |______________________________________| |
-				//  |_[ ]________day month year____________| |
-				//  |                                      | |
-				//  |            message text 1            | |
-				//  |                                      | |
-				//  |______________________________________| |
-				//  |_[ ]________day month year____________| |
-				//  |                                      | |
-				//  |            message text 2            | |
-				//  |                                      | |
-				//  |______________________________________| |
-				//  |_[ ]________day month year____________| |
-				//  |                                      | |
-				//  |            message text 3            | |
-				//  |                                      | |
-				//  |______________________________________| |
-				//  |_[ ]________day month year____________| |
-				//  |                                      | |
-				//  |            message text 4            | |
-				//  |                                      | |
-				//  |______________________________________|_|
-				//  |_____________Close button_______________|
+				//   __________________________________________
+				//  | |       ________________________       | |
+				//  | |      |________________________|      | |
+				//  | |______________________________________| |
+				//  | |_[ ]________day month year____________| |
+				//  | |                                      | |
+				//  | |            message text 1            | |
+				//  | |                                      | |
+				//  | |______________________________________| |
+				//  | |_[ ]________day month year____________| |
+				//  | |                                      | |
+				//  | |            message text 2            | |
+				//  | |                                      | |
+				//  | |______________________________________| |
+				//  | |_[ ]________day month year____________| |
+				//  | |                                      | |
+				//  | |            message text 3            | |
+				//  | |                                      | |
+				//  | |______________________________________| |
+				//  | |_[ ]________day month year____________| |
+				//  | |                                      | |
+				//  | |            message text 4            | |
+				//  | |                                      | |
+				//  | |______________________________________|_|
+				//  |_|______________Close button____________|_|
 				
 				
 				private JDialog dialog;
@@ -34121,6 +34146,7 @@ class Programs
 				private JScrollPane scrollpane;
 				
 				private boolean reverse_colors;
+				
 				private Color foreground;
 				private Color background;
 				
@@ -34386,11 +34412,9 @@ class Programs
 					
 					String[] tokens = plaintext.split("\n\n");
 					
-					boolean attachedfiles = true;
+					boolean attachedfiles =
 					
-					if (tokens.length <= 1)
-					
-					    attachedfiles = false;
+					    (tokens.length > 1) ? true : false;
 					
 					for (String token : tokens)
 					
@@ -34447,10 +34471,9 @@ class Programs
 					//  Constructs a file header and message string
 					//  and displays the message in the text area
 					
-					StringBuilder sb = new StringBuilder("");
-					
 					//  Append the view attached file == [ view ]
 					//         the save attached file == [ save ]
+					//         the dele attached file == [ x ]
 					//
 					//  1. Attached File  [ view ] [ save ] [ x ]
 					//
@@ -34459,6 +34482,8 @@ class Programs
 					//  3. Attached File  [ view ] [ save ] [ x ]
 					
 					int numberoffiles = this.numberoffiles[index];
+					
+					StringBuilder sb = new StringBuilder("");
 					
 					for (int i = 0; i < numberoffiles; i++)
 					{
@@ -34551,7 +34576,6 @@ class Programs
 						String path = dir + File.separator + filenames[i];
 						
 						File file = new File(path);
-						
 						
 						byte[] cipherdata;
 						
@@ -34657,7 +34681,6 @@ class Programs
 				
 				private String getDate(Calendar cal)
 				{
-				
 					DateFormatSymbols dfs = new DateFormatSymbols();
 					
 					String[] months = dfs.getMonths();
@@ -34725,7 +34748,7 @@ class Programs
 					
 					findfield.setFont(font);
 					
-					dialog.pack();
+					dialog.setSize(dialog.getPreferredSize());
 				}
 				
 				
@@ -34769,7 +34792,7 @@ class Programs
 					
 					dialog.setVisible(true);
 					
-					dialog.pack();
+					dialog.setSize(dialog.getPreferredSize());
 				}
 				
 				
@@ -34936,7 +34959,6 @@ class Programs
 						    encrypted[i] = Boolean.valueOf(false);
 						   textlabels[i] = new JLabel();
 						
-						
 						   datelabels[i].setFont(labelfont);
 						   textlabels[i].setFont(labelfont);
 						
@@ -34977,10 +34999,9 @@ class Programs
 						{ public void actionPerformed(ActionEvent e)
 						{ textarea.setEnabled(!deletebox.isSelected()); } });
 						
+						
 						JButton editbutton = editbuttons[i];
-						
 						editbutton.setIcon(editicon);
-						
 						editbutton.setToolTipText(__.edit);
 						
 						editbutton.addActionListener(new ActionListener()
@@ -38270,7 +38291,7 @@ class Programs
 				
 				  String.valueOf(outgoingmailport)) : null) );
 			
-			String homedir    = System.getProperty("user.home");
+			String homedir = System.getProperty("user.home");
 			
 			if (maildirectory == null) maildirectory =
 			
@@ -39440,6 +39461,7 @@ class Colors
 
 
 
+
 class SaveFile
 {
 
@@ -39812,7 +39834,13 @@ class DeleteFileListener implements ActionListener
 		
 		//  fc.setFont(font);
 		
-		int choice = fc.showDialog(frame, __.deletefile);
+		String title = __.deletefile;
+		
+		fc.setDialogTitle(title);
+		
+		fc.setApproveButtonText(title);
+		
+		int choice = fc.showDialog(frame, null);
 		
 		if (choice == JFileChooser.APPROVE_OPTION)
 		{
@@ -39949,7 +39977,13 @@ class RenameFileListener implements ActionListener
 		
 		fc = new FileChooser(directory);
 		
-		int choice = fc.showDialog(frame, __.renamefile);
+		String title = __.renamefile;
+		
+		fc.setDialogTitle(title);
+		
+		fc.setApproveButtonText(title);
+		
+		int choice = fc.showDialog(frame, null);
 		
 		if (choice == JFileChooser.APPROVE_OPTION)
 		{
@@ -40169,7 +40203,14 @@ class EncryptDirectory
 		
 		while (true)
 		{
-			choice = fc.showDialog(frame, __.encryptdirectory);
+			
+			String title = __.encryptdirectory;
+			
+			fc.setDialogTitle(title);
+			
+			fc.setApproveButtonText(title);
+			
+			choice = fc.showDialog(frame, null);
 			
 			if (choice == JFileChooser.APPROVE_OPTION)
 			
@@ -40190,9 +40231,7 @@ class EncryptDirectory
 		
 		while (true)
 		{
-			if (filekey == null)
-			
-			    chooseFileKey();
+			if (filekey == null) chooseFileKey();
 			
 			if (filekey == null) return;
 			
@@ -40604,7 +40643,13 @@ class EncryptDirectory
 		
 		while (true)
 		{
-			choice = fc.showDialog(frame, __.decryptdirectory);
+			String title = __.decryptdirectory;
+			
+			fc.setDialogTitle(title);
+			
+			fc.setApproveButtonText(title);
+			
+			choice = fc.showDialog(frame, null);
 			
 			if (choice == JFileChooser.APPROVE_OPTION)
 			
@@ -41463,7 +41508,28 @@ class FileEncryptor
 		
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
-		int choice = fc.showDialog(frame, __.encryptfile);
+		String title = __.encryptfile;
+		
+		if (filekey != null)
+		{
+			String passphrasehash = new Number(filekey).toString(40, 16);
+			
+			while ((passphrasehash.length() % 8) != 0)
+			
+			    passphrasehash = "0" + passphrasehash;
+			
+			passphrasehash = passphrasehash.substring(0, 16);
+			
+			passphrasehash = Convert.partition(passphrasehash, " ", 4);
+			
+			title += "  " + passphrasehash;
+		}
+		
+		fc.setDialogTitle(title);
+		
+		fc.setApproveButtonText(__.encryptfile);
+		
+		int choice = fc.showDialog(frame, null);
 		
 		if (choice == JFileChooser.APPROVE_OPTION)
 		{
@@ -42125,7 +42191,14 @@ class FileDecryptor
 		
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
-		int choice = fc.showDialog(frame, __.decryptfile);
+		
+		String title = __.decryptfile;
+		
+		fc.setDialogTitle(title);
+		
+		fc.setApproveButtonText(title);
+		
+		int choice = fc.showDialog(frame, null);
 		
 		if (choice == JFileChooser.APPROVE_OPTION)
 		{
@@ -42297,16 +42370,20 @@ class FileDecryptor
 		
 		byte[] cipherdata = data;
 		
-		byte[]  plaindata = null;
+		byte[] plaindata = null;
 		
 		
-		//  First try the secret passphrase SP
+		//  try the secret passphrase SP and the file key
 		
 		if ((SP != null) && !SP.isEmpty())
 		
 		    plaindata = Cipher.decrypt(cipherdata,
 		
 			Cipher.passphraseToKey(SP));
+		
+		if ((plaindata == null) && (filekey != null))
+		
+		     plaindata = Cipher.decrypt(cipherdata, filekey);
 		
 		
 		//  If the file was decrypted by the secret passphrase
@@ -42315,7 +42392,7 @@ class FileDecryptor
 		
 		if ((plaindata != null) && !Cipher.isEncrypted(plaindata))
 		{
-			if (filekey == null)  this.filekey
+			if (filekey == null) this.filekey
 			
 			    = Cipher.passphraseToKey(SP);
 			
@@ -43201,7 +43278,7 @@ class PopMail
 		String desc1 = "This is an attached image file example";
 		String desc2 = "This is an attached text file example";
 		String desc3 = "This is an attached table file example";
-
+		
 		filetext01 = Convert.stringToBase64(desc1) + "\n\n" + filetext01;
 		filetext02 = Convert.stringToBase64(desc2) + "\n\n" + filetext02;
 		filetext03 = Convert.stringToBase64(desc3) + "\n\n" + filetext03;
@@ -45672,7 +45749,7 @@ class Documents
 			
 			textarea.setFont(this.font);
 			
-			dialog.pack();
+			dialog.setSize(dialog.getPreferredSize());
 		}
 	}
 	
@@ -45825,11 +45902,28 @@ class Documents
 		
 		dialog.add(scrollpane);
 		
-		dialog.pack();
-		
 		dialog.setTitle(title);
 		
 		dialog.setLocationRelativeTo(frame);
+		
+		dialog.setSize(dialog.getPreferredSize());
+		
+		//  Center the dialog in the parent frame
+		
+		Point p = frame.getLocation();
+		
+		int xpos = p.x, ypos = p.y;
+		
+		int  width = frame.getWidth();
+		int height = frame.getHeight();
+		
+		int  width1 = dialog.getWidth();
+		int height1 = dialog.getHeight();
+		
+		int x2pos = xpos +  width/2 -  width1/2;
+		int y2pos = ypos + height/2 - height1/2;
+		
+		dialog.setLocation(x2pos, y2pos);
 		
 		dialog.setVisible(true);
 	}
@@ -45987,9 +46081,9 @@ class Documents
 		
 		dialog.setTitle(title);
 		
-		dialog.pack();
-		
 		dialog.setLocationRelativeTo(frame);
+		
+		dialog.setSize(dialog.getPreferredSize());
 		
 		dialog.setVisible(true);
 		
@@ -47964,7 +48058,9 @@ class Icons
 			
 			label.repaint();
 			
-			dialog.pack();
+			dialog.setSize(dialog
+			
+			    .getPreferredSize());
 		}
 	}
 	
@@ -48025,8 +48121,10 @@ class Icons
 		dialog.setSize(width, height);
 		dialog.setResizable(false);
 		dialog.setTitle(title);
+		
+		//  this method blocks because
+		//  modal is set to true
 		dialog.setVisible(true);
-		dialog.pack();
 	}
 }
 
@@ -48734,8 +48832,6 @@ class Keyboard
 		
 		frame.add(panel);
 		
-		frame.pack();
-		
 		frame.setDefaultCloseOperation(
 		
 		    JFrame.DISPOSE_ON_CLOSE);
@@ -48954,7 +49050,7 @@ class PublicKeyDialog
 
 
 
-class PassphraseDialog extends JPanel implements AncestorListener
+class PassphraseDialog extends JDialog implements AncestorListener
 {
 
 
@@ -49108,6 +49204,9 @@ class PassphraseDialog extends JPanel implements AncestorListener
 	public boolean ascending = true;
 	public int messagesperscreen = 50;
 	
+	private boolean validpassphrase;
+	
+	private boolean closed;
 	
 	
 	
@@ -49116,8 +49215,6 @@ class PassphraseDialog extends JPanel implements AncestorListener
 		final JFrame frame, int dialogtype)
 	{
 	
-		//	passphrase dialog boxes
-		//	
 		//	passphrase_only
 		//	
 		//	passphrase_email_encrypt
@@ -49190,7 +49287,9 @@ class PassphraseDialog extends JPanel implements AncestorListener
 		
 		
 		
-		this.frame = frame;
+		super(frame);
+		
+		dialog = this;
 		
 		this.dialogtype = dialogtype;
 		
@@ -49200,7 +49299,7 @@ class PassphraseDialog extends JPanel implements AncestorListener
 		Gbc gbc;  int y = 0;
 		
 		
-		// the number of characters in the passphrase field
+		//  the number of chars in the passphrase field
 		
 		final int textlength = 30;
 		
@@ -49257,33 +49356,33 @@ class PassphraseDialog extends JPanel implements AncestorListener
 			passphrasearea.addMouseListener(mouselistener1);
 			
 			
-			Component strut = Box
-			
-			   .createVerticalStrut(10);
-			
-			Box vbox = Box.createVerticalBox();
-			
-			vbox.add(scrollpane1);
-			
-			vbox.add(strut);
-			
-			vbox.add(hashfield);
-			
-			JPanel panel = new JPanel();
-			
-			panel.add(vbox);
-			
-			
 			this.setLayout(new GridBagLayout());
 			
 			gbc = new Gbc();
-			gbc.setPosition(0, y = 0);
-			gbc.setSize(20, 1);
-			gbc.setFill(Gbc.horizontal);
-			gbc.setAnchor(Gbc.center);
-			gbc.setWeight(100, 100);
 			
-			this.add(panel, gbc);
+			gbc.setPosition(0, 0);
+			gbc.setSize(1, 1);
+			gbc.setFill(Gbc.both);
+			
+			this.add(scrollpane1, gbc);
+			
+			
+			gbc = new Gbc();
+			
+			gbc.setPosition(0, 1);
+			gbc.setSize(1, 1);
+			gbc.setFill(Gbc.both);
+			
+			this.add(hashfield, gbc);
+			
+			
+			gbc = new Gbc();
+			
+			gbc.setPosition(0, 2);
+			gbc.setSize(1, 1);
+			gbc.setFill(Gbc.both);
+			
+			this.add(okbutton, gbc);
 		}
 		
 		
@@ -49344,11 +49443,11 @@ class PassphraseDialog extends JPanel implements AncestorListener
 			passphrasearea .setToolTipText(__.typedpassphrase);
 			hashfield      .setToolTipText(__.passphraseandemailhash);
 			
-			//  The number of chars on the last line is the sum
-			//  of the key sizes plus the number of hyphens
-			//  (which is n-1) modulo the line width. The num-
-			//  ber of chars per line could change in future
-			//  versions of the program.
+			//  The number of chars on the last line is the
+			//  sum of the key sizes plus the number of hyphens
+			//  (which is n-1) modulo the line width. The number
+			//  of chars per line could change in future versions
+			//  of the program.
 			
 			Integer[] linewidths = new Integer[] { 36, 48, 56 };
 			
@@ -49464,9 +49563,8 @@ class PassphraseDialog extends JPanel implements AncestorListener
 			
 			gbc = new Gbc();
 			
-			gbc.setPosition(0, y);
+			gbc.setPosition(0, y = 0);
 			gbc.setSize(9, 1);
-			gbc.setAnchor(Gbc.left);
 			
 			this.add(passphraselabel, gbc);
 			
@@ -49475,28 +49573,24 @@ class PassphraseDialog extends JPanel implements AncestorListener
 			
 			gbc.setPosition(0, y += 4);
 			gbc.setSize(9, 1);
-			gbc.setAnchor(Gbc.left);
 			
 			this.add(emaillabel, gbc);
 			
 			
-			
-			y = 0;
-			
 			gbc = new Gbc();
 			
-			
-			gbc.setPosition(10, y);
+			gbc.setPosition(10, y = 0);
 			gbc.setSize(size1, 1);
-			gbc.setFill(Gbc.horizontal);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			
 			this.add(passphrasefield, gbc);
 			
 			
-			// gbc.setPosition(10+8, y);
+			gbc = new Gbc();
+			
 			gbc.setPosition(9, y);
 			gbc.setSize(1, 1);
-			gbc.setAnchor(Gbc.right);
 			
 			this.add(randcheckbox, gbc);
 			
@@ -49505,7 +49599,8 @@ class PassphraseDialog extends JPanel implements AncestorListener
 			
 			gbc.setPosition(10, ++y);
 			gbc.setSize(size1, 3);
-			gbc.setAnchor(Gbc.right);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			
 			this.add(scrollpane1, gbc);
 			
@@ -49514,14 +49609,16 @@ class PassphraseDialog extends JPanel implements AncestorListener
 			
 			gbc.setPosition(10, y += 3);
 			gbc.setSize(size1, 1);
-			gbc.setAnchor(Gbc.right);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			
 			this.add(emailfield, gbc);
 			
 			
 			gbc.setPosition(10, ++y);
 			gbc.setSize(size1, 1);
-			gbc.setAnchor(Gbc.right);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			gbc.setInsets(1, 0, 0, 0);
 			
 			this.add(hashfield, gbc);
@@ -49549,6 +49646,7 @@ class PassphraseDialog extends JPanel implements AncestorListener
 				gbc.setPosition(12, y);
 				gbc.setSize(size1, 1);
 				gbc.setAnchor(Gbc.left);
+				gbc.setInsets(0, 5, 0, 0);
 				
 				this.add(buttonpanel, gbc);
 			}
@@ -49622,7 +49720,8 @@ class PassphraseDialog extends JPanel implements AncestorListener
 					
 					    String.valueOf(numberofciphers));
 					
-					dialog.pack();
+					Dimension newsize = dialog.getPreferredSize();
+					dialog.setSize(newsize.width, newsize.height);
 				}
 			}
 			
@@ -49978,13 +50077,10 @@ class PassphraseDialog extends JPanel implements AncestorListener
 		}
 		
 		
-		
 		passphrasefield.addKeyListener(keylistener);
 		passphrasearea .addKeyListener(keylistener);
 		
 		passphrasearea.addAncestorListener(this);
-		
-		
 		
 		if (emailfield != null) emailfield
 		
@@ -50054,7 +50150,12 @@ class PassphraseDialog extends JPanel implements AncestorListener
 				
 				keyboardpanel.setVisible(!keyboardpanel.isVisible());
 				
-				dialog.pack();
+				//  Window.java says that pack() is deprecated
+				//  but the warning is suppressed so we use
+				//  d.setSize(d.getPreferredSize()) instead
+				
+				Dimension newsize = dialog.getPreferredSize();
+				dialog.setSize(newsize.width, newsize.height);
 			}
 		});
 		
@@ -50074,6 +50175,7 @@ class PassphraseDialog extends JPanel implements AncestorListener
 		keyboardpanel = keyboardlistener.keyboardpanel;
 		
 		int length = textlength;
+		
 		
 		//  Add a virtual keyboard
 		
@@ -50096,6 +50198,67 @@ class PassphraseDialog extends JPanel implements AncestorListener
 		this.add(okbutton, gbc);
 		
 		keyboardpanel.setVisible(showkeyboard);
+		
+		
+		this.setDefaultCloseOperation(
+		
+		    JDialog.DO_NOTHING_ON_CLOSE);
+		
+		this.addWindowListener(new WindowAdapter()
+		{
+			public void windowClosing(WindowEvent e)
+			{
+				closed = true;
+				
+				dialog.setVisible(false);
+			}
+		});
+		
+		this.setTitle(title);
+		
+		this.setResizable(false);
+		
+		Dimension newsize = this.getPreferredSize();
+		this.setSize(newsize.width, newsize.height);
+		
+		passphrasearea.requestFocusInWindow();
+		
+		
+		//  Center the dialog in the parent frame
+		
+		Point p = frame.getLocation();
+		
+		int xpos = p.x, ypos = p.y;
+		
+		int  width = frame.getWidth();
+		int height = frame.getHeight();
+		
+		int  width1 = dialog.getWidth();
+		int height1 = dialog.getHeight();
+		
+		int x2pos = xpos +  width/2 -  width1/2;
+		int y2pos = ypos + height/2 - height1/2;
+		
+		this.setLocation(x2pos, y2pos);
+		
+		
+		//  this method doesn't block because
+		//  the modality is set to false
+		
+		this.setVisible(true);
+		
+		
+		okbutton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				validpassphrase = validatePassphrase();
+				
+				//  Hide the dialog to unblock the read passphrase methods
+				
+				if (validpassphrase) dialog.setVisible(false);
+			}
+		});
 	}
 	
 	
@@ -50187,7 +50350,7 @@ class PassphraseDialog extends JPanel implements AncestorListener
 	
 	
 	
-	
+			
 	
 	private class KeyListener extends KeyAdapter
 	{
@@ -50196,15 +50359,14 @@ class PassphraseDialog extends JPanel implements AncestorListener
 		
 		public void keyPressed(KeyEvent e)
 		{
-			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) dialog.dispose();
-			
 			if (e.getSource() == passphrasefield)
 			{
 				if (e.getKeyChar() == '\n')
 				
 				    passphrasefield.transferFocus();
 				
-				dialog.pack();
+				Dimension newsize = dialog.getPreferredSize();
+				dialog.setSize(newsize.width, newsize.height);
 			}
 			
 			if (e.getSource() == passphrasearea)
@@ -50212,15 +50374,23 @@ class PassphraseDialog extends JPanel implements AncestorListener
 				if (e.getKeyChar() == '\t')
 				
 				    if (emailfield != null)
-					
+				
 					passphrasearea.transferFocus();
 				
-				dialog.pack();
+				Dimension newsize = dialog.getPreferredSize();
+				dialog.setSize(newsize.width, newsize.height);
 			}
 			
 			if (e.getKeyCode() == KeyEvent.VK_CONTROL)
 			
 			    control = true;
+			
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+			{
+				closed = true;
+				
+				dialog.dispose();
+			}
 		}
 		
 		
@@ -50238,10 +50408,10 @@ class PassphraseDialog extends JPanel implements AncestorListener
 			
 			setPassphraseHash();
 			
-			dialog.pack();
+			Dimension newsize = dialog.getPreferredSize();
+			dialog.setSize(newsize.width, newsize.height);
 		}
 	}
-	
 	
 	
 	
@@ -50289,10 +50459,11 @@ class PassphraseDialog extends JPanel implements AncestorListener
 	//  (except for the top-level window) must also be displayable,
 	//  focusable, and visible, for the focus request to be granted.
 	
-	
 	public void ancestorAdded(AncestorEvent e)
 	{
-		//  Transfer the focus from the passphrase field to area
+		//  Transfer the focus from the passphrase field
+		//  to the passphrase area if the saved passphrase
+		//  was previously entered
 		
 		if (!passphrasefield.getText().isBlank())
 		
@@ -50321,6 +50492,7 @@ class PassphraseDialog extends JPanel implements AncestorListener
 		
 		return this;
 	}
+	
 	
 	public PassphraseDialog setPassphrase1(String passphrase1)
 	{
@@ -50351,12 +50523,10 @@ class PassphraseDialog extends JPanel implements AncestorListener
 	}
 	
 	
-	
 	private String getPassphrase0()
 	{
 		return passphrasefield.getText();
 	}
-	
 	
 	
 	
@@ -50546,16 +50716,6 @@ class PassphraseDialog extends JPanel implements AncestorListener
 	}
 	
 	
-	public PassphraseDialog setTitle(String title)
-	{
-		//  Set the title for the JOptionPane
-		
-		this.title = title;
-		
-		return this;
-	}
-	
-	
 	public PassphraseDialog showKeyboard(boolean bool)
 	{
 		//  Show the keyboard
@@ -50570,9 +50730,23 @@ class PassphraseDialog extends JPanel implements AncestorListener
 	
 	public String readPassphrase()
 	{
-		boolean result = validatePassphrase();
+		//  Set modal to true so that the setVisible method
+		//  will block until the user enters a passphrase
+		//  and the okbutton listener sets visible to false
 		
-		if (!result) return null;
+		this.setModal(true);
+		
+		Dimension newsize = getPreferredSize();
+		this.setSize(newsize.width, newsize.height);
+		
+		//  The frame visibility has to be set to false
+		//  and then to true for the method to block
+		
+		this.setVisible(false);
+		this.setSize(newsize.width, newsize.height);
+		this.setVisible(true);
+		
+		if (!validpassphrase || closed)  return null;
 		
 		String SP = passphrasefield.getText()
 		
@@ -50591,10 +50765,23 @@ class PassphraseDialog extends JPanel implements AncestorListener
 	
 	public String[] readDialogInput()
 	{
-	
-		boolean result = validatePassphrase();
+		//  Set modal to true so that the setVisible method
+		//  will block until the user enters a passphrase
+		//  and the okbutton listener sets visible to false
 		
-		if (!result) return null;
+		this.setModal(true);
+		
+		Dimension newsize = getPreferredSize();
+		this.setSize(newsize.width, newsize.height);
+		
+		//  The frame visibility has to be set to false
+		//  and then to true for the method to block
+		
+		this.setVisible(false);
+		this.setSize(newsize.width, newsize.height);
+		this.setVisible(true);
+		
+		if (!validpassphrase || closed) return null;
 		
 		if ((passphrasefield.getText() + passphrasearea.getText())
 		
@@ -50690,154 +50877,88 @@ class PassphraseDialog extends JPanel implements AncestorListener
 	
 	
 	
+	private int emailwarning = 0;
+	
 	private boolean validatePassphrase()
 	{
 	
-		final int[] emailwarning = new int[] { 0 };
+		boolean selectedvalue = false;
 		
-		final boolean[] selectedvalue = new boolean[] { false };
-		
-		
-		okbutton.addActionListener( new ActionListener()
+		while (true)
 		{
-			public void actionPerformed(ActionEvent e)
+			String text = passphrasefield.getText()
+			
+			    + passphrasearea.getText();
+			
+			if (!text.isBlank())
 			{
-				while (true)
+				//  passphrase < minlength
+				
+				String text1 = text.replaceAll("[ \n\t]", "");
+				
+				if (dialogtype != PASSPHRASE_ONLY)
 				{
-					String text = passphrasefield.getText()
-					
-					    + passphrasearea.getText();
-					
-					if (!text.isBlank())
+					if (text1.length() < minlength)
 					{
-						//  passphrase < minlength
+						String warning_message = __.passphrasewarning;
 						
-						String text1 = text.replaceAll("[ \n\t]", "");
+						JOptionPane.showMessageDialog(
 						
-						if (dialogtype == PASSPHRASE_ONLY)
-						{
-							if (text1.length() < minlength)
-							{
-								String warning_message = __.passphrasewarning;
-								
-								JOptionPane.showMessageDialog(
-								
-								    dialog, warning_message, "",
-								
-									JOptionPane.WARNING_MESSAGE);
-								
-								return;
-							}
-						}
+						    dialog, warning_message, "",
 						
-						else if (text1.length() < minlength)
-						{
-							String warning_message = __.passphrasewarning;
-							
-							JOptionPane.showMessageDialog(
-							
-							    dialog, warning_message, "",
-							
-								JOptionPane.WARNING_MESSAGE);
-							
-							return;
-						}
+							JOptionPane.WARNING_MESSAGE);
+						
+						return false;
 					}
-					
-					else // if (text.isBlank())
-					{
-						break;
-					}
-					
-					
-					if ((dialogtype != PASSPHRASE_ONLY) && !text.isBlank())
-					{
-						//  Validate the email field
-						
-						if ( (dialogtype == passphrase_email_encrypt)
-						 ||  (dialogtype == passphrase_email_decrypt) )
-						{
-							if ( emailfield.getText().isEmpty() ) // no trim
-							{
-								//  user forgot to enter an email address
-								
-								if (emailwarning[0]++ > 0) break;
-								
-								String errormessage = __.enteranemailaddress;
-								
-								JOptionPane.showMessageDialog(
-								
-								    dialog, errormessage, "",
-								
-									JOptionPane.ERROR_MESSAGE);
-								
-								return;
-							}
-							
-							else if ( !emailfield.getText().isBlank()
-							       && !emailfield.getText().contains("@") )
-							{
-								//  invalid email address
-								
-								String errormessage = __.invalidemailaddress;
-								
-								JOptionPane.showMessageDialog(dialog,
-								
-								   errormessage, "", JOptionPane.ERROR_MESSAGE);
-								
-								return;
-							}
-						}
-					}
-					
-					break;
 				}
-				
-				selectedvalue[0] = true;
-				
-				dialog.dispose();
 			}
-		} );
-		
-		
-		
-		//  Create a dialog box
-		
-		boolean modal = true;
-		
-		dialog = new JDialog(frame, modal);
-		
-		KeyAdapter closelistener = new KeyAdapter()
-		{
-			public void keyPressed(KeyEvent e)
+			
+			else // if (text.isBlank())
 			{
-				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				
-				    dialog.dispose();
+				break;
 			}
-		};
+			
+			
+			if ((dialogtype != PASSPHRASE_ONLY) && !text.isBlank())
+			{
+				//  Validate the email field
+				
+				if ( (dialogtype == passphrase_email_encrypt)
+				 ||  (dialogtype == passphrase_email_decrypt) )
+				{
+					if ( emailfield.getText().isEmpty() ) // no trim
+					{
+						//  user forgot to enter an email address
+						
+						if (emailwarning++ > 0) break;
+						
+						String message = __.enteranemailaddress;
+						
+						JOptionPane.showMessageDialog(dialog,
+						    message, "", JOptionPane.ERROR_MESSAGE);
+						
+						return false;
+					}
+					
+					else if ( !emailfield.getText().isBlank()
+					       && !emailfield.getText().contains("@") )
+					{
+						//  invalid email address
+						
+						String message = __.invalidemailaddress;
+						
+						JOptionPane.showMessageDialog(dialog,
+						    message, "", JOptionPane.ERROR_MESSAGE);
+						
+						return false;
+					}
+				}
+			}
+			
+			break;
+		}
 		
-		dialog.addKeyListener(closelistener);
-		
-		dialog.setDefaultCloseOperation(
-		
-		    JDialog.DISPOSE_ON_CLOSE);
-		
-		dialog.add(this);
-		
-		dialog.setTitle(title);
-		
-		dialog.setResizable(false);
-		
-		dialog.pack();
-		
-		dialog.setLocationRelativeTo(frame);
-		
-		dialog.setVisible(true);
-		
-		passphrasearea.requestFocusInWindow();
-		
-		return selectedvalue[0];
+		return true;
 	}
 	
 	
@@ -50895,7 +51016,6 @@ class PassphraseDialog extends JPanel implements AncestorListener
 			comp.copy();
 		}
 	}
-	
 	
 	
 	private class PasteListener implements ActionListener
@@ -51176,11 +51296,11 @@ class PublicKey
 	//  functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
 	//  nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
 	//
-	//  Even with quantum computing or a polynomial-time algorithm, the Rabin cipher might still be un-
-	//  breakable if the key size is large enough. For example, if a classical algorithm for factoring num-
-	//  bers has a running time of O(n^4) (or O(n^3.58)) which is the same time as prime number generation,
-	//  then for a 1 megabit number the algorithm would require (10^6)^4 or a septillion multiplications
-	//  which could require 10^27 to 10^30 (or 10^26 to 10^29) operations.
+	//  Even with quantum computing or a polynomial-time algorithm, the Rabin cipher is still unbreakable
+	//  if the key size is large enough. For example, if a classical algorithm for factoring numbers has
+	//  a running time of O(n^4) (or O(n^3.58)) which is the same time as prime number generation, then
+	//  for a 1 megabit number the algorithm would require (10^6)^4 or a septillion multiplications which
+	//  could require 10^27 to 10^30 (or 10^26 to 10^29) operations.
 	//
 	//  A quantum computer could reduce the running time to O(n^2.58) or O(n^2 log n) for large numbers
 	//  which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the factors f1 =
@@ -58184,7 +58304,7 @@ class PublicKey
 			return new Number(E2 .toIntegerString(s, radix), radix)
 			
 			    .mod(new Number(16).pow(64).add(1));
-		}	
+		}
 		
 		
 		
@@ -60593,7 +60713,7 @@ class Signature
 	//  q = 1461501637330902918203684832716283019655932555573
 	
 	
-
+	
 	
 	//  Signature constructors
 	
@@ -81311,7 +81431,7 @@ class SSLSocket extends Socket
 	
 	private PublicKey[] publickey;
 	
-	private Number sharedsecretkey;
+	private Number keyagreement;
 	
 	private boolean encrypted;
 	
@@ -81497,13 +81617,13 @@ class SSLSocket extends Socket
 		
 		//  Compute the shared secret key
 		
-		this.sharedsecretkey = PublicKey.generateSecretKey(
+		this.keyagreement = PublicKey.generateSecretKey(
 		
 		    clientkeysubset, publickeysubset, PublicKey.receive_decrypt);
 		
 		System.out.println("server shared secret key == "
 		
-		    + this.sharedsecretkey.toString(16));
+		    + this.keyagreement.toString(16));
 		
 		return true;
 	}
@@ -81551,13 +81671,13 @@ class SSLSocket extends Socket
 		
 		//  Compute the shared secret key
 		
-		this.sharedsecretkey = PublicKey.generateSecretKey(
+		this.keyagreement = PublicKey.generateSecretKey(
 		
 		    subsetkey, publickey, PublicKey.send_encrypt);
 		
 		System.out.println("client shared secret key == "
 		
-		    + this.sharedsecretkey.toString(16));
+		    + this.keyagreement.toString(16));
 		
 		
 		//  Set the received (server) key
@@ -81615,7 +81735,9 @@ class SSLSocket extends Socket
 		
 		if ((receivedkey != null) && !receivedkey.isEmpty())
 		
-		    message = Cipher.encrypt(message, sharedsecretkey.toByteArray());
+		    message = Cipher.encrypt(message,
+		
+			keyagreement.toByteArray());
 		
 		
 		//  Send the string in units of buffer size
@@ -81664,11 +81786,11 @@ class SSLSocket extends Socket
 		
 		String message = line.trim();
 		
-		if ((sharedsecretkey != null) && Number.isBase64(message)
+		if ((keyagreement != null) && Number.isBase64(message)
 		
 		    && Cipher.isEncrypted(Convert.base64ToByteArray(message)))
 		
-		    message = Cipher.decrypt(message, sharedsecretkey.toByteArray());
+		    message = Cipher.decrypt(message, keyagreement.toByteArray());
 		
 		return message;
 	}
@@ -81701,6 +81823,7 @@ class SSLSocket extends Socket
 //  key is 0000 2020 c685 5793 74c0 2d8d ef02 416c.
 
 //  Copyright © 2020  The Java Editor authors
+
 
 
 

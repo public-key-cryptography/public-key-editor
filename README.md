@@ -19,9 +19,16 @@
 	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
 	lows multiple users synchronous access to an email account from different computers which is useful
 	for some companies or organizations that have to reply to large numbers of emails because POP mail
-	accounts can only be accessed from one device at a time. Imap also allows users to change the state
-	of the messages on the server, but the POP mail protocol could be amended or the email servers could
-	be upgraded to include this feature.
+	accounts can only be accessed from one device at a time.
+	
+	Imap also allows users to change the state of the messages on the server, but the POP mail protocol
+	could be amended or the email servers could be upgraded to include this feature. POP mail servers
+	could also be upgraded to allow multiple users to retrieve and delete emails by assigning to each
+	message a hash or time stamp in milliseconds so that the retrieve and delete commands could use the
+	number assigned to the messages instead of the ordinal / cardinal numbers. Otherwise if two users
+	list the emails and then simultaneously try to delete the same message using the ordinal number,
+	the second user will delete the next consecutive message in the list, and the email messages on the
+	clients' computers will not correspond to messages on the server computer.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -89,9 +96,18 @@
 	font size and a line of code was removed from the mouse wheel listener that changed the size of the
 	frame instead of the font if the control button was pressed and the mouse wheel was scrolled; an
 	error in the readMessageStates method was corrected; the SavedEmails class was modified to append
-	the sender's from address to the saved messages even if they have attached files; and the ViewSaved
+	the sender's from address to the saved messages even if they have attached files; the ViewSaved-
 	EmailsListener class was modified so that it creates only one instance of the SavedEmails class or
-	opens only one dialog box even if the user clicks more than once on the view saved emails menu item.
+	opens only one dialog box even if the user clicks more than once on the view saved emails menu item;
+	a few deprecated methods such as frame.pack() and filechooser.showDialog() were replaced even though
+	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
+	the find class was modified so that it doesn't show the number of occurences for an empty string;
+	and the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was
+	modified so that the modal variable is set to false so the constructor doesn't block and the program
+	can use the object returned by the constructor to set the font, color, and other variables, and then
+	the modality is changed to true by the readPassphrase and readDialog methods so that the dialog.set
+	Visible method blocks until the user clicks the ok button and the passphrase size and email address
+	are validated.
 	
 	
 	
@@ -231,8 +247,14 @@
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
-	\n, 3 size 1 \n, ... This would be backward compatible with the POP mail protocol because it would
-	only display a number if a user changes the state of a message.
+	\n, 3 size 1 \n, ..., or  1 size timestamp msgstate \n, 2 size timestamp msgstate \n, 3 size time-
+	stamp msgstate \n, etcetera.
+	
+	This would be backward compatible with the POP mail protocol because it would only display a num-
+	ber if a user changes the state of a message. Also the client could retrieve and delete messages
+	using the ordinal / cardinal numbers or the time stamps. If multiple users want to retrieve and
+	delete the same messages simultaneously they would have to use a newer POP mail program that re-
+	trieves and deletes messages using the timestamps or message hashes.
 	
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
@@ -359,10 +381,11 @@
 	The ciphers in the public key class that have a many-to-one mapping of the private key X to the
 	public key Y may be unbreakable by classical and quantum computing because the solution is ambig-
 	uous and the private key X is only used once. Quantum computers are unable to solve math problems
-	that have ambiguous solutions because they wouldn't know which solution to solve for. Even if the
-	solution is unambiguous, it doesn't mean that a quantum computer can solve it; there has to be an
-	algorithm or method for solving it, or the same private key X would have to be used more than once
-	with a different public parameter A such as Y1 = A1 X and Y2 = A2 X.
+	that have ambiguous solutions because they wouldn't know which solution to solve for. This is why
+	a quantum computer can only attack the factorization problem by solving the discrete log problem.
+	Even if the solution is unambiguous, it doesn't mean that a quantum computer can solve it; there
+	has to be an algorithm or method for solving it, or the same private key X would have to be used
+	more than once with a different public parameter A such as Y1 = A1 X and Y2 = A2 X.
 	
 	Encryption ciphers are not used in the software because they have a one-to-one mapping (function)
 	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-
@@ -403,10 +426,11 @@
 	computing. The Rabin cipher can never be broken because factorization will always be harder than
 	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
 	rithm is O(n^3) multi-precision multiplications or O(n^4.58) single-precision multiplications or op-
-	erations. A 1 M bit key would only require O(1) == O(n^0) multi-precision multiplications or O(n^
-	1.58) single-precision multiplications for encryption. (No key size is secure for RSA because the
-	coprime root extraction problem is completely broken. This means that the function can be inverted
-	as fast as it can be computed.)
+	erations. The fastest algorithm could not be faster than prime number generation which requires O(
+	n^4) or O(n^3.58) operations. A 1 M bit key would only require O(1) == O(n^0) multi-precision multi-
+	plications or O(n^1.58 == log2(3) == log(3)/log(2)) single-precision multiplications for encryption.
+	(No key size is secure for RSA because the coprime root extraction problem is completely broken.
+	This means that the function can be inverted as fast as it can be computed.)
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
@@ -414,7 +438,9 @@
 	stead of log extraction. The integer digital signature algorithm is based on the discrete log problem
 	or dlp because it uses one equation for the static signature key y = a ^ x (mod p), another equation
 	for the one-time signature key r = a ^ k (mod p), and a third equation for the signature s = k m +
-	x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
+	x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus. This signature algorithm
+	is also not secure because the integer discrete log problem is just as broken as the integer factor-
+	ization problem.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
