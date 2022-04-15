@@ -17,18 +17,19 @@
 	a document called "How to use pop mail" which explains how to use the program.
 	
 	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
-	lows multiple users synchronous access to an email account from different computers which is useful
-	for some companies or organizations that have to reply to large numbers of emails because POP mail
-	accounts can only be accessed from one device at a time.
+	lows multiple users to access to an email account from different computers which is useful for some
+	companies or organizations that have to reply to large numbers of emails. POP mail also allows mult-
+	iple users to access an email account if none of the users deletes the new messages or only the old
+	messages are deleted by one of the users.
 	
-	Imap also allows users to change the state of the messages on the server, but the POP mail protocol
-	could be amended or the email servers could be upgraded to include this feature. POP mail servers
-	could also be upgraded to allow multiple users to retrieve and delete emails by assigning to each
-	message a hash or time stamp in milliseconds so that the retrieve and delete commands could use the
-	number assigned to the messages instead of the ordinal / cardinal numbers. Otherwise if two users
-	list the emails and then simultaneously try to delete the same message using the ordinal number,
-	the second user will delete the next consecutive message in the list, and the email messages on the
-	clients' computers will not correspond to messages on the server computer.
+	Imap allows users to change the state of the messages on the server, but the POP mail protocol could
+	be amended or the email servers could be upgraded to include this feature. POP mail servers could
+	also be upgraded to allow multiple users to retrieve and delete emails by assigning a hash or time
+	stamp to each message so that the retrieve and delete commands could use the number assigned to the
+	messages instead of the ordinal / cardinal numbers. Otherwise if multiple users list the emails and
+	try to delete messages using the ordinal numbers, the email messages on the clients' computers will
+	not correspond to messages on the server computer because the messages get re-numbered on the server
+	every time one of the users deletes a message and signs out.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -101,15 +102,18 @@
 	opens only one dialog box even if the user clicks more than once on the view saved emails menu item;
 	a few deprecated methods such as frame.pack() and filechooser.showDialog() were replaced even though
 	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
-	the find class was modified so that it doesn't show the number of occurences for an empty string;
+	the find class was modified so that it doesn't show the number of occurrences for an empty string;
 	
 	the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was mod-
 	ified so that the modal variable is set to false so the constructor doesn't block and the program
 	can use the object returned by the constructor to set the font, color, and other variables, and then
 	the modality is changed to true by the readPassphrase and readDialog methods so that the dialog.set
 	Visible method blocks until the user clicks the ok button and the passphrase size and email address
-	are validated; and the file detection was corrected so that the program correctly displays html doc-
-	uments instead of trying to display them as image files which caused the dialog frame to collapse.
+	are validated; the document / file type detection was corrected so the program correctly displays
+	html documents instead of trying to display them as image files which caused the dialog frame to
+	collapse; and the hyperactive class was modified to copy the url address to the clipboard so the
+	user can copy and paste the address into a web browser if an email provider like yandex sends mes-
+	sages to clients using html that has hyperlinks.
 	
 	
 	

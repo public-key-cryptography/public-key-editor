@@ -47,18 +47,19 @@
 	a document called "How to use pop mail" which explains how to use the program.
 	
 	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
-	lows multiple users synchronous access to an email account from different computers which is useful
-	for some companies or organizations that have to reply to large numbers of emails because POP mail
-	accounts can only be accessed from one device at a time.
+	lows multiple users to access to an email account from different computers which is useful for some
+	companies or organizations that have to reply to large numbers of emails. POP mail also allows mult-
+	iple users to access an email account if none of the users deletes the new messages or only the old
+	messages are deleted by one of the users.
 	
-	Imap also allows users to change the state of the messages on the server, but the POP mail protocol
-	could be amended or the email servers could be upgraded to include this feature. POP mail servers
-	could also be upgraded to allow multiple users to retrieve and delete emails by assigning to each
-	message a hash or time stamp in milliseconds so that the retrieve and delete commands could use the
-	number assigned to the messages instead of the ordinal / cardinal numbers. Otherwise if two users
-	list the emails and then simultaneously try to delete the same message using the ordinal number,
-	the second user will delete the next consecutive message in the list, and the email messages on the
-	clients' computers will not correspond to messages on the server computer.
+	Imap allows users to change the state of the messages on the server, but the POP mail protocol could
+	be amended or the email servers could be upgraded to include this feature. POP mail servers could
+	also be upgraded to allow multiple users to retrieve and delete emails by assigning a hash or time
+	stamp to each message so that the retrieve and delete commands could use the number assigned to the
+	messages instead of the ordinal / cardinal numbers. Otherwise if multiple users list the emails and
+	try to delete messages using the ordinal numbers, the email messages on the clients' computers will
+	not correspond to messages on the server computer because the messages get re-numbered on the server
+	every time one of the users deletes a message and signs out.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -131,15 +132,18 @@
 	opens only one dialog box even if the user clicks more than once on the view saved emails menu item;
 	a few deprecated methods such as frame.pack() and filechooser.showDialog() were replaced even though
 	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
-	the find class was modified so that it doesn't show the number of occurences for an empty string;
+	the find class was modified so that it doesn't show the number of occurrences for an empty string;
 	
 	the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was mod-
 	ified so that the modal variable is set to false so the constructor doesn't block and the program
 	can use the object returned by the constructor to set the font, color, and other variables, and then
 	the modality is changed to true by the readPassphrase and readDialog methods so that the dialog.set
 	Visible method blocks until the user clicks the ok button and the passphrase size and email address
-	are validated; and the file detection was corrected so that the program correctly displays html doc-
-	uments instead of trying to display them as image files which caused the dialog frame to collapse.
+	are validated; the document / file type detection was corrected so the program correctly displays
+	html documents instead of trying to display them as image files which caused the dialog frame to
+	collapse; and the hyperactive class was modified to copy the url address to the clipboard so the
+	user can copy and paste the address into a web browser if an email provider like yandex sends mes-
+	sages to clients using html that has hyperlinks.
 	
 	
 	
@@ -1875,9 +1879,18 @@ class __
 		"the caret / cursor is over the image. (If you don't have a mouse you can use the " +
 		"arrow keys to change the image size.)\n\n" +
 		
-		"A few unencrypted and undecryptable messages are included to test the mail pro" +
-		"gram because some messages may be sent unencrypted or may be encrypted to the " +
-		"wrong public key.\n\n" +
+		"If the (decrypted or unencrypted) message starts with a line that has the word " +
+		"HTML or html in it, a popup window will display the document. If the html document " +
+		"contains a hypertext link, clicking on the link prints the url address in the term" +
+		"inal and copies it to the clipboard so you can paste the address into a web browser. " +
+		"(In future versions it may open an html editor and connect to the address in the " +
+		"hyperlink if the user enables this feature.) Note that if you save the file the Html " +
+		"Viewer will not open files that do not end with the suffix .html or .htm just as the " +
+		"Table Editor will not open files that do not have the suffix .csv)\n\n" +
+		
+		"A few unencrypted and undecryptable messages are included to test the mail program " +
+		"because some messages may be sent unencrypted or may be encrypted to the wrong " +
+		"public key.\n\n" +
 		
 		"A few self-addressed emails are also included to test the mail program because " +
 		"the mail program can send a duplicate copy of your messages to your email ad" +
@@ -14932,8 +14945,8 @@ class Programs
 					    rows[0] + i, cols[0] + j);
 				}
 				
-				//  Convert the cell values to string
-				//  and copy to clipboard
+				//  Convert the cell values to string and copy the
+				//  tab / character-separated values to clipboard
 				
 				StringBuilder sb = new StringBuilder();
 				
@@ -19729,45 +19742,6 @@ class Programs
 		
 		
 		
-		
-		
-		//  The Hyperactive class is excerpted from the Java documentation for JEditorPane.java
-		
-		private class Hyperactive implements HyperlinkListener
-		{
-			public void hyperlinkUpdate(HyperlinkEvent e)
-			{
-				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
-				{
-					JEditorPane pane = (JEditorPane) e.getSource();
-					
-					if (e instanceof HTMLFrameHyperlinkEvent)
-					{
-						HTMLFrameHyperlinkEvent  evt = (HTMLFrameHyperlinkEvent) e;
-						
-						HTMLDocument doc = (HTMLDocument) pane.getDocument();
-						
-						doc.processHTMLFrameHyperlinkEvent(evt);
-					}
-					
-					else
-					{	URL url = e.getURL();
-						
-						if (url != null)
-						{
-							System.out.println(url);
-							
-							try { pane.setPage(url); }
-							
-							catch (Throwable t)
-							{
-								t.printStackTrace();
-							}
-						}
-					}
-				}
-			}
-		}
 		
 		
 		
@@ -31510,11 +31484,11 @@ class Programs
 				    filedesc = filedesc .substring(0, maxdesclength);
 				
 				
-				//  Determine if the file is a text document,
-				//  an image, or an html document
+				//  Determine if the file is a text / html document
+				//  or an image file (document / file type detection)
 				
 				
-				//  Test if the data contains text
+				//  Test if the text contains defined characters
 				
 				final String filetext = new String(filedata);
 				
@@ -31526,8 +31500,10 @@ class Programs
 				
 				    if (!Character.isDefined(c))
 				
-					text = false;
+					{ text = false;  break; }
 				
+				
+				//  Test if the text starts with <! and contains the word html or htm
 				
 				if (filetext.startsWith("<") || filetext.startsWith("<!"))
 				{
@@ -31535,13 +31511,14 @@ class Programs
 					
 					if (index != 0)
 					{
-						String substr = filetext.substring(0, index).toLowerCase();
+						String s = filetext.substring(0, index).toLowerCase();
 						
-						if (substr.contains("html") || substr.contains("doctype"))
-						
-						    html = true;
+						if (s.contains("html") || s.contains("doctype")) html = true;
 					}
 				}
+				
+				
+				//  Test if the text contains character-separated values
 				
 				if (isCSV(filetext))
 				{
@@ -31572,20 +31549,13 @@ class Programs
 				}
 				
 				
-				//  If the document is html open an editor
-				//  pane to show the html document
-				
 				//  If the document is text open a text area
-				//  to display the text document
-				
-				//  If the document is a csv file open a
-				//  table editor to display the table
+				//  If the document is html open an editor pane
+				//  If the document is csv open a table editor
 				
 				
 				if (text) // Display the text document
 				{
-					System.out.println("text document");
-					
 					if (!emailpanel.reverse_colors)
 					
 					    Documents .display(frame, filedesc, filetext,
@@ -31602,8 +31572,6 @@ class Programs
 				else if (table)
 				{
 					//  Open a table editor to display the table
-					
-					System.out.println("table document");
 					
 					tableframe = new Programs() .new TableFrame();
 					
@@ -31640,8 +31608,6 @@ class Programs
 				else // if (image)
 				{
 					//  Display the image
-					
-					System.out.println("image document");
 					
 					new Icons() .display(frame, filedesc, filedata);
 				}
@@ -44737,6 +44703,58 @@ class SendMail
 
 
 
+//  The Hyperactive class is excerpted from the
+//  Java source code jdk/jdk-xx/lib/src.zip
+
+class Hyperactive implements HyperlinkListener
+{
+	public void hyperlinkUpdate(HyperlinkEvent e)
+	{
+		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
+		{
+			JEditorPane pane = (JEditorPane) e.getSource();
+			
+			if (e instanceof HTMLFrameHyperlinkEvent)
+			{
+				HTMLFrameHyperlinkEvent  evt = (HTMLFrameHyperlinkEvent) e;
+				
+				HTMLDocument doc = (HTMLDocument) pane.getDocument();
+				
+				doc.processHTMLFrameHyperlinkEvent(evt);
+			}
+			
+			else
+			{	URL url = e.getURL();
+				
+				if (url != null)
+				{
+					System.out.println("url == " + url.toString());
+					
+					Clipboard cb = Toolkit.getDefaultToolkit() .getSystemClipboard();
+					
+					cb.setContents(new StringSelection(url.toString()), null);
+					
+					if (false) // if hyperlinks are enabled by the user
+					{
+						//  Open an html viewer if the
+						//  url starts with https://...
+						//
+						//  ...    ...
+					}
+					
+					//  try { pane.setPage(url); }
+					//
+					//  catch (IOException ex)
+					//  {
+					// 	ex.printStackTrace();
+					//  }
+				}
+			}
+		}
+	}
+}
+
+
 
 
 
@@ -46087,6 +46105,8 @@ class Documents
 		};
 		
 		editorpane.addKeyListener(closelistener);
+		
+		editorpane.addHyperlinkListener(new Hyperactive());
 		
 		dialog.setDefaultCloseOperation(
 		
@@ -50754,6 +50774,10 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		Dimension newsize = getPreferredSize();
 		this.setSize(newsize.width, newsize.height);
 		
+		if ((passphrasefield == null) || passphrasefield.isVisible())
+		
+		     passphrasearea.requestFocusInWindow();
+		
 		//  The frame visibility has to be set to false
 		//  and then to true for the method to block
 		
@@ -52629,24 +52653,6 @@ class PublicKey
 		str = str.trim().replaceAll("[\t ]", "");
 		
 		String publickey = "", email = "";
-		
-		
-		//  An example of a public key document
-		//  delimited by newline characters
-		
-		
-		//  -------------- Public Key --------------
-		//
-		//  address@example.com
-		//
-		//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-		//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-		//
-		//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-		//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-		//  xxxxxxxxxxxxxxxxxxxx
-		//
-		//  ----------------------------------------
 		
 		
 		//  Create an array of strings
