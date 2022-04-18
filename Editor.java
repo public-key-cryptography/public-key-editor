@@ -46125,6 +46125,8 @@ class Documents
 			}
 		};
 		
+		editorpane.setCaretPosition(0);
+		
 		editorpane.addKeyListener(closelistener);
 		
 		editorpane.addHyperlinkListener(new Hyperactive());
@@ -46137,10 +46139,26 @@ class Documents
 		
 		dialog.setTitle(title);
 		
-		dialog.setLocationRelativeTo(frame);
+		dialog.setSize(dialog.getPreferredSize());
 		
-		dialog.setPreferredSize(
-		dialog.getPreferredSize());
+		//  Center the dialog in the parent frame
+		
+		Point p = frame.getLocation();
+		
+		int xpos = p.x, ypos = p.y;
+		
+		 width = frame.getWidth();
+		height = frame.getHeight();
+		
+		int  width1 = dialog.getWidth();
+		int height1 = dialog.getHeight();
+		
+		int x2pos = xpos +  width/2 -  width1/2;
+		int y2pos = ypos + height/2 - height1/2;
+		
+		dialog.setLocation(x2pos, y2pos);
+		
+		dialog.setSize(dialog.getPreferredSize());
 		
 		dialog.setVisible(true);
 		
