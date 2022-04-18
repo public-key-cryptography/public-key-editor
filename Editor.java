@@ -50,16 +50,17 @@
 	lows multiple users to access to an email account from different computers which is useful for some
 	companies or organizations that have to reply to large numbers of emails. POP mail also allows mult-
 	iple users to access an email account if none of the users deletes the new messages or only the old
-	messages are deleted by one of the users.
+	messages are deleted.
 	
 	Imap allows users to change the state of the messages on the server, but the POP mail protocol could
 	be amended or the email servers could be upgraded to include this feature. POP mail servers could
-	also be upgraded to allow multiple users to retrieve and delete emails by assigning a hash or time
-	stamp to each message so that the retrieve and delete commands could use the number assigned to the
-	messages instead of the ordinal / cardinal numbers. Otherwise if multiple users list the emails and
-	try to delete messages using the ordinal numbers, the email messages on the clients' computers will
-	not correspond to messages on the server computer because the messages get re-numbered on the server
-	every time one of the users deletes a message and signs out.
+	also be upgraded to allow multiple users to retrieve and delete emails by assigning a hash value or
+	time stamp to each message so that the retrieve and delete commands could use the number assigned to
+	the messages instead of the ordinal / cardinal numbers that are used to enumerate the messages.
+	Otherwise if multiple users list the emails and try to delete messages using the ordinal numbers,
+	the email messages on the clients' computers will not correspond to messages on the server computer
+	because the messages get re-numbered every time one of the users deletes a message and signs out,
+	and the wrong messages will get deleted or retrieved.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -114,7 +115,7 @@
 	gram becomes unresponsive or the wifi loses its connection it will end the program in a few seconds
 	so the user doesn't have to close the terminal or open the System monitor to find and terminate the
 	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded da-
-	ta with a base-16 separator to make it base-64; the public key ciphers were rearranged; errors in
+	ta with a base-16 separator to make it base 64; the public key ciphers were rearranged; errors in
 	the readMessage method were corrected so that the messages and attached files are detached and dis-
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
 	the decryption method removes the padding / space chars appended to the message; the SavedEmails
@@ -122,7 +123,7 @@
 	tached files and edit the messages; the mail class was modified to save the message states in the
 	user's mail directory by clicking on the message icons; an icon / font size error was corrected; a
 	file description error was corrected that caused the delete attached files to display the file de-
-	scriptions in base-64 for unencrypted emails; a passphrase substring error was corrected in the mail
+	scriptions in base 64 for unencrypted emails; a passphrase substring error was corrected in the mail
 	class; the sendmailframe font size was adjusted to make it the same size as the retrievemail frame
 	font size and a line of code was removed from the mouse wheel listener that changed the size of the
 	frame instead of the font if the control button was pressed and the mouse wheel was scrolled; an
@@ -130,20 +131,26 @@
 	the sender's from address to the saved messages even if they have attached files; the ViewSaved-
 	EmailsListener class was modified so that it creates only one instance of the SavedEmails class or
 	opens only one dialog box even if the user clicks more than once on the view saved emails menu item;
-	a few deprecated methods such as frame.pack() and filechooser.showDialog() were replaced even though
+	a few deprecated methods such as Frame pack() and Filechooser showDialog() were replaced even though
 	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
 	the find class was modified so that it doesn't show the number of occurrences for an empty string;
+	an error that caused the message states to reset to the unread state when a message was deleted was
+	corrected; the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code
+	was modified so that the modal variable is set to false so the constructor doesn't block and the pro-
+	gram can use the object returned by the constructor to set the font, color, and other variables, and
+	then the modality is changed to true by the readPassphrase and readDialog methods so that the Dialog
+	setVisible method blocks until the user clicks the ok button and the passphrase size and email address
+	are validated; the document / file type detection was corrected so the program correctly displays html
+	documents instead of trying to display them as image files which caused the dialog frame to collapse;
 	
-	the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was mod-
-	ified so that the modal variable is set to false so the constructor doesn't block and the program
-	can use the object returned by the constructor to set the font, color, and other variables, and then
-	the modality is changed to true by the readPassphrase and readDialog methods so that the dialog.set
-	Visible method blocks until the user clicks the ok button and the passphrase size and email address
-	are validated; the document / file type detection was corrected so the program correctly displays
-	html documents instead of trying to display them as image files which caused the dialog frame to
-	collapse; and the hyperactive class was modified to copy the url address to the clipboard so the
-	user can copy and paste the address into a web browser if an email provider like yandex sends mes-
-	sages to clients using html that has hyperlinks.
+	the hyperactive class was modified to copy the url address to the clipboard so the user can copy and
+	paste the address into a web browser if an email provider like yandex sends messages to clients using
+	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
+	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
+	for the unselected tabs or panels; the SavedEmails variable or object was moved from the RetrieveMail-
+	Frame class to the EmailPanel so that different email tabs have separate saved emails; and the state-
+	Changed method for the RetrieveMailFrame was modified to show and hide the saved emails frames for
+	different usernames or email panels if the selected tab is changed.
 	
 	
 	
@@ -480,10 +487,10 @@
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
-	periodicity. In addition, the complexity of elliptic curves makes the ciphers vulnerable to attack
-	without solving the ecdlp or underlying math problem if the parameters a, b, and p are not chosen
-	correctly, and nobody knows how to choose the parameters of the curves to protect against all un-
-	known attacks.
+	periodicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic
+	curves makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem
+	if the parameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters
+	of the curves to protect against all unknown attacks.
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included
 	in the public key class because they are not secure for any key size.
@@ -1502,11 +1509,8 @@ class __
 	    + "file will be encrypted to recipient's key",
 	
 	fileisnotattached1 = "File is not attached because it was not decrypted",
-	fileisnotattached2 =
-	
-	    "If you want to send an encrypted file without decrypting it, use the\n" +
-	    "Private Key Encryption menu item and then the program will ignore the\n" +
-	    "encryption because the ciphertext or cipherdata will not be formatted.",
+	fileisnotattached2 = "The file has to be decrypted before encrypting it\n" +
+	                     "to the recipient's public key",
 	
 	errorsendingpublickey =
 	
@@ -5315,7 +5319,6 @@ class Programs
 					
 					findreplacelabel.addMouseListener(new MouseListener()
 					{
-					
 						public void mouseClicked(MouseEvent e)
 						{
 							if (findreplacelabel.getText().equals(__.Find))
@@ -5341,7 +5344,6 @@ class Programs
 					
 					closearea.addMouseListener(new MouseListener()
 					{
-					
 						public void mouseEntered(MouseEvent e)
 						{
 							closearea.setText(new String(
@@ -21842,7 +21844,7 @@ class Programs
 				{
 					if (e.getSource() instanceof JFrame)
 					{
-						fontsize = frameSizeToFontSize(frame) - 3;
+						fontsize = frameSizeToFontSize(frame) - 2;
 						
 						font = font.deriveFont(fontsize);
 						
@@ -21857,7 +21859,7 @@ class Programs
 			private boolean readRecipientsKey(Object e)
 			{
 			
-				//  reads the recipient's key from the clipboard and
+				//  Reads the recipient's key from the clipboard and
 				//  sets the public key icon to visible (or !visible)
 				//  if the key name matches (or !matches) the to field
 				
@@ -22447,9 +22449,9 @@ class Programs
 						{
 						
 							//  Use the recipient's POP mail server to retrieve the recipient's
-							//  public key. (The email service providers should upgrade their
-							//  POP mail servers to store and retrieve users' public keys.
-							//  
+							//  public key if email service providers upgrade their POP mail
+							//  servers to store and retrieve users' public keys.
+							//
 							//  Retrieving the recipient's public key would not require authen-
 							//  tication but saving or storing the public key would require au-
 							//  thentication, because anyone can request a public key but only
@@ -25243,8 +25245,6 @@ class Programs
 			
 			private EmailPanel emailpanel;
 			
-			private SavedEmails savedemails;
-			
 			//  The pop3 window is used to display the
 			//  the pop3 client / server communication
 			
@@ -26730,6 +26730,11 @@ class Programs
 				private ListPanel listpanel;
 				
 				
+				//  An object to hold the saved emails
+				
+				private SavedEmails savedemails;
+				
+				
 				private JScrollPane popscrollpane;
 				
 				private JTextArea poptextarea;
@@ -27329,13 +27334,13 @@ class Programs
 					//  This line corrects for the bug. It sets the pop3window
 					//  to visible even if the window is already visible.
 					
-					if (pop3window.isVisible()) pop3window.setVisible(true);
+					if (pop3window.isVisible())
+					    pop3window.setVisible(true);
 					
 					emailpanel.poptextarea  .repaint();
 					emailpanel.popscrollpane.repaint();
 					
 					pop3window.repaint();
-					
 					
 					//  Show the send mail frames for the selected tabs and
 					//  hide the send mail frames for the non-selected tabs
@@ -27349,6 +27354,17 @@ class Programs
 						    tabbedpane.getComponentAt(i);
 						
 						if (emailpanel1 == null) continue;
+						
+						
+						//  the view saved emails frames
+						
+						if (emailpanel1.savedemails != null)
+						
+						if (emailpanel1.equals(emailpanel))
+						
+						     emailpanel1.savedemails.setVisible(true);
+						else emailpanel1.savedemails.setVisible(false);
+						
 						
 						//  the reply send mail frames
 						
@@ -27387,7 +27403,7 @@ class Programs
 						//  at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
 						//  at java.base/java.util.ArrayList$Itr.next(ArrayList.java:967)
 						//  at Programs$Mail$RetrieveMailFrame$ChangeListener1.stateChanged(Editor.java:27650)
-						//  
+						//
 						//  This line throws an exception every time two email addresses (tabs) are open and
 						//  the user clicks the right tab and opens a non-reply frame, clicks the left tab
 						//  and opens a non-reply frame, clicks the right tab and closes the non-reply frame,
@@ -27981,16 +27997,12 @@ class Programs
 					replylabel2.addMouseListener(replymouselistener);
 					
 					addressarea.addMouseListener(new MouseAdapter()
-					{
-						public void mouseClicked(MouseEvent e)
-						
-						    { checkbox.setSelected(!checkbox.isSelected()); }
-					});
+					{ public void mouseClicked(MouseEvent e)
+					{ checkbox.setSelected(!checkbox.isSelected()); } });
 					
 					replylabel1.setToolTipText(__.click);
 					replylabel2.setToolTipText(__.click);
 					addressarea.setToolTipText(__.click);
-					
 					
 					Box hbox1 = Box.createHorizontalBox();
 					Box hbox2 = Box.createHorizontalBox();
@@ -28004,7 +28016,6 @@ class Programs
 					JButton replykeybutton = new JButton();
 					//  replykeybutton.setEnabled(false);
 					replykeybutton.add(replylabel1);
-					
 					
 					replykeybutton.setFont(labelfont);
 					replylabel1.setFont(labelfont);
@@ -28184,9 +28195,9 @@ class Programs
 						
 						if ((username == null) || username.isEmpty()) continue;
 						
-						SavedEmails savedemails = new SavedEmails(username);
+						emailpanel.savedemails = new SavedEmails(username);
 						
-						if (!savedemails.isDecryptable(SP))
+						if (!emailpanel.savedemails.isDecryptable(SP))
 						{
 							//  Display a JOptionPane to warn the user that the
 							//  saved emails are undecryptable and to prompt the user
@@ -28253,11 +28264,15 @@ class Programs
 							
 							newpassphrase = SP;
 							
-							if (!oldpassphrase.isEmpty() && savedemails.isDecryptable(oldpassphrase))
+							if (!oldpassphrase.isEmpty() && emailpanel
+							
+							    .savedemails.isDecryptable(oldpassphrase))
 							{
 								//  Re-encrypt the saved messages
 								
-								savedemails.reencryptFiles(oldpassphrase, newpassphrase);
+								emailpanel.savedemails.reencryptFiles(
+								
+								    oldpassphrase, newpassphrase);
 								
 								//  Delete or rename the usernames file
 								
@@ -29217,12 +29232,12 @@ class Programs
 					emailpanel.foreground = color;
 					emailpanel.caretcolor = color;
 					
-					if (savedemails != null)
+					if (emailpanel.savedemails != null)
 					{
-						savedemails.setReverseColors(
+						emailpanel.savedemails.setReverseColors(
 						    emailpanel.reverse_colors);
 						
-						savedemails.setForeground(color);
+						emailpanel.savedemails.setForeground(color);
 					}
 				}
 				
@@ -29306,12 +29321,12 @@ class Programs
 					
 					emailpanel.background = color;
 					
-					if (savedemails != null)
+					if (emailpanel.savedemails != null)
 					{
-						savedemails.setReverseColors(
+						emailpanel.savedemails.setReverseColors(
 						    emailpanel.reverse_colors);
 						
-						savedemails.setBackground(color);
+						emailpanel.savedemails.setBackground(color);
 					}
 				}
 				
@@ -29625,7 +29640,6 @@ class Programs
 			
 				private ArrayList<JTextField> textfieldlist;
 				
-				
 				public void actionPerformed(ActionEvent e)
 				{
 					listPublicKeys();
@@ -29634,7 +29648,6 @@ class Programs
 				
 				private void listPublicKeys()
 				{
-				
 					//  creates and displays a dialog box that en-
 					//  ables the user to view / delete public keys
 					
@@ -29696,23 +29709,17 @@ class Programs
 					
 					
 					deletebutton.addActionListener(new ActionListener()
-					{
-						public void actionPerformed(ActionEvent e)
-						{
-							int choice = list.getSelectedIndex();
-							
-							if (choice == -1) return;
-							
-							   emailmodel.remove(choice);
-							publickeyring.remove(choice);
-						}
-					});
+					{  public void actionPerformed(ActionEvent e)
+					{  int choice = list.getSelectedIndex();
+					   if (choice == -1) return;
+					      emailmodel.remove(choice);
+					   publickeyring.remove(choice);
+					} });
 					
 					
 					Box vbox = Box.createVerticalBox();
 					
 					vbox.add(hbox);
-					
 					
 					list         .setFont(font);
 					scrollpane   .setFont(font);
@@ -29720,11 +29727,9 @@ class Programs
 					
 					deletebutton .setToolTipText(__.shiftarrow);
 					
-					
 					JPanel panel1 = new JPanel();
 					
 					panel1.add(hbox);
-					
 					
 					String title = __.recipientspublickeys;
 					
@@ -29841,8 +29846,9 @@ class Programs
 			
 			private void setFont1(Font font)
 			{
-				//  changes the font for the retrievemailframe (and for the
-				//  sendmailframes that were opened from the retrievemailframe)
+				//  changes the font for the retrievemailframe
+				//  (and the sendmailframes that were opened
+				//  from the retrievemailframe)
 				
 				this.font = font;
 				
@@ -29910,7 +29916,6 @@ class Programs
 						sendmailframe.setFont1(font);
 					
 					
-					
 					//  Scale the button icon sizes and button
 					//  text sizes for the retrieve mail frame
 					
@@ -29959,61 +29964,61 @@ class Programs
 						
 						emailpanel1.buttons[j].setIcon(scaledicon);
 					}
-				}
-				
-				
-				//  Scale the icon panel sizes for the retrieve mail frame
-				
-				if (emailpanel != null)
-				
-				for (int i = 0; i < emailpanel.iconbuttons.length; i++)
-				{
-					//  Read the original image so the
-					//  icon doesn't get distorted
 					
-					if (emailpanel.imageicons[i] == null) continue;
 					
-					Image image = emailpanel.imageicons[i].getImage();
+					//  Scale the icon panel sizes for the retrieve mail frame
 					
-					//  Scale the icons to the frame size and font size
+					if (emailpanel != null)
 					
-					double q = 1.0D * framearea / screenarea;
-					
-					double sqrt = Math.sqrt(q);
-					
-					int width = (int) (16 + 24 * sqrt);
-					
-					//  Set the max and min icon sizes
-					
-					if (width > maxiconsize) width = maxiconsize;
-					if (width < miniconsize) width = miniconsize;
-					
-					//  Scale the icon size to the font size
-					
-					//  (the icon size can exceed the maxicon
-					//  size for the font, not the frame area)
-					
-					double fontsize = 1.1D * font.getSize();
-					
-					width = (int) (width * fontsize / defaultfontsize);
-					
-					if (width == 0) width = 1;
-					
-					int height = -1, hints = Image.SCALE_SMOOTH;
-					
-					image = image.getScaledInstance(width, height, hints);
-					
-					ImageIcon scaledicon = new ImageIcon(image);
-					
-					emailpanel.iconbuttons[i].setIcon(scaledicon);
+					for (int j = 0; j < emailpanel1.iconbuttons.length; j++)
+					{
+						//  Read the original image so the
+						//  icon doesn't get distorted
+						
+						if (emailpanel1.imageicons[j] == null) continue;
+						
+						Image image = emailpanel1.imageicons[j].getImage();
+						
+						//  Scale the icons to the frame size and font size
+						
+						double q = 1.0D * framearea / screenarea;
+						
+						double sqrt = Math.sqrt(q);
+						
+						int width = (int) (16 + 24 * sqrt);
+						
+						//  Set the max and min icon sizes
+						
+						if (width > maxiconsize) width = maxiconsize;
+						if (width < miniconsize) width = miniconsize;
+						
+						//  Scale the icon size to the font size
+						
+						//  (the icon size can exceed the maxicon
+						//  size for the font, not the frame area)
+						
+						double fontsize = 1.1D * font.getSize();
+						
+						width = (int) (width * fontsize / defaultfontsize);
+						
+						if (width == 0) width = 1;
+						
+						int height = -1, hints = Image.SCALE_SMOOTH;
+						
+						image = image.getScaledInstance(width, height, hints);
+						
+						ImageIcon scaledicon = new ImageIcon(image);
+						
+						emailpanel1.iconbuttons[j].setIcon(scaledicon);
+					}
 				}
 				
 				
 				//  Set the font
 				
-				if (savedemails != null)
+				if (emailpanel.savedemails != null)
 				
-				    savedemails.setFont(font);
+				    emailpanel.savedemails.setFont(font);
 				
 				tabbedpane.setFont(font.deriveFont(
 				
@@ -30196,19 +30201,19 @@ class Programs
 							
 							if ((message != null) && !message.isEmpty())
 							{
-								SavedEmails savedemails = new
+								emailpanel.savedemails = new
 								
 								    SavedEmails(emailpanel.username);
 								
 								if (numberoffiles == 0)
 								
-								    savedemails.saveMessage(message, null, from);
+								    emailpanel.savedemails.saveMessage(message, null, from);
 								
 								else // save the message and files (file text)
 								{
 									String filetext = emailpanel.list1.getFileText(msno);
 									
-									savedemails.saveMessage(message, filetext, from);
+									emailpanel.savedemails.saveMessage(message, filetext, from);
 								}
 							}
 						}
@@ -31609,7 +31614,7 @@ class Programs
 				{
 					//  Display the image
 					
-					new Icons() .display(frame, filedesc, filedata);
+					Icons .display(frame, filedesc, filedata);
 				}
 			}
 			
@@ -34058,15 +34063,15 @@ class Programs
 					
 					    (emailpanel.username == null)) return;
 					
-					if (savedemails == null)
+					if (emailpanel.savedemails == null)
 					
-					    savedemails = new SavedEmails(emailpanel.username);
+					    emailpanel.savedemails = new SavedEmails(emailpanel.username);
 					
-					savedemails.setForeground(emailpanel.foreground);
-					savedemails.setBackground(emailpanel.background);
-					savedemails.setReverseColors(emailpanel.reverse_colors);
+					emailpanel.savedemails.setForeground(emailpanel.foreground);
+					emailpanel.savedemails.setBackground(emailpanel.background);
+					emailpanel.savedemails.setReverseColors(emailpanel.reverse_colors);
 					
-					savedemails.viewSavedEmails();
+					emailpanel.savedemails.viewSavedEmails();
 				}
 			}
 			
@@ -34699,11 +34704,15 @@ class Programs
 					if ((dialog == null) || (textareas == null)) return;
 					
 					for (JTextArea textarea : textareas)
-					
-					    if (!reverse_colors)
-					
-						 textarea.setForeground(color);
-					    else textarea.setBackground(color);
+					{
+						if (!reverse_colors)
+						{
+						     textarea.setForeground(color);
+						     textarea.setCaretColor(textarea.getForeground());
+						}
+						
+						else textarea.setBackground(color);
+					}
 				}
 				
 				public void setBackground(Color color)
@@ -34713,11 +34722,14 @@ class Programs
 					if ((dialog == null) || (textareas == null)) return;
 					
 					for (JTextArea textarea : textareas)
-					
-					    if (!reverse_colors)
-					
-						 textarea.setBackground(color);
-					    else textarea.setForeground(color);
+					{
+						if (!reverse_colors) textarea.setBackground(color);
+						
+						else
+						{	textarea.setForeground(color);
+							textarea.setCaretColor(textarea.getForeground());
+						}
+					}
 				}
 				
 				
@@ -34732,6 +34744,14 @@ class Programs
 					findfield.setFont(font);
 					
 					dialog.setSize(dialog.getPreferredSize());
+				}
+				
+				
+				public void setVisible(boolean bool)
+				{
+					if (dialog != null)
+					
+					    dialog.setVisible(bool);
 				}
 				
 				
@@ -37135,7 +37155,7 @@ class Programs
 					{
 					
 						//  Reset the readmailsettings
-						//  
+						//
 						//  The readmailsettings variable is used so that the
 						//  passphrase / settings dialog only reads the settings
 						//  once or else the user would be unable to change any
@@ -40000,11 +40020,11 @@ class EncryptDirectory
 {
 
 
-	//  The user could also have the option to convert the directory to
-	//  a tar file, but if this option is used to encrypt and decrypt
+	//  The user could have the option to convert the directory to a
+	//  tar file, but if this option is used to encrypt and decrypt
 	//  the directory, then the encryption is not parallelizable, and
 	//  the entire directory has to be decrypted just to read one file.
-	//  
+	//
 	//  If the user opens an encrypted file, the program sets the title
 	//  of the frame to the decrypted file name but does not rename the
 	//  file unless the user decrypts the file using the decrypt file or
@@ -43595,6 +43615,7 @@ class PopMail
 	{
 		//  returns a list of messages
 		
+		
 		//  Return a local copy of array until the user logs out
 		
 		if (this.array != null)  return array;
@@ -43617,7 +43638,7 @@ class PopMail
 			
 			//  This line causes the program to terminate
 			//  a few seconds after the user clicks quit
-			// 
+			//
 			//  if (true) try { Thread.sleep(1024*1024); }
 			//  catch (InterruptedException ex) {  }
 			
@@ -46118,7 +46139,8 @@ class Documents
 		
 		dialog.setLocationRelativeTo(frame);
 		
-		dialog.pack();
+		dialog.setPreferredSize(
+		dialog.getPreferredSize());
 		
 		dialog.setVisible(true);
 		
@@ -47970,7 +47992,7 @@ class Icons
 	
 	
 	
-	private class MouseWheelListener1 implements MouseWheelListener
+	private static class MouseWheelListener1 implements MouseWheelListener
 	{
 		private JDialog dialog;
 		
@@ -48101,7 +48123,7 @@ class Icons
 	
 	
 	
-	public void display(JFrame frame, String title, byte[] imagedata)
+	public static void display(JFrame frame, String title, byte[] imagedata)
 	{
 		//  displays an image in a JDialog frame
 		
@@ -49112,7 +49134,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	//  the internet and email uses public keys which can be
 	//  compared to a list of pre-computed public keys that
 	//  use weak passwords.
-	//  
+	//
 	//  Files require less security than email because files
 	//  use secret keys instead of public keys and files are
 	//  protected by the user's computer.
@@ -49261,10 +49283,10 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		
 		//           ______________________________
-		//          |   ________________________   |
-		//          |  |                        |  |
-		//          |  |                        |  |
-		//          |  |________________________|  |
+		//          |______________________________|
+		//          |                              |
+		//          |                              |
+		//          |______________________________|
 		//          |    0123 4567 89ab cdef       |
 		//          |             ____             |
 		//          |            |_OK_|            |
@@ -49272,51 +49294,51 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		
 		
-		//    ______________________________________________
-		//   |                                              |
-		//   |                   ________________________   |
-		//   | Secret passphrase|________________________|  |
-		//   |                  |                        |  |
-		//   |                  |________________________|  |
-		//   | My email address |________________________|  |
-		//   |                   0123 4567 89ab cdef        |
-		//   |                                          __  |
-		//   |   * double  o quad  o oct  o max cipher |40| |
-		//   |                     ____                     |
-		//   |                    |_OK_|                    |
-		//   |______________________________________________|
+		//    _____________________________________________________
+		//   |                                                     |
+		//   |                   __________________________________|
+		//   |    passphrase    |__________________________________|
+		//   |                  |                                  |
+		//   |                  |__________________________________|
+		//   | My email address |__________________________________|
+		//   |                   0123 4567 89ab cdef               |
+		//   |                                                  __ |
+		//   | number of ciphers 4 o quad  o oct  o max  width |40||
+		//   |                         ____                        |
+		//   |                        |_OK_|                       |
+		//   |_____________________________________________________|
 		
 		
 		
-		//    ______________________________________________
-		//   |                                              |
-		//   |                   ________________________   |
-		//   | Secret passphrase|________________________|  |
-		//   |                  |                        |  |
-		//   |                  |________________________|  |
-		//   | My email address |________________________|  |
-		//   |                   0123 4567 89ab cdef        |
-		//   |                     ____                     |
-		//   |                    |_OK_|                    |
-		//   |______________________________________________|
+		//    _____________________________________________________
+		//   |                                                     |
+		//   |                   __________________________________|
+		//   |    passphrase    |__________________________________|
+		//   |                  |                                  |
+		//   |                  |__________________________________|
+		//   | My email address |__________________________________|
+		//   |                   0123 4567 89ab cdef               |
+		//   |                           ____                      |
+		//   |                          |_OK_|                     |
+		//   |_____________________________________________________|
 		
 		
 		
-		//   0____________________10__________________________18_
-		//   |                      ___________________________  |
-		//   |                     |___________________________| |
-		//   |  Secret passphrase  |                           | |
-		//   |                     |___________________________| |
-		//   |                       0123 4567 89ab cdef         |
-		//   |                                                   |
-		//   |                      ___________________________  |
-		//   | Incoming mail server|_________________________|_| |
-		//   | Outgoing mail server|_________________________|_| |
-		//   | Mail directory      |_________________________|_| |
-		//   | Number of messages  |__________|_|____________|_| |
-		//   |                      ____                         |
-		//   |                     |_OK_|                        |
-		//   |___________________________________________________|
+		//    _____________________________________________________
+		//   |                      _______________________________|
+		//   |                     |_______________________________|
+		//   |  Secret passphrase  |                               |
+		//   |                     |_______________________________|
+		//   |                       0123 4567 89ab cdef           |
+		//   |                                                     |
+		//   |                      _______________________________|
+		//   | Incoming mail server|_____________________________|_|
+		//   | Outgoing mail server|_____________________________|_|
+		//   | Mail directory      |_____________________________|_|
+		//   | Number of messages  |__________|_|________________|_|
+		//   |                          ____                       |
+		//   |                         |_OK_|                      |
+		//   |_____________________________________________________|
 		
 		
 		
@@ -49342,17 +49364,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		if (dialogtype == PASSPHRASE_ONLY)
 		{
-		
 			//   ______________________________
-			//  |   ________________________   |
-			//  |  |                        |  |
-			//  |  |                        |  |
-			//  |  |________________________|  |
+			//  |______________________________|
+			//  |                              |
+			//  |                              |
+			//  |______________________________|
 			//  |    0123 4567 89ab cdef       |
 			//  |             ____             |
 			//  |            |_OK_|            |
 			//  |______________________________|
-			
 			
 			
 			passphrasehashlabel = new JLabel("");
@@ -49427,20 +49447,19 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		      || (dialogtype == PASSPHRASE_EMAIL_DECRYPT))
 		{
 		
-		
-			//   0___________________10_______________________18__
-			//   |                                                |
-			//   |                    __________________________  |
-			// 0 | Secret passphrase |__________________________| |
-			//   |                   |                          | |
-			//   |                   |__________________________| |
-			// 4 | My email address  |__________________________| |
-			// 5 |                    0123 4567 89ab cdef         |
-			//   |                                          __    |
-			// 6 | No of ciphers * quad o oct o max  width |40|   |
-			//   |                     ____                       |
-			//   |                    |_OK_|                      |
-			//   |________________________________________________|
+			//    _____________________________________________________
+			//   |                                                     |
+			//   |                   __________________________________|
+			//   |    passphrase    |__________________________________|
+			//   |                  |                                  |
+			//   |                  |__________________________________|
+			//   | My email address |__________________________________|
+			//   |                   0123 4567 89ab cdef               |
+			//   |                                                  __ |
+			//   | number of ciphers 4 o quad  o oct  o max  width |40||
+			//   |                         ____                        |
+			//   |                        |_OK_|                       |
+			//   |_____________________________________________________|
 			
 			
 			//  Number of ciphers to be used for a composite key
@@ -49777,23 +49796,21 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		else if (dialogtype == PASSPHRASE_MAILSERVER)
 		{
 		
-			//   0____________________10__________________________18_
-			//   |                      ___________________________  |
-			//   |                     |___________________________| |
-			//   |  Secret passphrase  |                           | |
-			//   |                     |___________________________| |
-			//   |                       0123 4567 89ab cdef         |
-			//   |                                                   |
-			//   |                      ___________________________  |
-			//   | Incoming mail server|_________________________|_| |
-			//   | Outgoing mail server|_________________________|_| |
-			//   | Number of messages  |__________|_|____________|_| |
-			//   |                      ___________________________  |
-			//   | Mail directory      |___________________________| |
-			//   |                      ____                         |
-			//   |                     |_OK_|                        |
-			//   |___________________________________________________|
-			
+			//    _____________________________________________________
+			//   |                      _______________________________|
+			//   |                     |_______________________________|
+			//   |  Secret passphrase  |                               |
+			//   |                     |_______________________________|
+			//   |                       0123 4567 89ab cdef           |
+			//   |                                                     |
+			//   |                      _______________________________|
+			//   | Incoming mail server|_____________________________|_|
+			//   | Outgoing mail server|_____________________________|_|
+			//   | Mail directory      |_____________________________|_|
+			//   | Number of messages  |__________|_|________________|_|
+			//   |                          ____                       |
+			//   |                         |_OK_|                      |
+			//   |_____________________________________________________|
 			
 			
 			passphraselabel = new JLabel(passphraselabelstring0);
@@ -50779,7 +50796,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		     passphrasearea.requestFocusInWindow();
 		
 		//  The frame visibility has to be set to false
-		//  and then to true for the method to block
+		//  and then to true to force the method to block
 		
 		this.setVisible(false);
 		this.setSize(newsize.width, newsize.height);
@@ -50814,7 +50831,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		this.setSize(newsize.width, newsize.height);
 		
 		//  The frame visibility has to be set to false
-		//  and then to true for the method to block
+		//  and then to true to force the method to block
 		
 		this.setVisible(false);
 		this.setSize(newsize.width, newsize.height);
@@ -78968,6 +78985,32 @@ class Convert
 	//  to O(n) where n is the number of types.
 	
 	
+	//  For example, to convert from byte[] to String
+	//  and from String to byte[] for random data use
+	//
+	//  String str = new String(Convert.byteArrayToCharArray(array));
+	//  byte[] array1 = Convert.charArrayToByteArray(str.toCharArray());
+	//
+	//  Don't use String(byte[]) and getBytes()
+	//  String str = new String(array);
+	//  byte[] array1 = str.getBytes();
+	//  because it doesn't convert correctly
+	//  for random data; it only converts byte
+	//  array to String and String to byte array
+	//  for ascii / unicode / base-64 text
+	//
+	//  This code shows that the conversion is correct
+	//
+	//  byte[] array = new byte[256];
+	//  for (int i = 0; i < array.length; i++)
+	//    array[i] = (byte) Math.random(256);
+	//  String str = new String(Convert.byteArrayToCharArray(array));
+	//  byte[] array1 = Convert.charArrayToByteArray(str.toCharArray());
+	//  boolean bool = Arrays.equals(array, array1);
+	//  System.out.println(bool);
+	
+	
+	
 	
 	//  private Convert constructor
 	//
@@ -81006,7 +81049,7 @@ class Fourier
 
 
 //  These classes are included as an example to illustrate how encryption
-//  can be done using composite / multiple public keys.
+//  can be done using composite or multiple public keys.
 //
 //  The SSLSocket and SSLServerSocket classes can be excerpted and used
 //  in any program that is open source and has a free or copyleft license
@@ -81034,26 +81077,24 @@ class Fourier
 //  All websites should use encrypted sockets or SSL/TLS encryption, but most
 //  websites don't require a public key certificate unless the user is doing
 //  online banking or purchasing something from a website using a credit card.
-//  Even if a website or an email service provider has a public key certificate
-//  for its website, it doesn't prevent them from substituting fake keys for
-//  some of its users, just as a certificate for a public key server doesn't
-//  prevent someone from publishing fake public keys and email addresses for
-//  other users, and then re-encrypting and re-sending the emails to the real
-//  recipients.
+//  Even without key verification, public key cryptography still makes it im-
+//  possible for a wiretapper to read the messages or communication.
+//
+//  Even if an email service provider has a public key certificate for its web-
+//  site, it doesn't prevent them from substituting fake keys for some of its
+//  users, just as a certificate for a public key server doesn't prevent some-
+//  one from publishing fake public keys and email addresses for other users,
+//  or opening an email address in someone else's name and then re-encrypting
+//  and re-sending the emails to the real recipients.
 //
 //  Public key certificates are not required for email users or for email pro-
 //  viders because users can verify that their email server is not subtituting
-//  fake keys by asking other people to verify their keys by sending them email,
-//  and by publishing their public key hashes on their business cards or their
-//  websites so clients can verify their public keys. The email client could
-//  also alert the sender if the recipient's public key changes, and then if
-//  the email is important the sender could call the recipient or visit the
-//  company's website to verify that the key has changed. For encrypted phone
-//  calls the caller (or the recipient) can verify that the phone or internet
+//  fake keys by verifying their own public keys. For example, for encrypted
+//  phone calls the caller (or recipient) can verify that the phone or internet
 //  service provider is not substituting fake public keys for some users by
 //  reading the hash of the secret keys to the recipient to confirm that the
-//  two public key agreements are identical. For unimportant phone calls, e-
-//  mails, or websites, it doesn't matter if the keys are unverified.
+//  two public key agreements are identical. For unimportant phone calls,
+//  e-mails, or web sites, it doesn't matter if the keys are unverified.
 
 
 

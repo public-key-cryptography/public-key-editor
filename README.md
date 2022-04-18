@@ -20,16 +20,17 @@
 	lows multiple users to access to an email account from different computers which is useful for some
 	companies or organizations that have to reply to large numbers of emails. POP mail also allows mult-
 	iple users to access an email account if none of the users deletes the new messages or only the old
-	messages are deleted by one of the users.
+	messages are deleted.
 	
 	Imap allows users to change the state of the messages on the server, but the POP mail protocol could
 	be amended or the email servers could be upgraded to include this feature. POP mail servers could
-	also be upgraded to allow multiple users to retrieve and delete emails by assigning a hash or time
-	stamp to each message so that the retrieve and delete commands could use the number assigned to the
-	messages instead of the ordinal / cardinal numbers. Otherwise if multiple users list the emails and
-	try to delete messages using the ordinal numbers, the email messages on the clients' computers will
-	not correspond to messages on the server computer because the messages get re-numbered on the server
-	every time one of the users deletes a message and signs out.
+	also be upgraded to allow multiple users to retrieve and delete emails by assigning a hash value or
+	time stamp to each message so that the retrieve and delete commands could use the number assigned to
+	the messages instead of the ordinal / cardinal numbers that are used to enumerate the messages.
+	Otherwise if multiple users list the emails and try to delete messages using the ordinal numbers,
+	the email messages on the clients' computers will not correspond to messages on the server computer
+	because the messages get re-numbered every time one of the users deletes a message and signs out,
+	and the wrong messages will get deleted or retrieved.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -84,7 +85,7 @@
 	gram becomes unresponsive or the wifi loses its connection it will end the program in a few seconds
 	so the user doesn't have to close the terminal or open the System monitor to find and terminate the
 	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded da-
-	ta with a base-16 separator to make it base-64; the public key ciphers were rearranged; errors in
+	ta with a base-16 separator to make it base 64; the public key ciphers were rearranged; errors in
 	the readMessage method were corrected so that the messages and attached files are detached and dis-
 	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
 	the decryption method removes the padding / space chars appended to the message; the SavedEmails
@@ -92,7 +93,7 @@
 	tached files and edit the messages; the mail class was modified to save the message states in the
 	user's mail directory by clicking on the message icons; an icon / font size error was corrected; a
 	file description error was corrected that caused the delete attached files to display the file de-
-	scriptions in base-64 for unencrypted emails; a passphrase substring error was corrected in the mail
+	scriptions in base 64 for unencrypted emails; a passphrase substring error was corrected in the mail
 	class; the sendmailframe font size was adjusted to make it the same size as the retrievemail frame
 	font size and a line of code was removed from the mouse wheel listener that changed the size of the
 	frame instead of the font if the control button was pressed and the mouse wheel was scrolled; an
@@ -100,20 +101,26 @@
 	the sender's from address to the saved messages even if they have attached files; the ViewSaved-
 	EmailsListener class was modified so that it creates only one instance of the SavedEmails class or
 	opens only one dialog box even if the user clicks more than once on the view saved emails menu item;
-	a few deprecated methods such as frame.pack() and filechooser.showDialog() were replaced even though
+	a few deprecated methods such as Frame pack() and Filechooser showDialog() were replaced even though
 	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
 	the find class was modified so that it doesn't show the number of occurrences for an empty string;
+	an error that caused the message states to reset to the unread state when a message was deleted was
+	corrected; the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code
+	was modified so that the modal variable is set to false so the constructor doesn't block and the pro-
+	gram can use the object returned by the constructor to set the font, color, and other variables, and
+	then the modality is changed to true by the readPassphrase and readDialog methods so that the Dialog
+	setVisible method blocks until the user clicks the ok button and the passphrase size and email address
+	are validated; the document / file type detection was corrected so the program correctly displays html
+	documents instead of trying to display them as image files which caused the dialog frame to collapse;
 	
-	the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code was mod-
-	ified so that the modal variable is set to false so the constructor doesn't block and the program
-	can use the object returned by the constructor to set the font, color, and other variables, and then
-	the modality is changed to true by the readPassphrase and readDialog methods so that the dialog.set
-	Visible method blocks until the user clicks the ok button and the passphrase size and email address
-	are validated; the document / file type detection was corrected so the program correctly displays
-	html documents instead of trying to display them as image files which caused the dialog frame to
-	collapse; and the hyperactive class was modified to copy the url address to the clipboard so the
-	user can copy and paste the address into a web browser if an email provider like yandex sends mes-
-	sages to clients using html that has hyperlinks.
+	the hyperactive class was modified to copy the url address to the clipboard so the user can copy and
+	paste the address into a web browser if an email provider like yandex sends messages to clients using
+	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
+	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
+	for the unselected tabs or panels; the SavedEmails variable or object was moved from the RetrieveMail-
+	Frame class to the EmailPanel so that different email tabs have separate saved emails; and the state-
+	Changed method for the RetrieveMailFrame was modified to show and hide the saved emails frames for
+	different usernames or email panels if the selected tab is changed.
 	
 	
 	
@@ -450,10 +457,10 @@
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
-	periodicity. In addition, the complexity of elliptic curves makes the ciphers vulnerable to attack
-	without solving the ecdlp or underlying math problem if the parameters a, b, and p are not chosen
-	correctly, and nobody knows how to choose the parameters of the curves to protect against all un-
-	known attacks.
+	periodicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic
+	curves makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem
+	if the parameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters
+	of the curves to protect against all unknown attacks.
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included
 	in the public key class because they are not secure for any key size.
