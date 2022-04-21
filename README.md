@@ -118,9 +118,12 @@
 	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
 	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
 	for the unselected tabs or panels; the SavedEmails variable or object was moved from the RetrieveMail-
-	Frame class to the EmailPanel so that different email tabs have separate saved emails; and the state-
-	Changed method for the RetrieveMailFrame was modified to show and hide the saved emails frames for
-	different usernames or email panels if the selected tab is changed.
+	Frame class to the EmailPanel so that different email tabs have separate saved email frames; the
+	stateChanged method for the RetrieveMailFrame was modified to show and hide the saved emails frames
+	for different usernames or email panels if a tab is selected or unselected; and the checkDelete box
+	method was modified so that checking a delete box doesn't do a readall button click which caused the
+	screen components to get resized every time a box was checked or unchecked and also caused the text-
+	area.setText() method to throw an exception if a check box was checked and unchecked.
 	
 	
 	
@@ -258,10 +261,10 @@
 	
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
-	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but
+	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but it
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
-	\n, 3 size 1 \n, ..., or  1 size timestamp msgstate \n, 2 size timestamp msgstate \n, 3 size time-
-	stamp msgstate \n, etcetera.
+	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size time-
+	stamp state \n, etcetera.
 	
 	This would be backward compatible with the POP mail protocol because it would only display a num-
 	ber if a user changes the state of a message. Also the client could retrieve and delete messages

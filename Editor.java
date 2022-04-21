@@ -148,9 +148,12 @@
 	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
 	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
 	for the unselected tabs or panels; the SavedEmails variable or object was moved from the RetrieveMail-
-	Frame class to the EmailPanel so that different email tabs have separate saved emails; and the state-
-	Changed method for the RetrieveMailFrame was modified to show and hide the saved emails frames for
-	different usernames or email panels if the selected tab is changed.
+	Frame class to the EmailPanel so that different email tabs have separate saved email frames; the
+	stateChanged method for the RetrieveMailFrame was modified to show and hide the saved emails frames
+	for different usernames or email panels if a tab is selected or unselected; and the checkDelete box
+	method was modified so that checking a delete box doesn't do a readall button click which caused the
+	screen components to get resized every time a box was checked or unchecked and also caused the text-
+	area.setText() method to throw an exception if a check box was checked and unchecked.
 	
 	
 	
@@ -288,10 +291,10 @@
 	
 	Email server programs could also be upgraded so that POP mail clients could change the state of
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
-	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but
+	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but it
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
-	\n, 3 size 1 \n, ..., or  1 size timestamp msgstate \n, 2 size timestamp msgstate \n, 3 size time-
-	stamp msgstate \n, etcetera.
+	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size time-
+	stamp state \n, etcetera.
 	
 	This would be backward compatible with the POP mail protocol because it would only display a num-
 	ber if a user changes the state of a message. Also the client could retrieve and delete messages
@@ -1224,7 +1227,7 @@ class __
 	
 	replykeysettings = "Reply Key Settings",
 	
-	userpassword = "User password",
+	userpassword = "Userpass / Password",
 	
 	filelistsize = "File list size",
 	
@@ -1280,8 +1283,8 @@ class __
 	    "If you're changing your passphrase, enter your previous\n" +
 	    "passphrase to re-encrypt your saved emails or else your\n" +
 	    "previous saved emails will be undecryptable using the new\n" +
-	    "passphrase. Don't enter your email address because the\n" +
-	    "email address is not used for file encryption."
+	    "passphrase. (Don't enter your email address because the\n" +
+	    "email address is not used for file encryption.)"
 	
 	;
 	
@@ -1339,9 +1342,7 @@ class __
 	
 	messagestates = "message states",
 	
-	clientservercomm =
-	
-	  "Client/Server Communication",
+	clientservercomm = "Client/Server Communication",
 	
 	showemails = "Show / Hide Sent Emails",
 	
@@ -1563,7 +1564,10 @@ class __
 	   newtextanddate   = "New Text",
 	
 	popmailuserpass = "Pop mail userpass",
-	userpassislong = "userpass is too long",
+	
+	userpasswarning = "userpass is > 12 chars\n" +
+	                  "Do not use your passphrase\n" +
+	                  "as a userpass for your accounts",
 	
 	  userdomain =   "user domain",
 	serverdomain = "server domain",
@@ -1618,7 +1622,7 @@ class __
 	mediumred = "medium red",
 	darkred = "dark red",
 	
-	orange = "orange (red + 1/4 green)",
+	orange = "orange (red + 1/3 green)",
 	
 	green = "green",
 	darkgreen = "dark green",
@@ -1665,14 +1669,17 @@ class __
 	//
 	//  To implement this feature, the STAT command could be augmented or overloaded to
 	//  accept two arguments so that the user could change the status of a message, and
-	//  the LIST or TOP command could return the message state number after +OK size or
-	//  the header could include a stat:0,1,2,...,9.
+	//  the LIST or TOP command could return the message state number in the enumerated
+	//  list of messages. The LIST command could also include a message hash or a time
+	//  stamp in milliseconds such as 1 bytes timestamp state\n, 2 bytes timestamp state\n,
+	//  3 bytes timestamp state\n, ... so the client could retrieve and delete messages
+	//  using the time stamp or hash instead of the cardinal or ordinal numbers.
 	//
-	//  For example, the command STAT m n could change the state of message m to state n,
-	//  where m is the message number from 1 to k and n is an integer from 0 to 9. By de-
-	//  fault messages could be given the state 0 which would mean unread. The client's
-	//  mail program would be responsible for interpreting the number code and converting
-	//  it to a word or icon next to the message number.
+	//  The command STAT m n could change the state of message m to state n, where m is
+	//  the message number from 1 to k and n is an integer from 0 to 9. By default mes-
+	//  sages could be given the state 0 which would mean unread. The client's mail pro-
+	//  gram would be responsible for interpreting the number code and converting it to
+	//  a word or icon next to the message number.
 	
 	
 	
@@ -22693,7 +22700,7 @@ class Programs
 						
 						
 						//  Verify that the encryption works with either delimiter
-						//  because public keys may use hyphens or hex chars
+						//  because public keys may use hyphens or base-16 chars
 						//
 						//  if (recipientskey != null) recipientskey
 						//    .replaceAll(Convert.base16Separator, "-");
@@ -23385,12 +23392,13 @@ class Programs
 						text = Convert.stringToBase64(text);
 						
 						
-						//  If the user has selected any file(s) to attach,
+						//  If the user has selected any file(s) to attach
 						//
-						//  splice (join) the encoded message text
-						//  and the encoded (file desc + \n\n + file data)
+						//  splice (join) the encoded message text and
+						//  the encoded (file desc + \n\n + file data)
 						//
-						//  (Splice can mean to join or to cut depending on the context)
+						//  (Splice can mean to join or to cut
+						//  depending on the context)
 						
 						
 						//  Initialize sendtext to the encoded typed message
@@ -23996,11 +24004,6 @@ class Programs
 					if (file == null) return;
 					
 					directory = file.getParent();
-					
-					
-					//  if (file.getName().endsWith(...))
-					//
-					//	return;
 					
 					
 					//  Open and decrypt the file
@@ -28189,7 +28192,9 @@ class Programs
 					
 					for (int i = 0; i < tabbedpane.getTabCount(); i++)
 					{
-						EmailPanel emailpanel = (EmailPanel) tabbedpane.getComponentAt(i);
+						EmailPanel emailpanel = (EmailPanel)
+						
+						    tabbedpane.getComponentAt(i);
 						
 						String username = emailpanel.username;
 						
@@ -28398,25 +28403,38 @@ class Programs
 					
 					userpassfield .requestFocus();
 					
-					JOptionPane.showMessageDialog(frame, vbox,
+					String newuserpass;
 					
-					    title, JOptionPane.PLAIN_MESSAGE);
+					int warnings = 0;
 					
-					//  Read the userpass field because the
-					//  user may have edited the userpass
-					
-					String newuserpass = userpassfield.getText().trim();
-					
-					//  Don't allow the user to enter a
-					//  passphrase instead of a userpass
-					
-					if (userpass.length() > 12)
+					while (true)
 					{
-						JOptionPane.showMessageDialog(frame,
+						JOptionPane.showMessageDialog(frame, vbox,
 						
-						    __.userpassislong, "",
+						    title, JOptionPane.PLAIN_MESSAGE);
 						
-							JOptionPane.PLAIN_MESSAGE);
+						//  Read the userpass field because the
+						//  user may have edited the userpass
+						
+						newuserpass = userpassfield.getText().trim();
+						
+						//  Don't allow the user to enter a
+						//  passphrase instead of a userpass
+						
+						if (newuserpass.length() > 12)
+						{
+							JOptionPane.showMessageDialog(
+							  frame, __.userpasswarning, "",
+							    JOptionPane.WARNING_MESSAGE);
+							
+							warnings++;
+							
+							if (warnings < 3) continue;
+							
+							else break;
+						}
+						
+						else break;
 					}
 					
 					//  Save the userpass
@@ -29919,9 +29937,12 @@ class Programs
 					//  Scale the button icon sizes and button
 					//  text sizes for the retrieve mail frame
 					
+					int miniconsize = 14;
+					int maxiconsize = 28;
+					
 					for (JButton button : emailpanel1.buttons)
 					
-					    button.setFont(font.deriveFont(font.getSize()-2.0f));
+					    button.setFont(font.deriveFont(font.getSize() - 2.0f));
 					
 					for (int j = 0; j < emailpanel1.buttons.length; j++)
 					{
@@ -29938,7 +29959,7 @@ class Programs
 						
 						double m = Math.sqrt(2.0D * framearea / screenarea);
 						
-						int width = (int) (20 + 20 * m); // m = 0 to 1.4
+						int width = (int) (24 + 24 * m); // m = 0 to 1.4
 						
 						//  Set the max and min icon sizes
 						
@@ -29985,7 +30006,7 @@ class Programs
 						
 						double sqrt = Math.sqrt(q);
 						
-						int width = (int) (16 + 24 * sqrt);
+						int width = (int) (24 + 24 * sqrt);
 						
 						//  Set the max and min icon sizes
 						
@@ -30840,7 +30861,10 @@ class Programs
 							
 							checkDelete(emailpanel.textarea.getText(), index);
 							
-							emailpanel.readbutton.doClick();
+							//  Don't do a click for a check box because
+							//  it deletes the message text and redisplays
+							//  the screen which can resize the components
+							//  emailpanel.readbutton.doClick();
 						}
 						
 						
@@ -34803,7 +34827,7 @@ class Programs
 				{
 					public void windowClosing(WindowEvent e)
 					{
-						closebutton.doClick();
+						closebutton.doClick(100);
 					}
 				}
 				
@@ -35154,10 +35178,10 @@ class Programs
 					panel.add(scrollpane, gbc);
 					
 					gbc = new Gbc();
-					gbc.setPosition(25, 96);
-					gbc.setSize(50, 4);
+					gbc.setPosition(25, 98);
+					gbc.setSize(50, 2);
 					gbc.setFill(Gbc.horizontal);
-					gbc.setWeight(50, 4);
+					gbc.setWeight(50, 2);
 					gbc.setInsets(5, 100, 5, 100);
 					
 					panel.add(closebutton, gbc);
@@ -35287,7 +35311,7 @@ class Programs
 			}
 			
 			
-			//  End class SavedEmailsListener
+			//  End class SavedEmails
 			
 			
 			
@@ -35485,7 +35509,6 @@ class Programs
 			
 			
 			
-			
 			private class ButtonListener extends MouseAdapter implements ActionListener
 			{
 			
@@ -35497,6 +35520,7 @@ class Programs
 				private boolean    reading = false;
 				private boolean   deleting = false;
 				private boolean   quitting = false;
+				
 				
 				//  the threads that are created for listing, reading, and
 				//  deleting; the subject thread is inside the list thread
@@ -39385,7 +39409,7 @@ class Colors
 		{ 0xa00000, __.red },
 		{ 0x600000, __.darkred },
 		
-		{ 0xc03000, __.orange },
+		{ 0xef5000, __.orange },
 		
 		//  greens
 		
@@ -39394,8 +39418,8 @@ class Colors
 		
 		//  greenish blues
 		
-		{ 0x005050, __.cyan },
-		{ 0x002828, __.darkcyan },
+		{ 0x006868, __.cyan },
+		{ 0x004040, __.darkcyan },
 		
 		{ 0x003060, __.aqua },
 		{ 0x002040, __.darkaqua },
@@ -46042,6 +46066,10 @@ class Documents
 		    "IgnoreCharsetDirective", true);
 		
 		editorpane.setText(html);
+		
+		editorpane.setFont(new Font(
+		
+		    "monospaced", Font.PLAIN, 20));
 		
 		
 		JButton text_htmlbutton = new JButton("TEXT / HTML");
