@@ -28,7 +28,7 @@
 	Readme file
 	
 	
-	The Java Editor program contains a text editor, email editor, image viewer, and table editor.
+	The Java Editor program contains a text editor, email editor, table editor, and image viewer.
 	
 	The program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert
 	classes. These classes contain all the ciphers, algorithms, protocols, and software required to
@@ -47,7 +47,7 @@
 	a document called "How to use pop mail" which explains how to use the program.
 	
 	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
-	lows multiple users to access to an email account from different computers which is useful for some
+	lows multiple users to access an email account from different computers which is useful for some
 	companies or organizations that have to reply to large numbers of emails. POP mail also allows mult-
 	iple users to access an email account if none of the users deletes the new messages or only the old
 	messages are deleted.
@@ -148,12 +148,18 @@
 	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
 	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
 	for the unselected tabs or panels; the SavedEmails variable or object was moved from the RetrieveMail-
-	Frame class to the EmailPanel so that different email tabs have separate saved email frames; the
-	stateChanged method for the RetrieveMailFrame was modified to show and hide the saved emails frames
-	for different usernames or email panels if a tab is selected or unselected; and the checkDelete box
-	method was modified so that checking a delete box doesn't do a readall button click which caused the
-	screen components to get resized every time a box was checked or unchecked and also caused the text-
-	area.setText() method to throw an exception if a check box was checked and unchecked.
+	Frame class to the EmailPanel so that different email tabs have separate saved email frames; the state
+	Changed method for the RetrieveMailFrame was modified to show and hide the saved emails frames for
+	different usernames or email panels if a tab is selected or unselected; the checkDelete box method was
+	modified so that checking a delete box doesn't do a read all button click which caused the screen com-
+	ponents to get resized every time a box was checked or unchecked and also caused the textarea setText
+	method to throw an exception if a check box was checked and unchecked; the reverse colors button was
+	modified so that the button is disabled while the program is listing or reading the messages; and the
+	listing = true and reading = true statements were moved outside of the list and read threads so that
+	they get set immediately after the user clicks the list or read button or else the color button would
+	still be enabled until the list or read thread is started which caused two background colors to appear 
+	simultaneously on the same list panel if there were two email tabs open and the user clicked the re-
+	verse color button while the program was listing the messages.
 	
 	
 	
@@ -258,6 +264,7 @@
 	To remove or delete the jdk directory from your computer, use the command
 	
 	sudo rm -r -f /usr/jdk
+	
 	
 	
 	
@@ -480,13 +487,13 @@
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
-	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken because the cipher is based on log multiplication in-
-	stead of log extraction. The integer digital signature algorithm is based on the discrete log problem
-	or dlp because it uses one equation for the static signature key y = a ^ x (mod p), another equation
-	for the one-time signature key r = a ^ k (mod p), and a third equation for the signature s = k m +
-	x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus. This signature algorithm
-	is also not secure because the integer discrete log problem is just as broken as the integer factor-
-	ization problem.
+	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken without quantum computing because the cipher is based
+	on log multiplication instead of log extraction. The integer digital signature algorithm is based on
+	the discrete log problem or dlp because it uses one equation for the static signature key y = a ^ x
+	(mod p), another equation for the one-time signature key r = a ^ k (mod p), and a third equation for
+	the signature s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
+	This signature algorithm is also not secure because the integer discrete log problem is just as bro-
+	ken as the integer factorization problem.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
@@ -1565,9 +1572,11 @@ class __
 	
 	popmailuserpass = "Pop mail userpass",
 	
-	userpasswarning = "userpass is > 12 chars\n" +
-	                  "Do not use your passphrase\n" +
-	                  "as a userpass for your accounts",
+	userpasswarning =
+	
+	    "userpass is > 12 chars\n" +
+	    "Do not use your passphrase\n" +
+	    "as a userpass for your accounts",
 	
 	  userdomain =   "user domain",
 	serverdomain = "server domain",
@@ -1624,6 +1633,7 @@ class __
 	
 	orange = "orange (red + 1/3 green)",
 	
+	brightgreen = "bright green",
 	green = "green",
 	darkgreen = "dark green",
 	
@@ -1639,10 +1649,12 @@ class __
 	magenta = "magenta (purplish red)",
 	darkmagenta = "dark magenta",
 	
-	bluishpurple = "bluish purple (blue + 1/4 red)",
 	brightpurple = "bright purple (blue + 1/2 red)",
-	purple = "purple (reddish blue)",
+	purple = "purple (blue + 1/2 red)",
 	darkpurple = "dark purple (blue + 1/2 red)",
+	
+	brightreddishblue = "reddish blue (violet)",
+	reddishblue = "reddish blue (indigo)",
 	
 	aqua = "aqua (greenish blue)",
 	darkaqua = "dark aqua (blue + 1/2 green)",
@@ -8392,21 +8404,18 @@ class Programs
 				scrollpane.setViewportView(vbox);
 				
 				
-				
-				
-				//      [ OK ] [ Cancel ]
+				//        [ OK ] [ Cancel ]
 				//
-				//     [x] bold  font name
-				//   ________________________
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				
+				//       [x] bold  font name
+				//   ____________________________
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
 				
 				stylebox = new JCheckBox();
 				stylelabel = new JLabel(__.bold);
@@ -16642,20 +16651,18 @@ class Programs
 				scrollpane.setViewportView(vbox);
 				
 				
-				
-				
-				//      [ OK ] [ Cancel ]
+				//        [ OK ] [ Cancel ]
 				//
-				//     [x] bold  font name
-				//   ________________________
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
-				//  |________________________|
+				//       [x] bold  font name
+				//   ____________________________
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
+				//  |____________________________|
 				
 				
 				stylebox = new JCheckBox();
@@ -21095,9 +21102,11 @@ class Programs
 			
 			// font ~ 20 to 24,25,26,...
 			
-			minfontsize = (int) (minfontsize + 5.5f*q1);
-			maxfontsize = (int) (maxfontsize + 5.5f*q1);
+			minfontsize = (int) (minfontsize + 4.0f*q1);
+			maxfontsize = (int) (maxfontsize + 4.0f*q1);
 		}
+		
+		
 		
 		
 		//  Set the font
@@ -21851,7 +21860,7 @@ class Programs
 				{
 					if (e.getSource() instanceof JFrame)
 					{
-						fontsize = frameSizeToFontSize(frame) - 2;
+						fontsize = frameSizeToFontSize(frame);
 						
 						font = font.deriveFont(fontsize);
 						
@@ -28831,20 +28840,18 @@ class Programs
 					scrollpane.setViewportView(vbox);
 					
 					
-					
-					
-					//      [ OK ] [ Cancel ]
+					//        [ OK ] [ Cancel ]
 					//
-					//     [x] bold  font name
-					//   ________________________
-					//  |________________________|
-					//  |________________________|
-					//  |________________________|
-					//  |________________________|
-					//  |________________________|
-					//  |________________________|
-					//  |________________________|
-					//  |________________________|
+					//       [x] bold  font name
+					//   ____________________________
+					//  |____________________________|
+					//  |____________________________|
+					//  |____________________________|
+					//  |____________________________|
+					//  |____________________________|
+					//  |____________________________|
+					//  |____________________________|
+					//  |____________________________|
 					
 					
 					stylebox = new JCheckBox();
@@ -29183,6 +29190,9 @@ class Programs
 				{
 					//  Set the emailpanel foreground
 					
+					if (emailpanel.buttonlistener.listing
+					 || emailpanel.buttonlistener.reading) return;
+					
 					if (!color.equals(Color.white))
 					{
 						for (Component comp : emailpanel.components)
@@ -29274,6 +29284,9 @@ class Programs
 				{
 					//  Set the emailpanel foreground (not background)
 					//  because the colors may be reversed
+					
+					if (emailpanel.buttonlistener.listing
+					 || emailpanel.buttonlistener.reading) return;
 					
 					if (!color.equals(Color.white))
 					{
@@ -29635,6 +29648,9 @@ class Programs
 				
 				public void run()
 				{
+					if (emailpanel.buttonlistener.listing
+					 || emailpanel.buttonlistener.reading) return;
+					
 					emailpanel.reverse_colors = !emailpanel.reverse_colors;
 					
 					for (int i = 0; i < tabbedpane.getTabCount(); i++)
@@ -34732,7 +34748,7 @@ class Programs
 						if (!reverse_colors)
 						{
 						     textarea.setForeground(color);
-						     textarea.setCaretColor(textarea.getForeground());
+						     textarea.setCaretColor(color);
 						}
 						
 						else textarea.setBackground(color);
@@ -34751,7 +34767,7 @@ class Programs
 						
 						else
 						{	textarea.setForeground(color);
-							textarea.setCaretColor(textarea.getForeground());
+							textarea.setCaretColor(color);
 						}
 					}
 				}
@@ -35623,16 +35639,22 @@ class Programs
 						
 						if (reading) return;
 						
+						if (listing) return;
+						
+						//  listing = true has to be outside of the thread so
+						//  that it gets set immediately; otherwise it could
+						//  take a couple of seconds and then methods that test
+						//  this variable such as the setForeground and set-
+						//  Background methods could get listing == false.
+						
+						listing = true;
+						
 						
 						
 						//  Create the list thread
 						
 						listthread = new Thread(() ->
 						{
-							if (listing) return;
-							
-							else listing = true;
-							
 							//  System.out.print("\nlisting");
 							
 							try
@@ -36692,6 +36714,13 @@ class Programs
 						tabbedpane.repaint();
 						
 						
+						//  listing = true has to be outside of the thread so
+						//  that it gets set immediately; otherwise it could
+						//  take a couple of seconds and then methods that test
+						//  this variable could get reading == false.
+						
+						reading = true;
+						
 						readthread = new Thread(() ->
 						{
 							int cp = 0;
@@ -36706,9 +36735,6 @@ class Programs
 							
 							if (emailpanel.listpanel != null)
 							    emailpanel.listpanel.setCursor(wait_cursor);
-							
-							
-							reading = true;
 							
 							
 							//  Read all the messagesperscreen messages
@@ -39413,6 +39439,7 @@ class Colors
 		
 		//  greens
 		
+		{ 0x008000, __.brightgreen },
 		{ 0x006000, __.green },
 		{ 0x003000, __.darkgreen },
 		
@@ -39441,10 +39468,12 @@ class Colors
 		
 		//  reddish blues
 		
-		{ 0x200080, __.bluishpurple },
 		{ 0x5000a0, __.brightpurple },
 		{ 0x380070, __.purple },
 		{ 0x200040, __.darkpurple },
+		
+		{ 0x4000C0, __.brightreddishblue },
+		{ 0x200080, __.reddishblue },
 		
 		//  ...
 		
@@ -50663,7 +50692,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			if ((component1 instanceof JTextField)
 			 || (component1 instanceof JTextArea))
 			
-			     ((JTextComponent) component1) .setCaretColor(color);
+			     ((JTextComponent) component1)
+			
+				.setCaretColor(color);
 		}
 		
 		keyboardlistener.keyboard.setForeground(color);

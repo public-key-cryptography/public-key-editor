@@ -1,4 +1,4 @@
-	The Java Editor program contains a text editor, email editor, image viewer, and table editor.
+	The Java Editor program contains a text editor, email editor, table editor, and image viewer.
 	
 	The program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert
 	classes. These classes contain all the ciphers, algorithms, protocols, and software required to
@@ -17,7 +17,7 @@
 	a document called "How to use pop mail" which explains how to use the program.
 	
 	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
-	lows multiple users to access to an email account from different computers which is useful for some
+	lows multiple users to access an email account from different computers which is useful for some
 	companies or organizations that have to reply to large numbers of emails. POP mail also allows mult-
 	iple users to access an email account if none of the users deletes the new messages or only the old
 	messages are deleted.
@@ -118,12 +118,18 @@
 	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
 	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
 	for the unselected tabs or panels; the SavedEmails variable or object was moved from the RetrieveMail-
-	Frame class to the EmailPanel so that different email tabs have separate saved email frames; the
-	stateChanged method for the RetrieveMailFrame was modified to show and hide the saved emails frames
-	for different usernames or email panels if a tab is selected or unselected; and the checkDelete box
-	method was modified so that checking a delete box doesn't do a readall button click which caused the
-	screen components to get resized every time a box was checked or unchecked and also caused the text-
-	area.setText() method to throw an exception if a check box was checked and unchecked.
+	Frame class to the EmailPanel so that different email tabs have separate saved email frames; the state
+	Changed method for the RetrieveMailFrame was modified to show and hide the saved emails frames for
+	different usernames or email panels if a tab is selected or unselected; the checkDelete box method was
+	modified so that checking a delete box doesn't do a read all button click which caused the screen com-
+	ponents to get resized every time a box was checked or unchecked and also caused the textarea setText
+	method to throw an exception if a check box was checked and unchecked; the reverse colors button was
+	modified so that the button is disabled while the program is listing or reading the messages; and the
+	listing = true and reading = true statements were moved outside of the list and read threads so that
+	they get set immediately after the user clicks the list or read button or else the color button would
+	still be enabled until the list or read thread is started which caused two background colors to appear 
+	simultaneously on the same list panel if there were two email tabs open and the user clicked the re-
+	verse color button while the program was listing the messages.
 	
 	
 	
@@ -228,6 +234,7 @@
 	To remove or delete the jdk directory from your computer, use the command
 	
 	sudo rm -r -f /usr/jdk
+	
 	
 	
 	
@@ -450,13 +457,13 @@
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
-	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken because the cipher is based on log multiplication in-
-	stead of log extraction. The integer digital signature algorithm is based on the discrete log problem
-	or dlp because it uses one equation for the static signature key y = a ^ x (mod p), another equation
-	for the one-time signature key r = a ^ k (mod p), and a third equation for the signature s = k m +
-	x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus. This signature algorithm
-	is also not secure because the integer discrete log problem is just as broken as the integer factor-
-	ization problem.
+	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken without quantum computing because the cipher is based
+	on log multiplication instead of log extraction. The integer digital signature algorithm is based on
+	the discrete log problem or dlp because it uses one equation for the static signature key y = a ^ x
+	(mod p), another equation for the one-time signature key r = a ^ k (mod p), and a third equation for
+	the signature s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
+	This signature algorithm is also not secure because the integer discrete log problem is just as bro-
+	ken as the integer factorization problem.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
