@@ -154,13 +154,14 @@
 	modified so that checking a delete box doesn't do a read all button click which caused the screen com-
 	ponents to get resized every time a box was checked or unchecked and also caused the textarea setText
 	method to throw an exception if a check box was checked and unchecked; the reverse colors button was
-	modified so that the button is disabled while the program is listing or reading the messages; and the
+	modified so that the button is disabled while the program is listing or reading the messages; the
 	listing = true and reading = true statements were moved outside of the list and read threads so that
 	they get set immediately after the user clicks the list or read button or else the color button would
 	still be enabled until the list or read thread is started which caused two background colors to appear 
-	simultaneously on the same list panel if there were two email tabs open and the user clicked the re-
-	verse color button while the program was listing the messages.
-	
+	simultaneously on the same list panel if two email tabs were open and the user clicked the reverse
+	color button while the program was listing the messages; and the PublicKey decrypt(String, byte[])
+	method was modified so that it can decrypt ciphertext using any delimiter for the prepended one-time,
+	transient or ephemeral public keys such as "\n\n", "-", or the base 16 chars 0 to f.
 	
 	
 	
@@ -300,8 +301,8 @@
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but it
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
-	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size time-
-	stamp state \n, etcetera.
+	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size timestamp
+	state \n, etcetera.
 	
 	This would be backward compatible with the POP mail protocol because it would only display a num-
 	ber if a user changes the state of a message. Also the client could retrieve and delete messages
@@ -339,7 +340,7 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1      k2               -x2  x1   x2          -k2  k1   k2
+	          x1  x2           k1      k2               -x2  x1   x2           -k2  k1   k2
 	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
@@ -1653,8 +1654,8 @@ class __
 	purple = "purple (blue + 1/2 red)",
 	darkpurple = "dark purple (blue + 1/2 red)",
 	
-	brightreddishblue = "reddish blue (violet)",
-	reddishblue = "reddish blue (indigo)",
+	reddishblue1 = "reddish blue",
+	reddishblue  = "dark reddish blue",
 	
 	aqua = "aqua (greenish blue)",
 	darkaqua = "dark aqua (blue + 1/2 green)",
@@ -7751,7 +7752,7 @@ class Programs
 				
 				Font font1 = font.deriveFont(
 				
-				    Math.min(font.getSize(), 24));
+				    (float) Math.min(font.getSize(), 24));
 				
 				JTextArea textarea1 = new JTextArea();
 				
@@ -8114,7 +8115,7 @@ class Programs
 						
 						else if (e.getSource() == textfield)
 						{
-							textarea.setFont(font.deriveFont(
+							textarea.setFont(font.deriveFont((float)
 							
 							   Integer.parseInt(textfield.getText())));
 						}
@@ -9447,10 +9448,12 @@ class Programs
 					keyid = keyid.substring(0, 32);
 					keyid = Convert.partition(keyid, " ", 4);
 					
+					int maxfontsize = 40;
+					
 					textarea.setText(keyid);
 					textarea.setEditable(false);
-					textarea.setFont((font.getSize() <= 40) ?
-					    font : font.deriveFont(40.0f));
+					textarea.setFont((font.getSize() <= maxfontsize) ?
+					     font : font.deriveFont((float) maxfontsize));
 					textarea.setBackground(
 					   new JPanel().getBackground());
 					
@@ -9699,9 +9702,10 @@ class Programs
 					label1.setText(__.thisdocumentwassignedby + " ");
 					label2.setText(signkey32);
 					
-					Font font1 = ((font.getSize() <= 40) ?
+					int maxfontsize = 40;
 					
-					        font : font.deriveFont(40.0f));
+					Font font1 = ((font.getSize() <= maxfontsize) ?
+					  font : font.deriveFont((float) maxfontsize));
 					
 					label1.setFont(font1);
 					label2.setFont(font1);
@@ -16360,7 +16364,7 @@ class Programs
 						
 						    tablepanel.table.setFont(
 						
-							font.deriveFont(Integer
+							font.deriveFont((float) Integer
 							
 							    .parseInt(textfield.getText())));
 						
@@ -17638,13 +17642,13 @@ class Programs
 		
 		private int fontstyle = Font.PLAIN;
 		
-		private float maxfontsize = 28;
+		private int maxfontsize = 28;
 		
-		private float fontsize = 20;
+		private int fontsize = 20;
 		
 		private Font font = new Font(
 		
-		    fontname, fontstyle, (int) fontsize);
+		    fontname, fontstyle, fontsize);
 		
 		private Color foreground, background;
 		
@@ -18771,7 +18775,7 @@ class Programs
 						fd = new FileDecryptor(frame);
 						fd.setFileKey(filekey);
 						fd.setPassphrase(SP);
-						fd.setFont(font.deriveFont(fontsize));
+						fd.setFont(font.deriveFont((float) fontsize));
 						
 						imagedata = fd.decrypt(imagedata);
 						
@@ -19324,7 +19328,7 @@ class Programs
 				
 				Documents .display(frame, title,
 				
-				    document, font.deriveFont(20f),
+				    document, font.deriveFont(20.0f),
 				
 					foreground, background);
 			}
@@ -19457,11 +19461,11 @@ class Programs
 		
 		private int fontstyle = Font.PLAIN;
 		
-		private float fontsize = 19;
+		private int fontsize = 19;
 		
 		private Font font = new Font(
 		
-		    fontname, fontstyle, (int) fontsize);
+		    fontname, fontstyle, fontsize);
 		
 		private Color foreground, background;
 		
@@ -20269,7 +20273,7 @@ class Programs
 						fd = new FileDecryptor(frame);
 						fd.setFileKey(filekey);
 						fd.setPassphrase(SP);
-						fd.setFont(font.deriveFont(fontsize));
+						fd.setFont(font.deriveFont((float) fontsize));
 						
 						filedata = fd.decrypt(filedata);
 						
@@ -20678,7 +20682,7 @@ class Programs
 				textfield = new JTextField(4);
 				
 				textfield.setFont(textfield
-				    .getFont().deriveFont((float) 20));
+				    .getFont().deriveFont(20.0f));
 				
 				
 				panel = new JPanel();
@@ -28247,9 +28251,8 @@ class Programs
 							JTextArea messagearea = new JTextArea(message);
 							
 							messagearea.setEditable(false);
-							messagearea.setFont(messagearea.getFont()
-							
-							    .deriveFont((float) 18));
+							messagearea.setFont(messagearea
+							    .getFont().deriveFont(18.0f));
 							
 							vbox.add(messagearea);
 							
@@ -28987,7 +28990,7 @@ class Programs
 					
 					textfield.setFont(textfield.getFont()
 					
-					    .deriveFont((float) 22));
+					    .deriveFont(22.0f));
 					
 					plusbutton  = new JButton("+");
 					minusbutton = new JButton("-");
@@ -29917,13 +29920,15 @@ class Programs
 					
 					
 					//  Set the pop window font for the client / server communication
-					//  (The font is four sizes smaller than the retrieve mail frame)
+					//  (The font size is smaller than the retrieve mail frame)
 					
 					float popfontsize = font.getSize();
 					
-					popfontsize = popfontsize > 5 ? font.getSize() - 4 : 1;
+					popfontsize = popfontsize > 4 ? font.getSize() - 3 : 1;
 					
-					emailpanel1.poptextarea.setFont(font.deriveFont(popfontsize));
+					emailpanel1.poptextarea.setFont(
+					
+					    font.deriveFont(popfontsize));
 					
 					
 					//  Set the font for the reply send mail frames
@@ -29958,7 +29963,7 @@ class Programs
 					
 					for (JButton button : emailpanel1.buttons)
 					
-					    button.setFont(font.deriveFont(font.getSize() - 2.0f));
+					    button.setFont(font.deriveFont((float) font.getSize()));
 					
 					for (int j = 0; j < emailpanel1.buttons.length; j++)
 					{
@@ -34964,46 +34969,36 @@ class Programs
 					editbuttons = new JButton[t];
 					scrollpanes = new JScrollPane[t];
 					  textareas = new JTextArea[t];
-					   messages = new String[t];
+					
 					     edited = new Boolean[t];
 					  encrypted = new Boolean[t];
 					 textlabels = new JLabel[t];
-					    viewpos = new int[t][];
-					    savepos = new int[t][];
-					    delepos = new int[t][];
-					numberoffiles = new int[t];
 					
+					   messages = new String[t];
+					
+					viewpos = new int[t][];
+					savepos = new int[t][];
+					delepos = new int[t][];
+					
+					numberoffiles = new int[t];
 					filedescs = new String[t][];
 					filedatas = new   byte[t][][];
 					
 					
 					for (int i = 0; i < t; i++)
 					{
-						     panels[i] = null;
-						 datelabels[i] = null;
-						deleteboxes[i] = null;
-						editbuttons[i] = null;
-						  textareas[i] = null;
-						scrollpanes[i] = null;
-						     edited[i] = null;
-						  encrypted[i] = null;
-					         textlabels[i] = null;
-					}
-					
-					
-					for (int i = 0; i < t; i++)
-					{
-						       panels[i] = new JPanel();
-						   datelabels[i] = new JLabel();
-						  deleteboxes[i] = new JCheckBox();
-						  editbuttons[i] = new JButton();
-						    textareas[i] = new JTextArea(rows, columns);
-						       edited[i] = Boolean.valueOf(false);
-						    encrypted[i] = Boolean.valueOf(false);
-						   textlabels[i] = new JLabel();
+						     panels[i] = new JPanel();
+						 datelabels[i].setFont(labelfont);
+						 datelabels[i] = new JLabel();
+						deleteboxes[i] = new JCheckBox();
+						editbuttons[i] = new JButton();
+						  textareas[i] = new JTextArea(rows, columns);
 						
-						   datelabels[i].setFont(labelfont);
-						   textlabels[i].setFont(labelfont);
+						   edited[i] = Boolean.valueOf(false);
+						 encrypted[i] = Boolean.valueOf(false);
+						textlabels[i] = new JLabel();
+						
+						textlabels[i].setFont(labelfont);
 						
 						
 						JTextArea textarea = textareas[i];
@@ -35145,7 +35140,8 @@ class Programs
 					{ deleteCheckedMessages();
 					  saveEditedMessages();
 					  dialog.setVisible(false);
-					  dialog = null; } });
+					  dialog = null;
+					} });
 					
 					
 					//  Add the vertical box to the scrollpane
@@ -35320,8 +35316,6 @@ class Programs
 								}
 							}
 						}
-						
-						return;
 					}
 				}
 			}
@@ -39470,10 +39464,9 @@ class Colors
 		
 		{ 0x5000a0, __.brightpurple },
 		{ 0x380070, __.purple },
-		{ 0x200040, __.darkpurple },
 		
-		{ 0x4000C0, __.brightreddishblue },
-		{ 0x200080, __.reddishblue },
+		{ 0x3300A0, __.reddishblue1 },
+		{ 0x220080, __.reddishblue },
 		
 		//  ...
 		
@@ -40099,6 +40092,7 @@ class EncryptDirectory
 	
 	    = new JTextArea().getFont().getName();
 	
+	private int maxfontsize = 22;
 	private int defaultfontsize = 16;
 	
 	private Font font = new Font(
@@ -40111,8 +40105,6 @@ class EncryptDirectory
 	private byte[] filekey;
 	
 	private boolean encryptfilenames;
-	
-	private int maxfontsize = 22;
 	
 	private JCheckBox checkbox;
 	
@@ -45840,7 +45832,7 @@ class Documents
 				if (rotation < 0) fontsize = fontsize - 1;
 			}
 			
-			final float maxsize = 48;
+			float maxsize = 48;
 			
 			if (fontsize > maxsize) fontsize = maxsize;
 			
@@ -51251,8 +51243,8 @@ class PublicKey
 	//  Sending an encrypted message
 	//
 	//  The sender generates a set of one-time private keys k[] and a set of
-	//  one-time public keys z[] == f[](a[], k[]) to match the recipient's public
-	//  key ciphers y[] == f[](a[], x[]).
+	//  one-time public keys z[] == f[](a[], k[]) to match the recipient's
+	//  public key ciphers y[] == f[](a[], x[]).
 	//
 	//  The sender also computes the one-time secret keys e[] == f[](y[], k[])
 	//  and the ciphertext c = E(e, m).
@@ -51647,6 +51639,15 @@ class PublicKey
 	//  of the parallelograms
 	//
 	//  Y  =  A (x) X   and   Z  =  A (x) K
+	//
+	//  where the cross product of A = { a1, a2, a3 } and
+	//  B = { b1, b2, b3 } is the determinant or vector
+	//
+	//  |   i   j   k  |          (a2 b3 - a3 b2) i
+	//  |              |   __
+	//  |  a1  a2  a3  |   __   + (a3 b1 - a1 b3) j
+	//  |              |
+	//  |  b1  b2  b3  |        + (a1 b2 - a2 b1) k
 	//
 	//  The secret key is the volume of the parallelepiped
 	//
@@ -52938,7 +52939,20 @@ class PublicKey
 		
 		//  Parse the message
 		
-		String[] tokens = str.split("\n\n");
+		String[] tokens = null;
+		
+		if (str.contains("-")) tokens = str.split("-");
+		
+		else if (str.contains("\n\n")) tokens = str.split("\n\n");
+		
+		else if (str.contains(Convert.base16Separator))
+		
+		    tokens = str.split(Convert.base16Separator);
+		
+		else return null;
+		
+		
+		//  Verify that the ciphertext is in base 64
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
 		
@@ -53062,7 +53076,17 @@ class PublicKey
 		
 		//  Parse the message
 		
-		String[] tokens = str.split("\n{2,}");
+		String[] tokens = null;
+		
+		if (str.contains("-")) tokens = str.split("-");
+		
+		else if (str.contains("\n\n")) tokens = str.split("\n\n");
+		
+		else if (str.contains(Convert.base16Separator))
+		
+		    tokens = str.split(Convert.base16Separator);
+		
+		else return null;
 		
 		
 		//  Verify that the ciphertext is in base 64
@@ -53220,7 +53244,17 @@ class PublicKey
 		
 		//  Parse the message
 		
-		String[] tokens = str.split("\n{2,}");
+		String[] tokens = null;
+		
+		if (str.contains("-")) tokens = str.split("-");
+		
+		else if (str.contains("\n\n")) tokens = str.split("\n\n");
+		
+		else if (str.contains(Convert.base16Separator))
+		
+		    tokens = str.split(Convert.base16Separator);
+		
+		else return null;
 		
 		
 		//  Verify that the ciphertext is in base 64
@@ -53382,7 +53416,20 @@ class PublicKey
 		
 		//  Parse the message
 		
-		String[] tokens = str.split("\n\n");
+		String[] tokens = null;
+		
+		if (str.contains("-")) tokens = str.split("-");
+		
+		else if (str.contains("\n\n")) tokens = str.split("\n\n");
+		
+		else if (str.contains(Convert.base16Separator))
+		
+		    tokens = str.split(Convert.base16Separator);
+		
+		else return null;
+		
+		
+		//  Verify that the ciphertext is in base 64
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
 		

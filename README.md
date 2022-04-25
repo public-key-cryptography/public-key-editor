@@ -124,13 +124,14 @@
 	modified so that checking a delete box doesn't do a read all button click which caused the screen com-
 	ponents to get resized every time a box was checked or unchecked and also caused the textarea setText
 	method to throw an exception if a check box was checked and unchecked; the reverse colors button was
-	modified so that the button is disabled while the program is listing or reading the messages; and the
+	modified so that the button is disabled while the program is listing or reading the messages; the
 	listing = true and reading = true statements were moved outside of the list and read threads so that
 	they get set immediately after the user clicks the list or read button or else the color button would
 	still be enabled until the list or read thread is started which caused two background colors to appear 
-	simultaneously on the same list panel if there were two email tabs open and the user clicked the re-
-	verse color button while the program was listing the messages.
-	
+	simultaneously on the same list panel if two email tabs were open and the user clicked the reverse
+	color button while the program was listing the messages; and the PublicKey decrypt(String, byte[])
+	method was modified so that it can decrypt ciphertext using any delimiter for the prepended one-time,
+	transient or ephemeral public keys such as "\n\n", "-", or the base 16 chars 0 to f.
 	
 	
 	
@@ -270,8 +271,8 @@
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but it
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
-	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size time-
-	stamp state \n, etcetera.
+	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size timestamp
+	state \n, etcetera.
 	
 	This would be backward compatible with the POP mail protocol because it would only display a num-
 	ber if a user changes the state of a message. Also the client could retrieve and delete messages
@@ -309,7 +310,7 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1      k2               -x2  x1   x2          -k2  k1   k2
+	          x1  x2           k1      k2               -x2  x1   x2           -k2  k1   k2
 	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
