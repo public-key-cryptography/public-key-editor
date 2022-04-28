@@ -5,7 +5,7 @@
 	do cryptography. The Mail, PopMail, and SendMail classes contain the software required to send
 	and retrieve email.
 	
-	All the software is contained in one file so the source code can be executed without compiling the
+	All the software is included in one file so the source code can be executed without compiling the
 	program. No other packages or modules are required to run the program or to use encrypted email.
 	Software developers can copy and paste these classes into other free and open source software pro-
 	grams that have compatible licenses. This means that the software can be used with a more permissive
@@ -129,9 +129,12 @@
 	they get set immediately after the user clicks the list or read button or else the color button would
 	still be enabled until the list or read thread is started which caused two background colors to appear 
 	simultaneously on the same list panel if two email tabs were open and the user clicked the reverse
-	color button while the program was listing the messages; and the PublicKey decrypt(String, byte[])
-	method was modified so that it can decrypt ciphertext using any delimiter for the prepended one-time,
-	transient or ephemeral public keys such as "\n\n", "-", or the base 16 chars 0 to f.
+	color button while the program was listing the messages; the dialog.setSize(dialog.getPreferredSize())
+	statement that was between the dialog.setVisible(false) and setVisible(true) statements was moved in
+	front of setVisible(false) statement because the passphrase dialog box wasn't getting packed or re-
+	painted correctly; and the PublicKey decrypt(String, byte[]) method was modified so that it can de-
+	crypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
+	such as "\n\n", "-", or the base 16 chars 0 to f.
 	
 	
 	
@@ -450,11 +453,12 @@
 	computing. The Rabin cipher can never be broken because factorization will always be harder than
 	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
 	rithm is O(n^3) multi-precision multiplications or O(n^4.58) single-precision multiplications or op-
-	erations. The fastest algorithm could not be faster than prime number generation which requires O(
-	n^4) or O(n^3.58) operations. A 1 M bit key would only require O(1) == O(n^0) multi-precision multi-
-	plications or O(n^1.58 == log2(3) == log(3)/log(2)) single-precision multiplications for encryption.
-	(No key size is secure for RSA because the coprime root extraction problem is completely broken.
-	This means that the function can be inverted as fast as it can be computed.)
+	erations. The fastest classical algorithm could not be faster than prime number generation which re-
+	quires O(n^4) or O(n^3.58) operations. A 1 M bit key would only require O(1) == O(n^0) multi-preci-
+	sion multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multiplications for
+	encryption using a sesquilinear or three-halves multiplier. (No key size is secure for RSA because
+	the coprime root extraction problem is completely broken. This means that the function can be invert-
+	ed as fast as it can be computed.)
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =

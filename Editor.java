@@ -35,7 +35,7 @@
 	do cryptography. The Mail, PopMail, and SendMail classes contain the software required to send
 	and retrieve email.
 	
-	All the software is contained in one file so the source code can be executed without compiling the
+	All the software is included in one file so the source code can be executed without compiling the
 	program. No other packages or modules are required to run the program or to use encrypted email.
 	Software developers can copy and paste these classes into other free and open source software pro-
 	grams that have compatible licenses. This means that the software can be used with a more permissive
@@ -159,9 +159,12 @@
 	they get set immediately after the user clicks the list or read button or else the color button would
 	still be enabled until the list or read thread is started which caused two background colors to appear 
 	simultaneously on the same list panel if two email tabs were open and the user clicked the reverse
-	color button while the program was listing the messages; and the PublicKey decrypt(String, byte[])
-	method was modified so that it can decrypt ciphertext using any delimiter for the prepended one-time,
-	transient or ephemeral public keys such as "\n\n", "-", or the base 16 chars 0 to f.
+	color button while the program was listing the messages; the dialog.setSize(dialog.getPreferredSize())
+	statement that was between the dialog.setVisible(false) and setVisible(true) statements was moved in
+	front of setVisible(false) statement because the passphrase dialog box wasn't getting packed or re-
+	painted correctly; and the PublicKey decrypt(String, byte[]) method was modified so that it can de-
+	crypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
+	such as "\n\n", "-", or the base 16 chars 0 to f.
 	
 	
 	
@@ -480,11 +483,12 @@
 	computing. The Rabin cipher can never be broken because factorization will always be harder than
 	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
 	rithm is O(n^3) multi-precision multiplications or O(n^4.58) single-precision multiplications or op-
-	erations. The fastest algorithm could not be faster than prime number generation which requires O(
-	n^4) or O(n^3.58) operations. A 1 M bit key would only require O(1) == O(n^0) multi-precision multi-
-	plications or O(n^1.58 == log2(3) == log(3)/log(2)) single-precision multiplications for encryption.
-	(No key size is secure for RSA because the coprime root extraction problem is completely broken.
-	This means that the function can be inverted as fast as it can be computed.)
+	erations. The fastest classical algorithm could not be faster than prime number generation which re-
+	quires O(n^4) or O(n^3.58) operations. A 1 M bit key would only require O(1) == O(n^0) multi-preci-
+	sion multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multiplications for
+	encryption using a sesquilinear or three-halves multiplier. (No key size is secure for RSA because
+	the coprime root extraction problem is completely broken. This means that the function can be invert-
+	ed as fast as it can be computed.)
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
@@ -1352,7 +1356,7 @@ class __
 	
 	clientservercomm = "Client/Server Communication",
 	
-	showemails = "Show / Hide Sent Emails",
+	showsentemails = "Show / Hide Sent Emails",
 	
 	Showkeyboard = "Show / Hide Keyboard",
 	
@@ -1648,13 +1652,13 @@ class __
 	
 	brightmagenta = "bright magenta (red + blue)",
 	magenta = "magenta (purplish red)",
-	darkmagenta = "dark magenta",
+	darkmagenta = "dark magenta (red + blue)",
 	
 	brightpurple = "bright purple (blue + 1/2 red)",
 	purple = "purple (blue + 1/2 red)",
 	darkpurple = "dark purple (blue + 1/2 red)",
 	
-	reddishblue1 = "reddish blue",
+	reddishblue1 = "reddish blue (bluish purple)",
 	reddishblue  = "dark reddish blue",
 	
 	aqua = "aqua (greenish blue)",
@@ -11183,8 +11187,6 @@ class Programs
 				{
 					public void mouseEntered(MouseEvent e)
 					{
-						//  these three lines should be commented or removed
-						
 						colorbutton1.setVisible(true);
 						colorbutton2.setVisible(true);
 						colorlabel  .setVisible(true);
@@ -17424,8 +17426,6 @@ class Programs
 				{
 					public void mouseEntered(MouseEvent e)
 					{
-						//  these three lines should be commented or removed
-						
 						colorbutton1.setVisible(true);
 						colorbutton2.setVisible(true);
 						colorlabel  .setVisible(true);
@@ -25275,7 +25275,7 @@ class Programs
 			
 			private Font font = new Font(fontname, fontstyle, (int) fontsize);
 			
-			private boolean showemails = true;
+			private boolean showsentemails = true;
 			
 			
 			//  In Java the cursor refers to the mouse pointer 'I',
@@ -25396,7 +25396,7 @@ class Programs
 			colormenuitem,
 			clientservermenuitem,
 			showkeyboardmenuitem,
-			showemailsmenuitem,
+			showsentemailsmenuitem,
 			viewpublickeysmenuitem,
 			viewsavedemailsmenuitem,
 			keyboardmenuitem;
@@ -25433,7 +25433,7 @@ class Programs
 			ClientServerListener clientserverlistener;
 			
 			ShowKeyboardListener showkeyboardlistener;
-			ShowHideEmailsListener showemailslistener;
+			ShowHideEmailsListener showsentemailslistener;
 			
 			ViewPublicKeysListener viewpublickeyslistener;
 			ViewSavedEmailsListener viewsavedemailslistener;
@@ -25589,7 +25589,7 @@ class Programs
 				clientserverlistener = new ClientServerListener();
 				
 				showkeyboardlistener = new ShowKeyboardListener();
-				showemailslistener = new ShowHideEmailsListener();
+				showsentemailslistener = new ShowHideEmailsListener();
 				
 				viewpublickeyslistener = new ViewPublicKeysListener();
 				viewsavedemailslistener = new ViewSavedEmailsListener();
@@ -25795,9 +25795,9 @@ class Programs
 				
 				viewmenu.addSeparator();
 				
-				showemailsmenuitem = new JMenuItem(__.showemails);
-				showemailsmenuitem.addActionListener(showemailslistener);
-				viewmenu.add(showemailsmenuitem);
+				showsentemailsmenuitem = new JMenuItem(__.showsentemails);
+				showsentemailsmenuitem.addActionListener(showsentemailslistener);
+				viewmenu.add(showsentemailsmenuitem);
 				
 				viewmenu.addSeparator();
 				
@@ -25868,7 +25868,7 @@ class Programs
 					
 					fonttypemenuitem, boldmenuitem, colormenuitem,
 					
-					clientservermenuitem, showkeyboardmenuitem, showemailsmenuitem,
+					clientservermenuitem, showkeyboardmenuitem, showsentemailsmenuitem,
 					
 					viewpublickeysmenuitem, viewsavedemailsmenuitem, aboutmenuitem,
 					
@@ -27234,14 +27234,14 @@ class Programs
 					  textboldbutton.addMouseListener(textboldlistener);
 					  fontsizebutton.addMouseListener(fontsizelistener);
 					  printkeybutton.addMouseListener(publickeylistener);
-					  showhidebutton.addMouseListener(showemailslistener);
+					  showhidebutton.addMouseListener(showsentemailslistener);
 					reversecolorsbutton.addMouseListener(reversecolorslistener);
 					
 					   composebutton.setToolTipText(__.compose_mail);
 					passphrasebutton.setToolTipText(__.passphrasesettings);
 					  textboldbutton.setToolTipText(__.text_bold);
 					  printkeybutton.setToolTipText(__.printpublickey);
-					  showhidebutton.setToolTipText(__.showemails);
+					  showhidebutton.setToolTipText(__.showsentemails);
 					  fontsizebutton.setToolTipText(__.font);
 					reversecolorsbutton.setToolTipText(__.reverse_colors);
 					
@@ -27509,7 +27509,7 @@ class Programs
 					
 					colormenuitem, clientservermenuitem, showkeyboardmenuitem,
 					
-					showemailsmenuitem, viewpublickeysmenuitem, viewsavedemailsmenuitem,
+					showsentemailsmenuitem, viewpublickeysmenuitem, viewsavedemailsmenuitem,
 					
 					aboutmenuitem, howtousepopmailmenuitem, testmailmenuitem,
 				};
@@ -28295,7 +28295,7 @@ class Programs
 								
 								String filepath = passphraseToFilePath(
 								
-								    oldpassphrase, __.usernames);
+								    __.usernames, oldpassphrase);
 								
 								File file = new File(filepath);
 								
@@ -28371,13 +28371,11 @@ class Programs
 					
 					final int maxlen = 24;
 					
-					if (useremailaddress.length() > 16)
+					useremailaddress = useremailaddress.substring(
 					
-					    useremailaddress = useremailaddress.substring(
-					    
-					       0, Math.min(maxlen, useremailaddress.length()));
+					    0, Math.min(maxlen, useremailaddress.length()));
 					
-					if (useremailaddress.length() == maxlen) useremailaddress += "..";
+					if (useremailaddress.length() > maxlen) useremailaddress += "..";
 					
 					JLabel useremailaddresslabel = new JLabel(useremailaddress);
 					
@@ -29447,8 +29445,6 @@ class Programs
 					{
 						public void mouseEntered(MouseEvent e)
 						{
-							//  these three lines should be commented or removed
-							
 							colorbutton1.setVisible(true);
 							colorbutton2.setVisible(true);
 							colorlabel  .setVisible(true);
@@ -29482,6 +29478,8 @@ class Programs
 						
 						public void mousePressed(MouseEvent e)
 						{
+							if (emailpanel.buttonlistener.listing) return;
+							
 							if (e.getSource() == checkbox)
 							{
 								colorbutton1.setVisible(!colorbutton1.isVisible());
@@ -29611,7 +29609,7 @@ class Programs
 					
 					//  ...   ...
 					
-					showemails = !showemails;
+					showsentemails = !showsentemails;
 					
 					if (emailpanel.list1 != null)
 					
@@ -29632,7 +29630,7 @@ class Programs
 						
 						if (from.equals(user)) emailpanel
 						
-						   .listpanel.setVisible(i, showemails);
+						   .listpanel.setVisible(i, showsentemails);
 					}
 				}
 			}
@@ -32841,6 +32839,8 @@ class Programs
 			{
 				//  checks or unchecks a [ x ] box for the read all screen
 				
+				if (emailpanel.buttonlistener.reading) return;
+				
 				int cp = emailpanel.textarea.getCaretPosition();
 				
 				StringBuilder sb = new StringBuilder(str);
@@ -33390,7 +33390,7 @@ class Programs
 				
 				
 				
-				String filepath = passphraseToFilePath(SP, __.usernames);
+				String filepath = passphraseToFilePath(__.usernames, SP);
 				
 				System.out.println("file path == " + filepath);
 				
@@ -33687,9 +33687,9 @@ class Programs
 						showkeyboard = Boolean.valueOf(line1);
 					}
 					
-					else if (line.equalsIgnoreCase(__.showemails))
+					else if (line.equalsIgnoreCase(__.showsentemails))
 					{
-						showemails = Boolean.valueOf(line1);
+						showsentemails = Boolean.valueOf(line1);
 					}
 					
 					else if (line.equalsIgnoreCase(__.mailcopytoself))
@@ -34014,8 +34014,8 @@ class Programs
 						list.add(__.Showkeyboard.toLowerCase());
 						list.add(showkeyboard);
 						
-						list.add(__.showemails.toLowerCase());
-						list.add(showemails);
+						list.add(__.showsentemails.toLowerCase());
+						list.add(showsentemails);
 						
 						list.add(__.mailcopytoself.toLowerCase());
 						list.add(mailcopytoself);
@@ -34056,7 +34056,7 @@ class Programs
 				
 				if ((SP == null) || SP.isEmpty()) return false;
 				
-				String filepath = passphraseToFilePath(SP, __.usernames);
+				String filepath = passphraseToFilePath(__.usernames, SP);
 				
 				File file = new File(filepath);
 				
@@ -34988,7 +34988,6 @@ class Programs
 					for (int i = 0; i < t; i++)
 					{
 						     panels[i] = new JPanel();
-						 datelabels[i].setFont(labelfont);
 						 datelabels[i] = new JLabel();
 						deleteboxes[i] = new JCheckBox();
 						editbuttons[i] = new JButton();
@@ -34998,6 +34997,7 @@ class Programs
 						 encrypted[i] = Boolean.valueOf(false);
 						textlabels[i] = new JLabel();
 						
+						datelabels[i].setFont(labelfont);
 						textlabels[i].setFont(labelfont);
 						
 						
@@ -35030,8 +35030,6 @@ class Programs
 						JCheckBox deletebox = deleteboxes[i];
 						
 						deletebox.setToolTipText(__.delete);
-						
-						final int i1 = i;
 						
 						deletebox.addActionListener(new ActionListener()
 						{ public void actionPerformed(ActionEvent e)
@@ -36200,7 +36198,7 @@ class Programs
 									
 									//  Skip the self-addressed email messages (if the user hides them)
 									
-									if (!showemails && from.equals(useraddress))
+									if (!showsentemails && from.equals(useraddress))
 									
 									    emailpanel.listpanel.setVisible(i, false);
 									
@@ -38455,7 +38453,7 @@ class Programs
 		
 		//  All username and public key files are encrypted by the same passphrase
 		
-		private String passphraseToFilePath(String passphrase, String desc)
+		private String passphraseToFilePath(String desc, String passphrase)
 		{
 			//  creates a unique file name from the passphrase and username
 			
@@ -38508,7 +38506,7 @@ class Programs
 			
 			String filepath = passphraseToFilePath(
 			
-			    SP + user, __.messagestates.toLowerCase());
+			    __.messagestates.toLowerCase(), SP + user);
 			
 			if (filepath == null)  return false;
 			
@@ -38633,7 +38631,7 @@ class Programs
 			
 			String filepath = passphraseToFilePath(
 			
-			    SP + user, __.messagestates.toLowerCase());
+			    __.messagestates.toLowerCase(), SP + user);
 			
 			
 			File file = new File(filepath);
@@ -38683,6 +38681,7 @@ class Programs
 		
 		
 		
+		
 		private PublicKeyRing readPublicKeys(String user)
 		{
 		
@@ -38696,7 +38695,7 @@ class Programs
 			
 			String filepath = passphraseToFilePath(
 			
-			    SP + user, __.publickeys.toLowerCase());
+			    __.publickeys.toLowerCase(), SP + user);
 			
 			if (filepath == null)  return null;
 			
@@ -38829,7 +38828,7 @@ class Programs
 			
 			String filepath = passphraseToFilePath(
 			
-			    SP + user, __.publickeys.toLowerCase());
+			    __.publickeys.toLowerCase(), SP + user);
 			
 			
 			File file = new File(filepath);
@@ -39429,7 +39428,7 @@ class Colors
 		{ 0xa00000, __.red },
 		{ 0x600000, __.darkred },
 		
-		{ 0xef5000, __.orange },
+		{ 0xf05000, __.orange },
 		
 		//  greens
 		
@@ -39462,11 +39461,11 @@ class Colors
 		
 		//  reddish blues
 		
-		{ 0x5000a0, __.brightpurple },
-		{ 0x380070, __.purple },
+		{ 0x5000a0, __.purple },
+		{ 0x380070, __.darkpurple },
 		
-		{ 0x3300A0, __.reddishblue1 },
-		{ 0x220080, __.reddishblue },
+		{ 0x2800A0, __.reddishblue1 },
+		{ 0x200080, __.reddishblue },
 		
 		//  ...
 		
@@ -50857,7 +50856,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setModal(true);
 		
-		Dimension newsize = getPreferredSize();
+		Dimension newsize = this.getPreferredSize();
 		this.setSize(newsize.width, newsize.height);
 		
 		if ((passphrasefield == null) || passphrasefield.isVisible())
@@ -50867,8 +50866,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//  The frame visibility has to be set to false
 		//  and then to true to force the method to block
 		
-		this.setVisible(false);
 		this.setSize(newsize.width, newsize.height);
+		
+		this.setVisible(false);
 		this.setVisible(true);
 		
 		if (!validpassphrase || closed)  return null;
@@ -50896,14 +50896,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setModal(true);
 		
-		Dimension newsize = getPreferredSize();
+		Dimension newsize = this.getPreferredSize();
 		this.setSize(newsize.width, newsize.height);
 		
 		//  The frame visibility has to be set to false
 		//  and then to true to force the method to block
 		
-		this.setVisible(false);
 		this.setSize(newsize.width, newsize.height);
+		
+		this.setVisible(false);
 		this.setVisible(true);
 		
 		if (!validpassphrase || closed) return null;
@@ -57970,12 +57971,19 @@ class PublicKey
 			
 			//  Append random digits to make the one-time public
 			//  key size equal to the static public key size
+			//
+			//  While the random numbers can be probabilistic
+			//  they should be deterministic so that a matching
+			//  public key can be a static key or a one-time pub-
+			//  lic key by using a static or one-time private key,
+			//  and a program can test if a key is being reused
+			//  by hashing the key.
 			
 			StringBuilder sb = new StringBuilder(ystr);
 			
-			while (sb.length() < digits) sb.append(
+			for (int i = 0; sb.length() < digits; i++)
 			
-			    new Number(Math.random(16)) .toString(16));
+			    sb.append(pi16.charAt(i));
 			
 			this.publickey = sb.toString();
 		}
@@ -81861,9 +81869,9 @@ class SSLSocket extends Socket
 		
 		    subsetkey, publickey, PublicKey.send_encrypt);
 		
-		System.out.println("client shared secret key == "
-		
-		    + this.keyagreement.toString(16));
+		//  System.out.println("key agreement == "
+		//
+		//    + this.keyagreement.toString(16));
 		
 		
 		//  Set the received (server) key
