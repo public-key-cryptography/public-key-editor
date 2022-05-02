@@ -47,9 +47,8 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to
 	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
 	as RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as
-	factorization or discrete logarithms. The software includes 16 public key ciphers (including 14
-	Diffie-Merkle-Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital sig-
-	nature algorithm.
+	factorization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-
+	Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
 	
 	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
 	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
@@ -128,12 +127,16 @@
 	listing = true and reading = true statements were moved outside of the list and read threads so that
 	they get set immediately after the user clicks the list or read button or else the color button would
 	still be enabled until the list or read thread is started which caused two background colors to appear 
-	simultaneously on the same list panel if two email tabs were open and the user clicked the reverse
-	color button while the program was listing the messages; the dialog.setSize(dialog.getPreferredSize())
-	statement that was between the dialog.setVisible(false) and setVisible(true) statements was moved in
-	front of setVisible(false) statement because the passphrase dialog box wasn't getting packed or re-
-	painted correctly; and the PublicKey decrypt(String, byte[]) method was modified so that it can de-
-	crypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
+	on the same list panel if two email tabs were open and the user clicked the reverse color button while
+	the program was listing the messages because Swing is not thread safe; the dialog.setSize(dialog.get-
+	PreferredSize()) statement that was between the dialog.setVisible(false) and setVisible(true) state-
+	ments was moved in front of the setVisible(false) statement because the passphrase dialog box wasn't
+	getting packed or repainted correctly; an error in the passphrase dialog that caused the line width to
+	stay at 56 chars if the user checked and unchecked the max cipher box and then clicked another button
+	was corrected; the Delete menu item was modified so it also deletes folders by recursively listing the
+	files in the directory, deleting the files, and then deleting the empty folders because Java will not
+	delete an un-empty directory; and the PublicKey decrypt(String, byte[]) method was modified so it can
+	decrypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
 	such as "\n\n", "-", or the base 16 chars 0 to f.
 	
 	
@@ -313,7 +316,7 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1      k2               -x2  x1   x2           -k2  k1   k2
+	          x1  x2           k1      k2               -x2  x1   x2           -k2  k1  k2
 	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
@@ -401,9 +404,9 @@
 	
 	Composite keys are a game changer because a cryptanalyst would have to break every cipher, invert
 	every function, or solve every equation in the public key class to read the encrypted messages.
-	The user has an advantage since only one of the ciphers has to be secure for the encryption to be
-	unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst anything because breaking a
-	composite key is an all-or-nothing game.
+	The cryptographer or user has an advantage since only one of the ciphers has to be secure for the
+	the encryption to be unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst any-
+	thing because breaking a composite key is an all-or-nothing game.
 	
 	The ciphers in the public key class that have a many-to-one mapping of the private key X to the
 	public key Y may be unbreakable by classical and quantum computing because the solution is ambig-
@@ -452,13 +455,14 @@
 	It doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
 	computing. The Rabin cipher can never be broken because factorization will always be harder than
 	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
-	rithm is O(n^3) multi-precision multiplications or O(n^4.58) single-precision multiplications or op-
-	erations. The fastest classical algorithm could not be faster than prime number generation which re-
-	quires O(n^4) or O(n^3.58) operations. A 1 M bit key would only require O(1) == O(n^0) multi-preci-
-	sion multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multiplications for
-	encryption using a sesquilinear or three-halves multiplier. (No key size is secure for RSA because
-	the coprime root extraction problem is completely broken. This means that the function can be invert-
-	ed as fast as it can be computed.)
+	rithm is O(n^2) multi-precision multiplications or O(n^3.58) single-precision multiplications or op-
+	erations. The fastest classical algorithm is unlikely to be faster than prime number generation which
+	requires O(n^4) or O(n^3.58) operations, and if it requires a matrix then it would be O(n^3) multi-
+	precision multiplications or O(n^4.58) operations. A 1 M bit key would only require O(1) == O(n^0)
+	multi-precision multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multiplica-
+	tions for encryption using a sesquilinear or three-halves multiplier. (No key size is secure for RSA
+	because the coprime root extraction problem is completely broken. This means that the function can be
+	inverted as fast as it can be computed.)
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =

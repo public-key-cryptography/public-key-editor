@@ -77,9 +77,8 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to
 	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
 	as RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as
-	factorization or discrete logarithms. The software includes 16 public key ciphers (including 14
-	Diffie-Merkle-Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital sig-
-	nature algorithm.
+	factorization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-
+	Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
 	
 	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
 	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
@@ -158,12 +157,16 @@
 	listing = true and reading = true statements were moved outside of the list and read threads so that
 	they get set immediately after the user clicks the list or read button or else the color button would
 	still be enabled until the list or read thread is started which caused two background colors to appear 
-	simultaneously on the same list panel if two email tabs were open and the user clicked the reverse
-	color button while the program was listing the messages; the dialog.setSize(dialog.getPreferredSize())
-	statement that was between the dialog.setVisible(false) and setVisible(true) statements was moved in
-	front of setVisible(false) statement because the passphrase dialog box wasn't getting packed or re-
-	painted correctly; and the PublicKey decrypt(String, byte[]) method was modified so that it can de-
-	crypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
+	on the same list panel if two email tabs were open and the user clicked the reverse color button while
+	the program was listing the messages because Swing is not thread safe; the dialog.setSize(dialog.get-
+	PreferredSize()) statement that was between the dialog.setVisible(false) and setVisible(true) state-
+	ments was moved in front of the setVisible(false) statement because the passphrase dialog box wasn't
+	getting packed or repainted correctly; an error in the passphrase dialog that caused the line width to
+	stay at 56 chars if the user checked and unchecked the max cipher box and then clicked another button
+	was corrected; the Delete menu item was modified so it also deletes folders by recursively listing the
+	files in the directory, deleting the files, and then deleting the empty folders because Java will not
+	delete an un-empty directory; and the PublicKey decrypt(String, byte[]) method was modified so it can
+	decrypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
 	such as "\n\n", "-", or the base 16 chars 0 to f.
 	
 	
@@ -343,7 +346,7 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1      k2               -x2  x1   x2           -k2  k1   k2
+	          x1  x2           k1      k2               -x2  x1   x2           -k2  k1  k2
 	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
@@ -431,9 +434,9 @@
 	
 	Composite keys are a game changer because a cryptanalyst would have to break every cipher, invert
 	every function, or solve every equation in the public key class to read the encrypted messages.
-	The user has an advantage since only one of the ciphers has to be secure for the encryption to be
-	unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst anything because breaking a
-	composite key is an all-or-nothing game.
+	The cryptographer or user has an advantage since only one of the ciphers has to be secure for the
+	the encryption to be unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst any-
+	thing because breaking a composite key is an all-or-nothing game.
 	
 	The ciphers in the public key class that have a many-to-one mapping of the private key X to the
 	public key Y may be unbreakable by classical and quantum computing because the solution is ambig-
@@ -482,13 +485,14 @@
 	It doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
 	computing. The Rabin cipher can never be broken because factorization will always be harder than
 	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
-	rithm is O(n^3) multi-precision multiplications or O(n^4.58) single-precision multiplications or op-
-	erations. The fastest classical algorithm could not be faster than prime number generation which re-
-	quires O(n^4) or O(n^3.58) operations. A 1 M bit key would only require O(1) == O(n^0) multi-preci-
-	sion multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multiplications for
-	encryption using a sesquilinear or three-halves multiplier. (No key size is secure for RSA because
-	the coprime root extraction problem is completely broken. This means that the function can be invert-
-	ed as fast as it can be computed.)
+	rithm is O(n^2) multi-precision multiplications or O(n^3.58) single-precision multiplications or op-
+	erations. The fastest classical algorithm is unlikely to be faster than prime number generation which
+	requires O(n^4) or O(n^3.58) operations, and if it requires a matrix then it would be O(n^3) multi-
+	precision multiplications or O(n^4.58) operations. A 1 M bit key would only require O(1) == O(n^0)
+	multi-precision multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multiplica-
+	tions for encryption using a sesquilinear or three-halves multiplier. (No key size is secure for RSA
+	because the coprime root extraction problem is completely broken. This means that the function can be
+	inverted as fast as it can be computed.)
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
@@ -1038,13 +1042,15 @@ class __
 	del = "del", // delete  or  x
 	
 	deletefile = "Delete file",
-	renamefile = "Rename file",
+	
+	deletefileorfolder = "DELETE file or folder",
+	renamefileorfolder = "Rename file or folder",
 	
 	newfilename = "New file name",
 	
-	filewillbepermanentlydeleted =
+	filewillbedeleted = "File will be permanently deleted",
 	
-	    "File will be permanently deleted",
+	folderwillbedeleted = "Folder will be permanently deleted",
 	
 	words = "words",  newlines = "lines",
 	
@@ -1658,8 +1664,8 @@ class __
 	purple = "purple (blue + 1/2 red)",
 	darkpurple = "dark purple (blue + 1/2 red)",
 	
-	reddishblue1 = "reddish blue (bluish purple)",
-	reddishblue  = "dark reddish blue",
+	reddishblue = "reddish blue (bluish purple)",
+	darkreddishblue  = "dark reddish blue",
 	
 	aqua = "aqua (greenish blue)",
 	darkaqua = "dark aqua (blue + 1/2 green)",
@@ -8094,7 +8100,8 @@ class Programs
 				textfield = new JTextField(4);
 				
 				textfield.setFont(textfield
-				    .getFont().deriveFont((float) 20));
+				
+				    .getFont().deriveFont(20.0f));
 				
 				panel = new JPanel();
 				
@@ -9458,8 +9465,7 @@ class Programs
 					textarea.setEditable(false);
 					textarea.setFont((font.getSize() <= maxfontsize) ?
 					     font : font.deriveFont((float) maxfontsize));
-					textarea.setBackground(
-					   new JPanel().getBackground());
+					textarea.setBackground(new JPanel().getBackground());
 					
 					
 					//  Display the JOptionPane dialog
@@ -11444,15 +11450,15 @@ class Programs
 							{
 								fontname = tokens[0].trim();
 								
-								fontstyle = new Number(tokens[1].trim()).intValue();
+								fontstyle = Integer.valueOf(tokens[1].trim());
 								
 								//  Test the font size
 								
 								if ((fontsize > 0) && (fontsize < 50))
 								
-								     fontsize = new Number(
+								     fontsize = Integer.valueOf(
 								
-									tokens[2].trim()).intValue();
+									tokens[2].trim());
 								
 								else fontsize = 20;
 							}
@@ -11644,8 +11650,8 @@ class Programs
 					textrgb   = foreground.getRGB();
 					screenrgb = background.getRGB();
 					
-					list.add(__.textrgb);   list.add(new Number(textrgb));
-					list.add(__.screenrgb); list.add(new Number(screenrgb));
+					list.add(__.textrgb);   list.add(Integer.valueOf(textrgb));
+					list.add(__.screenrgb); list.add(Integer.valueOf(screenrgb));
 				}
 				
 				if (font != null)
@@ -14704,7 +14710,7 @@ class Programs
 			
 			private JTable table;
 			
-			private final int stacksize = 80;
+			private final int stacksize = 128;
 			
 			private int indexer = 0;
 			
@@ -16346,7 +16352,7 @@ class Programs
 				textfield = new JTextField(4);
 				
 				textfield.setFont(textfield
-				    .getFont().deriveFont((float) 20));
+				    .getFont().deriveFont(20.0f));
 				
 				panel = new JPanel();
 				
@@ -21133,7 +21139,7 @@ class Programs
 		//  The msg state numbers to send to the server
 		//  and / or save in the message states file
 		
-		private enum MessageState
+		private static enum MessageState
 		{
 			unread,  // new envelope gold star
 			read,    // opened envelope
@@ -21839,7 +21845,7 @@ class Programs
 					button.setBorderPainted(false);
 					
 					Component hstrut = Box
-					    .createHorizontalStrut(10);
+					    .createHorizontalStrut(15);
 					
 					box.add(button);
 					box.add(hstrut);
@@ -22196,7 +22202,7 @@ class Programs
 				private int   publickeymessages = 0;
 				private int replytoselfmessages = 0;
 				
-				private int  minsize = 256;
+				private int minsize = 256;
 				
 				
 				public void actionPerformed(ActionEvent e)
@@ -25930,7 +25936,8 @@ class Programs
 				
 				private int msno, numberofmessages;
 				
-				private Color foreground, background;
+				private Color foreground;
+				private Color background;
 				
 				public ListPanel(int t)
 				{
@@ -26344,7 +26351,8 @@ class Programs
 				
 				private int msno, numberofmessages;
 				
-				private Color foreground, background;
+				private Color foreground;
+				private Color background;
 				
 				public ListPanel(int t)
 				{
@@ -29187,6 +29195,16 @@ class Programs
 				}
 				
 				
+				private void setBackground(Color color)
+				{
+					EmailPanel emailpanel1 = emailpanel;
+					
+					if (emailpanel1 == null) return;
+					
+					setBackground(emailpanel1, color);
+				}
+				
+				
 				private void setForeground(EmailPanel emailpanel, Color color)
 				{
 					//  Set the emailpanel foreground
@@ -29268,16 +29286,6 @@ class Programs
 						
 						emailpanel.savedemails.setForeground(color);
 					}
-				}
-				
-				
-				private void setBackground(Color color)
-				{
-					EmailPanel emailpanel1 = emailpanel;
-					
-					if (emailpanel1 == null) return;
-					
-					setBackground(emailpanel1, color);
 				}
 				
 				
@@ -29363,8 +29371,7 @@ class Programs
 				}
 				
 				
-				//  These methods are used to change
-				//  the colors of all the emailpanels
+				//  These methods are used to set the color of an emailpanel
 				
 				public void setForeground(EmailPanel emailpanel)
 				{
@@ -33587,11 +33594,11 @@ class Programs
 						{
 							String fontname = tokens[0].trim();
 							
-							int fontstyle = new Number(tokens[1].trim()).intValue();
+							int fontstyle = Integer.valueOf(tokens[1].trim());
 							
 							//  Test the font size
 							
-							int fontsize = new Number(tokens[2].trim()).intValue();
+							int fontsize = Integer.valueOf(tokens[2].trim());
 							
 							if ((fontsize < 0) || (fontsize > 50))
 							
@@ -34722,11 +34729,9 @@ class Programs
 					String dayofweek = days[cal.get(Calendar.DAY_OF_WEEK) -1];
 					String    month = months[cal.get(Calendar.MONTH)];
 					
-					String day = new Number(
+					String day = String.valueOf(
 					
-					   cal.get(Calendar.DAY_OF_MONTH) )
-					
-					      .add(0) .toString() .trim();
+					   cal.get(Calendar.DAY_OF_MONTH) );
 					
 					int year = cal.get(Calendar.YEAR);
 					
@@ -39151,7 +39156,7 @@ class Undo
 	
 	private JTextArea textarea;
 	
-	private final int stacksize = 80;
+	private final int stacksize = 128;
 	
 	private int indexer = 0;
 	
@@ -39464,8 +39469,8 @@ class Colors
 		{ 0x5000a0, __.purple },
 		{ 0x380070, __.darkpurple },
 		
-		{ 0x2800A0, __.reddishblue1 },
-		{ 0x200080, __.reddishblue },
+		{ 0x2000A0, __.reddishblue },
+		{ 0x170080, __.darkreddishblue },
 		
 		//  ...
 		
@@ -39773,7 +39778,7 @@ class Print
 		
 		font = font .deriveFont(
 		
-		    (float) font.getSize() - 6);
+		    font.getSize() - 6.0f);
 		
 		textarea1.setFont(font);
 		
@@ -39817,7 +39822,8 @@ class DeleteFileListener implements ActionListener
 	
 	public void run()
 	{
-	
+		int warnings = 0;
+		
 		while (true)
 		{
 			//  Choose a file
@@ -39833,13 +39839,14 @@ class DeleteFileListener implements ActionListener
 			
 			//  Confirm delete operation
 			
-			//  String message = __.deletefile + " ?";
+			//  String message = __.deletefileorfolder + " ?";
 			
 			String title = __.Warning + " !" + "  " + __.deletefile;
 			
-			String warning = __.Delete + " " + filename + " ?";
+			String warning = __.Delete + " " + filename + " ?" + "\n\n";
 			
-			warning += "\n" + __.filewillbepermanentlydeleted + "!";
+			if (file.isFile())      warning += __.  filewillbedeleted + "!\n";
+			if (file.isDirectory()) warning += __.folderwillbedeleted + "!\n";
 			
 			JTextArea textarea = new JTextArea(warning);
 			
@@ -39847,24 +39854,51 @@ class DeleteFileListener implements ActionListener
 			textarea.setBackground(new JLabel().getBackground());
 			textarea.setEditable(false);
 			
-			int choice = JOptionPane.showConfirmDialog(frame,
+			if (warnings < 2)
+			{
+				int choice = JOptionPane.showConfirmDialog(frame,
+				    textarea, title, JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.WARNING_MESSAGE);
+				
+				if ((choice == JOptionPane.CANCEL_OPTION)
+				 || (choice == JOptionPane.CLOSED_OPTION)) return;
+				
+				else if (choice == JOptionPane.NO_OPTION) return;
+				 
+				else if (choice == JOptionPane.YES_OPTION) { }
+			}
 			
-			    textarea, title, JOptionPane.YES_NO_CANCEL_OPTION,
+			//  Delete the file
 			
-				JOptionPane.WARNING_MESSAGE);
+			if (!file.isDirectory()) file.delete();
 			
-			if ((choice == JOptionPane.CANCEL_OPTION)
-			 || (choice == JOptionPane.CLOSED_OPTION))
+			else // if (file.isDirectory)
+			{
+				//  Delete the contents of the directory
+				
+				File[] files = ListFiles.listFiles(file);
+				
+				//  Only the files or empty directories will get
+				//  deleted by the first for each loop unless the
+				//  sub-directories are moved to the end of the array
+				//  by the ListFiles listFiles method.
+				
+				for (File file1 : files) file1.delete();
+				
+				//  Use a second loop to delete the remaining empty
+				//  sub-directories that were not deleted by the
+				//  first for each loop
+				
+				for (File file1 : files)
+				
+				    if (file1.exists()) file1.delete();
+			}
 			
-			    return;
+			//  Delete the empty top directory
 			
-			else if (choice == JOptionPane.YES_OPTION)
+			if (file.exists()) file.delete();
 			
-			    //  Delete the file
-			
-			    file.delete();
-			
-			else return;
+			warnings++;
 		}
 	}
 	
@@ -39876,17 +39910,19 @@ class DeleteFileListener implements ActionListener
 	
 		File file = null;
 		
-		JFileChooser fc;
+		FileChooser fc;
 		
 		fc = new FileChooser(directory);
 		
-		//  fc.setFont(font);
+		fc.setFont(font);
 		
-		String title = __.deletefile;
+		String title = __.deletefileorfolder;
 		
 		fc.setDialogTitle(title);
 		
 		fc.setApproveButtonText(title);
+		
+		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		
 		int choice = fc.showDialog(frame, null);
 		
@@ -40016,6 +40052,7 @@ class RenameFileListener implements ActionListener
 	}
 	
 	
+	
 	private File chooseFile(String directory)
 	{
 	
@@ -40025,7 +40062,7 @@ class RenameFileListener implements ActionListener
 		
 		fc = new FileChooser(directory);
 		
-		String title = __.renamefile;
+		String title = __.renamefileorfolder;
 		
 		fc.setDialogTitle(title);
 		
@@ -40575,9 +40612,7 @@ class EncryptDirectory
 		
 		//  Read the file names into the file list
 		
-		File[] filearray = new File[] { directory };
-		
-		File[] files = listFileTree(filearray);
+		File[] files = ListFiles.listFiles(directory);
 		
 		long totalbytes = 0;
 		
@@ -40838,9 +40873,7 @@ class EncryptDirectory
 		
 		//  Read the file names into the file list
 		
-		File[] filearray = new File[] { directory };
-		
-		File[] files = listFileTree(filearray);
+		File[] files = ListFiles.listFiles(directory);
 		
 		
 		long totalbytes = 0;
@@ -40946,44 +40979,6 @@ class EncryptDirectory
 			files[rand1] = files[n-1 -i];
 			
 			files[n-1 -i] = temp;
-		}
-	}
-	
-	
-	
-	private static File[] listFileTree(File[] filearray)
-	{
-		//  returns a list of all the files in a directory
-		
-		ArrayList<File> filelist = new ArrayList<File>();
-		
-		listFileTree(filearray, filelist);
-		
-		File[] files = new File[filelist.size()];
-		
-		return filelist.toArray(files);
-	}
-	
-	
-	private static void listFileTree(
-	
-		File[] filearray, ArrayList<File> filelist)
-	{
-		if ((filearray == null) || (filearray.length == 0)) return;
-		
-		for (File file : filearray)
-		{
-			//  Test before recursion
-			
-			if (file.isDirectory())
-			
-			    listFileTree(file.listFiles(), filelist);
-			
-			//  Add the file to the list
-			
-			if (!file.isDirectory())
-			
-			    filelist.add(file);
 		}
 	}
 	
@@ -48259,6 +48254,47 @@ class Icons
 
 
 
+class ListFiles
+{
+
+	//  Returns a list of all files in a directory
+	//  using recursion. Java listFiles only returns
+	//  the files in the directory, not the files in
+	//  the sub-directories. Listing all files is re-
+	//  quired for directory encryption and deletion.
+	
+	public static File[] listFiles(File directory)
+	{
+		ArrayList<File> filelist = new ArrayList<File>();
+		
+		listFiles(new File[] { directory }, filelist);
+		
+		File[] files = new File[filelist.size()];
+		
+		return filelist.toArray(files);
+	}
+	
+	private static void listFiles(
+	
+		File[] filearray, ArrayList<File> filelist)
+	{
+		if ((filearray == null) || (filearray.length == 0)) return;
+		
+		for (File file : filearray)
+		{
+			//  Test before recursion
+			
+			if (file.isDirectory()) listFiles(
+			
+			    file.listFiles(), filelist);
+			
+			//  Add the file to the list
+			
+			filelist.add(file);
+		}
+	}
+}
+
 
 
 
@@ -49569,7 +49605,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//  of chars per line could change in future versions
 			//  of the program.
 			
-			Integer[] linewidths = new Integer[] { 36, 48, 56 };
+			Integer[] linewidths = new Integer[] { 36, 48, 56, };
 			
 			linewidthbox = new JComboBox<Integer>(linewidths);
 			
@@ -49824,7 +49860,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 						
 						//  Set the line width index
 						
-						if (numberofciphers == n)
+						if ((numberofciphers == n)
+						 || (numberofciphers == n - n1))
 						
 						     index = linewidths.length - 1;
 						else index = linewidths.length - 2;
@@ -50956,7 +50993,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			return new String[] { SP0, SP1, email, String.valueOf(
 			
-			    numberofciphers), new Number(linewidth).toString().trim() };
+			    numberofciphers), String.valueOf(linewidth) };
 		}
 		
 		
@@ -69817,8 +69854,6 @@ class Number implements Comparable<Number>
 		
 		//  Set the inverse precision
 		
-		//  int inv_precision = intdigits*2 + fracdigits;
-		
 		int inv_precision = this.precision + 32;
 		
 		
@@ -75320,12 +75355,7 @@ class Matrix
 	
 	
 	
-	
-	
-	
-	
 	//  Matrix methods
-	
 	
 	
 	
@@ -75770,11 +75800,11 @@ class Matrix
 		
 		//  This method computes the determinant by recursion
 		//
-		//  using the definition | a11 | == a11
+		//  using the definition | a11 | == a11  and
 		//
-		//      | a11  a12 |
-		//  and |          | == a11 a22 - a12 a21.
-		//      | a21  a22 |
+		//  | a11  a12 |
+		//  |          | == a11 a22 - a12 a21.
+		//  | a21  a22 |
 		
 		
 		Number n = modulus;
@@ -76140,7 +76170,6 @@ class Matrix
 		
 		return new Number[] { x[0], x[1], x[2] };
 	}
-	
 	
 	
 	
@@ -79986,7 +80015,6 @@ class Fourier
 	
 	
 	
-	
 	public static Number[] transform(Number[] array, int sign)
 	{
 	
@@ -80406,7 +80434,6 @@ class Fourier
 	
 	
 	
-	
 	//  The Fast Fourier Transform (fft)
 	//
 	//  The Fast Fourier Transform (fft) is an algorithm or method for
@@ -80704,7 +80731,6 @@ class Fourier
 	
 	
 	
-	
 	private static double[] fftr(final double[] x, int sign)
 	{
 	
@@ -80772,7 +80798,6 @@ class Fourier
 		
 		return x;
 	}
-	
 	
 	
 	
