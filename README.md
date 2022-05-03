@@ -135,9 +135,11 @@
 	stay at 56 chars if the user checked and unchecked the max cipher box and then clicked another button
 	was corrected; the Delete menu item was modified so it also deletes folders by recursively listing the
 	files in the directory, deleting the files, and then deleting the empty folders because Java will not
-	delete an un-empty directory; and the PublicKey decrypt(String, byte[]) method was modified so it can
+	delete an un-empty directory; the PublicKey decrypt(String, byte[]) method was modified so it can
 	decrypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
-	such as "\n\n", "-", or the base 16 chars 0 to f.
+	such as "\n\n", "-", or the base 16 chars 0 to f; and a missing statement in the send mail frame set-
+	Font method was added to assign the font parameter to the font member / variable so that changing the
+	retrieve mail frame font type also changes the send mail frame font type.
 	
 	
 	
@@ -405,8 +407,8 @@
 	Composite keys are a game changer because a cryptanalyst would have to break every cipher, invert
 	every function, or solve every equation in the public key class to read the encrypted messages.
 	The cryptographer or user has an advantage since only one of the ciphers has to be secure for the
-	the encryption to be unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst any-
-	thing because breaking a composite key is an all-or-nothing game.
+	encryption to be unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst anything
+	because breaking a composite key is an all-or-nothing game.
 	
 	The ciphers in the public key class that have a many-to-one mapping of the private key X to the
 	public key Y may be unbreakable by classical and quantum computing because the solution is ambig-
