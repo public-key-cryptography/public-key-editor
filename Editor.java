@@ -165,11 +165,17 @@
 	stay at 56 chars if the user checked and unchecked the max cipher box and then clicked another button
 	was corrected; the Delete menu item was modified so it also deletes folders by recursively listing the
 	files in the directory, deleting the files, and then deleting the empty folders because Java will not
-	delete an un-empty directory; the PublicKey decrypt(String, byte[]) method was modified so it can
-	decrypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
-	such as "\n\n", "-", or the base 16 chars 0 to f; and a missing statement in the send mail frame set-
-	Font method was added to assign the font parameter to the font member / variable so that changing the
-	retrieve mail frame font type also changes the send mail frame font type.
+	delete an un-empty directory; the PublicKey decrypt(String, byte[]) method was modified so it can de-
+	crypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
+	such as "\n\n", "-", or the base 16 chars 0 to f; a missing statement in the send mail frame setFont
+	method was added to assign the font parameter to the font member / variable so that changing the re-
+	trieve mail frame font type also changes the send mail frame font type; the Filechooser class was mod-
+	ified to use a static font type so the dialog box size doesn't change if the font type is changed; the
+	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
+	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
+	sub-directories; and the JOptionPane method was changed to use the constructor instead of the static
+	factory method to get a reference to the dialog object so the encrypt directory dialog can be disposed
+	because sometimes the frame would collapse if the user closed the dialog or clicked the ok button.
 	
 	
 	
@@ -1791,7 +1797,7 @@ class __
 	    "If you do not include a reply key, the recipient will have to request\n" +
 	    "your public key to send an encrypted reply to your email until email\n" +
 	    "service providers upgrade their software to allow clients or users to\n" +
-	    "store their public keys on their servers.",
+	    "store public keys on their servers.",
 	
 	thismessageisundecryptable =
 	
@@ -1931,7 +1937,7 @@ class __
 		"A few self-addressed emails are also included to test the mail program because " +
 		"the mail program can send a duplicate copy of your messages to your email ad" +
 		"dress so that you have a copy of all your sent messages in your inbox. You can " +
-		"hide these emails by clicking a menu item that says show / hide emails.\n\n\n" +
+		"hide these emails by clicking a menu item that says show / hide sent emails.\n\n\n" +
 		
 		
 		"You can change the size of the window by dragging the lower right corner of the " +
@@ -10231,7 +10237,8 @@ class Programs
 					directory = file.getParent();
 					
 					
-					//  File sizes > 32 bits should use RandomAccessFile
+					//  File sizes > 32 bits should use a
+					//  RandomAccessFile or FileChannel object
 					
 					if (file.length() >= 2L*1024*1024*1024) return;
 					
@@ -22173,7 +22180,9 @@ class Programs
 				
 				JLabel label = new JLabel(hash);
 				
-				label.setFont(labelfont.deriveFont(18.0f));
+				label.setFont(labelfont.deriveFont(20.0f)
+				
+				    .deriveFont(Font.PLAIN));
 				
 				int type = JOptionPane.PLAIN_MESSAGE;
 				
@@ -23206,7 +23215,9 @@ class Programs
 												
 												vbox.add(vstrut);
 												
-												JOptionPane .showMessageDialog(frame, vbox);
+												JOptionPane .showMessageDialog(frame, vbox,
+												
+												    "", JOptionPane.ERROR_MESSAGE);
 												
 												continue;
 											}
@@ -23446,9 +23457,6 @@ class Programs
 						}
 						
 						
-						
-						//  This code block is only required if the user tries
-						//  to send a message without first entering a passphrase
 						
 						if ((SP == null) || SP.isEmpty())
 						{
@@ -27927,7 +27935,7 @@ class Programs
 				public void actionPerformed(ActionEvent e)
 				{
 				
-					//    Reply key size dialog box
+					//                    Reply key size dialog box
 					//     ________________________________________________________
 					//    |                   ----------------                     |
 					//    |                  | Reply key size | 4                  |
@@ -27939,7 +27947,7 @@ class Programs
 					//    |________________________________________________________|
 					
 					
-					//  Clicking on the reply key size button opens the second dialog
+					//   Clicking on the reply key size button opens the second dialog
 					//
 					//   _____________________________________________________________
 					//  |                                                             |
@@ -27948,8 +27956,8 @@ class Programs
 					//  |                                                             |
 					//  | If you do not include a reply key, the recipient will have  |
 					//  | to request your public key to send an encrypted reply to    |
-					//  | your email until email service providers upgrade their soft |
-					//  | ware to allow clients or users to store their public keys   |
+					//  | your email until email service providers upgrade their      |
+					//  | software to allow clients or users to store public keys     |
 					//  | on their servers.                                           |
 					//  |                                                             |
 					//  |            o zero  * quad  o oct  o max1  o max2            |
@@ -39673,50 +39681,54 @@ class SaveFile
 
 
 
+
 class FileChooser extends JFileChooser
 {
 
+	//  A static font type is used because some font
+	//  types can change the size of the dialog box
+	
 	private static final long serialVersionUID = 1L;
 	
-	private Font font;
+	private Font font = new Font("Dialog", Font.PLAIN, 18);
 	
 	public FileChooser() { super(); }
 	
-	private final float minsize = 14;
-	private final float maxsize = 20;
+	private final float minsize =  8;
+	private final float maxsize = 21;
 	
 	public FileChooser(String directory)
 	{
 		super(directory);
-		
-		Dimension d;
-		
-		d = super.getPreferredSize();
-		
-		double x = d.getWidth(), y = d.getHeight();
-		
-		d = new Dimension((int) (1.2*x), (int) (1.2*y));
-		
-		super.setPreferredSize(d);
 	}
 	
 	
-	public void setFont(Font font)
+	public void setFont(Font font1)
 	{
-		if (font == null) return;
+		//  sets the font size
 		
-		int size = font.getSize();
+		if (font1 == null) return;
 		
-		if (size < minsize) font = font.deriveFont(minsize);
-		if (size > maxsize) font = font.deriveFont(maxsize);
+		int size = font1.getSize();
+		
+		if (size < minsize) font1 = font.deriveFont(minsize);
+		if (size > maxsize) font1 = font.deriveFont(maxsize);
 		
 		font = new Font(font.getName(),
 		
-		    Font.BOLD, font.getSize());
+		    font.getStyle(), font1.getSize());
 		
 		this.font = font;
 		
 		setFont(this.getComponents());
+		
+		Dimension d = super.getPreferredSize();
+		
+		double x = d.getWidth(), y = d.getHeight();
+		
+		d = new Dimension((int) (0.8*x), (int) (1.2*y));
+		
+		super.setPreferredSize(d);
 	}
 	
 	
@@ -39734,12 +39746,17 @@ class FileChooser extends JFileChooser
 			
 			    comp.setFont(font);
 			
-			if (comp instanceof JComboBox
-			 || comp instanceof JButton)
+			float buttonfontsize = font.getSize();
+			float comboboxfontsize = font.getSize();
 			
-			    comp.setFont(font.deriveFont(
+			if (buttonfontsize < minsize) buttonfontsize = minsize;
+			if (comboboxfontsize < minsize) comboboxfontsize = minsize;
 			
-				font.getSize() - 2.0f));
+			Font buttonfont = font.deriveFont(buttonfontsize);
+			Font comboboxfont = font.deriveFont(comboboxfontsize);
+			
+			if (comp instanceof JComboBox) comp.setFont(comboboxfont);
+			if (comp instanceof JButton) comp.setFont(buttonfont);
 		}
 	}
 }
@@ -39817,7 +39834,7 @@ class DeleteFileListener implements ActionListener
 	
 	private Font font = new JPanel()
 	
-	    .getFont() .deriveFont(16.0f);
+	    .getFont() .deriveFont(18.0f);
 	
 	
 	public DeleteFileListener(JFrame frame)
@@ -40125,10 +40142,7 @@ class EncryptDirectory
 	
 	
 	
-	private JFileChooser fc;
-	
 	private File directory;
-	
 	
 	private JFrame frame;
 	
@@ -40150,11 +40164,7 @@ class EncryptDirectory
 	
 	private boolean encryptfilenames;
 	
-	private JCheckBox checkbox;
-	
 	private JTextArea filearea;
-	
-	private JLabel keyhashlabel;
 	
 	private JButton    testbutton;
 	private JButton encryptbutton;
@@ -40180,8 +40190,6 @@ class EncryptDirectory
 		encryptbutton = new JButton(__.encrypt);
 		decryptbutton = new JButton(__.decrypt);
 		 cancelbutton = new JButton(__.cancel);
-		
-		checkbox = new JCheckBox();
 		
 		buttons = new JButton[]
 		
@@ -40238,10 +40246,6 @@ class EncryptDirectory
 		cancelbutton.addActionListener(new ActionListener()
 		   { public void actionPerformed(ActionEvent e)
 		        { canceled = true; }});
-		
-		checkbox.addActionListener(new ActionListener()
-		   { public void actionPerformed(ActionEvent e)
-			{ encryptfilenames = checkbox.isSelected(); }});
 	}
 	
 	public void setFont(Font font)
@@ -40281,6 +40285,8 @@ class EncryptDirectory
 		
 		directory = null;
 		
+		JFileChooser fc;
+		
 		fc = new FileChooser();
 		
 		fc.setFont(font);
@@ -40290,11 +40296,10 @@ class EncryptDirectory
 		fc.setFileSelectionMode(mode);
 		
 		
-		int choice = 0;
-		
 		
 		while (true)
 		{
+			//  Choose a directory
 			
 			String title = __.encryptdirectory;
 			
@@ -40302,7 +40307,7 @@ class EncryptDirectory
 			
 			fc.setApproveButtonText(title);
 			
-			choice = fc.showDialog(frame, null);
+			int choice = fc.showDialog(frame, null);
 			
 			if (choice == JFileChooser.APPROVE_OPTION)
 			
@@ -40321,60 +40326,76 @@ class EncryptDirectory
 		
 		
 		
-		while (true)
-		{
-			if (filekey == null) chooseFileKey();
-			
-			if (filekey == null) return;
-			
-			String encryptmessage  = __.encryptdirectorywithkey;
-			String enterpassphrase = __.entersecretpassphrase;
-			
-			String filepath = directory.toString();
-			
-			if (filepath.length() > 32) filepath =
-			
-			    filepath .substring(0, 32) + "..";
-			
-			String str = new Number(filekey) .toString(16);
-			
-			while ((str.length() % 8) != 0) str = "0" + str;
-			
-			String keyhash = Convert.partition(
-			
-			    str.substring(0, 16), " ", 4);
-			
-			String title = directory.toString();
-			
-			
-			//  Display the JOptionPane dialog
-			
-			JPanel panel = createPanel(filepath, keyhash);
-			
-			choice = JOptionPane.showConfirmDialog(frame, panel, title,
-			
-			    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-			
-			
-			if ((choice == JOptionPane.CANCEL_OPTION)
-			 || (choice == JOptionPane.CLOSED_OPTION))
-			{
-				return;
-			}
-			
-			else if (choice == JOptionPane.NO_OPTION)
-			{
-				filekey = null;
-				
-				continue;
-			}
-			
-			else if (choice == JOptionPane.YES_OPTION)
-			{
-				break;
-			}
-		}
+		if (filekey == null) chooseFileKey();
+		
+		if (filekey == null) return;
+		
+		String encryptmessage  = __.encryptdirectorywithkey;
+		String enterpassphrase = __.entersecretpassphrase;
+		
+		String filepath = directory.toString();
+		
+		if (filepath.length() > 32) filepath =
+		
+		    filepath .substring(0, 32) + "..";
+		
+		String str = new Number(filekey) .toString(16);
+		
+		while ((str.length() % 8) != 0) str = "0" + str;
+		
+		String keyhash = Convert.partition(
+		
+		    str.substring(0, 16), " ", 4);
+		
+		String title = directory.toString();
+		
+		
+		//  Create the panel that contains the components
+		
+		JPanel panel = createPanel(filepath, keyhash);
+		
+		
+		
+		//  Display the panel using a JOptionPane dialog
+		
+		//  choice = JOptionPane.showConfirmDialog(frame, panel, title,
+		//
+		//    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+		
+		
+		//  Use the JOptionPane constructor instead of the static factory
+		//  method to get a reference to the dialog object so the dialog
+		//  can be disposed. Otherwise the JOptionPane can sometimes col-
+		//  lapse if the user closes the option pane or clickes the ok
+		//  button and then the user has to click ok a second time on the
+		//  collapsed frame.
+		
+		JOptionPane pane = new JOptionPane(panel, JOptionPane
+		
+		   .PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, null, 0);
+		
+		//  pane .set(...)
+		
+		JDialog dialog = pane.createDialog(frame, title);
+		
+		dialog.setVisible(true);
+		
+		Object selection = pane.getValue();
+		
+		//  if (selection == null) { dialog.dispose(); return; }
+		//
+		//  if (selection instanceof Integer)
+		//  {
+		//	int choice = (Integer) selection;
+		//	
+		//	if (choice == ...)  ...
+		//  }
+		
+		dialog.dispose();
+		
+		return;
 	}
+	
 	
 	
 	
@@ -40408,148 +40429,161 @@ class EncryptDirectory
 	
 	
 	
+	
 	private JPanel createPanel(String filename, String keyhash)
 	{
 	
-			//   ____________________________________________________
-			//  |                                                    |
-			//  |              [x] Encrypt file names                |
-			//  |              /home/username/folder                 |
-			//  |             Encrypt directory with key             |
-			//  |                0123 4567 89ab cdef                 |
-			//  |      ________________________________________      |
-			//  |     |  Encrypting file /home/username/file1  |     |
-			//  |     |  Encrypting file /home/username/file2  |     |
-			//  |     |  Encrypting file /home/username/file3  |     |
-			//  |     |  Encrypting file /home/username/file4  |     |
-			//  |     |________________________________________|     |
-			//  |      ______   _________   _________   ________     |
-			//  |     |_Test_| |_Encrypt_| |_Decrypt_| |_Cancel_|    |
-			//  |                        ____                        |
-			//  |                       |_OK_|                       |
-			//  |____________________________________________________|
-			
-			
-			//  Create the encrypt / decrypt directory panel
-			
-			Box vbox = Box.createVerticalBox();
-			
-			JLabel label1, label2, label3, label4;
-			
-			label1 = new JLabel(__.encryptfilenames);
-			label2 = new JLabel(filename);
-			label3 = new JLabel(__.encryptdirectorywithkey);
-			label4 = new JLabel(keyhash);
-			
-			label1.setFont(font);
-			label2.setFont(font);
-			label3.setFont(font);
-			label4.setFont(font);
-			
-			label1.addMouseListener(new MouseAdapter()
-			{ public void mouseClicked(MouseEvent e)
-			{ Object obj = e.getSource();
-			if (obj instanceof JLabel)
-			    checkbox.setSelected(
-			   !checkbox.isSelected()); }});
-			
-			JButton keybutton = new JButton();
-			
-			keybutton.setEnabled(false);
-			keybutton.add(label4);
-			
-			Box hbox1, hbox2, hbox3, hbox4;
-			
-			hbox1 = Box.createHorizontalBox();
-			hbox2 = Box.createHorizontalBox();
-			hbox3 = Box.createHorizontalBox();
-			hbox4 = Box.createHorizontalBox();
-			
-			Component hstrut = Box
-			    .createHorizontalStrut(2);
-			
-			hbox1.add(checkbox);
-			hbox1.add(hstrut);
-			hbox1.add(label1);
-			hbox2.add(label2);
-			hbox3.add(label3);
-			hbox4.add(keybutton);
-			
-			Component strut1 = Box.createVerticalStrut(2);
-			Component strut2 = Box.createVerticalStrut(2);
-			Component strut3 = Box.createVerticalStrut(2);
-			Component strut4 = Box.createVerticalStrut(2);
-			
-			vbox.add(hbox1); vbox.add(strut1);
-			vbox.add(hbox2); vbox.add(strut2);
-			vbox.add(hbox3); vbox.add(strut3);
-			vbox.add(hbox4); vbox.add(strut4);
-			
-			
-			//  The highlighter must be disabled or set to null
-			//  or else the program will hang if the user clicks
-			//  on the text area as the file names are scrolling.
-			
-			filearea = new JTextArea(10, 48);
-			filearea.setEditable(false);
-			filearea.setHighlighter(null);
-			filearea.setFont(font);
-			filearea.setForeground(foreground);
-			filearea.setBackground(background);
-			if (background.equals(new JPanel().getBackground()))
-			    background = Color.white;
-			
-			JScrollPane scrollpane;
-			
-			scrollpane = new JScrollPane(filearea);
-			
-			vbox.add(scrollpane);
-			
-			Box hbox = Box.createHorizontalBox();
-			
-			hbox.add(testbutton);
-			hbox.add(encryptbutton);
-			hbox.add(decryptbutton);
-			hbox.add(cancelbutton);
-			
-			vbox.add(hbox);
-			
-			JPanel panel = new JPanel();
-			
-			panel.add(vbox);
-			
-			
-			keyhashlabel = label4;
-			
-			keyhashlabel.addMouseListener(new MouseAdapter()
+	
+		//   ____________________________________________________
+		//  |                                                    |
+		//  |              [x] Encrypt file names                |
+		//  |              /home/username/folder                 |
+		//  |             Encrypt directory with key             |
+		//  |                0123 4567 89ab cdef                 |
+		//  |      ________________________________________      |
+		//  |     |  Encrypting file /home/username/file1  |     |
+		//  |     |  Encrypting file /home/username/file2  |     |
+		//  |     |  Encrypting file /home/username/file3  |     |
+		//  |     |  Encrypting file /home/username/file4  |     |
+		//  |     |________________________________________|     |
+		//  |      ______   _________   _________   ________     |
+		//  |     |_Test_| |_Encrypt_| |_Decrypt_| |_Cancel_|    |
+		//  |                        ____                        |
+		//  |                       |_OK_|                       |
+		//  |____________________________________________________|
+		
+		
+		//  Create the encrypt / decrypt directory panel
+		
+		Box vbox = Box.createVerticalBox();
+		
+		JCheckBox checkbox = new JCheckBox();
+		
+		checkbox.addActionListener(new ActionListener()
+		{ public void actionPerformed(ActionEvent e)
+		{ encryptfilenames = checkbox.isSelected(); }});
+		
+		JLabel label1, label2, label3, label4;
+		
+		label1 = new JLabel(__.encryptfilenames);
+		label2 = new JLabel(filename);
+		label3 = new JLabel(__.encryptdirectorywithkey);
+		label4 = new JLabel(keyhash);
+		
+		label1.setFont(font);
+		label2.setFont(font);
+		label3.setFont(font);
+		label4.setFont(font);
+		
+		label1.addMouseListener(new MouseAdapter()
+		{ public void mouseClicked(MouseEvent e)
+		{ Object obj = e.getSource();
+		if (obj instanceof JLabel)
+		    checkbox.setSelected(
+		   !checkbox.isSelected()); }});
+		
+		JButton keybutton = new JButton();
+		
+		keybutton.setEnabled(false);
+		keybutton.add(label4);
+		
+		Box hbox1, hbox2, hbox3, hbox4;
+		
+		hbox1 = Box.createHorizontalBox();
+		hbox2 = Box.createHorizontalBox();
+		hbox3 = Box.createHorizontalBox();
+		hbox4 = Box.createHorizontalBox();
+		
+		Component hstrut = Box
+		    .createHorizontalStrut(2);
+		
+		hbox1.add(checkbox);
+		hbox1.add(hstrut);
+		hbox1.add(label1);
+		hbox2.add(label2);
+		hbox3.add(label3);
+		hbox4.add(keybutton);
+		
+		Component strut1 = Box.createVerticalStrut(2);
+		Component strut2 = Box.createVerticalStrut(2);
+		Component strut3 = Box.createVerticalStrut(2);
+		Component strut4 = Box.createVerticalStrut(2);
+		
+		vbox.add(hbox1); vbox.add(strut1);
+		vbox.add(hbox2); vbox.add(strut2);
+		vbox.add(hbox3); vbox.add(strut3);
+		vbox.add(hbox4); vbox.add(strut4);
+		
+		
+		//  The highlighter must be disabled or set to null
+		//  or else the program will hang if the user clicks
+		//  on the text area as the file names are scrolling.
+		
+		filearea = new JTextArea(10, 48);
+		filearea.setEditable(false);
+		filearea.setHighlighter(null);
+		filearea.setFont(font);
+		filearea.setForeground(foreground);
+		filearea.setBackground(background);
+		if (background.equals(new JPanel().getBackground()))
+		    background = Color.white;
+		
+		JScrollPane scrollpane;
+		
+		scrollpane = new JScrollPane(filearea);
+		
+		vbox.add(scrollpane);
+		
+		Box hbox = Box.createHorizontalBox();
+		
+		hbox.add(testbutton);
+		hbox.add(encryptbutton);
+		hbox.add(decryptbutton);
+		hbox.add(cancelbutton);
+		
+		vbox.add(hbox);
+		
+		JPanel panel = new JPanel();
+		
+		panel.add(vbox);
+		
+		
+		JLabel keyhashlabel;
+		
+		keyhashlabel = label4;
+		
+		keyhashlabel.addMouseListener(new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e)
 			{
-				public void mousePressed(MouseEvent e)
+				if (e.getSource() == keyhashlabel)
 				{
-					if (e.getSource() == keyhashlabel)
-					{
-						if (running) return;
-						
-						chooseFileKey();
-						
-						String str = new Number(filekey).toString(16);
-						
-						while ((str.length() % 8) != 0) str = "0" + str;
-						
-						String keyhash = Convert.partition(
-						
-						    str.substring(0, 16), " ", 4);
-						
-						keyhashlabel.setText(keyhash);
-					}
+					if (running) return;
+					
+					chooseFileKey();
+					
+					String str = new Number(filekey).toString(16);
+					
+					while ((str.length() % 8) != 0) str = "0" + str;
+					
+					String keyhash = Convert.partition(
+					
+					    str.substring(0, 16), " ", 4);
+					
+					keyhashlabel.setText(keyhash);
 				}
-			});
-			
-			return panel;
+			}
+		});
+		
+		return panel;
 	}
 	
 	
-	//  The program could become unreponsive if
-	//  the append method were not synchronized
+	
+	//  The program could become deadlocked if the append
+	//  method were not synchronized and then the user
+	//  would have to find and terminate the process
+	
 	
 	private synchronized void append(String message)
 	{
@@ -40592,7 +40626,8 @@ class EncryptDirectory
 			
 			if (!parent.equals(home))
 			{
-				//  Warn the user that the file is not in the home dir
+				//  Warn the user that the file
+				//  is not in the home directory
 				
 				String title = "";
 				
@@ -40719,6 +40754,8 @@ class EncryptDirectory
 		//  Choose a directory to decrypt
 		
 		directory = null;
+		
+		JFileChooser fc;
 		
 		fc = new FileChooser();
 		
@@ -40921,6 +40958,7 @@ class EncryptDirectory
 		
 		         filearrays[i][j] = files[size*i + j];
 		
+		
 		//  Add the runnable R2 to the thread array
 		
 		for (int i = 0; i < tarray.length; i++)
@@ -40962,6 +41000,7 @@ class EncryptDirectory
 		
 		if (!test) append(message);
 	}
+	
 	
 	
 	
@@ -41007,13 +41046,14 @@ class EncryptDirectory
 		
 			for (File file : files)
 			{
-				if (file == null) continue;
+				if ((file == null) || file.isDirectory()) continue;
 				
 			        if (file.length() >= 2L*1024*1024*1024)
 				
 				    continue;
 				
 				if (canceled) return;
+				
 				
 				//  Read each file
 				
@@ -41043,6 +41083,7 @@ class EncryptDirectory
 					
 					continue;
 				}
+				
 				
 				if (!Cipher.isEncrypted(file))
 				{
@@ -41084,14 +41125,16 @@ class EncryptDirectory
 					//	catch (IOException ex) { append(ex); return; }
 					
 					
-					//  Read the file path, delete the file,
-					//  and create a new file using the path
+					//  Read the file path, delete the plaindata/text file,
+					//  and create a new cipherdata/text file using the path
 					
 					String filepath = file.getPath();
 					
 					boolean bool = file.delete();
 					
-					if (!bool) System.out.println("Error deleting file");
+					if (!bool) System.out.println(
+					
+					    "Error deleting file");
 					
 					file = new File(filepath);
 					
@@ -41110,23 +41153,6 @@ class EncryptDirectory
 						
 						continue;
 					}
-					
-					if (encryptfilenames)
-					{
-						message = __.encryptingfilename + " " + file;
-						
-						//  append(message);
-						
-						byte[] m = Cipher.hash(input);
-						
-						String name1 = FileNameEncryptor
-						
-						  .encryptFileName(file.getName(), filekey, m);
-						
-						String path1 = file.getParent() + File.separator + name1;
-						
-						file.renameTo(new File(path1));
-					}
 				}
 				
 				else
@@ -41137,6 +41163,30 @@ class EncryptDirectory
 					append(message);
 					
 					continue;
+				}
+				
+				
+				if (encryptfilenames)
+				{
+					String message =
+					
+					    __.encryptingfilename + " " + file;
+					
+					//  append(message);
+					
+					byte[] m = Cipher.hash(input);
+					
+					//  to encrypt sub-directory names
+					//  m could equal hash(new byte[] { 0 })
+					//  but this feature is not implemented
+					
+					String name1 = FileNameEncryptor
+					
+					  .encryptFileName(file.getName(), filekey, m);
+					
+					String path1 = file.getParent() + File.separator + name1;
+					
+					file.renameTo(new File(path1));
 				}
 			}
 		}
@@ -41158,7 +41208,7 @@ class EncryptDirectory
 		
 			for (File file : files)
 			{
-				if (file == null) continue;
+				if ((file == null) || file.isDirectory()) continue;
 				
 			        if (file.length() >= 2L*1024*1024*1024)
 				
@@ -41246,13 +41296,22 @@ class EncryptDirectory
 						
 						byte[] m = Cipher.hash(plaindata);
 						
+						//  to encrypt sub-directory names
+						//  m could equal hash(new byte[] { 0 })
+						//  but this feature is not implemented
+						
 						String name1 = FileNameEncryptor
 						
 						  .decryptFileName(file.getName(), filekey, m);
 						
-						String path1 = file.getParent() + File.separator + name1;
-						
-						file.renameTo(new File(path1));
+						if ((name1 != null) && !name1.isEmpty())
+						{
+							String path1 = file.getParent()
+							
+							    + File.separator + name1;
+							
+							file.renameTo(new File(path1));
+						}
 					}
 				}
 				
@@ -41267,6 +41326,7 @@ class EncryptDirectory
 		}
 	}
 }
+
 
 //  End class EncryptDirectory
 
@@ -41800,14 +41860,16 @@ class FileEncryptor
 		//  DataStream.write(file, array); // too slow
 		
 		
-		//  Read the file path, delete the file,
-		//  and create a new file using the path
+		//  Read the file path, delete the plaindata/text file,
+		//  and create a new cipherdata/text file using the path
 		
 		String filepath = file.getPath();
 		
 		boolean bool = file.delete();
 		
-		if (!bool) System.out.println("Error deleting file");
+		if (!bool) System.out.println(
+		
+		    "Error deleting file");
 		
 		file = new File(filepath);
 		
@@ -48321,8 +48383,9 @@ class DataStream
 	//  be opened and closed for each read and write operation.
 	
 	//  These methods can only read files up to 2 GB because of
-	//  the array size limit. The RandomAccessFile class should
-	//  be used for larger file sizes.
+	//  the array size limit. For larger file sizes the methods
+	//  should use a RandomAccessFile or FileChannel object
+	//  which is safe for use by multiple concurrent threads.
 	
 	//  The Editor program reads and writes binary data because
 	//  the data is usually encrypted. The random data is not
@@ -49321,7 +49384,10 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	private int maxradiobuttonsize = 32;
 	private int maxboxsize = 32;
 	
-	private Font font;
+	private Font font = new Font(
+	
+	    "monospaced", Font.BOLD, 18);
+	
 	
 	
 	
@@ -50762,14 +50828,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 		if (font == null)  return this;
 		
-		String fontname = font.getName();
-		int fontstyle = font.getStyle();
+		String fontname = this.font.getName();
+		int fontstyle = this.font.getStyle();
+		
 		float fontsize = font.getSize();
 		
 		if (fontsize > maxfontsize)
 		    fontsize = maxfontsize;
 		
-		this.font = font.deriveFont(fontsize);
+		this.font = this.font.deriveFont(fontsize);
 		
 		for (Component component : components)
 		{
@@ -57434,7 +57501,8 @@ class PublicKey
 	//  c[i]   ==  c[i]                    (mod p[i])
 	//
 	//  and lcr(r[], p[]) is the least common remainder,
-	//  least Chinese remainder, or least common residue.
+	//  least Chinese remainder, least common residue,
+	//  or least composite residue
 	//
 	//  If m1 < p[i] for any p, then the secret key is
 	//
@@ -57474,8 +57542,8 @@ class PublicKey
 	//  based on least common multiples, not modular inversion because there was
 	//  no modular inversion before Fermat's little theorem a^(p-1) == 1 (mod p)
 	//  was published in the seventeenth century. (This theorem says that a^(p-1)
-	//  == 1 == a^0 (mod p) which implies that the inverse of a is a^(p-2) == 1/a
-	//  == a^-1 (mod p))
+	//  == 1 == a^0 (mod p) for a != 0 (mod p) which implies that the inverse of
+	//  a is a^(p-2) == 1/a == a^-1 (mod p))
 	//
 	//  In the first century A.D. Nicomachus mentioned the problem of computing
 	//  the composite residue from a set of reduced residues and moduli but he
@@ -62291,8 +62359,8 @@ class Cipher
 	
 	
 	//  If a file is larger than the max file size, the hash
-	//  methods will use the RandomAccessFile methods instead
-	//  of reading the entire file into memory.
+	//  methods will use the RandomAccessFile or FileChannel
+	//  methods instead of reading the entire file into memory.
 	
 	
 	public static final int maxfilesize = (int) (2L*1024*1024*1024-1);

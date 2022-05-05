@@ -135,11 +135,17 @@
 	stay at 56 chars if the user checked and unchecked the max cipher box and then clicked another button
 	was corrected; the Delete menu item was modified so it also deletes folders by recursively listing the
 	files in the directory, deleting the files, and then deleting the empty folders because Java will not
-	delete an un-empty directory; the PublicKey decrypt(String, byte[]) method was modified so it can
-	decrypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
-	such as "\n\n", "-", or the base 16 chars 0 to f; and a missing statement in the send mail frame set-
-	Font method was added to assign the font parameter to the font member / variable so that changing the
-	retrieve mail frame font type also changes the send mail frame font type.
+	delete an un-empty directory; the PublicKey decrypt(String, byte[]) method was modified so it can de-
+	crypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
+	such as "\n\n", "-", or the base 16 chars 0 to f; a missing statement in the send mail frame setFont
+	method was added to assign the font parameter to the font member / variable so that changing the re-
+	trieve mail frame font type also changes the send mail frame font type; the Filechooser class was mod-
+	ified to use a static font type so the dialog box size doesn't change if the font type is changed; the
+	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
+	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
+	sub-directories; and the JOptionPane method was changed to use the constructor instead of the static
+	factory method to get a reference to the dialog object so the encrypt directory dialog can be disposed
+	because sometimes the frame would collapse if the user closed the dialog or clicked the ok button.
 	
 	
 	
