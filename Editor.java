@@ -173,9 +173,8 @@
 	ified to use a static font type so the dialog box size doesn't change if the font type is changed; the
 	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
 	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
-	sub-directories; and the JOptionPane method was changed to use the constructor instead of the static
-	factory method to get a reference to the dialog object so the encrypt directory dialog can be disposed
-	because sometimes the frame would collapse if the user closed the dialog or clicked the ok button.
+	sub-directories, and an error in the EncryptDirectory class that caused it to display two JOptionPane
+	dialogs was corrected.
 	
 	
 	
@@ -10153,7 +10152,7 @@ class Programs
 				
 				ed.setFileKey(filekey);
 				
-				ed.encryptDirectory();
+				ed.encryptDecryptDirectory();
 				
 				//  Update the file key
 				
@@ -10186,7 +10185,7 @@ class Programs
 				
 				dd.setFileKey(filekey);
 				
-				dd.decryptDirectory();
+				dd.encryptDecryptDirectory();
 				
 				if (dd.getFileKey() != null)
 				
@@ -17111,7 +17110,7 @@ class Programs
 				
 				ed.setFileKey(filekey);
 				
-				ed.encryptDirectory();
+				ed.encryptDecryptDirectory();
 				
 				//  Update the file key
 				
@@ -17141,7 +17140,7 @@ class Programs
 				
 				dd.setFileKey(filekey);
 				
-				dd.decryptDirectory();
+				dd.encryptDecryptDirectory();
 				
 				//  Update the file key
 				
@@ -19253,7 +19252,7 @@ class Programs
 				
 				ed.setFileKey(filekey);
 				
-				ed.encryptDirectory();
+				ed.encryptDecryptDirectory();
 				
 				//  Update the file key
 				
@@ -19294,7 +19293,7 @@ class Programs
 				
 				//  dd.setFileKey(filekey);
 				
-				dd.decryptDirectory();
+				dd.encryptDecryptDirectory();
 				
 				//  Update the file key
 				
@@ -23395,9 +23394,9 @@ class Programs
 							
 							if (filedesc.isBlank()) filedesc = Convert.stringToBase64("    ");
 							
-							if (encrypt == false) filetext = Convert.partition(
+							if (encrypt == false) filetext = Convert
 							
-								filetext, "\n", linesize);
+							    .partition(filetext, "\n", linesize);
 							
 							//  Concatenate the file description and the file text
 							
@@ -39482,8 +39481,8 @@ class Colors
 		
 		//  reddish blues
 		
-		{ 0x5800b0, __.purple },
-		{ 0x380070, __.darkpurple },
+		{ 0x6000a8, __.purple },
+		{ 0x400070, __.darkpurple },
 		
 		{ 0x2000A0, __.reddishblue },
 		{ 0x170080, __.darkreddishblue },
@@ -40278,7 +40277,7 @@ class EncryptDirectory
 	}
 	
 	
-	public void encryptDirectory()
+	public void encryptDecryptDirectory()
 	{
 	
 		//  Choose a directory to encrypt
@@ -40294,7 +40293,6 @@ class EncryptDirectory
 		int mode = JFileChooser.DIRECTORIES_ONLY;
 		
 		fc.setFileSelectionMode(mode);
-		
 		
 		
 		while (true)
@@ -40355,45 +40353,11 @@ class EncryptDirectory
 		JPanel panel = createPanel(filepath, keyhash);
 		
 		
-		
 		//  Display the panel using a JOptionPane dialog
 		
-		//  choice = JOptionPane.showConfirmDialog(frame, panel, title,
-		//
-		//    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+		JOptionPane.showConfirmDialog(frame, panel, title,
 		
-		
-		//  Use the JOptionPane constructor instead of the static factory
-		//  method to get a reference to the dialog object so the dialog
-		//  can be disposed. Otherwise the JOptionPane can sometimes col-
-		//  lapse if the user closes the option pane or clickes the ok
-		//  button and then the user has to click ok a second time on the
-		//  collapsed frame.
-		
-		JOptionPane pane = new JOptionPane(panel, JOptionPane
-		
-		   .PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, null, 0);
-		
-		//  pane .set(...)
-		
-		JDialog dialog = pane.createDialog(frame, title);
-		
-		dialog.setVisible(true);
-		
-		Object selection = pane.getValue();
-		
-		//  if (selection == null) { dialog.dispose(); return; }
-		//
-		//  if (selection instanceof Integer)
-		//  {
-		//	int choice = (Integer) selection;
-		//	
-		//	if (choice == ...)  ...
-		//  }
-		
-		dialog.dispose();
-		
-		return;
+		    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 	}
 	
 	
@@ -40745,128 +40709,6 @@ class EncryptDirectory
 	}
 	
 	
-	
-	
-	
-	public void decryptDirectory()
-	{
-	
-		//  Choose a directory to decrypt
-		
-		directory = null;
-		
-		JFileChooser fc;
-		
-		fc = new FileChooser();
-		
-		fc.setFont(font);
-		
-		int mode = JFileChooser.DIRECTORIES_ONLY;
-		
-		fc.setFileSelectionMode(mode);
-		
-		int choice = 0;
-		
-		
-		while (true)
-		{
-			String title = __.decryptdirectory;
-			
-			fc.setDialogTitle(title);
-			
-			fc.setApproveButtonText(title);
-			
-			choice = fc.showDialog(frame, null);
-			
-			if (choice == JFileChooser.APPROVE_OPTION)
-			
-			    directory = fc.getSelectedFile();
-			
-			else if (choice == JFileChooser.CANCEL_OPTION) return;
-			
-			if (!directory.isDirectory())
-			
-			    System.out.println(__.selectedfileisnotadirectory);
-			
-			else break;
-		}
-		
-		
-		//  Create a passphrase dialog
-		
-		PassphraseDialog pd = new PassphraseDialog(
-		
-		    frame, PassphraseDialog.passphrase_only);
-		
-		pd.setMinimumLength(0);
-		
-		pd.setFont1(font != null ?
-		
-		    font : frame.getFont());
-		
-		pd.setForeground1(foreground);
-		pd.setBackground1(background);
-		
-		
-		while (true)
-		{
-			if (filekey == null)
-			{
-				//  Request a secret filekey
-				
-				String passphrase = pd .readPassphrase();
-				
-				if ((passphrase != null) && !passphrase.isEmpty())
-				
-				    filekey = Cipher.passphraseToKey(passphrase);
-				
-				else return;
-			}
-			
-			
-			String enterpassphrase = __.entersecretpassphrase;
-			String encryptmessage  = __.encryptdirectorywithkey;
-			
-			String str = new Number(filekey) .toString(16);
-			
-			while ((str.length() % 8) != 0) str = "0" + str;
-			
-			String filepath = directory.toString();
-			
-			if (filepath.length() > 32) filepath = filepath.substring(0, 32) + "..";
-			
-			String keyhash = Convert.partition(str.substring(0, 16), " ", 4);
-			
-			String title = directory.toString();
-			
-			
-			//  Display the JOptionPane dialog
-			
-			JPanel panel = createPanel(filepath, keyhash);
-			
-			choice = JOptionPane.showConfirmDialog(frame, panel, title,
-			
-			    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-			
-			if ((choice == JOptionPane.CANCEL_OPTION)
-			 || (choice == JOptionPane.CLOSED_OPTION))
-			{
-				return;
-			}
-			
-			else if (choice == JOptionPane.NO_OPTION)
-			{
-				filekey = null;
-				
-				continue;
-			}
-			
-			else if (choice == JOptionPane.YES_OPTION)
-			{
-				break;
-			}
-		}
-	}
 	
 	
 	
@@ -42432,6 +42274,7 @@ class FileDecryptor
 			    font : frame.getFont());
 			
 			
+			
 			while (true)
 			{
 				if (filekey != null)
@@ -42502,8 +42345,10 @@ class FileDecryptor
 		//
 		//  update the filekey and return
 		
-		if ((plaindata != null) && !Cipher.isEncrypted(plaindata))
+		if (plaindata != null)
 		{
+			System.out.println("random == " + Cipher.isRandom(plaindata));
+			
 			if (filekey == null) this.filekey
 			
 			    = Cipher.passphraseToKey(SP);
@@ -42559,6 +42404,7 @@ class FileDecryptor
 		
 		return plaindata;
 	}
+	
 	
 	
 	
@@ -63767,6 +63613,24 @@ class Cipher
 		return isRandom(array);
 	}
 	
+	
+	
+	
+	
+	
+	//  The isRandom(byte[]) method should have more
+	//  tests for randomness because it returns true
+	//  for byte arrays such as the consecutive integers
+	//  { 0, 1, 2, 3, ..., n }
+	//
+	//
+	//  byte[] a = new byte[64*1024];
+	//
+	//  for (int i = 0; i < a.length; i++) a[i] = (byte) i;
+	//
+	//  boolean random = Cipher.isRandom(a);
+	//
+	//  System.out.println("random == " + random);
 	
 	
 	public static boolean isRandom(byte[] array)

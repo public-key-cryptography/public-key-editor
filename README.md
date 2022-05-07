@@ -143,9 +143,8 @@
 	ified to use a static font type so the dialog box size doesn't change if the font type is changed; the
 	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
 	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
-	sub-directories; and the JOptionPane method was changed to use the constructor instead of the static
-	factory method to get a reference to the dialog object so the encrypt directory dialog can be disposed
-	because sometimes the frame would collapse if the user closed the dialog or clicked the ok button.
+	sub-directories, and an error in the EncryptDirectory class that caused it to display two JOptionPane
+	dialogs was corrected.
 	
 	
 	
