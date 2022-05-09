@@ -143,8 +143,20 @@
 	ified to use a static font type so the dialog box size doesn't change if the font type is changed; the
 	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
 	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
-	sub-directories, and an error in the EncryptDirectory class that caused it to display two JOptionPane
-	dialogs was corrected.
+	sub-directories; an error in the EncryptDirectory class that caused it to display two JOptionPane dia-
+	logs was corrected;
+	
+	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
+	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
+	decryptable if the user re-saves a file that has an encrypted file name; encrypted file names are only
+	useful for the Pictures folder because the image viewer decrypts the file names, but for the Documents
+	folder the file names should not be encrypted because users have to be able to read the file names to
+	know which file or document to open unless the OpenListener class can prompt the user to enter the
+	passphrase to read, decrypt, and display the decrypted filenames; users who have encrypted file name
+	directories will have to decrypt the directories using a previous version of the program and then re-
+	encrypt the directories or else only the file contents will be decrypted and the file names will be
+	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted.
+	
 	
 	
 	

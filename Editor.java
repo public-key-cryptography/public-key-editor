@@ -173,8 +173,20 @@
 	ified to use a static font type so the dialog box size doesn't change if the font type is changed; the
 	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
 	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
-	sub-directories, and an error in the EncryptDirectory class that caused it to display two JOptionPane
-	dialogs was corrected.
+	sub-directories; an error in the EncryptDirectory class that caused it to display two JOptionPane dia-
+	logs was corrected;
+	
+	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
+	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
+	decryptable if the user re-saves a file that has an encrypted file name; encrypted file names are only
+	useful for the Pictures folder because the image viewer decrypts the file names, but for the Documents
+	folder the file names should not be encrypted because users have to be able to read the file names to
+	know which file or document to open unless the OpenListener class can prompt the user to enter the
+	passphrase to read, decrypt, and display the decrypted filenames; users who have encrypted file name
+	directories will have to decrypt the directories using a previous version of the program and then re-
+	encrypt the directories or else only the file contents will be decrypted and the file names will be
+	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted.
+	
 	
 	
 	
@@ -939,6 +951,8 @@ class __
 	encryptdirectory = "Encrypt Directory",
 	decryptdirectory = "Decrypt Directory",
 	
+	encryptdecryptdirectory = "Encrypt / Decrypt Directory",
+	
 	encryptfile = "Encrypt File",
 	decryptfile = "Decrypt File",
 	
@@ -1148,6 +1162,7 @@ class __
 	
 	test = "Test",
 	
+	encryptfilename    = "Encrypt file name",
 	encryptfilenames   = "Encrypt file names",
 	encryptfilewithkey = "Encrypt file with key",
 	
@@ -4050,6 +4065,8 @@ class Programs
 			private ImageFrame imageframe;
 			private HTMLFrame htmlframe;
 			
+			private String title;
+			
 			//  If the user opens an image file instead of a text file,
 			//  open the file in the image viewer instead of the text editor
 			
@@ -4192,11 +4209,9 @@ class Programs
 				
 				//  Set the tab title and color
 				
-				tabbedpane.setTitleAt(
+				tabbedpane.setTitleAt(tabbedpane
 				
-				    tabbedpane.getSelectedIndex(),
-				
-					textareapanel.file.getName() );
+				    .getSelectedIndex(), title );
 				
 				if (textareapanel.encrypted)
 				{
@@ -4250,6 +4265,8 @@ class Programs
 			public byte[] open(File file)
 			{
 			
+				title = file.getName();
+				
 				if (file.length() > 16*1024*1024)
 				{
 					String message = __.largefile;
@@ -4326,6 +4343,15 @@ class Programs
 					}
 					
 					filekey = fd.getFileKey();
+					
+					
+					//  Decrypt the file name to set the tab title
+					
+					String name1 = FileNameEncryptor
+					
+					  .decryptFileName(file.getName(), filekey);
+					
+					title = name1;
 				}
 				
 				return plaindata;
@@ -4499,9 +4525,13 @@ class Programs
 				 || (result == -1))  return result;
 				
 				
-				tabbedpane.setTitleAt(tabbedpane.getSelectedIndex(),
+				String filename = textareapanel.file.getName();
 				
-				    textareapanel.file.getName() );
+				tabbedpane.setTitleAt(tabbedpane
+				
+				   .getSelectedIndex(), filename );
+				
+				
 				
 				if (textareapanel.encrypted)
 				{
@@ -4517,6 +4547,10 @@ class Programs
 					     tabbedpane.setForegroundAt(index, foreground);
 					else tabbedpane.setForegroundAt(index, background);
 				}
+				
+				tabbedpane.setTitleAt(tabbedpane
+				
+				   .getSelectedIndex(), file.getName() );
 				
 				textareapanel.filechanged = false;
 				
@@ -4548,6 +4582,8 @@ class Programs
 				//  update the current file path
 				
 				
+				JTextArea textarea = textareapanel.textarea;
+				
 				File file = new SaveFile(frame, __.saveas)
 				
 				    .setDirectory(directory) .setFont(font)
@@ -4559,9 +4595,7 @@ class Programs
 				
 				directory = file.getParent();
 				
-				byte[] data = textareapanel
-				
-				    .textarea.getText() .getBytes();
+				byte[] data = textarea.getText() .getBytes();
 				
 				//  If the user is reading an existing encrypted file
 				//  then the textarea panel encrypted variable is true
@@ -4603,7 +4637,7 @@ class Programs
 						
 						FileEncryptor fe = new FileEncryptor(frame);
 						
-						fe.setFont(textareapanel.textarea.getFont());
+						fe.setFont(textarea.getFont());
 						fe.setForeground(foreground);
 						fe.setBackground(background);
 						
@@ -4646,14 +4680,50 @@ class Programs
 				
 				    textareapanel.encrypted = true;
 				
+				
+				
+				String filename = textareapanel.file.getName();
+				
+				if (textareapanel.encrypted && (filename.length() >= 64)
+				
+				    && Number.isBase16(filename))
+				{
+					int choice = JOptionPane
+					
+					   .showConfirmDialog(frame,
+					
+						__.encryptfilename + " ?");
+					
+					if (choice == JOptionPane.YES_OPTION)
+					{
+						//  Re-encrypt the new file name
+						
+						String name0 = FileNameEncryptor
+						
+						  .decryptFileName(file.getName(), filekey);
+						
+						String name1 = FileNameEncryptor
+						
+						  .encryptFileName(name0, filekey);
+						
+						String path1 = file.getParent()
+						
+						    + File.separator + name1;
+						
+						file.renameTo(new File(path1));
+					}
+				}
+				
+				
+				
 				if (textareapanel.encrypted)
 				{
 					//  Set the tab color to the encrypted color
 					
 					int index = tabbedpane.getSelectedIndex();
 					
-					Color foreground = textareapanel.textarea.getForeground();
-					Color background = textareapanel.textarea.getBackground();
+					Color foreground = textarea.getForeground();
+					Color background = textarea.getBackground();
 					
 					if (textareapanel.encrypted)
 					{
@@ -4663,10 +4733,9 @@ class Programs
 						
 						else tabbedpane.setForegroundAt(index,
 						
-						    textareapanel.textarea.getBackground());
+						     textarea.getBackground());
 					}
 				}
-				
 				
 				tabbedpane.setTitleAt(tabbedpane
 				
@@ -13425,7 +13494,8 @@ class Programs
 		
 		private class OpenListener implements ActionListener
 		{
-		
+			private String title;
+			
 			public void actionPerformed(ActionEvent e) { run(); }
 			
 			public void run()
@@ -13559,6 +13629,8 @@ class Programs
 			
 			public byte[] open(File file)
 			{
+				title = file.getName();
+				
 				if (file.length() > 16*1024*1024)
 				{
 					String errormessage = __.largefile;
@@ -13633,6 +13705,16 @@ class Programs
 					}
 					
 					filekey = fd.getFileKey();
+					
+					
+					
+					//  Decrypt the file name to set the tab title
+					
+					String name1 = FileNameEncryptor
+					
+					  .decryptFileName(file.getName(), filekey);
+					
+					title = name1;
 				}
 				
 				return plaindata;
@@ -13782,6 +13864,8 @@ class Programs
 				
 				//  File already exists
 				
+				boolean encrypted = Cipher.isEncrypted(file);
+				
 				byte[] data = getData().getBytes();
 				
 				
@@ -13808,9 +13892,14 @@ class Programs
 				 || (result == -1))  return result;
 				
 				
-				tabbedpane.setTitleAt(tabbedpane.getSelectedIndex(),
 				
-				    tablepanel.file.getName() );
+				String filename = tablepanel.file.getName();
+				
+				tabbedpane.setTitleAt(tabbedpane
+				
+				   .getSelectedIndex(), filename );
+				
+				
 				
 				if (tablepanel.encrypted)
 				{
@@ -13826,6 +13915,10 @@ class Programs
 					     tabbedpane.setForegroundAt(index, foreground);
 					else tabbedpane.setForegroundAt(index, background);
 				}
+				
+				tabbedpane.setTitleAt(tabbedpane
+				
+				   .getSelectedIndex(), file.getName() );
 				
 				tablepanel.filechanged = false;
 				
@@ -13855,6 +13948,8 @@ class Programs
 				//  update the current file path
 				
 				
+				JTable table = tablepanel.table;
+				
 				File file = new SaveFile(frame, __.saveas)
 				
 				  .setDirectory(directory) .setFont(font) .chooseFile();
@@ -13862,8 +13957,6 @@ class Programs
 				if (file == null) return;
 				
 				directory = file.getParent();
-				
-				String filename = file.getName();
 				
 				
 				byte[] data = getData().getBytes();
@@ -13910,8 +14003,6 @@ class Programs
 						
 						if (tablepanel != null)
 						{
-							JTable table = tablepanel.table;
-							
 							fe.setFont(table.getFont());
 							fe.setForeground(table.getForeground());
 							fe.setBackground(table.getBackground());
@@ -13956,14 +14047,49 @@ class Programs
 				
 				    tablepanel.encrypted = true;
 				
+				
+				String filename = file.getName();
+				
+				if (tablepanel.encrypted && (filename.length() >= 64)
+				
+				    && Number.isBase16(filename))
+				{
+					int choice = JOptionPane
+					
+					   .showConfirmDialog(frame,
+					
+						__.encryptfilename + " ?");
+					
+					if (choice == JOptionPane.YES_OPTION)
+					{
+						//  Re-encrypt the new file name
+						
+						String name0 = FileNameEncryptor
+						
+						  .decryptFileName(file.getName(), filekey);
+						
+						String name1 = FileNameEncryptor
+						
+						  .encryptFileName(name0, filekey);
+						
+						String path1 = file.getParent()
+						
+						    + File.separator + name1;
+						
+						file.renameTo(new File(path1));
+					}
+				}
+				
+				
+				
 				if (tablepanel.encrypted)
 				{
 					//  Set the tab color to the encrypted color
 					
 					int index = tabbedpane.getSelectedIndex();
 					
-					Color foreground = tablepanel.table.getForeground();
-					Color background = tablepanel.table.getBackground();
+					Color foreground = table.getForeground();
+					Color background = table.getBackground();
 					
 					if (background.equals(Color.white))
 					
@@ -18851,15 +18977,13 @@ class Programs
 				String title = file.getName();
 				
 				
-				//  Decrypt the file name to set the title label
+				//  Decrypt the file name to set the tab title
 				
 				if (encrypted)
 				{
-					byte[] m = Cipher.hash(imagedata);
-					
 					String name1 = FileNameEncryptor
 					
-					  .decryptFileName(file.getName(), filekey, m);
+					  .decryptFileName(file.getName(), filekey);
 					
 					title = name1;
 				}
@@ -39894,9 +40018,9 @@ class DeleteFileListener implements ActionListener
 			
 			//  Delete the file
 			
-			if (!file.isDirectory()) file.delete();
+			if (file.isFile()) { file.delete(); warnings++; }
 			
-			else // if (file.isDirectory)
+			else if (file.isDirectory())
 			{
 				//  Delete the contents of the directory
 				
@@ -39916,13 +40040,11 @@ class DeleteFileListener implements ActionListener
 				for (File file1 : files)
 				
 				    if (file1.exists()) file1.delete();
+				
+				//  Delete the empty top directory
+				
+				if (file.exists()) file.delete();
 			}
-			
-			//  Delete the empty top directory
-			
-			if (file.exists()) file.delete();
-			
-			warnings++;
 		}
 	}
 	
@@ -40122,6 +40244,46 @@ class RenameFileListener implements ActionListener
 
 
 
+//	//  This code was used to create a file folder to
+//	//  test the encrypt / decrypt directory menu items
+//	
+//	int filesize = 1024*1024, numberoffiles = 1024;
+//	
+//	String homedir = System.getProperty("user.home");
+//	
+//	String filename1 = homedir + "/Desktop/folder";
+//	
+//	File file1 = new File(filename1);
+//	
+//	System.out.println(!file1.exists());
+//	
+//	if (!file1.exists()) file1.mkdir();
+//	
+//	for (int i = 0; i < numberoffiles; i++)
+//	{
+//		String s = File.separator;
+//		
+//		String filename = homedir + s + "Desktop"
+//		
+//		 + s + "folder" + s + String.valueOf(i);
+//		
+//		File file = new File(filename);
+//		
+//		byte[] array = new byte[filesize];
+//		
+//		for (int j = 0; j < array.length; j++)
+//		
+//		    //  0123456789 ... abcdefgh ...
+//		
+//		    array[j] = (byte) j;
+//		
+//		DataStream.write(file, array);
+//	}
+
+
+
+
+
 class EncryptDirectory
 {
 
@@ -40299,7 +40461,9 @@ class EncryptDirectory
 		{
 			//  Choose a directory
 			
-			String title = __.encryptdirectory;
+			String title =
+			
+			  __.encryptdecryptdirectory;
 			
 			fc.setDialogTitle(title);
 			
@@ -41010,21 +41174,9 @@ class EncryptDirectory
 				
 				if (encryptfilenames)
 				{
-					String message =
-					
-					    __.encryptingfilename + " " + file;
-					
-					//  append(message);
-					
-					byte[] m = Cipher.hash(input);
-					
-					//  to encrypt sub-directory names
-					//  m could equal hash(new byte[] { 0 })
-					//  but this feature is not implemented
-					
 					String name1 = FileNameEncryptor
 					
-					  .encryptFileName(file.getName(), filekey, m);
+					  .encryptFileName(file.getName(), filekey);
 					
 					String path1 = file.getParent() + File.separator + name1;
 					
@@ -41033,6 +41185,7 @@ class EncryptDirectory
 			}
 		}
 	}
+	
 	
 	
 	
@@ -41136,15 +41289,9 @@ class EncryptDirectory
 					{
 						//  Decrypt the file name
 						
-						byte[] m = Cipher.hash(plaindata);
-						
-						//  to encrypt sub-directory names
-						//  m could equal hash(new byte[] { 0 })
-						//  but this feature is not implemented
-						
 						String name1 = FileNameEncryptor
 						
-						  .decryptFileName(file.getName(), filekey, m);
+						  .decryptFileName(file.getName(), filekey);
 						
 						if ((name1 != null) && !name1.isEmpty())
 						{
@@ -41780,11 +41927,9 @@ class FileEncryptor
 			{
 				//  Decrypt the file name
 				
-				byte[] m = Cipher.hash(plaindata);
-				
 				String name1 = FileNameEncryptor
 				
-				  .decryptFileName(file.getName(), filekey, m);
+				  .decryptFileName(file.getName(), filekey);
 				
 				String path1 = file.getParent() + File.separator + name1;
 				
@@ -41959,7 +42104,6 @@ class FileEncryptor
 	
 	
 	
-	
 	public boolean decrypt(File file, byte[] decryptionkey)
 	
 		throws IOException, FileNotFoundException
@@ -42002,23 +42146,15 @@ class FileEncryptor
 		
 		//  Decrypt the file name
 		
-		System.out.println(
-		
-		  Number.isBase16(file.getName())
-		
-		    && (file.getName().length() >= 32));
-		
 		if (Number.isBase16(file.getName())
 		
 		    && (file.getName().length() >= 32))
 		{
 			//  Decrypt the file name
 			
-			byte[] m = Cipher.hash(plaindata);
-			
 			String name1 = FileNameEncryptor
 			
-			  .decryptFileName(file.getName(), filekey, m);
+			  .decryptFileName(file.getName(), filekey);
 			
 			String path1 = file.getParent() + File.separator + name1;
 			
@@ -42217,11 +42353,9 @@ class FileDecryptor
 			
 			    && (file.getName().length() >= 32))
 			{
-				byte[] m = Cipher.hash(plaindata);
-				
 				String name1 = FileNameEncryptor
 				
-				  .decryptFileName(file.getName(), filekey, m);
+				  .decryptFileName(file.getName(), filekey);
 				
 				String path1 = file.getParent() + File.separator + name1;
 				
@@ -42347,8 +42481,6 @@ class FileDecryptor
 		
 		if (plaindata != null)
 		{
-			System.out.println("random == " + Cipher.isRandom(plaindata));
-			
 			if (filekey == null) this.filekey
 			
 			    = Cipher.passphraseToKey(SP);
@@ -42460,11 +42592,9 @@ class FileDecryptor
 		
 		    && (file.getName().length() >= 32))
 		{
-			byte[] m = Cipher.hash(plaindata);
-			
 			String name1 = FileNameEncryptor
 			
-			  .decryptFileName(file.getName(), filekey, m);
+			  .decryptFileName(file.getName(), filekey);
 			
 			String path1 = file.getParent() + File.separator + name1;
 			
@@ -42490,7 +42620,7 @@ class FileNameEncryptor
 {
 
 
-	public static String encryptFileName(String filename, byte[] filekey, byte[] m)
+	public static String encryptFileName(String filename, byte[] filekey)
 	{
 		//  m is the hash of the plaindata
 		
@@ -42500,7 +42630,7 @@ class FileNameEncryptor
 		//
 		//  compute the one-time pad
 		//
-		//  k = hash(m (+) filekey (+) iv)
+		//  k = hash(filekey (+) iv)
 		//
 		//  convert the file name to byte array
 		//
@@ -42513,25 +42643,27 @@ class FileNameEncryptor
 		//  (Without an iv, if two files have the same data
 		//  and filekey, the one-time pads would be identical)
 		
-		String name = filename;
+		String plaintext = filename;
 		
-		byte[] iv = new Number(Math.random(4L*1024*1024*1024)).toByteArray(4);
+		byte[] iv = new Number(Math.random(
 		
-		byte[] k = Cipher.hash(Math.xor(Math.xor(m, filekey), iv));
+		    4L*1024*1024*1024)).toByteArray(4);
 		
-		byte[] namebytes = name.getBytes();
+		byte[] k = Cipher.hash(Math.xor(filekey, iv));
 		
-		byte[] namebytes1 = Math.xor(namebytes, k);
+		byte[] plaindata = plaintext.getBytes();
+		
+		byte[] cipherdata = Math.xor(plaindata, k);
 		
 		//  Convert from base-256 byte array to base-16 string
 		
 		return  Convert.byteArrayToBase16(iv) +
-			Convert.byteArrayToBase16(namebytes1);
+			Convert.byteArrayToBase16(cipherdata);
 	}
 	
 	
 	
-	public static String decryptFileName(String filename, byte[] filekey, byte[] m)
+	public static String decryptFileName(String filename, byte[] filekey)
 	{
 	
 		//  To decrypt the file name
@@ -42540,7 +42672,7 @@ class FileNameEncryptor
 		//
 		//  compute the one-time secret pad
 		//
-		//  k = hash(m (+) filekey (+) iv)
+		//  k = hash(filekey (+) iv)
 		//
 		//  convert the encrypted name array to base 16
 		//
@@ -42565,7 +42697,7 @@ class FileNameEncryptor
 		
 		namebytes = Arrays.copyOfRange(namebytes, 4, namebytes.length);
 		
-		byte[] k = Cipher.hash(Math.xor(Math.xor(m, filekey), iv));
+		byte[] k = Cipher.hash(Math.xor(filekey, iv));
 		
 		byte[] namebytes1 = Math.xor(namebytes, k);
 		
@@ -42581,7 +42713,9 @@ class FileNameEncryptor
 		
 		    if (namebytes1[namebytes1.length -1 -i] == 0) zeros++;
 		
-		namebytes1 = Arrays.copyOfRange(namebytes1, 0, namebytes1.length - zeros);
+		namebytes1 = Arrays.copyOfRange(
+		
+		    namebytes1, 0, namebytes1.length - zeros);
 		
 		return new String(namebytes1);
 	}
@@ -48217,26 +48351,30 @@ class ListFiles
 
 
 
+
+
 class DataStream
 {
 
 
+
 	//  This class opens a file, reads or writes data, and then
 	//  closes the file using only one read or write statement.
+	//  These methods are inefficient for large numbers of read
+	//  and write operations because the file has to be opened
+	//  and closed for each read and write operation, but one
+	//  read or write operation can transfer up to 2 GB of data.
 	
-	//  These methods are inefficient for reading or writing
-	//  multiple lines of text or data because the file has to
-	//  be opened and closed for each read and write operation.
+	//  These methods can only read and write files up to 2 GB
+	//  because of the array size limit. For larger file sizes
+	//  the methods should use a RandomAccessFile or FileChannel
+	//  object which is safe for use by multiple concurrent threads.
 	
-	//  These methods can only read files up to 2 GB because of
-	//  the array size limit. For larger file sizes the methods
-	//  should use a RandomAccessFile or FileChannel object
-	//  which is safe for use by multiple concurrent threads.
+	//  The Editor program reads and writes binary data because the
+	//  data is usually encrypted. The random data is not encoded
+	//  because encoding in base 64 would expand the file size by
+	//  one-third.
 	
-	//  The Editor program reads and writes binary data because
-	//  the data is usually encrypted. The random data is not
-	//  encoded because encoding in base 64 would expand the
-	//  file size by one-third.
 	
 	
 	
@@ -63366,40 +63504,6 @@ class Cipher
 	
 	
 	
-	
-	//	//  This code was used to create a file folder to
-	//	//  test the encrypt / decrypt directory menu items
-	//	
-	//	int filesize = 1024*1024, numberoffiles = 1024;
-	//	
-	//	String homedir = System.getProperty("user.home");
-	//	
-	//	String filename1 = homedir + "/Desktop/folder";
-	//	
-	//	File file1 = new File(filename1);
-	//	
-	//	System.out.println(!file1.exists());
-	//	
-	//	if (!file1.exists()) file1.mkdir();
-	//	
-	//	for (int i = 0; i < numberoffiles; i++)
-	//	{
-	//		String filename = homedir + "/Desktop/folder/"
-	//		
-	//		   + String.valueOf(i);
-	//		
-	//		File file = new File(filename);
-	//		
-	//		byte[] array = new byte[filesize];
-	//		
-	//		for (int j = 0; j < array.length; j++)
-	//		
-	//		    //  0123456789 ... abcdefgh ...
-	//		
-	//		    array[j] = (byte) j;
-	//		
-	//		DataStream.write(file, array);
-	//	}
 	
 	
 	
