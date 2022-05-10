@@ -174,7 +174,8 @@
 	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
 	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
 	sub-directories; an error in the EncryptDirectory class that caused it to display two JOptionPane dia-
-	logs was corrected;
+	logs was corrected; the directory label in the dialog was added to a disabled button to create a bor-
+	der around the label so the user knows to click on the label or button to change the directory name;
 	
 	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
 	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
@@ -185,7 +186,11 @@
 	passphrase to read, decrypt, and display the decrypted filenames; users who have encrypted file name
 	directories will have to decrypt the directories using a previous version of the program and then re-
 	encrypt the directories or else only the file contents will be decrypted and the file names will be
-	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted.
+	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
+	
+	an error in the SaveAsListener class that was caused by correcting the file name encryption in the
+	previous file upload was also corrected; the Save As button saved the file but it didn't set the tab
+	title or display the file name because of a NullPointerException.
 	
 	
 	
@@ -1071,7 +1076,7 @@ class __
 	
 	filewillbedeleted = "File will be permanently deleted",
 	
-	folderwillbedeleted = "Folder will be permanently deleted",
+	folderwillbedeleted = "FOLDER will be permanently deleted",
 	
 	words = "words",  newlines = "lines",
 	
@@ -1186,8 +1191,6 @@ class __
 	fileisalreadyencrypted = "File is already encrypted",
 	fileisnotencrypted     = "File is not encrypted",
 	fileisnotwritable      = "File is not writable",
-	
-	selectedfileisnotadirectory = "Selected file is not a directory",
 	
 	filenamecontainsillegalchar = "File name contains an illegal char",
 	
@@ -4682,7 +4685,7 @@ class Programs
 				
 				
 				
-				String filename = textareapanel.file.getName();
+				String filename = file.getName();
 				
 				if (textareapanel.encrypted && (filename.length() >= 64)
 				
@@ -40002,11 +40005,22 @@ class DeleteFileListener implements ActionListener
 			textarea.setBackground(new JLabel().getBackground());
 			textarea.setEditable(false);
 			
-			if (warnings < 2)
+			if ((warnings < 2) || file.isDirectory())
 			{
+				//  Show the warning twice
+				
 				int choice = JOptionPane.showConfirmDialog(frame,
 				    textarea, title, JOptionPane.YES_NO_CANCEL_OPTION,
 					JOptionPane.WARNING_MESSAGE);
+				
+				if ((choice == JOptionPane.YES_OPTION)
+				
+				    && (file.isDirectory() || (warnings < 2)))
+				
+				    choice = JOptionPane.showConfirmDialog(frame,
+				        textarea, title, JOptionPane.YES_NO_CANCEL_OPTION,
+					    JOptionPane.WARNING_MESSAGE);
+				
 				
 				if ((choice == JOptionPane.CANCEL_OPTION)
 				 || (choice == JOptionPane.CLOSED_OPTION)) return;
@@ -40017,6 +40031,7 @@ class DeleteFileListener implements ActionListener
 			}
 			
 			//  Delete the file
+			
 			
 			if (file.isFile()) { file.delete(); warnings++; }
 			
@@ -40044,6 +40059,8 @@ class DeleteFileListener implements ActionListener
 				//  Delete the empty top directory
 				
 				if (file.exists()) file.delete();
+				
+				warnings = 0;
 			}
 		}
 	}
@@ -40442,51 +40459,7 @@ class EncryptDirectory
 	public void encryptDecryptDirectory()
 	{
 	
-		//  Choose a directory to encrypt
-		
-		directory = null;
-		
-		JFileChooser fc;
-		
-		fc = new FileChooser();
-		
-		fc.setFont(font);
-		
-		int mode = JFileChooser.DIRECTORIES_ONLY;
-		
-		fc.setFileSelectionMode(mode);
-		
-		
-		while (true)
-		{
-			//  Choose a directory
-			
-			String title =
-			
-			  __.encryptdecryptdirectory;
-			
-			fc.setDialogTitle(title);
-			
-			fc.setApproveButtonText(title);
-			
-			int choice = fc.showDialog(frame, null);
-			
-			if (choice == JFileChooser.APPROVE_OPTION)
-			
-			    directory = fc.getSelectedFile();
-			
-			else if (choice == JFileChooser.CANCEL_OPTION)
-			
-			    return;
-			
-			if (!directory.isDirectory())
-			
-			    System.out.println(__.selectedfileisnotadirectory);
-			
-			else break;
-		}
-		
-		
+		chooseDirectory();
 		
 		if (filekey == null) chooseFileKey();
 		
@@ -40524,6 +40497,39 @@ class EncryptDirectory
 		    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 	}
 	
+	
+	
+	private void chooseDirectory()
+	{
+		//  Choose a directory to encrypt
+		
+		JFileChooser fc;
+		
+		fc = new FileChooser();
+		
+		fc.setFont(font);
+		
+		
+		//  Choose a directory
+		
+		int mode = JFileChooser.DIRECTORIES_ONLY;
+		
+		fc.setFileSelectionMode(mode);
+		
+		String title =
+		
+		  __.encryptdecryptdirectory;
+		
+		fc.setDialogTitle(title);
+		
+		fc.setApproveButtonText(title);
+		
+		int choice = fc.showDialog(frame, null);
+		
+		if (choice == JFileChooser.APPROVE_OPTION)
+		
+		    directory = fc.getSelectedFile();
+	}
 	
 	
 	
@@ -40610,10 +40616,16 @@ class EncryptDirectory
 		    checkbox.setSelected(
 		   !checkbox.isSelected()); }});
 		
-		JButton keybutton = new JButton();
 		
-		keybutton.setEnabled(false);
-		keybutton.add(label4);
+		JButton filebutton = new JButton();
+		JButton  keybutton = new JButton();
+		
+		filebutton.setEnabled(false);
+		 keybutton.setEnabled(false);
+		
+		filebutton.add(label2);
+		 keybutton.add(label4);
+		
 		
 		Box hbox1, hbox2, hbox3, hbox4;
 		
@@ -40628,7 +40640,7 @@ class EncryptDirectory
 		hbox1.add(checkbox);
 		hbox1.add(hstrut);
 		hbox1.add(label1);
-		hbox2.add(label2);
+		hbox2.add(filebutton);
 		hbox3.add(label3);
 		hbox4.add(keybutton);
 		
@@ -40676,9 +40688,30 @@ class EncryptDirectory
 		panel.add(vbox);
 		
 		
+		
+		JLabel filelabel;
 		JLabel keyhashlabel;
 		
+		   filelabel = label2;
 		keyhashlabel = label4;
+		
+		
+		filelabel.addMouseListener(new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e)
+			{
+				if (e.getSource() == filelabel)
+				{
+					if (running) return;
+					
+					chooseDirectory();
+					
+					String pathname = directory.getPath();
+					
+					filelabel.setText(pathname);
+				}
+			}
+		});
 		
 		keyhashlabel.addMouseListener(new MouseAdapter()
 		{
@@ -40702,6 +40735,7 @@ class EncryptDirectory
 				}
 			}
 		});
+		
 		
 		return panel;
 	}
@@ -40895,6 +40929,8 @@ class EncryptDirectory
 			
 			if (!parent.equals(home))
 			{
+				if (test) return; // encrypt already issued a warning
+				
 				//  Warn the user that the file is not in the home dir
 				
 				String title = "";
@@ -41074,10 +41110,6 @@ class EncryptDirectory
 					continue;
 				}
 				
-				if (!file.canWrite())
-				
-				  { append(__.fileisnotwritable); continue; }
-				
 				
 				if (test)
 				{
@@ -41089,6 +41121,12 @@ class EncryptDirectory
 					
 					continue;
 				}
+				
+				
+				if (!file.canWrite())
+				
+				  { append(__.fileisnotwritable); continue; }
+				
 				
 				
 				if (!Cipher.isEncrypted(file))
@@ -41136,16 +41174,30 @@ class EncryptDirectory
 					
 					String filepath = file.getPath();
 					
-					boolean bool = file.delete();
-					
-					if (!bool) System.out.println(
-					
-					    "Error deleting file");
-					
-					file = new File(filepath);
-					
+					if (file.canWrite())
+					{
+						//  Make sure the file is really writable
+						//  before deleting the plaintext file
+						
+						try { DataStream.write(file, new byte[0]); }
+						
+						catch (IOException ex)
+						{
+							System.out.println(ex);
+							
+							continue;
+						}
+						
+						boolean bool = file.delete();
+						
+						if (!bool) System.out.println(
+						
+						    "Error deleting file");
+					}
 					
 					//  Save the encrypted file
+					
+					file = new File(filepath);
 					
 					try
 					{	DataStream.write(file, cipherdata);
@@ -41224,11 +41276,6 @@ class EncryptDirectory
 					continue;
 				}
 				
-				if (!file.canWrite())
-				
-				  { append(__.fileisnotwritable); continue; }
-				
-				
 				if (test)
 				{
 					String message = __.unencryptedfile + " " + file;
@@ -41239,6 +41286,12 @@ class EncryptDirectory
 					
 					continue;
 				}
+				
+				
+				if (!file.canWrite())
+				
+				  { append(__.fileisnotwritable); continue; }
+				
 				
 				
 				if (Cipher.isEncrypted(file))
@@ -41854,14 +41907,28 @@ class FileEncryptor
 		
 		String filepath = file.getPath();
 		
-		boolean bool = file.delete();
+		if (file.canWrite())
+		{
+			//  Make sure the file is really writable
+			//  before deleting the plaintext file
+			
+			try { DataStream.write(file, new byte[0]); }
+			
+			catch (IOException ex)
+			{
+				System.out.println(ex);
+			}
+			
+			boolean bool = file.delete();
+			
+			if (!bool) System.out.println(
+			
+			    "Error deleting file");
+		}
 		
-		if (!bool) System.out.println(
-		
-		    "Error deleting file");
+		//  Save the encrypted file
 		
 		file = new File(filepath);
-		
 		
 		//  Save the cipherdata to file
 		
@@ -42640,10 +42707,9 @@ class FileNameEncryptor
 		//
 		//  prepend the random iv
 		
-		//  (Without an iv, if two files have the same data
-		//  and filekey, the one-time pads would be identical)
-		
 		String plaintext = filename;
+		
+		Math.initRng(System.nanoTime());
 		
 		byte[] iv = new Number(Math.random(
 		

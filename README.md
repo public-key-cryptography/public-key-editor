@@ -144,7 +144,8 @@
 	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
 	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
 	sub-directories; an error in the EncryptDirectory class that caused it to display two JOptionPane dia-
-	logs was corrected;
+	logs was corrected; the directory label in the dialog was added to a disabled button to create a bor-
+	der around the label so the user knows to click on the label or button to change the directory name;
 	
 	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
 	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
@@ -155,7 +156,11 @@
 	passphrase to read, decrypt, and display the decrypted filenames; users who have encrypted file name
 	directories will have to decrypt the directories using a previous version of the program and then re-
 	encrypt the directories or else only the file contents will be decrypted and the file names will be
-	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted.
+	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
+	
+	an error in the SaveAsListener class that was caused by correcting the file name encryption in the
+	previous file upload was also corrected; the Save As button saved the file but it didn't set the tab
+	title or display the file name because of a NullPointerException.
 	
 	
 	
