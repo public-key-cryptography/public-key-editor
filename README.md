@@ -146,6 +146,9 @@
 	sub-directories; an error in the EncryptDirectory class that caused it to display two JOptionPane dia-
 	logs was corrected; the directory label in the dialog was added to a disabled button to create a bor-
 	der around the label so the user knows to click on the label or button to change the directory name;
+	the JOptionPane static factory method showConfirmDialog() in the EncryptDirectory class was replaced
+	by the JOptionPane constructor so the dialog can be re-packed if the user changes the directory or
+	else the encrypt and decrypt buttons would collapse;
 	
 	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
 	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-

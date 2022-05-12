@@ -176,6 +176,9 @@
 	sub-directories; an error in the EncryptDirectory class that caused it to display two JOptionPane dia-
 	logs was corrected; the directory label in the dialog was added to a disabled button to create a bor-
 	der around the label so the user knows to click on the label or button to change the directory name;
+	the JOptionPane static factory method showConfirmDialog() in the EncryptDirectory class was replaced
+	by the JOptionPane constructor so the dialog can be re-packed if the user changes the directory or
+	else the encrypt and decrypt buttons would collapse;
 	
 	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
 	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
@@ -3504,10 +3507,13 @@ class Programs
 				  ||  (keychar == vk_enter)
 				  ||  (keychar == vk_tab) )
 				
-					if (control == false)
-					
-					    textareapanel.filechanged = true;
+				     if (control == false)
 				
+					textareapanel.filechanged = true;
+				
+				
+				if ((keycode == __.undokeycode)
+				 || (keycode == __.redokeycode))
 				
 				//  ctrl + a == 1,  ctrl + b == 2, ctrl + c == 3, ...
 				
@@ -5215,6 +5221,8 @@ class Programs
 				
 				if (e.getSource() == undobutton) undo();
 				if (e.getSource() == redobutton) redo();
+				
+				textareapanel.filechanged = true;
 				
 				textareapanel.textarea.requestFocusInWindow();
 			}
@@ -14827,6 +14835,8 @@ class Programs
 				
 				if (e.getSource() == undobutton) undo();
 				if (e.getSource() == redobutton) redo();
+				
+				tablepanel.filechanged = true;
 			}
 			
 			public void undo() { tablepanel.undo.undo(); }
@@ -23124,7 +23134,7 @@ class Programs
 							
 								.DEFAULT_OPTION, icon, options, 0);
 							
-							//  pane .set(...)
+							//  pane.set(...)
 							
 							JDialog dialog = pane.createDialog(frame, title);
 							
@@ -23450,7 +23460,7 @@ class Programs
 							
 							   .WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION, icon, options, 0);
 							
-							//  pane .set(...)
+							//  pane.set(...)
 							
 							JDialog dialog = pane.createDialog(frame, title);
 							
@@ -40268,7 +40278,9 @@ class RenameFileListener implements ActionListener
 //	
 //	String homedir = System.getProperty("user.home");
 //	
-//	String filename1 = homedir + "/Desktop/folder";
+//	String filename1 = homedir + File.separator +
+//	
+//	    "Desktop" + File.separator + "folder";
 //	
 //	File file1 = new File(filename1);
 //	
@@ -40341,6 +40353,8 @@ class EncryptDirectory
 	private byte[] filekey;
 	
 	private boolean encryptfilenames;
+	
+	private JDialog dialog;
 	
 	private JTextArea filearea;
 	
@@ -40459,7 +40473,10 @@ class EncryptDirectory
 	public void encryptDecryptDirectory()
 	{
 	
-		chooseDirectory();
+		int choice = chooseDirectory();
+		
+		if ((choice == JOptionPane.CLOSED_OPTION)
+		 || (choice == JOptionPane.NO_OPTION)) return;
 		
 		if (filekey == null) chooseFileKey();
 		
@@ -40491,15 +40508,49 @@ class EncryptDirectory
 		
 		
 		//  Display the panel using a JOptionPane dialog
+		//
+		//  JOptionPane.showConfirmDialog(frame, panel, title,
+		//
+		//    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 		
-		JOptionPane.showConfirmDialog(frame, panel, title,
 		
-		    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+		//  The JOptionPane constructor is used instead of the
+		//  static factory method to get a reference to the
+		//  dialog object so the frame can be re-packed if the
+		//  user changes the directory name or file key.
+		
+		
+		Icon icon = null;
+		
+		Object[] options = null;
+		
+		JOptionPane pane = new JOptionPane(panel,
+		
+		    JOptionPane.PLAIN_MESSAGE, JOptionPane
+		
+			.DEFAULT_OPTION, icon, options, 0);
+		
+		//  pane.set(...)
+		
+		dialog = pane.createDialog(frame, title);
+		
+		dialog.setVisible(true);
+		
+		
+		//  Object value = pane.getValue();
+		//
+		//  if(value == null) return JOptionPane.CLOSED_OPTION;
+		//
+		//  if ((options == null) && value instanceof Integer)
+		//
+		//    return ((Integer) value).intValue();
+		//
+		//  return CLOSED_OPTION;
 	}
 	
 	
 	
-	private void chooseDirectory()
+	private int chooseDirectory()
 	{
 		//  Choose a directory to encrypt
 		
@@ -40529,6 +40580,8 @@ class EncryptDirectory
 		if (choice == JFileChooser.APPROVE_OPTION)
 		
 		    directory = fc.getSelectedFile();
+		
+		return choice;
 	}
 	
 	
@@ -40659,7 +40712,7 @@ class EncryptDirectory
 		//  or else the program will hang if the user clicks
 		//  on the text area as the file names are scrolling.
 		
-		filearea = new JTextArea(10, 48);
+		filearea = new JTextArea(10, 56);
 		filearea.setEditable(false);
 		filearea.setHighlighter(null);
 		filearea.setFont(font);
@@ -40688,7 +40741,6 @@ class EncryptDirectory
 		panel.add(vbox);
 		
 		
-		
 		JLabel filelabel;
 		JLabel keyhashlabel;
 		
@@ -40709,9 +40761,14 @@ class EncryptDirectory
 					String pathname = directory.getPath();
 					
 					filelabel.setText(pathname);
+					
+					dialog.setSize(dialog
+					
+					    .getPreferredSize());
 				}
 			}
 		});
+		
 		
 		keyhashlabel.addMouseListener(new MouseAdapter()
 		{
@@ -40732,6 +40789,10 @@ class EncryptDirectory
 					    str.substring(0, 16), " ", 4);
 					
 					keyhashlabel.setText(keyhash);
+					
+					dialog.setSize(dialog
+					
+					    .getPreferredSize());
 				}
 			}
 		});
@@ -42736,17 +42797,15 @@ class FileNameEncryptor
 		//
 		//  remove the random iv
 		//
+		//  convert from base 16 to byte array
+		//
 		//  compute the one-time secret pad
 		//
 		//  k = hash(filekey (+) iv)
 		//
-		//  convert the encrypted name array to base 16
-		//
-		//  xor k and the encrypted name array
+		//  xor k and the encrypted byte array
 		//
 		//  remove zeros from the end of the array
-		//
-		//  convert the byte array to base 16
 		
 		
 		String name = filename;
@@ -42769,7 +42828,7 @@ class FileNameEncryptor
 		
 		//  Remove the zero bytes at the end of the byte array
 		//  or else the string will not contain valid characters
-		//  and the file will not rename to the encrypted name.
+		//  and the file will not rename to the decrypted name.
 		//  (Zero bytes occur because the encryption pad is longer
 		//  than the file name bytes)
 		
@@ -48431,15 +48490,103 @@ class DataStream
 	//  and closed for each read and write operation, but one
 	//  read or write operation can transfer up to 2 GB of data.
 	
-	//  These methods can only read and write files up to 2 GB
-	//  because of the array size limit. For larger file sizes
-	//  the methods should use a RandomAccessFile or FileChannel
-	//  object which is safe for use by multiple concurrent threads.
-	
 	//  The Editor program reads and writes binary data because the
 	//  data is usually encrypted. The random data is not encoded
 	//  because encoding in base 64 would expand the file size by
 	//  one-third.
+	
+	
+	//  These methods can only read and write files up to 2 GB
+	//  because of the array size limit, except for the append(
+	//  String) method. For larger file sizes the methods should
+	//  use a RandomAccessFile or FileChannel object which is
+	//  safe for use by multiple concurrent threads.
+	//
+	//  For example, to read and write using the FileChannel class
+	//
+	//	String homedir = System.getProperty("user.home");
+	//	
+	//	String filepath = homedir + File.separator + "testfile";
+	//	
+	//	Path path = FileSystems.getDefault().getPath(filepath);
+	//	
+	//	new File(filepath).createNewFile();
+	//	
+	//	OpenOption   readoption = StandardOpenOption.READ;
+	//	OpenOption  writeoption = StandardOpenOption.WRITE;
+	//	OpenOption appendoption = StandardOpenOption.APPEND;
+	//	
+	//	FileChannel fc = FileChannel.open(path, readoption, writeoption);
+	//	
+	//	FileChannel.MapMode readmode      = FileChannel.MapMode.READ_ONLY;
+	//	FileChannel.MapMode readwritemode = FileChannel.MapMode.READ_WRITE;
+	//	
+	//	
+	//	//  the array length specifies the
+	//	//  amount of data to read or write
+	//	
+	//	int arraylength = 26;
+	//	
+	//	byte[] array = new byte[arraylength];
+	//	
+	//	ByteBuffer bytebuffer = ByteBuffer.wrap(array);
+	//	
+	//	//  Initialize the array with the data to write
+	//	
+	//	for (int i = 0; i < array.length; i++)
+	//	
+	//	    array[i] = (byte) ('a' + (i % 26));
+	//	
+	//	System.out.println(new String(array));
+	//	
+	//	//  abcdefghijklmnopqrstuvwxyz
+	//	
+	//	
+	//	long position = 0;
+	//	
+	//	//  for single-threaded applications use the position object
+	//	//  and the write method will increment the file position; the
+	//	//  method will block if another thread is reading or writing
+	//	//
+	//	//  fc.position(position);
+	//	//  fc.write(bytebuffer);
+	//	
+	//	//  for multi-threaded applications specify the absolute position
+	//	//  without using the file position object if the threads have to
+	//	//  read and write the same file concurrently; whether they actu-
+	//	//  ally read or write concurrently is system dependent
+	//	
+	//	//  Write the data from the byte buffer
+	//	
+	//	fc.write(bytebuffer, position);
+	//	
+	//	
+	//	arraylength = 16;
+	//	
+	//	byte[] array1 = new byte[arraylength];
+	//	
+	//	ByteBuffer bytebuffer1 = ByteBuffer.wrap(array1);
+	//	
+	//	long position1 = 4;
+	//	
+	//	//  fc.position(position1);
+	//	//  fc.write(bytebuffer1)
+	//	
+	//	//  Read the data into the bytebuffer
+	//	
+	//	fc.read(bytebuffer1, position1);
+	//	
+	//	System.out.println("fc position = " + fc.position());
+	//	
+	//	System.out.println(new String(array1));
+	//	
+	//	//  efghijklmnopqrst
+	//	
+	//	try { fc.close(); }
+	//	
+	//	catch (IOException ex)
+	//	
+	//	{ System.out.println(ex); }
 	
 	
 	
