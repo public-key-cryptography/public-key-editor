@@ -142,7 +142,7 @@
 	are validated; the document / file type detection was corrected so the program correctly displays html
 	documents instead of trying to display them as image files which caused the dialog frame to collapse;
 	
-	the hyperactive class was modified to copy the url address to the clipboard so the user can copy and
+	the Hyperactive class was modified to copy the url address to the clipboard so the user can copy and
 	paste the address into a web browser if an email provider like yandex sends messages to clients using
 	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
 	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
@@ -191,9 +191,9 @@
 	encrypt the directories or else only the file contents will be decrypted and the file names will be
 	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
 	
-	an error in the SaveAsListener class that was caused by correcting the file name encryption in the
-	previous file upload was also corrected; the Save As button saved the file but it didn't set the tab
-	title or display the file name because of a NullPointerException.
+	a FileChannelReader and FileChannelWriter class were also added to the software to encrypt and decrypt
+	large files and to hash files larger than the array size limit which is 2 G Bytes; the hash value com-
+	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename.
 	
 	
 	
@@ -592,7 +592,11 @@ import java.awt.print.*;
 
 import java.io.*;
 import java.net.*;
+
+import java.nio.*;
 import java.nio.file.*;
+import java.nio.channels.*;
+
 import java.security.*;
 import java.text.*;
 
@@ -7581,7 +7585,7 @@ class Programs
 				
 				if (selectedtext != null) text = selectedtext;
 				
-				//  Compute the type1 and type2 hashes
+				//  Compute the hash with and without white space
 				
 				//  (The text could be trimmed before hashing)
 				
@@ -7721,9 +7725,9 @@ class Programs
 				
 				String hashstr = new Number(hash).toString(64, 16);
 				
-				hashstr = Convert.partition(hashstr.substring(0, 40), " ", 4);
-				
 				System.out.println(hashstr);
+				
+				hashstr = Convert.partition(hashstr.substring(0, 40), " ", 4);
 				
 				String message = hashstr;
 				
@@ -10314,16 +10318,6 @@ class Programs
 					if (file == null) return;
 					
 					directory = file.getParent();
-					
-					
-					//  File sizes > 32 bits should use a
-					//  RandomAccessFile or FileChannel object
-					
-					if (file.length() >= 2L*1024*1024*1024) return;
-					
-					//   ...
-					
-					//   ...
 					
 					
 					if (Cipher.isEncrypted(file))
@@ -35060,7 +35054,7 @@ class Programs
 				
 				private JPanel createPanel(int t)
 				{
-					final int rows = 16, columns = 64;
+					final int rows = 16, cols = 56;
 					
 					Box vbox = Box.createVerticalBox();
 					
@@ -35148,7 +35142,7 @@ class Programs
 						 datelabels[i] = new JLabel();
 						deleteboxes[i] = new JCheckBox();
 						editbuttons[i] = new JButton();
-						  textareas[i] = new JTextArea(rows, columns);
+						  textareas[i] = new JTextArea(rows, cols);
 						
 						   edited[i] = Boolean.valueOf(false);
 						 encrypted[i] = Boolean.valueOf(false);
@@ -41925,6 +41919,10 @@ class FileEncryptor
 		
 		if ((file == null) || Cipher.isEncrypted(file)) return false;
 		
+		//  Save the last modified time before writing
+		
+		long time = file.lastModified();
+		
 		//  Read and encrypt the plaindata
 		
 		byte[] plaindata, cipherdata = null;
@@ -41936,24 +41934,25 @@ class FileEncryptor
 			cipherdata = Cipher.encrypt(plaindata,
 			
 			    encryptionkey, Cipher.encrypt_method_3);
+			
+			if (cipherdata == null)
+			{
+				System.out.println("encryption error");
+				
+				return false;
+			}
 		}
 		
 		else // if (file.length() >= 2L*1024*1024*1024)
 		{
-			Cipher.encryptLargeFile(file, encryptionkey);
-		}
-		
-		if (cipherdata == null)
-		{
-			System.out.println("encryption error");
+			boolean bool = Cipher.encryptLargeFile(
 			
-			return false;
+			    file, encryptionkey);
+			
+			file.setLastModified(time);
+			
+			return bool;
 		}
-		
-		
-		//  Save the last modified time before writing
-		
-		long time = file.lastModified();
 		
 		
 		//  //  Erase the file plaintext by writing zeros
@@ -42087,7 +42086,7 @@ class FileEncryptor
 			//
 			//  update the filekey and return
 			
-			if (bool || !Cipher.isEncrypted(file))
+			if (bool)
 			{
 				if (filekey == null)
 				
@@ -42237,7 +42236,6 @@ class FileEncryptor
 		throws IOException, FileNotFoundException
 	{
 		//  decrypts a file using the decryption key
-		//  The last modified time is not changed by this method
 		
 		//  If the file is null or not encrypted then return false
 		
@@ -42247,7 +42245,13 @@ class FileEncryptor
 		
 		byte[] plaindata = null, cipherdata = null;
 		
-		if (file.length() < 2L*1024*1024*1024)
+		boolean largefile = file.length() < 2L*1024*1024*1024;
+		
+		//  Save the last modified time before writing
+		
+		long time = file.lastModified();
+		
+		if (largefile == false)
 		{
 			cipherdata = DataStream.read(file);
 			
@@ -42256,18 +42260,22 @@ class FileEncryptor
 			if (plaindata == null)  return false;
 		}
 		
-		else // if (file.length() >= 2L*1024*1024*1024)
+		else // if (largefile)
 		{
-			Cipher.decryptLargeFile(file, decryptionkey);
+			boolean bool = Cipher.decryptLargeFile(
+			
+			    file, decryptionkey);
+			
+			if (bool == false) return false;
 		}
 		
-		//  Save the last modified time before writing
-		
-		long time = file.lastModified();
 		
 		//  Save the plaindata
 		
-		DataStream.write(file, plaindata);
+		if (largefile == false)
+		
+		    DataStream.write(file, plaindata);
+		
 		
 		file.setLastModified(time);
 		
@@ -42513,28 +42521,14 @@ class FileDecryptor
 			//
 			//  update the filekey and return
 			
-			if (bool || !Cipher.isEncrypted(file))
+			if (bool)
 			{
-				if (filekey == null)
+				if (filekey == null) this.filekey
 				
-				    this.filekey = Cipher.passphraseToKey(SP);
+				    = Cipher.passphraseToKey(SP);
 				
 				return true;
 			}
-			
-			//  Create a passphrase dialog
-			
-			PassphraseDialog pd = new PassphraseDialog(
-			
-			   frame, PassphraseDialog.passphrase_only);
-			
-			pd.setTitle(title);
-			pd.setMinimumLength(minlength);
-			pd.setForeground1(foreground);
-			pd.setBackground1(background);
-			pd.setFont1(font != null ?
-			    font : frame.getFont());
-			
 			
 			
 			while (true)
@@ -42553,6 +42547,19 @@ class FileDecryptor
 				}
 				
 				//  Request a passphrase from the user
+				
+				//  Create a passphrase dialog
+				
+				PassphraseDialog pd = new PassphraseDialog(
+				
+				   frame, PassphraseDialog.passphrase_only);
+				
+				pd.setTitle(title);
+				pd.setMinimumLength(minlength);
+				pd.setForeground1(foreground);
+				pd.setBackground1(background);
+				pd.setFont1(font != null ?
+				    font : frame.getFont());
 				
 				String passphrase = pd.readPassphrase();
 				
@@ -42674,8 +42681,6 @@ class FileDecryptor
 		throws IOException, FileNotFoundException
 	{
 		//  decrypts a file using the decryption key
-		//
-		//  The last modified time is not changed by this method
 		
 		if ((file == null) || !Cipher.isEncrypted(file)) return false;
 		
@@ -42683,7 +42688,13 @@ class FileDecryptor
 		
 		byte[] plaindata = null, cipherdata = null;
 		
-		if (file.length() < 2L*1024*1024*1024)
+		//  Save the last modified time before writing
+		
+		long time = file.lastModified();
+		
+		boolean largefile = file.length() >= 2L*1024*1024*1024;
+		
+		if (largefile == false)
 		{
 			cipherdata = DataStream.read(file);
 			
@@ -42692,29 +42703,27 @@ class FileDecryptor
 			if (plaindata == null)  return false;
 		}
 		
-		else // if (file.length() >= 2L*1024*1024*1024)
+		else // if (largefile)
 		{
-			Cipher.decryptLargeFile(file, decryptionkey);
+			boolean bool = Cipher.decryptLargeFile(
+			
+			    file, decryptionkey);
+			
+			if (bool == false) return false;
 		}
 		
-		//  Save the last modified time before writing
-		
-		long time = file.lastModified();
 		
 		//  Save the plaindata
 		
-		DataStream.write(file, plaindata);
+		if (largefile == false)
+		
+		    DataStream.write(file, plaindata);
+		
 		
 		file.setLastModified(time);
 		
 		
 		//  Decrypt the file name
-		
-		System.out.println(
-		
-		   Number.isBase16(file.getName())
-		
-		      && (file.getName().length() >= 32));
 		
 		if (Number.isBase16(file.getName())
 		
@@ -48429,6 +48438,8 @@ class Icons
 
 
 
+
+
 class ListFiles
 {
 
@@ -48477,7 +48488,6 @@ class ListFiles
 
 
 
-
 class DataStream
 {
 
@@ -48495,103 +48505,15 @@ class DataStream
 	//  because encoding in base 64 would expand the file size by
 	//  one-third.
 	
-	
 	//  These methods can only read and write files up to 2 GB
 	//  because of the array size limit, except for the append(
 	//  String) method. For larger file sizes the methods should
 	//  use a RandomAccessFile or FileChannel object which is
 	//  safe for use by multiple concurrent threads.
-	//
-	//  For example, to read and write using the FileChannel class
-	//
-	//	String homedir = System.getProperty("user.home");
-	//	
-	//	String filepath = homedir + File.separator + "testfile";
-	//	
-	//	Path path = FileSystems.getDefault().getPath(filepath);
-	//	
-	//	new File(filepath).createNewFile();
-	//	
-	//	OpenOption   readoption = StandardOpenOption.READ;
-	//	OpenOption  writeoption = StandardOpenOption.WRITE;
-	//	OpenOption appendoption = StandardOpenOption.APPEND;
-	//	
-	//	FileChannel fc = FileChannel.open(path, readoption, writeoption);
-	//	
-	//	FileChannel.MapMode readmode      = FileChannel.MapMode.READ_ONLY;
-	//	FileChannel.MapMode readwritemode = FileChannel.MapMode.READ_WRITE;
-	//	
-	//	
-	//	//  the array length specifies the
-	//	//  amount of data to read or write
-	//	
-	//	int arraylength = 26;
-	//	
-	//	byte[] array = new byte[arraylength];
-	//	
-	//	ByteBuffer bytebuffer = ByteBuffer.wrap(array);
-	//	
-	//	//  Initialize the array with the data to write
-	//	
-	//	for (int i = 0; i < array.length; i++)
-	//	
-	//	    array[i] = (byte) ('a' + (i % 26));
-	//	
-	//	System.out.println(new String(array));
-	//	
-	//	//  abcdefghijklmnopqrstuvwxyz
-	//	
-	//	
-	//	long position = 0;
-	//	
-	//	//  for single-threaded applications use the position object
-	//	//  and the write method will increment the file position; the
-	//	//  method will block if another thread is reading or writing
-	//	//
-	//	//  fc.position(position);
-	//	//  fc.write(bytebuffer);
-	//	
-	//	//  for multi-threaded applications specify the absolute position
-	//	//  without using the file position object if the threads have to
-	//	//  read and write the same file concurrently; whether they actu-
-	//	//  ally read or write concurrently is system dependent
-	//	
-	//	//  Write the data from the byte buffer
-	//	
-	//	fc.write(bytebuffer, position);
-	//	
-	//	
-	//	arraylength = 16;
-	//	
-	//	byte[] array1 = new byte[arraylength];
-	//	
-	//	ByteBuffer bytebuffer1 = ByteBuffer.wrap(array1);
-	//	
-	//	long position1 = 4;
-	//	
-	//	//  fc.position(position1);
-	//	//  fc.write(bytebuffer1)
-	//	
-	//	//  Read the data into the bytebuffer
-	//	
-	//	fc.read(bytebuffer1, position1);
-	//	
-	//	System.out.println("fc position = " + fc.position());
-	//	
-	//	System.out.println(new String(array1));
-	//	
-	//	//  efghijklmnopqrst
-	//	
-	//	try { fc.close(); }
-	//	
-	//	catch (IOException ex)
-	//	
-	//	{ System.out.println(ex); }
 	
 	
 	
-	
-	public static byte[] read(File file)  throws IOException
+	public static byte[] read(File file) throws IOException
 	{
 		//  opens a file, reads binary data from
 		//  the file, and then closes the file
@@ -48618,7 +48540,7 @@ class DataStream
 	
 	
 	
-	public static void write(File file, byte[] data)  throws IOException
+	public static void write(File file, byte[] data) throws IOException
 	{
 		//  opens a file, writes binary data to
 		//  the file, and then closes the file
@@ -48638,7 +48560,7 @@ class DataStream
 	}
 	
 	
-	public static void write(File file, String text)  throws IOException
+	public static void write(File file, String text) throws IOException
 	{
 		//  opens a file, writes text data to
 		//  the file, and then closes the file
@@ -48658,7 +48580,7 @@ class DataStream
 	}
 	
 	
-	public static void append(File file, String text)  throws IOException
+	public static void append(File file, String text) throws IOException
 	{
 		//  opens a file, appends text data to
 		//  the file, and then closes the file
@@ -48678,7 +48600,7 @@ class DataStream
 	}
 	
 	
-	public static void appendLine(File file, String text)  throws IOException
+	public static void appendLine(File file, String text) throws IOException
 	{
 		//  opens a file, appends text data to
 		//  the file, and then closes the file
@@ -48707,6 +48629,201 @@ class DataStream
 
 
 
+
+
+
+
+class FileChannel1
+{
+
+
+	private FileChannel fc;
+	
+	private String filepath;
+	
+	public static OpenOption   readoption = StandardOpenOption.READ;
+	public static OpenOption  writeoption = StandardOpenOption.WRITE;
+	public static OpenOption appendoption = StandardOpenOption.APPEND;
+	
+	public FileChannel1(String filepath, OpenOption openoption) throws IOException
+	{
+		this.filepath = filepath;
+		
+		Path path = FileSystems.getDefault().getPath(filepath);
+		
+		fc = FileChannel.open(path, openoption);
+	}
+	
+	public FileChannel1(String filepath, OpenOption openoption1,
+	
+		OpenOption openoption2) throws IOException
+	{
+		this.filepath = filepath;
+		
+		Path path = FileSystems.getDefault().getPath(filepath);
+		
+		fc = FileChannel.open(path, openoption1, openoption2);
+	}
+	
+	public long position() throws IOException { return fc.position(); }
+	
+	public void position(long p) throws IOException { fc.position(p); }
+	
+	
+	public int read(ByteBuffer bytebuffer) throws IOException
+	{
+		//  Reads a sequence of bytes into the given buffer starting at
+		//  the channel's current file position and then the file position
+		//  is updated with the number of bytes read
+		
+		return fc.read(bytebuffer);
+	}
+	
+	public int read(ByteBuffer bytebuffer, long position) throws IOException
+	{
+		//  Reads a sequence of bytes from this channel into the buffer
+		//  starting at the given file position
+		
+		return fc.read(bytebuffer, position);
+	}
+	
+	public int write(ByteBuffer bytebuffer) throws IOException
+	{
+		//  Writes a sequence of bytes starting at the channel's starting at
+		//  the current file position and then the file position is updated
+		//  with the number of bytes actually written
+		
+		return fc.write(bytebuffer);
+	}
+	
+	public int write(ByteBuffer bytebuffer, long position) throws IOException
+	{
+		//  Writes a sequence of bytes to this channel from the buffer
+		//  starting at the given file position
+		
+		return fc.write(bytebuffer, position);
+	}
+	
+	public void force(boolean metadata) throws IOException
+	{
+		//  Forces any updates to this channel's file to be
+		//  written to the storage device that contains it
+		
+		fc.force(metadata);
+	}
+	
+	public void close() throws IOException
+	{
+		fc.close();
+	}
+}
+
+
+//  End class FileChannel1
+
+
+
+
+class FileChannelReader extends FileChannel1
+{
+	public FileChannelReader(String filepath) throws IOException
+	{
+		super(filepath, StandardOpenOption.READ);
+	}
+}
+
+
+class FileChannelWriter extends FileChannel1
+{
+	public FileChannelWriter(String filepath) throws IOException
+	{
+		super(filepath, StandardOpenOption.WRITE);
+	}
+	
+	public FileChannelWriter truncate(long size)
+	{
+		return this.truncate(size);
+	}
+}
+
+
+
+
+
+
+
+class BigByteArray
+{
+
+	//  A class for creating large byte arrays
+	
+	private byte[][] arrays;
+	
+	private int arraysize = 256*1024*1024;
+	
+	private long elements;
+	
+	public BigByteArray(long elements)
+	{
+		int size1 = (int) (elements + arraysize-1) / arraysize;
+		
+		int r = (int) (elements % arraysize);
+		
+		arrays = new byte[size1][];
+		
+		for (int i = 0; i < size1; i++)
+		{
+			if (i == size1 - 1)
+			
+			     arrays[i] = new byte[r];
+			
+			else arrays[i] = new byte[arraysize];
+		}
+	}
+	
+	public BigByteArray(byte[][] arrays)
+	{
+		int size1 = arrays.length;
+		
+		this.arrays = new byte[size1][];
+		
+		for (int i = 0; i < size1; i++)
+		
+		    this.arrays[i] = new byte[
+		
+			 arrays[i].length];
+		
+		int elements = 0;
+		
+		for (int i = 0; i < arrays.length; i++)
+		
+		    elements += arrays[i].length;
+		
+		this.elements = elements;
+	}
+	
+	
+	public byte get(long index)
+	{
+		int div = (int) (index / arraysize);
+		int mod = (int) (index % arraysize);
+		
+		return arrays[div][mod];
+	}
+	
+	public void set(long index, byte b)
+	{
+		int div = (int) (index / arraysize);
+		int mod = (int) (index % arraysize);
+		
+		arrays[div][mod] = b;
+	}
+	
+	public long size()
+	{
+		return elements;
+	}
+}
 
 
 
@@ -62674,108 +62791,155 @@ class Cipher
 	
 		if (plaindata.length < 8) return null;
 		
-		//  Remove back padding and truncate the array
-		
 		final int s = 256; // the size of a byte
 		
-		//  The increment between two consecutive bytes
-		//  is reduced modulo the size of a byte
-		
-		for (int t = 0; t < 1; t++)
+		if (isPadded(plaindata, false))
 		{
-			int d = plaindata[plaindata.length -1]
-			      - plaindata[plaindata.length -2];
+			//  Remove back padding and truncate the array
 			
-			d = ((d % s) + s) % s;
+			//  The increment between two consecutive bytes
+			//  is reduced modulo the size of a byte
 			
-			for (int i = 0; i < 8; i++)
+			for (int t = 0; t < 1; t++)
 			{
-				int d1 = plaindata[plaindata.length -1 -i]
-			               - plaindata[plaindata.length -2 -i];
+				int d = plaindata[plaindata.length -1]
+				      - plaindata[plaindata.length -2];
 				
-				d1 = ((d1 % s) + s) % s;
+				d = ((d % s) + s) % s;
 				
-				if (d1 != d) break; // no padding
-			}
-			
-			//  Find the length of the padding
-			
-			int index = 0;
-			
-			while (index < plaindata.length -1)
-			{
-				int d1 = plaindata[plaindata.length -1 -index]
-				       - plaindata[plaindata.length -2 -index];
+				for (int i = 0; i < 8; i++)
+				{
+					int d1 = plaindata[plaindata.length -1 -i]
+				               - plaindata[plaindata.length -2 -i];
+					
+					d1 = ((d1 % s) + s) % s;
+					
+					if (d1 != d) break; // no padding
+				}
 				
-				d1 = ((d1 % s) + s) % s;
+				//  Find the length of the padding
 				
-				if (d1 == d) index++;
+				int index = 0;
 				
-				else break;
-			}
-			
-			if (index >= 8)
-			{
-				int padlength = index + 1;
+				while (index < plaindata.length -1)
+				{
+					int d1 = plaindata[plaindata.length -1 -index]
+					       - plaindata[plaindata.length -2 -index];
+					
+					d1 = ((d1 % s) + s) % s;
+					
+					if (d1 == d) index++;
+					
+					else break;
+				}
 				
-				byte[] array = new byte[plaindata.length - padlength];
-				
-				for (int i = 0; i < array.length; i++)
-				
-				    array[i] = plaindata[i];
-				
-				return array;
+				if (index >= 8)
+				{
+					int padlength = index + 1;
+					
+					byte[] array = new byte[plaindata.length - padlength];
+					
+					for (int i = 0; i < array.length; i++)
+					
+					    array[i] = plaindata[i];
+					
+					return array;
+				}
 			}
 		}
 		
 		
-		//  Remove front padding and truncate the array
-		
-		for (int t = 0; t < 1; t++)
+		else // if (isPadded(array, true))
 		{
-			int d = plaindata[1] - plaindata[0];
+			//  Remove front padding and truncate the array
 			
-			d = ((d % s) + s) % s;
-			
-			for (int i = 1; i < 8; i++)
+			for (int t = 0; t < 1; t++)
 			{
-				int d1 = plaindata[i] - plaindata[i-1];
-			
-				d1 = ((d1 % s) + s) % s;
+				int d = plaindata[1] - plaindata[0];
 				
-				if (d1 != d) break; // no padding
-			}
-			
-			//  Find the length of the padding
-			
-			int index = 0;
-			
-			while (index < plaindata.length -1)
-			{
-				int d1 = plaindata[index+1] - plaindata[index];
+				d = ((d % s) + s) % s;
 				
-				d1 = ((d1 % s) + s) % s;
+				for (int i = 1; i < 8; i++)
+				{
+					int d1 = plaindata[i] - plaindata[i-1];
 				
-				if (d1 == d) index++;
+					d1 = ((d1 % s) + s) % s;
+					
+					if (d1 != d) break; // no padding
+				}
 				
-				else break;
-			}
-			
-			if (index >= 8)
-			{
-				int padlength = index + 1;
+				//  Find the length of the padding
 				
-				byte[] array = new byte[plaindata.length - padlength];
+				int index = 0;
 				
-				for (int i = 0; i < array.length; i++)
+				while (index < plaindata.length -1)
+				{
+					int d1 = plaindata[index+1] - plaindata[index];
+					
+					d1 = ((d1 % s) + s) % s;
+					
+					if (d1 == d) index++;
+					
+					else break;
+				}
 				
-				    array[i] = plaindata[padlength + i];
-				
-				return array;
+				if (index >= 8)
+				{
+					int padlength = index + 1;
+					
+					byte[] array = new byte[plaindata.length - padlength];
+					
+					for (int i = 0; i < array.length; i++)
+					
+					    array[i] = plaindata[padlength + i];
+					
+					return array;
+				}
 			}
 		}
 		
 		return null;
+	}
+	
+	
+	
+	private static byte[] oneTimeEncryptionKey(byte[] encryptionkey)
+	{
+	
+		//  Choose a one-time secret encryption key k
+		//  using multiple sources of entropy
+		//
+		//  (The three sources of entropy are the user's private key,
+		//  the message, and the current time in nano seconds.
+		//  Secure Random is too slow for file encryption.)
+		
+		
+		//  Generate random bytes using the current time
+		
+		long randtime = System.nanoTime();
+		
+		Random rng = new Random(randtime);
+		
+		double rand = rng.nextDouble();
+		
+		long rand64 = (long) (0x4000000000000000L * rand);
+		
+		int rand32 = (int) (rand64 % 0xffffffffL);
+		
+		byte[] randbytes = Cipher.hash(
+		
+		    new Number(rand32).toByteArray());
+		
+		
+		//  Generate a one-time encryption key
+		//
+		//  k = H(encryption key, random bytes, m = H(M))
+		
+		byte[] k = Cipher.hash(
+		
+		    Math.xor(encryptionkey, randbytes) );
+		
+		return k;
 	}
 	
 	
@@ -62833,47 +62997,9 @@ class Cipher
 		plaindata = addPadding(plaindata);
 		
 		
-		//  Choose a one-time secret encryption key k
-		//  using multiple sources of entropy
-		//
-		//  (The three sources of entropy are the user's private key,
-		//  the message, and the current time in nano seconds.
-		//  Secure Random is too slow for file encryption.)
-		
-		
-		//  Generate random bytes using the current time
-		
-		long randtime = System.nanoTime();
-		
-		Random rng = new Random(randtime);
-		
-		double rand = rng.nextDouble();
-		
-		long rand64 = (long) (0x4000000000000000L * rand);
-		
-		int rand32 = (int) (rand64 % 0xffffffffL);
-		
-		byte[] randbytes = Cipher.hash(
-		
-		    new Number(rand32).toByteArray());
-		
-		
-		//  Compute a hash of the byte array / message / file
-		
-		final int maxlen = 4*1024;
-		
-		byte[] hash = hash( Arrays.copyOfRange( plaindata, 0,
-		
-		    Math.min(plaindata.length, maxlen) ) );
-		
-		
 		//  Generate a one-time encryption key
-		//
-		//  k = H(encryption key, random bytes, m = H(M))
 		
-		final byte[] k = Cipher.hash( Math.xor(encryptionkey,
-		
-		    Cipher.hash( Math.xor( randbytes, hash ) ) ) );
+		final byte[] k = oneTimeEncryptionKey(encryptionkey);
 		
 		
 		//  Encrypt the one-time encryption key k using
@@ -62904,7 +63030,7 @@ class Cipher
 		
 		
 		
-		//  Prepend the hash of the encrypted one-time encryption key
+		//  Prepend the hash of the encrypted key
 		//
 		//  or the 32-byte file information (if byte[] != null)
 		
@@ -63044,27 +63170,420 @@ class Cipher
 	
 	
 	
-	//  These two methods are not finished
 	
-	
-	public static void encryptLargeFile(File file, byte[] encryptionkey)
+	public static boolean encryptLargeFile(File file, byte[] encryptionkey) throws IOException
 	{
-		//  encrypts a large file using the RandomAccessFile class
+		//  Encrypts a large file using the FileChannelReader and FileChannel Writer class
 		
-		//  ...
+		//  The encryption method was tested by hashing a large file before encryption and
+		//  hashing the file after decryption and verifying that the hashes are identical
 		
-		//  ...
+		//  Note that using using force() after each write operation makes file
+		//  encryption and decryption one-third slower. The updates will be written
+		//  to storage anyway because the file channel reader and writer are closed
+		//  at the end of the method.
+		
+		
+		//  Set the array size for the buffer and read the array size plaindata;
+		//  write the encrypted encryption key to the file channel writer and
+		//  write the encrypted encryption key hash to the file channel writer
+		//  using a 32-byte buffer; for each array size read the plaindata from
+		//  the file channel reader while bytes read >= 0, encrypt the plaindata,
+		//  and write the cipherdata to the file channel writer.
+		
+		//  The read positions are 0*size, 1*size, 2*size, 3*size, 4*size, ...
+		//  the write positions are 64, 64 + padlen + 1*size, 64 + padlen + 2*size, ...
+		
+		final int arraysize = 256*1024*1024;
+		
+		String filepath = file.getPath();
+		
+		FileChannelReader reader = new FileChannelReader(filepath);
+		
+		File tempfile = File.createTempFile(
+		
+		    file.getName(), null, new File(file.getParent()));
+		
+		String tempfilepath = tempfile.getPath();
+		
+		FileChannelWriter writer = new FileChannelWriter(tempfilepath);
+		
+		
+		ByteBuffer bytebuffer;
+		
+		bytebuffer = ByteBuffer.allocate(arraysize);
+		
+		
+		long bytesread = 0;
+		
+		long byteswritten = 0;
+		
+		reader.position(bytesread);
+		
+		bytesread += reader.read(bytebuffer);
+		
+		
+		//  Pad the front / left side of the plaindata
+		
+		byte[] plaindata = bytebuffer.array();
+		
+		int numberofpadbytes = arraysize / 2 + Math.random(arraysize / 2);
+		
+		while (((plaindata.length + numberofpadbytes) % 4) != 0)
+		
+		    numberofpadbytes++;
+		
+		if (numberofpadbytes >= arraysize)
+		
+		    throw new IllegalArgumentException();
+		
+		int padlen = numberofpadbytes;
+		
+		plaindata = addPadding(plaindata, padlen, true);
+		
+		if (!isPadded(plaindata))
+		{
+			System.out.println(Arrays.toString(plaindata));
+			
+			throw new ArithmeticException();
+		}
+		
+		//  Generate a one-time encryption key
+		
+		final byte[] k = oneTimeEncryptionKey(encryptionkey);
+		
+		
+		//  Encrypt the one-time encryption key k using
+		//  the static / file key as a reusable pad
+		//
+		//  encrypted key k' = k (+) static / file key
+		
+		final byte[] encryptedkey = Math.xor(k, encryptionkey);
+		
+		
+		//  Compute the hash of the encrypted key
+		//
+		//  or the 32-byte file information (if byte[] != null)
+		
+		byte[] encryptedkeyhash = hash(encryptedkey);
+		
+		
+		//  Write the encrypted encryption key to the file channel writer and
+		//  write the encrypted encryption key hash to the file channel writer
+		
+		byte[] byte32;
+		
+		ByteBuffer bytebuffer32;
+		
+		byte32 = encryptedkey;
+		
+		bytebuffer32 = ByteBuffer.wrap(byte32);
+		
+		writer.position(0);
+		
+		byteswritten += writer.write(bytebuffer32);
+		
+		byte32 = encryptedkeyhash;
+		
+		bytebuffer32 = ByteBuffer.wrap(byte32);
+		
+		byteswritten += writer.write(bytebuffer32);
+		
+		
+		//  For each array size read the plaindata from the file channel reader
+		//  while bytes read >= 0, encrypt the plaindata and write the cipherdata
+		//  to the file channel writer
+		
+		BigHash bighash = new Cipher() .new BigHash(k);
+		
+		
+		//  Encrypt the plaindata with the one-time secret key k
+		//  Use a fast hash algorithm that generates an array of
+		//  random numbers or one-time pad for file encryption
+		
+		byte[] hasharray = bighash.hash(plaindata.length);
+		
+		//  Encrypt the plaindata by xor-ing the hash
+		//
+		//  c[i] = p[i] (+) hash[i]
+		
+		byte[] cipherdata = Math.xor(plaindata, hasharray);
+		
+		boolean lastarray = false;
+		
+		for (int t = 0;  ; t++)
+		{
+			//  Read the next array size or less of plaindata
+			
+			bytebuffer = ByteBuffer.allocate(arraysize);
+			
+			reader.position(bytesread);
+			
+			int bytesread1 = reader.read(bytebuffer);
+			
+			
+			//  Write the cipherdata
+			
+			writer.position(byteswritten);
+			
+			byteswritten += writer.write(
+			
+			    ByteBuffer.wrap(cipherdata));
+			
+			
+			if (bytesread1 > 0) bytesread += bytesread1;
+			
+			if (bytesread1 < arraysize) lastarray = true;
+			
+			plaindata = bytebuffer.array();
+			
+			//  Encrypt the plaindata with the one-time secret key k
+			//  Use a fast hash algorithm that generates an array of
+			//  random numbers or one-time pad for file encryption
+			
+			//  For the final hash it doesn't matter if the
+			//  number of bytes read is not divisible by 4
+			
+			hasharray = bighash.hash(bytesread1);
+			
+			//  Encrypt the plaindata by xor-ing the hash
+			//
+			//  c[i] = p[i] (+) hash[i]
+			
+			if (lastarray) plaindata = Arrays.copyOf(plaindata, bytesread1);
+			
+			cipherdata = Math.xor(plaindata, hasharray);
+			
+			if (lastarray == true)
+			{
+				//  Write the cipherdata
+				
+				writer.position(byteswritten);
+				
+				byteswritten += writer.write(
+				
+				    ByteBuffer.wrap(cipherdata));
+				
+				break;
+			}
+		}
+		
+		reader.close();
+		writer.close();
+		
+		boolean delete = file.delete();
+		
+		boolean rename = tempfile.renameTo(new File(filepath));
+		
+		new File(tempfilepath).delete();
+		
+		return true;
 	}
 	
 	
-	public static void decryptLargeFile(File file, byte[] encryptionkey)
+	
+	public static boolean decryptLargeFile(File file, byte[] encryptionkey) throws IOException
 	{
-		//  decrypts a large file using the RandomAccessFile class
+		//  Decrypts a large file using the FileChannelReader and FileChannel Writer class
 		
-		//  ...
+		//  The encryption method was tested by hashing a large file before encryption and
+		//  hashing the file after decryption and verifying that the hashes are identical
 		
-		//  ...
+		
+		//  Read the encrypted encryption key from the file channel reader and
+		//  read the encrypted encryption key hash from the file channel reader
+		//  using a 32-byte buffer; set the arraysize for the byte buffer; read
+		//  the array size cipherdata from the file channel reader while bytes
+		//  read >= 0, decrypt the cipherdata, and write the plaindata to the
+		//  file channel writer.
+		
+		//  The read positions are 64 + 0*size, 64 + 1*size, 64 + 2*size, 64 + 3*size, ...
+		//  the write positions are 0*size, 1*size - padlen - 64, 2*size - padlen - 64, ...
+		
+		final int arraysize = 256*1024*1024;
+		
+		String filepath = file.getPath();
+		
+		FileChannelReader reader = new FileChannelReader(filepath);
+		
+		File tempfile = File.createTempFile(
+		
+		    file.getName(), null, new File(file.getParent()));
+		
+		String tempfilepath = tempfile.getPath();
+		
+		FileChannelWriter writer = new FileChannelWriter(tempfilepath);
+		
+		
+		byte[] byte32;
+		
+		ByteBuffer bytebuffer32;
+		
+		byte32 = new byte[32];
+		
+		bytebuffer32 = ByteBuffer.wrap(byte32);
+		
+		reader.position(0);
+		
+		reader.read(bytebuffer32);
+		
+		byte[] encryptedkey = Arrays.copyOf(
+		
+		    bytebuffer32.array(),
+		    bytebuffer32.array().length);
+		
+		byte32 = new byte[32];
+		
+		bytebuffer32 = ByteBuffer.wrap(byte32);
+		
+		reader.read(bytebuffer32);
+		
+		byte[] encryptedkeyhash = Arrays.copyOf(
+		
+		    bytebuffer32.array(),
+		    bytebuffer32.array().length);
+		
+		
+		//  Decrypt the encrypted one-time key
+		
+		//  k = encrypted key k' - static encryption key
+		
+		final byte[] k = Math.xor(encryptedkey, encryptionkey);
+		
+		
+		//  For each array size read the plaindata from the file channel reader
+		//  while bytes read >= 0, encrypt the plaindata and write the cipherdata
+		//  to the file channel writer
+		
+		ByteBuffer bytebuffer;
+		
+		bytebuffer = ByteBuffer.allocate(arraysize);
+		
+		
+		long bytesread = 0;
+		
+		long byteswritten = 0;
+		
+		reader.position(64);
+		
+		bytesread += reader.read(bytebuffer);
+		
+		
+		boolean padded = false;
+		
+		byte[] cipherdata = bytebuffer.array();
+		
+		
+		//  Decrypt the cipherdata with the one-time secret key k
+		//  Use a fast hash algorithm that generates an array of
+		//  random numbers or one-time pad for file encryption
+		
+		BigHash bighash = new Cipher() .new BigHash(k);
+		
+		byte[] hasharray = bighash.hash(cipherdata.length);
+		
+		
+		//  Decrypt the cipherdata by xor-ing the hash
+		//
+		//  p[i] = c[i] (+) hash[i]
+		
+		byte[] plaindata = Math.xor(cipherdata, hasharray);
+		
+		int padlen = 0;
+		
+		if (!isPadded(plaindata))
+		{
+			tempfile.delete();
+			
+			return false;
+		}
+		
+		else
+		{	padded = true;
+			
+			byte[] plaindata1 = removePadding(plaindata);
+			
+			padlen = plaindata.length - plaindata1.length;
+			
+			plaindata = plaindata1;
+		}
+		
+		boolean lastarray = false;
+		
+		for (int t = 0;  ; t++)
+		{
+			//  Read the next array size or less of cipherdata
+			
+			bytebuffer = ByteBuffer.allocate(arraysize);
+			
+			long position = 64L + bytesread;
+			
+			reader.position(position);
+			
+			final int bytesread1 = reader.read(bytebuffer);
+			
+			if (bytesread1 > 0) bytesread += bytesread1;
+			
+			
+			//  Write the plaindata
+			
+			position = byteswritten;
+			
+			writer.position(position);
+			
+			byteswritten += writer.write(
+			
+			    ByteBuffer.wrap(plaindata));
+			
+			
+			if (bytesread1 < arraysize) lastarray = true;
+			
+			cipherdata = bytebuffer.array();
+			
+			
+			//  Decrypt the cipherdata with the one-time secret key k
+			//  Use a fast hash algorithm that generates an array of
+			//  random numbers or one-time pad for file encryption
+			
+			//  For the final hash it doesn't matter if the
+			//  number of bytes read is not divisible by 4
+			
+			hasharray = bighash.hash(bytesread1);
+			
+			//  Decrypt the cipherdata by xor-ing the hash
+			//
+			//  p[i] = c[i] (+) hash[i]
+			
+			if (lastarray) cipherdata = Arrays.copyOf(cipherdata, bytesread1);
+			
+			plaindata = Math.xor(cipherdata, hasharray);
+			
+			if (lastarray == true)
+			{
+				//  Write the last plaindata
+				
+				position = byteswritten;
+				
+				writer.position(position);
+				
+				byteswritten += writer.write(ByteBuffer.wrap(plaindata));
+				
+				break;
+			}
+		}
+		
+		reader.close();
+		writer.close();
+		
+		boolean delete = file.delete();
+		
+		boolean rename = tempfile.renameTo(new File(filepath));
+		
+		new File(tempfilepath).delete();
+		
+		return true;
 	}
+	
 	
 	
 	
@@ -63553,7 +64072,6 @@ class Cipher
 		}
 		
 		
-		
 		private static void permutate(int[] A, Number key)
 		{
 			int elements = A.length;
@@ -63643,7 +64161,7 @@ class Cipher
 			
 			//  Initialize the hash array
 			
-			int[] array = new int[bytes / 4];
+			int[] array = new int[bytes/4];
 			
 			for (int k = 0; k < array.length; k++, index += 2)
 			{
@@ -63738,8 +64256,6 @@ class Cipher
 	
 	
 	
-	
-	
 	public static byte[] hash(final byte[] M)
 	{
 		//  returns a 32-byte hash using SHA256
@@ -63764,18 +64280,70 @@ class Cipher
 	
 	
 	
+	
 	public static byte[] hashLargeFile(File file)
 	
 		throws IOException, FileNotFoundException
 	{
 		//  hashes files larger than 2 GB
 		
-		//  ...
+		MessageDigest md;
 		
-		//  ...
+		try { md = MessageDigest.getInstance("SHA-256"); }
 		
-		return null;
+		catch (NoSuchAlgorithmException ex)
+		
+		  { System.out.println(ex); return null; }
+		
+		int bytes = 0;
+		
+		FileChannelReader reader = null;
+		
+		try
+		{	reader = new FileChannelReader(file.getPath());
+			
+			do
+			{	final int size = 1024*1024*1024;
+				
+				ByteBuffer bytebuffer;
+				
+				//  ByteBuffer.allocate(size);
+				
+				byte[] array = new byte[size];
+				
+				bytebuffer = ByteBuffer.wrap(array);
+				
+				bytes = reader.read(bytebuffer);
+				
+				array = bytebuffer.array();
+				
+				if (bytes < 0) break;
+				
+				if (bytes < bytebuffer.array().length)
+				{
+					byte[] array1 = new byte[bytes];
+					
+					for (int i = 0; i < bytes; i++)
+					
+					    array1[i] = array[i];
+					
+					array = array1;
+				}
+				
+				md.update(array);
+				
+			}	while (bytes > 0);
+			
+			return md.digest();
+		}
+		
+		finally
+		{
+			if (reader != null) reader.close();
+		}
 	}
+	
+	
 	
 	
 	public static String hash1(String M)
@@ -63857,18 +64425,21 @@ class Cipher
 		
 		if (file.length() < 64) return false;
 		
-		if (file.length() >= 2L*1024*1024*1024)
-		
-		    throw new IllegalArgumentException();
-		
-		//  Use RandomAccessFile for sizes > 32 bits
-		//
-		//  ...   ...
-		
-		
 		byte[] input = null;
 		
-		try { input = DataStream.read(file); }
+		try
+		{	if (file.length() < 2L*1024*1024*1024)
+			
+			input = DataStream.read(file);
+			
+			else
+			{	ByteBuffer bytebuffer = ByteBuffer.allocate(1024*1024);
+				
+				new FileChannelReader(file.getPath()).read(bytebuffer);
+				
+				input = bytebuffer.array();
+			}
+		}
 		
 		catch (IOException ex)
 		{
@@ -63876,7 +64447,7 @@ class Cipher
 			
 			return false;
 		}
-		
+			
 		
 		//  Test if the first 32 bytes equals
 		//  the hash of the second 32 bytes
@@ -64138,17 +64709,27 @@ class Cipher
 	
 	public static boolean isPadded(byte[] array)
 	{
+		return isPadded(array, true) || isPadded(array, false);
+	}
+	
+	
+	public static boolean isPadded(byte[] array, boolean front)
+	{
+	
 		//  tests if a decrypted array is padded
 		
 		if (array.length < 8) return false;
 		
 		final int s = 256; // the size of a byte
 		
-		{	//  Calculate the difference between the last two elements
+		if (front == false)
+		{
+			//  Calculate the difference between the last two elements
 			
 			boolean padded = true;
 			
-			int d = array[array.length -1] - array[array.length -2];
+			int d = array[array.length -1]
+			      - array[array.length -2];
 			
 			d = ((d % s) + s) % s;
 			
@@ -64168,7 +64749,9 @@ class Cipher
 		}
 		
 		
-		{	//  Calculate the difference between the first two elements
+		else // if (front == true)
+		{
+			//  Calculate the difference between the first two elements
 			
 			boolean padded = true;
 			
@@ -64192,6 +64775,7 @@ class Cipher
 		
 		return false;
 	}
+	
 	
 	
 	

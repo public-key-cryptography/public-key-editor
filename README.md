@@ -112,7 +112,7 @@
 	are validated; the document / file type detection was corrected so the program correctly displays html
 	documents instead of trying to display them as image files which caused the dialog frame to collapse;
 	
-	the hyperactive class was modified to copy the url address to the clipboard so the user can copy and
+	the Hyperactive class was modified to copy the url address to the clipboard so the user can copy and
 	paste the address into a web browser if an email provider like yandex sends messages to clients using
 	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
 	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
@@ -161,9 +161,9 @@
 	encrypt the directories or else only the file contents will be decrypted and the file names will be
 	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
 	
-	an error in the SaveAsListener class that was caused by correcting the file name encryption in the
-	previous file upload was also corrected; the Save As button saved the file but it didn't set the tab
-	title or display the file name because of a NullPointerException.
+	a FileChannelReader and FileChannelWriter class were also added to the software to encrypt and decrypt
+	large files and to hash files larger than the array size limit which is 2 G Bytes; the hash value com-
+	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename.
 	
 	
 	
