@@ -192,8 +192,17 @@
 	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
 	
 	a FileChannelReader and FileChannelWriter class were also added to the software to encrypt and decrypt
-	large files and to hash files larger than the array size limit which is 2 G Bytes; the hash value com-
-	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename.
+	large files and to hash files larger than the array size limit which is 2G Bytes; the hash value com-
+	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename; the
+	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2G bytes
+	because there was no FileChannelReader or FileChannelWriter class to encrypt large files; the synchro-
+	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; and the documents
+	display method was modified to correct for an error in Java that would cause the view attached file
+	dialog frame to throw a negative array size exception and expand to the size of the screen for large
+	files that are unwrapped such as source code files because the lines are all short, but not for docu-
+	ments such as word processor files that are wrapped by the text area because every paragraph is one
+	line.
+	
 	
 	
 	
@@ -608,6 +617,7 @@ import java.util.zip.*;
 
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
+import java.util.concurrent.atomic.*;
 
 import javax.imageio.*;
 import javax.net.ssl.*;
@@ -1581,6 +1591,8 @@ class __
 	encryptionreplykeyciphers = "Encryption / reply key ciphers",
 	
 	recipientspublickeyhash = "Recipient's public key hash",
+	
+	copytoclipboard = "Copy to clipboard",
 	
 	cancel = "Cancel",  canceled = "Canceled",
 	
@@ -3597,7 +3609,9 @@ class Programs
 				
 				//  Stop the bell from ringing
 				
-				if ((cp == 0) && (keycode == vk_backspace) && !selected) e.consume();
+				if ((cp == 0) && (keycode == vk_backspace)
+				
+				    && !selected) e.consume();
 				
 				
 				
@@ -5134,7 +5148,9 @@ class Programs
 					
 					listmenuitem.add(menuitem);
 					
-					listmenuitem.get(i).addActionListener(openlistfilelistener);
+					listmenuitem.get(i).addActionListener(
+					
+					    openlistfilelistener);
 					
 					filemenu.add(listmenuitem.get(i));
 				}
@@ -11928,10 +11944,6 @@ class Programs
 			{
 				//  creates an Editor Frame
 				
-				//  Only one frame is created when the actionPerformed
-				//  method is called.
-				
-				
 				htmlframe = new HTMLFrame();
 			}
 		}
@@ -15112,7 +15124,7 @@ class Programs
 					     cellvalues[i][j] = "";
 					
 					if (delete) table.setValueAt("",
-						
+					
 					    rows[0] + i, cols[0] + j);
 				}
 				
@@ -21217,7 +21229,8 @@ class Programs
 		
 		private KeyboardListener keyboardlistener;
 		
-		//  Choose a linesize < the terminal width = 80 chars
+		//  Choose a minimum size for partitioning the message
+		//  and a linesize < the terminal width = 80 chars
 		//
 		//  The linesize should be different from the public key
 		//  sizes + 16 (the size of 0123456789abcdef) so the base-16
@@ -21225,6 +21238,7 @@ class Programs
 		//  text is partitioned.
 		
 		private int linesize = 78;
+		private int minsize = 256;
 		
 		
 		private Dimension d = Toolkit
@@ -22333,8 +22347,7 @@ class Programs
 			private class SendButtonListener implements ActionListener
 			{
 			
-				public boolean sending = false;
-				
+				public  boolean sending = false;
 				private boolean clicked = false;
 				
 				private String plaintext, sendtext;
@@ -22342,8 +22355,6 @@ class Programs
 				
 				private int   publickeymessages = 0;
 				private int replytoselfmessages = 0;
-				
-				private int minsize = 256;
 				
 				
 				public void actionPerformed(ActionEvent e)
@@ -22405,8 +22416,6 @@ class Programs
 					final int[] numberofciphers1 =
 					
 					    new int[] { numberofciphers };
-					
-					boolean finished = false;
 					
 					
 					try
@@ -22584,9 +22593,8 @@ class Programs
 						//  the recipient. If the message is unimportant then it doesn't matter.
 						
 						
+						//  Read the public key ring for this user address
 						
-						//  Read the public key file for this user name or email address
-												
 						String useraddr = fromstring;
 						
 						if (useraddr.contains(" ")) useraddr =
@@ -22691,7 +22699,9 @@ class Programs
 									//  address@example.com
 									//  0123 4567 89ab cdef
 									
-									String keyhash = PublicKey.hashPublicKey(key) .substring(0, 32);
+									String keyhash = PublicKey
+									
+									    .hashPublicKey(key) .substring(0, 32);
 									
 									keyhash = Convert.partition(keyhash, " ", 4);
 									
@@ -22753,7 +22763,9 @@ class Programs
 						
 						if ((recipientskey == null) || recipientskey.isEmpty()
 						
-						   || (recipientskeyaddress == null) || !recipientskeyaddress.equals(tostring))
+						   || (recipientskeyaddress == null) ||
+						
+						      !recipientskeyaddress.equals(tostring))
 						{
 							//  A public key is required to encrypt an email message
 							//
@@ -22840,7 +22852,6 @@ class Programs
 							keyring.add(name_key);
 						}
 						
-						
 						//  Save the new key ring or update
 						//  the existing public key ring
 						
@@ -22859,14 +22870,19 @@ class Programs
 						 else encrypt = false;
 						
 						
-						//  Verify that the encryption works with either delimiter
-						//  because public keys may use hyphens or base-16 chars
+						//  This line was used to test that the encryption works
+						//  with either delimiter ('-' or 0123456789abcdef) be-
+						//  cause public keys may use hyphens or base-16 chars
 						//
 						//  if (recipientskey != null) recipientskey
 						//    .replaceAll(Convert.base16Separator, "-");
 						
 						
-						//  Display the Send Message JOptionPane dialog
+						
+						
+						
+						//  Create a file data list, a file desc list, and a file
+						//  name list to hold the attached files
 						
 						ArrayList<byte[]> filedatalist = new ArrayList<byte[]>();
 						ArrayList<String> filedesclist = new ArrayList<String>();
@@ -22877,10 +22893,17 @@ class Programs
 						//  sent to the recipient; only the file description is
 						//  sent to the recipient.
 						
+						//  Create an openlistener object
+						
 						OpenListener openlistener = new OpenListener(
 						
 						    __.attachfilesordirectory);
 						
+						
+						//  Use a while loop so that if the user clicks the
+						//  Attach File button more than once the JOptionPane
+						//  dialog will re-display until the user clicks the
+						//  Yes button
 						
 						while (true)
 						{
@@ -23116,6 +23139,12 @@ class Programs
 								panel.add(vbox);
 							}
 							
+							
+							
+							//  Create a JOptionPane dialog and add
+							//  | Yes | Attach Files | Cancel | buttons
+							
+							
 							Icon icon = null;
 							
 							String title = __.Sendmessage;
@@ -23204,7 +23233,9 @@ class Programs
 									
 									if (directory != null)
 									
-									    message = "Directory > " + maxfileno + " " + "files";
+									    message = "Directory > " +
+									
+										maxfileno + " " + "files";
 									
 									System.out.println(message);
 									
@@ -23277,7 +23308,7 @@ class Programs
 									
 									//  If the file is encrypted
 									//
-									//  ask if the user wants to decrypt
+									//  prompt the user to decrypt
 									//  the file before attaching
 									
 									
@@ -23387,19 +23418,24 @@ class Programs
 									{
 										//  Compress the file data
 										
-										byte[] compresseddata = compress(filedata);
+										try
+										{	byte[]   compresseddata =   compress(filedata);
+											byte[] decompresseddata = decompress(compresseddata);
+											
+											if (!Arrays.equals(filedata, decompresseddata))
+											
+											    throw new DataFormatException();
+											
+											//  If the file is compressible then use the compressed data
+											
+											if (compresseddata.length < filedata.length * 3/4)
+											
+											    filedata = compresseddata;
+										}
 										
-										byte[] decompresseddata = decompress(compresseddata);
+										catch (DataFormatException ex)
 										
-										if (!Arrays.equals(filedata, decompresseddata))
-										
-										    throw new Exception();
-										
-										//  If the file is compressible then use the compressed data
-										
-										if (compresseddata.length < filedata.length * 3/4)
-										
-										    filedata = compresseddata;
+										    { System.out.println(ex); }
 									}
 									
 									
@@ -23763,11 +23799,8 @@ class Programs
 						
 						
 						
-						//  If the send text is in base 64, and the size is > min size,
-						//  partition the base-64 text
-						
-						//  if ( encrypt) System.out.println("Partitioning the encoded ciphertext");
-						//  if (!encrypt) System.out.println("Partitioning the encoded plaintext");
+						//  If the send text is in base 64, and the size
+						//  is > min size, partition the base-64 text
 						
 						if (Number.isBase64(sendtext1.trim()) && (sendtext1.length() > minsize))
 						
@@ -23888,10 +23921,6 @@ class Programs
 						        .substring(0, 8);
 						
 						
-						//  Set finished = true so the send
-						//  button remains clicked/disabled
-						
-						finished = true;
 						
 						
 						//  Save a copy of the text area so that if the user
@@ -24008,10 +24037,6 @@ class Programs
 							//  Use the from string to mail to self
 							
 							String fromaddress = fromstring.trim();
-							
-							if (fromaddress.contains(" ")) fromaddress = fromaddress
-							
-							    .substring(0, fromaddress.indexOf(" "));
 							
 							sent2 = sendmail .send(// send to self
 							
@@ -28079,21 +28104,21 @@ class Programs
 					
 					//   Clicking on the reply key size button opens the second dialog
 					//
-					//   _____________________________________________________________
-					//  |                                                             |
-					//  | Choose the key size that you want sent with your messages.  |
-					//  | The recipient will use this key to reply to your messages.  |
-					//  |                                                             |
-					//  | If you do not include a reply key, the recipient will have  |
-					//  | to request your public key to send an encrypted reply to    |
-					//  | your email until email service providers upgrade their      |
-					//  | software to allow clients or users to store public keys     |
-					//  | on their servers.                                           |
-					//  |                                                             |
-					//  |            o zero  * quad  o oct  o max1  o max2            |
-					//  |                            ____                             |
-					//  |                           |_OK_|                            |
-					//  |_____________________________________________________________|
+					//   ____________________________________________________________
+					//  |                                                            |
+					//  | Choose the key size that you want sent with your messages. |
+					//  | The recipient will use this key to reply to your messages. |
+					//  |                                                            |
+					//  | If you do not include a reply key, the recipient will have |
+					//  | to request your public key to send an encrypted reply to   |
+					//  | your email until email service providers upgrade their     |
+					//  | software to allow clients or users to store public keys    |
+					//  | on their servers.                                          |
+					//  |                                                            |
+					//  |            o zero  * quad  o oct  o max1  o max2           |
+					//  |                            ____                            |
+					//  |                           |_OK_|                           |
+					//  |____________________________________________________________|
 					
 					
 					
@@ -28460,7 +28485,9 @@ class Programs
 							else
 							{	oldpassphrase = null;
 								
-								JOptionPane.showMessageDialog(frame, __.Error);
+								JOptionPane.showMessageDialog(
+								
+								    frame, __.Error);
 							}
 						}
 					}
@@ -28796,7 +28823,8 @@ class Programs
 					publickeyhash = Convert.partition(publickeyhash, " ", 4);
 					
 					
-					//  Display the document
+					//  Display the user's public key and a
+					//  a copy to clipboard and cancel button
 					
 					String document = publickeystr;
 					
@@ -28804,21 +28832,78 @@ class Programs
 					
 					title += "  " + publickeyhash;
 					
-					Documents .display(frame, title, document, font,
 					
-					    emailpanel.foreground, emailpanel.background);
+					JButton copy_button, cancel_button;
+					
+					  copy_button = new JButton(__.copytoclipboard);
+					cancel_button = new JButton(__.cancel);
+					
+					int rows = 24, cols = 56;
+					
+					JTextArea textarea = new JTextArea(rows, cols);
+					JScrollPane scrollpane = new JScrollPane(textarea);
+					
+					textarea.setText(document);
+					textarea.setEditable(false);
+					textarea.setFont(font);
+					
+					Box vbox = Box.createVerticalBox();
+					Box hbox = Box.createHorizontalBox();
+					
+					hbox.add(copy_button);
+					hbox.add(cancel_button);
+					
+					vbox.add(scrollpane);
+					vbox.add(hbox);
 					
 					
-					//  Copy the key string to clipboard
+					Icon icon = null;
 					
-					Clipboard cb = Toolkit .getDefaultToolkit() .getSystemClipboard();
+					//  options has to equal the empty array instead of
+					//  null or else the JOptionPane will add an OK button
 					
-					cb.setContents(new StringSelection(publickeystr), null);
+					Object[] options = new Object[] {  };
 					
-					//  System.out.println("Public key copied to clipboard");
+					JOptionPane pane = new JOptionPane(vbox,
+					
+					    JOptionPane.PLAIN_MESSAGE, JOptionPane
+					
+						.DEFAULT_OPTION, icon, options, 0);
+					
+					//  pane.set(...)
+					
+					JDialog dialog = pane.createDialog(frame, title);
+					
+					final int[] choice = new int[] { -1 };
+					
+					copy_button.addActionListener( new ActionListener()
+					{ public void actionPerformed(ActionEvent e)
+					{ choice[0] = 0; dialog.dispose(); } } );
+					
+					cancel_button.addActionListener( new ActionListener()
+					{ public void actionPerformed(ActionEvent e)
+					{ choice[0] = 1; dialog.dispose(); } } );
+					
+					dialog.setVisible(true);
+					
+					
+					if (choice[0] == 0)
+					{
+						//  Copy the key string to clipboard
+						
+						Clipboard cb = Toolkit .getDefaultToolkit() .getSystemClipboard();
+						
+						cb.setContents(new StringSelection(publickeystr), null);
+						
+						System.out.println("Public key copied to clipboard");
+					}
+					
+					else if (choice[0] == 1)
+					{
+						
+					}
 				}
 			}
-			
 			
 			
 			
@@ -31814,6 +31899,7 @@ class Programs
 			
 			
 			
+			
 			private void saveAttachedFile(String filedesc, byte[] filedata)
 			{
 				//  Saves an image, text, or html document
@@ -32413,7 +32499,7 @@ class Programs
 						    filedatalist.set(i, decompresseddata);
 					}
 					
-					catch (Exception ex) {  }
+					catch (Exception ex) { System.out.println(ex); }
 				}
 				
 				
@@ -33057,7 +33143,7 @@ class Programs
 				
 				if (message == null) return;
 				
-				if ((message.length() > 256)
+				if ((message.length() > minsize)
 				 && !message.trim().contains("\n"))
 				
 				    message = Convert.partition(
@@ -33466,7 +33552,7 @@ class Programs
 				
 				String str = new String();
 				
-				String separator32 = "________________________________";
+				String separator32 = "_".repeat(32);
 				
 				
 				str += "\n\n\n";
@@ -34303,7 +34389,7 @@ class Programs
 				//  | |            message text 4            | |
 				//  | |                                      | |
 				//  | |______________________________________|_|
-				//  |_|______________Close button____________|_|
+				//  |_|_____________Close button_____________|_|
 				
 				
 				private JDialog dialog;
@@ -37016,8 +37102,7 @@ class Programs
 								{
 									sb.append("\n\n\n");
 									
-									sb.append("------------------------");
-									sb.append("------------------------");
+									sb.append("-".repeat(48));
 									
 									sb.append("\n\n\n");
 									
@@ -37131,8 +37216,7 @@ class Programs
 								{
 									sb.append("\n\n\n\n");
 									
-									sb.append("------------------------");
-									sb.append("------------------------");
+									sb.append("-".repeat(48));
 									
 									sb.append("\n\n\n\n");
 								}
@@ -38307,10 +38391,9 @@ class Programs
 			
 			compressor.end();
 			
-			output = Arrays.copyOfRange(output, 0, compressedlength);
+			output = Arrays.copyOfRange(
 			
-			//  System.out.println("uncompressed length == " + input.length);
-			//  System.out.println("  compressed length == " + compressedlength);
+			    output, 0, compressedlength);
 			
 			return output;
 		}
@@ -38342,7 +38425,9 @@ class Programs
 			
 			decompressor.end();
 			
-			imagedata = Arrays.copyOfRange(imagedata, 0, datalength);
+			imagedata = Arrays.copyOfRange(
+			
+			    imagedata, 0, datalength);
 			
 			return imagedata;
 		}
@@ -39203,6 +39288,11 @@ class Programs
 	
 	
 	
+	
+	
+	
+	
+	
 	//  Methods and inner classes of the Programs class that are
 	//  shared by the TextFrame and TableFrame classes could be
 	//  placed here or outside the Programs class to avoid repli-
@@ -40050,7 +40140,19 @@ class DeleteFileListener implements ActionListener
 				//  sub-directories are moved to the end of the array
 				//  by the ListFiles listFiles method.
 				
-				for (File file1 : files) file1.delete();
+				for (File file1 : files)
+				{
+				    try { file1.delete(); }
+				
+				    catch (SecurityException ex)
+				    {
+					System.out.println(ex);
+					
+					JOptionPane.showMessageDialog(frame, ex);
+					
+					return;
+				    }
+				}
 				
 				//  Use a second loop to delete the remaining empty
 				//  sub-directories that were not deleted by the
@@ -40361,7 +40463,7 @@ class EncryptDirectory
 	
 	private boolean canceled;
 	
-	private int numberoffiles;
+	private static AtomicInteger numberoffiles;
 	
 	private boolean running;
 	
@@ -40371,6 +40473,8 @@ class EncryptDirectory
 	public EncryptDirectory(JFrame frame)
 	{
 		this.frame = frame;
+		
+		numberoffiles = new AtomicInteger();
 		
 		   testbutton = new JButton(__.test);
 		encryptbutton = new JButton(__.encrypt);
@@ -40814,11 +40918,6 @@ class EncryptDirectory
 	}
 	
 	
-	private synchronized void incrementNumberOfFiles()
-	{
-		numberoffiles += 1;
-	}
-	
 	
 	private void encrypt(File directory)
 	{
@@ -40868,7 +40967,7 @@ class EncryptDirectory
 		
 		//  Reset the numberoffiles
 		
-		numberoffiles = 0;
+		numberoffiles.set(0);
 		
 		//  Read the file names into the file list
 		
@@ -41010,7 +41109,7 @@ class EncryptDirectory
 		
 		//  Reset the numberoffiles
 		
-		numberoffiles = 0;
+		numberoffiles.set(0);
 		
 		
 		//  Read the file names into the file list
@@ -41087,7 +41186,7 @@ class EncryptDirectory
 		
 		if (canceled) { append(__.canceled); running = false; return; }
 		
-		String message = "\n" + numberoffiles + " " + __.files
+		String message = "\n" + numberoffiles.get() + " " + __.files
 		
 		   + "  " + totalbytes/1024/1024 + " " + "M" + __.bytes
 		
@@ -41145,25 +41244,7 @@ class EncryptDirectory
 			{
 				if ((file == null) || file.isDirectory()) continue;
 				
-			        if (file.length() >= 2L*1024*1024*1024)
-				
-				    continue;
-				
 				if (canceled) return;
-				
-				
-				//  Read each file
-				
-				byte[] input = null;
-				
-				try { input = DataStream.read(file); }
-				
-				catch (IOException ex)
-				{
-					System.out.println(ex);
-					
-					continue;
-				}
 				
 				
 				if (test)
@@ -41186,86 +41267,31 @@ class EncryptDirectory
 				
 				if (!Cipher.isEncrypted(file))
 				{
-					//  Encrypt the file input
-					
 					String message = __.encryptingfile + " " + file;
 					
 					append(message);
 					
-					byte[] cipherdata = Cipher.encrypt(
 					
-					    input, filekey, Cipher.encrypt_method_3);
-					
-					if (cipherdata == null)
-					{
-						message = __.errorencryptingfile + " " + file;
-						
-						append(message);
-						
-						continue;
-					}
-					
-					incrementNumberOfFiles();
-					
-					
-					//  Save the last modified time before writing
+					//  Save the last modified time
 					
 					long time = file.lastModified();
 					
 					
-					//	//  Erase the file plaintext by writing zeros
-					//	
-					//	try
-					//	{	byte[] array = new byte[(int) file.length()];
-					//		
-					//		DataStream.write(file, array); // too slow
-					//	}
-					//	
-					//	catch (IOException ex) { append(ex); return; }
+					//  Encrypt the file input
 					
+					boolean bool;
 					
-					//  Read the file path, delete the plaindata/text file,
-					//  and create a new cipherdata/text file using the path
-					
-					String filepath = file.getPath();
-					
-					if (file.canWrite())
-					{
-						//  Make sure the file is really writable
-						//  before deleting the plaintext file
-						
-						try { DataStream.write(file, new byte[0]); }
-						
-						catch (IOException ex)
-						{
-							System.out.println(ex);
-							
-							continue;
-						}
-						
-						boolean bool = file.delete();
-						
-						if (!bool) System.out.println(
-						
-						    "Error deleting file");
-					}
-					
-					//  Save the encrypted file
-					
-					file = new File(filepath);
-					
-					try
-					{	DataStream.write(file, cipherdata);
-						
-						file.setLastModified(time);
-					}
+					try { bool = FileEncryptor.encrypt(file, filekey); }
 					
 					catch (IOException ex)
 					{
-						System.out.println(ex);
+						append(ex.toString());
 						
 						continue;
 					}
+					
+					
+					numberoffiles.getAndIncrement();
 				}
 				
 				else
@@ -41312,24 +41338,7 @@ class EncryptDirectory
 			{
 				if ((file == null) || file.isDirectory()) continue;
 				
-			        if (file.length() >= 2L*1024*1024*1024)
-				
-				    continue;
-				
 				if (canceled) return;
-				
-				//  Read each file
-				
-				byte[] input = null;
-				
-				try { input = DataStream.read(file); }
-				
-				catch (IOException ex)
-				{
-					append(ex.toString());
-					
-					continue;
-				}
 				
 				if (test)
 				{
@@ -41348,37 +41357,24 @@ class EncryptDirectory
 				  { append(__.fileisnotwritable); continue; }
 				
 				
+				//  Read the last modified time
+				
+				long time = file.lastModified();
+				
 				
 				if (Cipher.isEncrypted(file))
 				{
-					//  Try to decrypt the input
+					//  Try to decrypt the file
 					
 					String message = __.decryptingfile + " " + file;
 					
 					append(message);
 					
-					byte[] plaindata = Cipher.decrypt(input, filekey);
 					
-					if (plaindata == null)
-					{
-						message = __.errordecryptingfile + " " + file;
-						
-						append(message);
-						
-						continue;
-					}
-					
-					incrementNumberOfFiles();
-					
-					
-					//  Save the last modified time before writing
-					
-					long time = file.lastModified();
-					
-					//  Save the file and restore the last modified time
+					boolean bool;
 					
 					try
-					{	DataStream.write(file, plaindata);
+					{	bool = FileDecryptor.decrypt(file, filekey);
 						
 						file.setLastModified(time);
 					}
@@ -41389,6 +41385,10 @@ class EncryptDirectory
 						
 						continue;
 					}
+					
+					
+					numberoffiles.getAndIncrement();
+					
 					
 					
 					if (Number.isBase16(file.getName())
@@ -41413,7 +41413,9 @@ class EncryptDirectory
 				}
 				
 				else
-				{	String message = __.fileisnotencrypted + " " + file;
+				{	String message =
+					
+					   __.fileisnotencrypted + " " + file;
 					
 					append(message);
 					
@@ -41904,7 +41906,7 @@ class FileEncryptor
 	
 	
 	
-	public boolean encrypt(File file, byte[] encryptionkey)
+	public static boolean encrypt(File file, byte[] encryptionkey)
 	
 		throws IOException, FileNotFoundException
 	{
@@ -42676,7 +42678,7 @@ class FileDecryptor
 	
 	
 	
-	public boolean decrypt(File file, byte[] decryptionkey)
+	public static boolean decrypt(File file, byte[] decryptionkey)
 	
 		throws IOException, FileNotFoundException
 	{
@@ -42731,7 +42733,7 @@ class FileDecryptor
 		{
 			String name1 = FileNameEncryptor
 			
-			  .decryptFileName(file.getName(), filekey);
+			  .decryptFileName(file.getName(), decryptionkey);
 			
 			String path1 = file.getParent() + File.separator + name1;
 			
@@ -45462,6 +45464,7 @@ class Documents
 	
 	
 	static String howtousepopmail1 =
+	
 	"\n0. Open an email account that supports POP3 (Post Office Protocol) mail. Once " +
 	"you open an email account, you may also have to enable POP mail if it is not ena" +
 	"bled by default. Click on the settings or email client label on the email websit" +
@@ -46182,24 +46185,27 @@ class Documents
 		
 		dialog.setTitle(title);
 		
-		dialog.setSize(dialog.getPreferredSize());
-		
-		//  Center the dialog in the parent frame
 		
 		Point p = frame.getLocation();
 		
 		int xpos = p.x, ypos = p.y;
 		
-		int  width = frame.getWidth();
-		int height = frame.getHeight();
+		dialog.setLocation(xpos, ypos);
 		
-		int  width1 = dialog.getWidth();
-		int height1 = dialog.getHeight();
+		Dimension size = dialog.getPreferredSize();
 		
-		int x2pos = xpos +  width/2 -  width1/2;
-		int y2pos = ypos + height/2 - height1/2;
+		int x = (int) size.getWidth();
+		int y = (int) size.getHeight();
 		
-		dialog.setLocation(x2pos, y2pos);
+		if (x > (int) (d.getWidth()*0.7))
+		    x = (int) (d.getWidth()*0.7);
+		
+		if (y > (int) (d.getHeight()*0.7))
+		    y = (int) (d.getHeight()*0.7);
+		
+		size = new Dimension(x, y);
+		
+		dialog.setSize(size);
 		
 		dialog.setVisible(true);
 	}
@@ -46366,26 +46372,27 @@ class Documents
 		
 		dialog.setTitle(title);
 		
-		dialog.setSize(dialog.getPreferredSize());
-		
-		//  Center the dialog in the parent frame
 		
 		Point p = frame.getLocation();
 		
 		int xpos = p.x, ypos = p.y;
 		
-		 width = frame.getWidth();
-		height = frame.getHeight();
+		dialog.setLocation(xpos, ypos);
 		
-		int  width1 = dialog.getWidth();
-		int height1 = dialog.getHeight();
+		Dimension size = dialog.getPreferredSize();
 		
-		int x2pos = xpos +  width/2 -  width1/2;
-		int y2pos = ypos + height/2 - height1/2;
+		int x = (int) size.getWidth();
+		int y = (int) size.getHeight();
 		
-		dialog.setLocation(x2pos, y2pos);
+		if (x > (int) (d.getWidth()*0.7))
+		    x = (int) (d.getWidth()*0.7);
 		
-		dialog.setSize(dialog.getPreferredSize());
+		if (y > (int) (d.getHeight()*0.7))
+		    y = (int) (d.getHeight()*0.7);
+		
+		size = new Dimension(x, y);
+		
+		dialog.setSize(size);
 		
 		dialog.setVisible(true);
 		
@@ -48505,11 +48512,21 @@ class DataStream
 	//  because encoding in base 64 would expand the file size by
 	//  one-third.
 	
+	
 	//  These methods can only read and write files up to 2 GB
 	//  because of the array size limit, except for the append(
 	//  String) method. For larger file sizes the methods should
 	//  use a RandomAccessFile or FileChannel object which is
 	//  safe for use by multiple concurrent threads.
+	//
+	//  If the file contains text separated by a delimiters such
+	//  as newlines and space chars, then a Scanner object can be
+	//  used to read the file such as Scanner in = null; try { in
+	//  = new Scanner(new BufferedReader(new FileReader(file))); }
+	//  catch (IOException ex) { }, and a PrintWriter object can be
+	//  used to write the file such as PrintWriter out = new Print
+	//  Writer(new DataOutputStream(socket.getOutputStream()), bool).
+	
 	
 	
 	
@@ -48704,14 +48721,6 @@ class FileChannel1
 		return fc.write(bytebuffer, position);
 	}
 	
-	public void force(boolean metadata) throws IOException
-	{
-		//  Forces any updates to this channel's file to be
-		//  written to the storage device that contains it
-		
-		fc.force(metadata);
-	}
-	
 	public void close() throws IOException
 	{
 		fc.close();
@@ -48738,6 +48747,14 @@ class FileChannelWriter extends FileChannel1
 	public FileChannelWriter(String filepath) throws IOException
 	{
 		super(filepath, StandardOpenOption.WRITE);
+	}
+	
+	public void force(boolean metadata) throws IOException
+	{
+		//  Forces any updates to this channel's file to be
+		//  written to the storage device that contains it
+		
+		this.force(metadata);
 	}
 	
 	public FileChannelWriter truncate(long size)
@@ -50893,7 +50910,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	
 	
-			
 	
 	private class KeyListener extends KeyAdapter
 	{
@@ -51292,8 +51308,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//  The frame visibility has to be set to false
 		//  and then to true to force the method to block
 		
-		this.setSize(newsize.width, newsize.height);
-		
 		this.setVisible(false);
 		this.setVisible(true);
 		
@@ -51327,8 +51341,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		//  The frame visibility has to be set to false
 		//  and then to true to force the method to block
-		
-		this.setSize(newsize.width, newsize.height);
 		
 		this.setVisible(false);
 		this.setVisible(true);
@@ -51364,7 +51376,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			if (SP.length() < minlength) return null;
 			
 			
-			String email = emailfield.getText().replaceAll(" ", "");
+			String email = emailfield.getText()
+			
+			    .replaceAll(" ", "");
 			
 			email = email.toLowerCase();
 			
@@ -51380,9 +51394,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			this.linewidth = linewidth;
 			
-			return new String[] { SP0, SP1, email, String.valueOf(
+			return new String[] { SP0, SP1, email, String
 			
-			    numberofciphers), String.valueOf(linewidth) };
+			   .valueOf(numberofciphers), String.valueOf(linewidth) };
 		}
 		
 		
@@ -52245,7 +52259,7 @@ class PublicKey
 	final static int    send_encrypt = 2; //  sender / one-time key
 	
 	
-	//  The padding chars appended to the message
+	//  The padding chars appended to the message (c1 != c)
 	
 	final static char c1 = '\n'; // single pad char
 	final static char c = ' '; // multiple pad char
@@ -53119,7 +53133,6 @@ class PublicKey
 		
 			return false;
 		
-		
 		//  Verify that no two public keys have the same size
 		
 		int[] array = new int[publickeys.length];
@@ -53549,7 +53562,9 @@ class PublicKey
 		
 		byte[] messagekey = null;
 		
-		ArrayList<String> onetimepublickeylist = new ArrayList<String>();
+		ArrayList<String> onetimepublickeylist
+		
+		    = new ArrayList<String>();
 		
 		for (int i = 0; i < numberofkeys; i++)
 		
@@ -53633,7 +53648,7 @@ class PublicKey
 		//  the encrypted messagekey == the messagekey + the compositekey
 		//  the messagekey == the encrypted messagekey - the compositekey
 		
-		if (encryptedmessagekey != null) //  use the decrypted key k = H(m) or rand256
+		if (encryptedmessagekey != null) //  use the decrypted key k
 		
 		    messagekey = new Number(encryptedmessagekey, 16)
 		
@@ -53717,7 +53732,9 @@ class PublicKey
 		
 		byte[] messagekey = null;
 		
-		ArrayList<String> onetimepublickeylist = new ArrayList<String>();
+		ArrayList<String> onetimepublickeylist
+		
+		    = new ArrayList<String>();
 		
 		for (int i = 0; i < numberofkeys; i++)
 		
@@ -53767,9 +53784,9 @@ class PublicKey
 				
 				Number secretkey = null;
 				
-				secretkey = publickey
+				secretkey = publickey.generateSecretKey(
 				
-				    .generateSecretKey(onetimepublickey, type);
+				    onetimepublickey, type);
 				
 				e[i1] = secretkey;
 			});
@@ -53807,7 +53824,7 @@ class PublicKey
 		//  the encrypted messagekey == the messagekey + the compositekey
 		//  the messagekey == the encrypted messagekey - the compositekey
 		
-		if (encryptedmessagekey != null) //  use the decrypted key k = H(m) or rand256
+		if (encryptedmessagekey != null) //  use the decrypted key k
 		
 		    messagekey = new Number(encryptedmessagekey, 16)
 		
@@ -53958,8 +53975,6 @@ class PublicKey
 	
 	
 	public static String encrypt(String message, String[] y)
-	
-		throws Exception  //  ArithmeticException, NullPointerException
 	{
 		return encrypt(message, y, null);
 	}
@@ -53977,8 +53992,6 @@ class PublicKey
 	
 	
 	public static String encrypt(String message, String[] y, PublicKey[] onetimepublickey)
-	
-		throws Exception // ArithmeticException, NullPointerException
 	{
 		return encrypt(message, y, onetimepublickey, false);
 	}
@@ -53987,8 +54000,6 @@ class PublicKey
 	public static String encrypt(
 	
 	    String message, String[] y, PublicKey[] onetimepublickey, boolean randkey)
-	
-		throws Exception  //  ArithmeticException, NullPointerException
 	{
 		//  encrypts a message to the recipient's public key y
 		
@@ -54042,8 +54053,6 @@ class PublicKey
 		//  crypt to the same size. Larger messages use smaller multipliers
 		//  for less expansion.
 		
-		
-		if (c1 == c) throw new Exception();
 		
 		String plaintext = new String(message) + c1;
 		
@@ -57767,9 +57776,11 @@ class PublicKey
 		
 		for (int i = 1; i < t; i++)
 		
-		   CC[i] = A[i] .multiply(CC[i-1]) .multiply(B[i]) .mod(p)
+		   CC[i] = A[i] .multiply(CC[i-1])
 		
-		      .add(CC[i-1]) .mod(p).add(p).mod(p);
+		      .multiply(B[i]) .mod(p) .add(CC[i-1])
+		
+			 .mod(p).add(p).mod(p);
 		
 		Matrix Y = (A1 == null) ? C0 : A1;
 		
@@ -62862,7 +62873,7 @@ class Cipher
 				for (int i = 1; i < 8; i++)
 				{
 					int d1 = plaindata[i] - plaindata[i-1];
-				
+					
 					d1 = ((d1 % s) + s) % s;
 					
 					if (d1 != d) break; // no padding
@@ -63350,7 +63361,9 @@ class Cipher
 			//
 			//  c[i] = p[i] (+) hash[i]
 			
-			if (lastarray) plaindata = Arrays.copyOf(plaindata, bytesread1);
+			if (lastarray) plaindata = Arrays
+			
+			    .copyOf(plaindata, bytesread1);
 			
 			cipherdata = Math.xor(plaindata, hasharray);
 			
@@ -63554,7 +63567,9 @@ class Cipher
 			//
 			//  p[i] = c[i] (+) hash[i]
 			
-			if (lastarray) cipherdata = Arrays.copyOf(cipherdata, bytesread1);
+			if (lastarray) cipherdata = Arrays
+			
+			    .copyOf(cipherdata, bytesread1);
 			
 			plaindata = Math.xor(cipherdata, hasharray);
 			
@@ -63566,7 +63581,9 @@ class Cipher
 				
 				writer.position(position);
 				
-				byteswritten += writer.write(ByteBuffer.wrap(plaindata));
+				byteswritten += writer.write(
+				
+				    ByteBuffer.wrap(plaindata));
 				
 				break;
 			}
@@ -64447,7 +64464,7 @@ class Cipher
 			
 			return false;
 		}
-			
+		
 		
 		//  Test if the first 32 bytes equals
 		//  the hash of the second 32 bytes
@@ -66260,7 +66277,7 @@ class Math
 		
 		for (int i = 0; i < t; i++)
 		{
-			u = (r[i].subtract(R)) .multiply(C[i]) .mod(n[i]);
+			u = r[i].subtract(R) .multiply(C[i]) .mod(n[i]);
 			
 			M = M .multiply(n[i]);
 			

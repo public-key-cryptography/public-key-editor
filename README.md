@@ -162,8 +162,17 @@
 	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
 	
 	a FileChannelReader and FileChannelWriter class were also added to the software to encrypt and decrypt
-	large files and to hash files larger than the array size limit which is 2 G Bytes; the hash value com-
-	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename.
+	large files and to hash files larger than the array size limit which is 2G Bytes; the hash value com-
+	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename; the
+	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2G bytes
+	because there was no FileChannelReader or FileChannelWriter class to encrypt large files; the synchro-
+	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; and the documents
+	display method was modified to correct for an error in Java that would cause the view attached file
+	dialog frame to throw a negative array size exception and expand to the size of the screen for large
+	files that are unwrapped such as source code files because the lines are all short, but not for docu-
+	ments such as word processor files that are wrapped by the text area because every paragraph is one
+	line.
+	
 	
 	
 	
