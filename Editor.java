@@ -6573,13 +6573,10 @@ class Programs
 			
 			private class ActionListener1 implements ActionListener
 			{
-			
 				private boolean clicked = false;
-				
 				
 				public void actionPerformed(ActionEvent e)
 				{
-				
 					try
 					{  //  Disable the button until the finally block is executed
 					
@@ -22389,7 +22386,7 @@ class Programs
 					//  (unless the method throws an exception)
 					//  so the message can only be sent once
 					
-					if (clicked) return; else clicked = true;
+					if (clicked) return;  else clicked = true;
 					
 					
 					final String   tostring =   tofield.getText().trim();
@@ -23433,9 +23430,7 @@ class Programs
 											    filedata = compresseddata;
 										}
 										
-										catch (DataFormatException ex)
-										
-										    { System.out.println(ex); }
+										catch (DataFormatException ex) {  }
 									}
 									
 									
@@ -25446,7 +25441,10 @@ class Programs
 			private int fontstyle = Font.BOLD;
 			private float fontsize = defaultfontsize;
 			
-			private Font font = new Font(fontname, fontstyle, (int) fontsize);
+			private Font font = new Font(
+			
+			    fontname, fontstyle, (int) fontsize);
+			
 			
 			private boolean showsentemails = true;
 			
@@ -25468,23 +25466,23 @@ class Programs
 			private String     nextpopupmsg = __.lastmessage;
 			
 			
+			
 			//  Icons for the list screen
 			
 			//  A stamp icon will be displayed next to messages that are self-addressed.
 			//  (The send method mails one copy to the recipient and one copy to self.)
 			//
 			//  A regular envelope icon will be displayed next to messages that are received.
-			//
 			//  A paper clip icon will be displayed next to messages that have file attachments.
 			
 			
 			ImageIcon plaintext_unreadicon = Icons.get(Icons.new_); // paper + gold star
 			ImageIcon plaintext_readicon   = Icons.get(Icons.file); // paper - gold star
 			
-			ImageIcon messageicon = Icons.get(Icons.message);    // closed envelope
+			ImageIcon messageicon = Icons.get(Icons.message); // closed envelope
 			
-			ImageIcon senticon    = Icons.get(Icons.mail_send_32x32);  // postage stamp
-			ImageIcon attachicon  = Icons.get(Icons.attachment);  // paper + paper clip
+			ImageIcon senticon    = Icons.get(Icons.mail_send_32x32); // postage stamp
+			ImageIcon attachicon  = Icons.get(Icons.attachment);      // paper + paper clip
 			
 			
 			//  icon popup menu (the list / decrypt thread will change the icons)
@@ -30552,8 +30550,6 @@ class Programs
 				
 				private boolean clicked = false;
 				
-				private boolean bool = false;
-				
 				private int iconnumber;
 				
 				
@@ -32495,11 +32491,24 @@ class Programs
 						//  If the file was compressed then re-save the new data
 						
 						if (Arrays.equals(filedata, compresseddata))
-						
-						    filedatalist.set(i, decompresseddata);
+						{
+							filedatalist.set(i, decompresseddata);
+							
+							//  System.out.println("file sizes == " +
+							//
+							//    decompresseddata.length + " : " +
+							//      compresseddata.length);
+							//
+							//    26769 : 26660  color circle
+							//    34770 : 11656  text document
+							//     5518 :  2399  table document
+						}
 					}
 					
-					catch (Exception ex) { System.out.println(ex); }
+					//  if the file wasn't compressed or deflated then
+					//  the code just throws a data format exception
+					
+					catch (DataFormatException ex) {  }
 				}
 				
 				
@@ -32838,7 +32847,7 @@ class Programs
 									
 									if (messagekey != null) decryptedmessage =
 									
-									    PublicKey.decrypt(message, messagekey);
+									    PublicKey.decryptCiphertext(message, messagekey);
 									
 									if ((decryptedmessage != null) && !decryptedmessage.isEmpty())
 									
@@ -32869,7 +32878,7 @@ class Programs
 								
 								if (messagekey != null) decryptedmessage =
 								
-								    PublicKey.decrypt(message, messagekey);
+								    PublicKey.decryptCiphertext(message, messagekey);
 								
 								if ((decryptedmessage != null)
 								 && !decryptedmessage.isEmpty())
@@ -35451,7 +35460,7 @@ class Programs
 							
 							for (int i = 0; i < textareas.length; i++)
 							
-							    if (textareas[i].hasFocus()) index = i;
+							    if (e.getSource() == textareas[i]) index = i;
 							
 							int cp = ((JTextArea) e.getSource()) .getCaretPosition();
 							
@@ -38373,7 +38382,7 @@ class Programs
 		
 		
 		
-		private static byte[] compress(byte[] input)
+		public static byte[] compress(byte[] input)
 		{
 			//  compresses a byte array
 			
@@ -38401,7 +38410,7 @@ class Programs
 		
 		
 		
-		private static byte[] decompress(byte[] compresseddata)
+		public static byte[] decompress(byte[] compresseddata)
 		
 			throws DataFormatException
 		{
@@ -41290,7 +41299,6 @@ class EncryptDirectory
 						continue;
 					}
 					
-					
 					numberoffiles.getAndIncrement();
 				}
 				
@@ -41370,7 +41378,6 @@ class EncryptDirectory
 					
 					append(message);
 					
-					
 					boolean bool;
 					
 					try
@@ -41386,9 +41393,7 @@ class EncryptDirectory
 						continue;
 					}
 					
-					
 					numberoffiles.getAndIncrement();
-					
 					
 					
 					if (Number.isBase16(file.getName())
@@ -43497,9 +43502,18 @@ class PopMail
 		//  These file examples can be changed or replaced
 		//  (They are only used to test the mail program)
 		
-		String filetext01 = Icons.image_example1;
-		String filetext02 = Convert.stringToBase64(Documents.gpl);
-		String filetext03 = Convert.stringToBase64(Documents.table_example);
+		byte[] filedata1 = Convert.base64ToByteArray(Icons.image_example1);
+		byte[] filedata2 = Documents.gpl.getBytes();
+		byte[] filedata3 = Documents.table_example.getBytes();
+		
+		filedata1 = new Programs().new Mail().compress(filedata1);
+		filedata2 = new Programs().new Mail().compress(filedata2);
+		filedata3 = new Programs().new Mail().compress(filedata3);
+		
+		String filetext01 = Convert.byteArrayToBase64(filedata1);
+		String filetext02 = Convert.byteArrayToBase64(filedata2);
+		String filetext03 = Convert.byteArrayToBase64(filedata3);
+		
 		
 		//  The file description typed by the sender
 		
@@ -43514,9 +43528,10 @@ class PopMail
 		//  Converting to base-64 to remove the newlines between the
 		//  file descriptions and encoded file texts is redundant
 		
-		final String filetext1 = filetext01; /// Convert.stringToBase64(filetext01);
-		final String filetext2 = filetext02; /// Convert.stringToBase64(filetext02);
-		final String filetext3 = filetext03; /// Convert.stringToBase64(filetext03);
+		String filetext1 = filetext01; /// Convert.stringToBase64(filetext01);
+		String filetext2 = filetext02; /// Convert.stringToBase64(filetext02);
+		String filetext3 = filetext03; /// Convert.stringToBase64(filetext03);
+		
 		
 		
 		//  This multi-threading may be redundant because the PublicKey
@@ -48521,11 +48536,8 @@ class DataStream
 	//
 	//  If the file contains text separated by a delimiters such
 	//  as newlines and space chars, then a Scanner object can be
-	//  used to read the file such as Scanner in = null; try { in
-	//  = new Scanner(new BufferedReader(new FileReader(file))); }
-	//  catch (IOException ex) { }, and a PrintWriter object can be
-	//  used to write the file such as PrintWriter out = new Print
-	//  Writer(new DataOutputStream(socket.getOutputStream()), bool).
+	//  used to read the file such as Scanner in = new Scanner(
+	//  new BufferedReader(new FileReader(file)));
 	
 	
 	
@@ -48691,23 +48703,23 @@ class FileChannel1
 	{
 		//  Reads a sequence of bytes into the given buffer starting at
 		//  the channel's current file position and then the file position
-		//  is updated with the number of bytes read
+		//  is updated with the number of bytes actually read
 		
 		return fc.read(bytebuffer);
 	}
 	
 	public int read(ByteBuffer bytebuffer, long position) throws IOException
 	{
-		//  Reads a sequence of bytes from this channel into the buffer
-		//  starting at the given file position
+		//  Reads a sequence of bytes from this channel into
+		//  the buffer starting at the given file position
 		
 		return fc.read(bytebuffer, position);
 	}
 	
 	public int write(ByteBuffer bytebuffer) throws IOException
 	{
-		//  Writes a sequence of bytes starting at the channel's starting at
-		//  the current file position and then the file position is updated
+		//  Writes a sequence of bytes starting at the current
+		//  channel position and then the file position is updated
 		//  with the number of bytes actually written
 		
 		return fc.write(bytebuffer);
@@ -48715,8 +48727,8 @@ class FileChannel1
 	
 	public int write(ByteBuffer bytebuffer, long position) throws IOException
 	{
-		//  Writes a sequence of bytes to this channel from the buffer
-		//  starting at the given file position
+		//  Writes a sequence of bytes to this channel from
+		//  the buffer starting at the given file position
 		
 		return fc.write(bytebuffer, position);
 	}
@@ -52259,11 +52271,6 @@ class PublicKey
 	final static int    send_encrypt = 2; //  sender / one-time key
 	
 	
-	//  The padding chars appended to the message (c1 != c)
-	
-	final static char c1 = '\n'; // single pad char
-	final static char c = ' '; // multiple pad char
-	
 	
 	
 	//  This array determines the number and order
@@ -53125,7 +53132,7 @@ class PublicKey
 	
 	private static boolean isValidKey(String[] publickeys)
 	{
-		//  verifies that each public key is valid
+		//  Verify that each public key is valid
 		
 		for (String publickey : publickeys)
 		
@@ -53459,21 +53466,6 @@ class PublicKey
 		if (size8 && size16) return "";
 		
 		
-		//  Remove the text padding
-		
-		if (Cipher.isPadded(plaintext.getBytes()))
-		{
-			int index = 0;
-			
-			int length = plaintext.length();
-			
-			while (plaintext.charAt(length -1 - index) == c) index++;
-			
-			if (plaintext.charAt(length -1 - index) == c1) index++;
-			
-			plaintext = plaintext .substring(0, length - index);
-		}
-		
 		if (!Cipher.isEncrypted(plaintext.getBytes()))
 		
 		     return plaintext;
@@ -53485,16 +53477,27 @@ class PublicKey
 	
 	
 	
-	//  The Mail class uses these PublicKey methods so it can decrypt the
-	//  message key, use the key to decrypt the partial ciphertext to read
-	//  the subject and first few lines of the message, and then save the
-	//  message key so it can reuse the key to decrypt the message if the
-	//  user clicks on the message / subject line to read the message.
+	//  These PublicKey methods can decrypt the message key, use the key
+	//  to decrypt the partial ciphertext to read the subject, from address,
+	//  and first few lines of the message, and then save the message key so
+	//  the caller can reuse the key to decrypt the message if the user clicks
+	//  on the message / subject line to read the message.
 	
 	
 	//  The decryptMessageKey() method is the first half of the decrypt()
-	//  method. The Mail program uses the decryptMessageKey() and decrypt
-	//  Ciphertext() methods.
+	//  method. Programs can use the following code to decrypt partial
+	//  ciphertext messages.
+	//
+	//  byte[] staticprivatekey = ...
+	//
+	//  byte[] messagekey = PublicKey
+	//
+	//     .decryptMessageKey(ciphertext, staticprivatekey);
+	//
+	//  if (messagekey != null) plaintext = PublicKey
+	//
+	//     .decryptCiphertext(ciphertext, messagekey);
+	
 	
 	
 	
@@ -53533,9 +53536,17 @@ class PublicKey
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
 		
-		if ((ciphertext == null) || ciphertext.isEmpty()
+		if (ciphertext.isEmpty()) return null;
 		
-		  || !Number.isBase64(ciphertext)) return null;
+		if (!Number.isBase64(ciphertext))
+		
+		    while ((ciphertext.length() % 4) != 0)
+		
+			ciphertext = ciphertext.substring(
+			
+			    0, ciphertext.length() - 1);
+		
+		if (!Number.isBase64(ciphertext)) return null;
 		
 		
 		//  Read the encrypted message key
@@ -53562,9 +53573,7 @@ class PublicKey
 		
 		byte[] messagekey = null;
 		
-		ArrayList<String> onetimepublickeylist
-		
-		    = new ArrayList<String>();
+		ArrayList<String> onetimepublickeylist = new ArrayList<String>();
 		
 		for (int i = 0; i < numberofkeys; i++)
 		
@@ -53648,7 +53657,7 @@ class PublicKey
 		//  the encrypted messagekey == the messagekey + the compositekey
 		//  the messagekey == the encrypted messagekey - the compositekey
 		
-		if (encryptedmessagekey != null) //  use the decrypted key k
+		if (encryptedmessagekey != null) //  use the decrypted key k = H(m) or rand256
 		
 		    messagekey = new Number(encryptedmessagekey, 16)
 		
@@ -53703,9 +53712,17 @@ class PublicKey
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
 		
-		if ((ciphertext == null) || ciphertext.isEmpty()
+		if (ciphertext.isEmpty()) return null;
 		
-		  || !Number.isBase64(ciphertext)) return null;
+		if (!Number.isBase64(ciphertext))
+		
+		    while ((ciphertext.length() % 4) != 0)
+		
+			ciphertext = ciphertext.substring(
+			
+			    0, ciphertext.length() - 1);
+		
+		if (!Number.isBase64(ciphertext)) return null;
 		
 		
 		//  Read the encrypted message key
@@ -53732,9 +53749,7 @@ class PublicKey
 		
 		byte[] messagekey = null;
 		
-		ArrayList<String> onetimepublickeylist
-		
-		    = new ArrayList<String>();
+		ArrayList<String> onetimepublickeylist = new ArrayList<String>();
 		
 		for (int i = 0; i < numberofkeys; i++)
 		
@@ -53784,9 +53799,9 @@ class PublicKey
 				
 				Number secretkey = null;
 				
-				secretkey = publickey.generateSecretKey(
+				secretkey = publickey
 				
-				    onetimepublickey, type);
+				    .generateSecretKey(onetimepublickey, type);
 				
 				e[i1] = secretkey;
 			});
@@ -53824,7 +53839,7 @@ class PublicKey
 		//  the encrypted messagekey == the messagekey + the compositekey
 		//  the messagekey == the encrypted messagekey - the compositekey
 		
-		if (encryptedmessagekey != null) //  use the decrypted key k
+		if (encryptedmessagekey != null) //  use the decrypted key k = H(m) or rand256
 		
 		    messagekey = new Number(encryptedmessagekey, 16)
 		
@@ -53877,9 +53892,17 @@ class PublicKey
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
 		
-		if ((ciphertext == null) || ciphertext.isEmpty()
+		if (ciphertext.isEmpty()) return null;
 		
-		  || !Number.isBase64(ciphertext)) return null;
+		if (!Number.isBase64(ciphertext))
+		
+		    while ((ciphertext.length() % 4) != 0)
+		
+			ciphertext = ciphertext.substring(
+			
+			    0, ciphertext.length() - 1);
+		
+		if (!Number.isBase64(ciphertext)) return null;
 		
 		
 		//  Use the message key to decrypt the ciphertext
@@ -53906,7 +53929,7 @@ class PublicKey
 		
 		//  Use the decrypted message key to decrypt the ciphertext
 		
-		byte[] plaindata = Cipher .decrypt(cipherdata, messagekey);
+		byte[] plaindata = Cipher.decrypt(cipherdata, messagekey);
 		
 		
 		//  Verify that the message decrypted properly
@@ -53919,9 +53942,9 @@ class PublicKey
 		String plaintext = new String(plaindata);
 		
 		
-		//  Verify that the text is valid
+		//  Verify that the text is valid after removing the padding
 		
-		String teststr = new String(plaindata);
+		String teststr = plaintext;
 		
 		char[] charray = teststr.toCharArray();
 		
@@ -53938,21 +53961,6 @@ class PublicKey
 		if (plaintext.isEmpty()) return "";
 		
 		
-		//  Remove the text padding
-		
-		if (Cipher.isPadded(plaintext.getBytes()))
-		{
-			int index = 0;
-			
-			int length = plaintext.length();
-			
-			while (plaintext.charAt(length -1 - index) == c) index++;
-			
-			if (plaintext.charAt(length -1 - index) == c) index++;
-			
-			plaintext = plaintext .substring(0, length - index);
-		}
-		
 		if (!Cipher.isEncrypted(plaintext.getBytes()))
 		
 		     return plaintext;
@@ -53963,8 +53971,6 @@ class PublicKey
 	
 	
 	public static String encrypt(String message, String publickey)
-	
-		throws Exception  //  ArithmeticException, NullPointerException
 	{
 		if (!isValidKey(publickey)) throw new IllegalArgumentException();
 		
@@ -54039,50 +54045,12 @@ class PublicKey
 		
 		//  Pad the plaintext to a multiple of 32 bytes
 		
-		//  Add a space character, then add any character other than a
-		//  space several times so the decryption method can verify that
-		//  the message decrypted properly.
-		//
-		//  Append at least 8 chars so the isPadded method returns true.
-		//
 		//  The plaintext is padded to a multiple of 32 bytes or 256 bits so
 		//  that any private key cipher can encrypt and decrypt the message.
 		//
-		//  The length of the padding is random so that if the same message
-		//  is sent twice or sent to more than one recipient it will not en-
-		//  crypt to the same size. Larger messages use smaller multipliers
-		//  for less expansion.
-		
-		
-		String plaintext = new String(message) + c1;
-		
-		
-		//  Use the nano time to initialize the Math rng
-		
-		Math.initRng(System.nanoTime());
-		
-		double multiplier = 0;
-		
-		if      (plaintext.length() < ( 64*1024)) multiplier = 1.00;
-		else if (plaintext.length() < (256*1024)) multiplier = 0.50;
-		else                                      multiplier = 0.25;
-		
-		//  Use a random pad length < the size of the
-		//  multiplier to hide the size of the message
-		
-		int padlength = 16 + (int) (plaintext.length()
-		
-		    * Math.random(1.0D) * multiplier);
-		
-		
-		StringBuilder sb = new StringBuilder(plaintext);
-		
-		for (int i = 0; i < padlength; i++) sb.append(c);
-		
-		while ((sb.length() % 32) != 0) sb.append(c);
-		
-		plaintext = sb.toString();
-		
+		//  The length of the padding can be random so that if the same message
+		//  is sent twice or sent to more than one recipient it will not encrypt
+		//  to the same size.
 		
 		
 		//  Compute an array of one-time public keys
@@ -54144,10 +54112,11 @@ class PublicKey
 		//  appending the encrypted encryption key to the one-time public keys.
 		
 		
-		//  Use the composite key as the message key
+		//  Use the composite public key agreement as the secret encryption key
 		
-		byte[] messagekey = compositekey .toByteArray(32);
+		byte[] messagekey = compositekey.toByteArray(32);
 		
+		String plaintext = new String(message);
 		
 		if (randkey) // if randkey == true
 		{
@@ -54160,6 +54129,7 @@ class PublicKey
 			messagekey = Cipher.hash((plaintext + randstr) .getBytes());
 		}
 		
+		
 		//  Convert the plaintext to plaindata
 		
 		byte[] plaindata = Convert.charArrayToByteArray(
@@ -54168,10 +54138,25 @@ class PublicKey
 		
 		
 		//  Encrypt the plaindata using a private key cipher
+		//  and verify that the cipherdata is decryptable
 		
 		int method = Cipher.encrypt_method_3;
 		
 		byte[] cipherdata = Cipher.encrypt(plaindata, messagekey, method);
+		
+		byte[] plaindata1 = Cipher.decrypt(cipherdata, messagekey);
+		
+		if (!Arrays.equals(plaindata1, Cipher.removePadding(plaindata)))
+		
+		try { throw new ArithmeticException(); }
+		
+		catch (ArithmeticException ex)
+		{
+			ex.printStackTrace();
+			
+			System.out.println(Arrays.toString(plaindata1));
+			System.out.println(Arrays.toString(Cipher.removePadding(plaindata)));
+		}
 		
 		
 		//  Convert the cipherdata to ciphertext
@@ -57776,11 +57761,9 @@ class PublicKey
 		
 		for (int i = 1; i < t; i++)
 		
-		   CC[i] = A[i] .multiply(CC[i-1])
+		   CC[i] = A[i] .multiply(CC[i-1]) .multiply(B[i]) .mod(p)
 		
-		      .multiply(B[i]) .mod(p) .add(CC[i-1])
-		
-			 .mod(p).add(p).mod(p);
+		      .add(CC[i-1]) .mod(p).add(p).mod(p);
 		
 		Matrix Y = (A1 == null) ? C0 : A1;
 		
@@ -62720,15 +62703,21 @@ class Cipher
 	
 	public static byte[] addPadding(byte[] plaindata)
 	{
-		//  Pad at least 32 and less than 64 bytes
+		//  Pad at least 32 and less than 64 bytes at the end of the array
+		
+		//  if (isPadded(plaindata)) System.out
+		//
+		//      .println("data is already padded");
 		
 		int bytes = 64 - (plaindata.length % 32);
 		
 		byte[] paddeddata = addPadding(plaindata, bytes, false);
 		
-		if (!Arrays.equals(plaindata, removePadding(paddeddata)))
+		if ((paddeddata.length % 32) != 0)
 		
-		    System.out.println("Padding Error");
+		    try { throw new ArithmeticException(); }
+		
+		    catch (ArithmeticException ex) { ex.printStackTrace(); }
 		
 		return paddeddata;
 	}
@@ -62797,12 +62786,21 @@ class Cipher
 	
 	
 	
-	public static byte[] removePadding(byte[] plaindata)
+	public static byte[] removePadding(byte[] plaindata1)
 	{
 	
-		if (plaindata.length < 8) return null;
+		if (plaindata1.length < 8) return null;
 		
 		final int s = 256; // the size of a byte
+		
+		byte[] plaindata = Arrays.copyOf(
+		
+		   plaindata1, plaindata1.length);
+		
+		if (!isPadded(plaindata)) return plaindata;
+		
+		byte[] array = null;
+		
 		
 		if (isPadded(plaindata, false))
 		{
@@ -62811,105 +62809,97 @@ class Cipher
 			//  The increment between two consecutive bytes
 			//  is reduced modulo the size of a byte
 			
-			for (int t = 0; t < 1; t++)
+			int d = plaindata[plaindata.length -1]
+			      - plaindata[plaindata.length -2];
+			
+			d = ((d % s) + s) % s;
+			
+			for (int i = 0; i < 8; i++)
 			{
-				int d = plaindata[plaindata.length -1]
-				      - plaindata[plaindata.length -2];
+				int d1 = plaindata[plaindata.length -1 -i]
+			               - plaindata[plaindata.length -2 -i];
 				
-				d = ((d % s) + s) % s;
+				d1 = ((d1 % s) + s) % s;
 				
-				for (int i = 0; i < 8; i++)
-				{
-					int d1 = plaindata[plaindata.length -1 -i]
-				               - plaindata[plaindata.length -2 -i];
-					
-					d1 = ((d1 % s) + s) % s;
-					
-					if (d1 != d) break; // no padding
-				}
-				
-				//  Find the length of the padding
-				
-				int index = 0;
-				
-				while (index < plaindata.length -1)
-				{
-					int d1 = plaindata[plaindata.length -1 -index]
-					       - plaindata[plaindata.length -2 -index];
-					
-					d1 = ((d1 % s) + s) % s;
-					
-					if (d1 == d) index++;
-					
-					else break;
-				}
-				
-				if (index >= 8)
-				{
-					int padlength = index + 1;
-					
-					byte[] array = new byte[plaindata.length - padlength];
-					
-					for (int i = 0; i < array.length; i++)
-					
-					    array[i] = plaindata[i];
-					
-					return array;
-				}
+				if (d1 != d) break; // no padding
 			}
+			
+			//  Find the length of the padding
+			
+			int index = 0;
+			
+			while (index < plaindata.length -1)
+			{
+				int d1 = plaindata[plaindata.length -1 -index]
+				       - plaindata[plaindata.length -2 -index];
+				
+				d1 = ((d1 % s) + s) % s;
+				
+				if (d1 == d) index++;
+				
+				else break;
+			}
+			
+			if (index >= 8)
+			{
+				int padlength = index + 1;
+				
+				array = new byte[plaindata.length - padlength];
+				
+				for (int i = 0; i < array.length; i++)
+				
+				    array[i] = plaindata[i];
+			}
+			
+			plaindata = array;
 		}
 		
 		
-		else // if (isPadded(array, true))
+		if (isPadded(plaindata, true))
 		{
 			//  Remove front padding and truncate the array
 			
-			for (int t = 0; t < 1; t++)
+			int d = plaindata[1] - plaindata[0];
+			
+			d = ((d % s) + s) % s;
+			
+			for (int i = 1; i < 8; i++)
 			{
-				int d = plaindata[1] - plaindata[0];
+				int d1 = plaindata[i] - plaindata[i-1];
+			
+				d1 = ((d1 % s) + s) % s;
 				
-				d = ((d % s) + s) % s;
+				if (d1 != d) break; // no padding
+			}
+			
+			//  Find the length of the padding
+			
+			int index = 0;
+			
+			while (index < plaindata.length -1)
+			{
+				int d1 = plaindata[index+1] - plaindata[index];
 				
-				for (int i = 1; i < 8; i++)
-				{
-					int d1 = plaindata[i] - plaindata[i-1];
-					
-					d1 = ((d1 % s) + s) % s;
-					
-					if (d1 != d) break; // no padding
-				}
+				d1 = ((d1 % s) + s) % s;
 				
-				//  Find the length of the padding
+				if (d1 == d) index++;
 				
-				int index = 0;
+				else break;
+			}
+			
+			if (index >= 8)
+			{
+				int padlength = index + 1;
 				
-				while (index < plaindata.length -1)
-				{
-					int d1 = plaindata[index+1] - plaindata[index];
-					
-					d1 = ((d1 % s) + s) % s;
-					
-					if (d1 == d) index++;
-					
-					else break;
-				}
+				array = new byte[plaindata.length - padlength];
 				
-				if (index >= 8)
-				{
-					int padlength = index + 1;
-					
-					byte[] array = new byte[plaindata.length - padlength];
-					
-					for (int i = 0; i < array.length; i++)
-					
-					    array[i] = plaindata[padlength + i];
-					
-					return array;
-				}
+				for (int i = 0; i < array.length; i++)
+				
+				    array[i] = plaindata[padlength + i];
 			}
 		}
 		
-		return null;
+		return array;
 	}
 	
 	
@@ -63003,9 +62993,15 @@ class Cipher
 		    encryptionkey = hash(encryptionkey);
 		
 		
-		//  Pad the plaindata
+		//  Pad the plaindata to a multiple of 32 bytes
 		
 		plaindata = addPadding(plaindata);
+		
+		if ((plaindata.length % 32) != 0)
+		
+		    try { throw new ArithmeticException(); }
+		
+		    catch (ArithmeticException ex) { ex.printStackTrace(); }
 		
 		
 		//  Generate a one-time encryption key
@@ -63075,6 +63071,7 @@ class Cipher
 		    array[32 + i] = cipherdata[i];
 		
 		cipherdata = array;
+		
 		
 		return cipherdata;
 	}
@@ -63253,11 +63250,9 @@ class Cipher
 		plaindata = addPadding(plaindata, padlen, true);
 		
 		if (!isPadded(plaindata))
-		{
-			System.out.println(Arrays.toString(plaindata));
-			
-			throw new ArithmeticException();
-		}
+		
+		    throw new ArithmeticException();
+		
 		
 		//  Generate a one-time encryption key
 		
@@ -63361,9 +63356,7 @@ class Cipher
 			//
 			//  c[i] = p[i] (+) hash[i]
 			
-			if (lastarray) plaindata = Arrays
-			
-			    .copyOf(plaindata, bytesread1);
+			if (lastarray) plaindata = Arrays.copyOf(plaindata, bytesread1);
 			
 			cipherdata = Math.xor(plaindata, hasharray);
 			
@@ -63567,9 +63560,7 @@ class Cipher
 			//
 			//  p[i] = c[i] (+) hash[i]
 			
-			if (lastarray) cipherdata = Arrays
-			
-			    .copyOf(cipherdata, bytesread1);
+			if (lastarray) cipherdata = Arrays.copyOf(cipherdata, bytesread1);
 			
 			plaindata = Math.xor(cipherdata, hasharray);
 			
@@ -63581,9 +63572,7 @@ class Cipher
 				
 				writer.position(position);
 				
-				byteswritten += writer.write(
-				
-				    ByteBuffer.wrap(plaindata));
+				byteswritten += writer.write(ByteBuffer.wrap(plaindata));
 				
 				break;
 			}
@@ -64464,7 +64453,7 @@ class Cipher
 			
 			return false;
 		}
-		
+			
 		
 		//  Test if the first 32 bytes equals
 		//  the hash of the second 32 bytes
