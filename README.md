@@ -166,12 +166,14 @@
 	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename; the
 	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2G bytes
 	because there was no FileChannelReader or FileChannelWriter class to encrypt large files; the synchro-
-	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; and the documents
-	display method was modified to correct for an error in Java that would cause the view attached file
-	dialog frame to throw a negative array size exception and expand to the size of the screen for large
-	files that are unwrapped such as source code files because the lines are all short, but not for docu-
-	ments such as word processor files that are wrapped by the text area because every paragraph is one
-	line.
+	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; the documents display
+	method was modified to correct for an error in Java that would cause the view attached file dialog
+	frame to throw a negative array size exception and expand to the size of the screen for large files
+	that are unwrapped such as source code files because the lines are all short, but not for documents
+	such as word processor files that are wrapped by the text area because every paragraph is one line;
+	and an additional test was added to the isPadded method because it would return true for files that
+	contain an increasing sequence of bytes such as the files created by the code example in the Encrypt-
+	Directory class; other padding methods could be used in future versions of the program.
 	
 	
 	

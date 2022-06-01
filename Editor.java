@@ -196,12 +196,14 @@
 	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename; the
 	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2G bytes
 	because there was no FileChannelReader or FileChannelWriter class to encrypt large files; the synchro-
-	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; and the documents
-	display method was modified to correct for an error in Java that would cause the view attached file
-	dialog frame to throw a negative array size exception and expand to the size of the screen for large
-	files that are unwrapped such as source code files because the lines are all short, but not for docu-
-	ments such as word processor files that are wrapped by the text area because every paragraph is one
-	line.
+	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; the documents display
+	method was modified to correct for an error in Java that would cause the view attached file dialog
+	frame to throw a negative array size exception and expand to the size of the screen for large files
+	that are unwrapped such as source code files because the lines are all short, but not for documents
+	such as word processor files that are wrapped by the text area because every paragraph is one line;
+	and an additional test was added to the isPadded method because it would return true for files that
+	contain an increasing sequence of bytes such as the files created by the code example in the Encrypt-
+	Directory class; other padding methods could be used in future versions of the program.
 	
 	
 	
@@ -53479,9 +53481,8 @@ class PublicKey
 	
 	//  These PublicKey methods can decrypt the message key, use the key
 	//  to decrypt the partial ciphertext to read the subject, from address,
-	//  and first few lines of the message, and then save the message key so
-	//  the caller can reuse the key to decrypt the message if the user clicks
-	//  on the message / subject line to read the message.
+	//  and first few lines of the message for email clients, and then the
+	//  caller can reuse the key to decrypt the message.
 	
 	
 	//  The decryptMessageKey() method is the first half of the decrypt()
@@ -62899,8 +62900,126 @@ class Cipher
 			}
 		}
 		
+		
+		if (array.length == 0)
+		
+		    try { throw new ArithmeticException(); }
+		
+		catch (ArithmeticException ex)
+		{
+			System.out.println(Arrays.toString(plaindata));
+			
+			ex.printStackTrace();
+		}
+		
 		return array;
 	}
+	
+	
+	
+	public static boolean isPadded(byte[] array)
+	{
+		return isPadded(array, true) || isPadded(array, false);
+	}
+	
+	
+	public static boolean isPadded(byte[] array, boolean front)
+	{
+	
+		//  tests if a decrypted array is padded
+		
+		if (array.length < 32) return false;
+		
+		final int s = 256; // the size of a byte
+		
+		if (front == false)
+		{
+			//  Calculate the difference between the last two elements
+			
+			boolean padded = true;
+			
+			int d = array[array.length -1]
+			      - array[array.length -2];
+			
+			d = ((d % s) + s) % s;
+			
+			//  Calculate the difference between the next several elements
+			
+			for (int i = 0; i < 32 -1; i++)
+			{
+				int d1 = array[array.length -i -1]
+				       - array[array.length -i -2];
+				
+				d1 = ((d1 % s) + s) % s;
+				
+				if (d1 != d) padded = false;
+			}
+			
+			for (int i = 32; array.length -i -2 >= 0; i++)
+			{
+				int d1 = array[array.length -i -1]
+				       - array[array.length -i -2];
+				
+				d1 = ((d1 % s) + s) % s;
+				
+				if ((d1 != d) || (array.length -i -2 == 0))
+				{
+					if (array[array.length -i -1]
+					 != array[array.length -i -2])
+					
+					    padded = false;
+					
+					break;
+				}
+			}
+			
+			if (padded) return true;
+		}
+		
+		
+		else // if (front == true)
+		{
+			//  Calculate the difference between the first two elements
+			
+			boolean padded = true;
+			
+			int d = array[1] - array[0];
+			
+			d = ((d % s) + s) % s;
+			
+			//  Calculate the difference between the next several elements
+			
+			for (int i = 1; i < 32 -1; i++)
+			{
+				int d1 = array[i] - array[i-1];
+				
+				d1 = ((d1 % s) + s) % s;
+				
+				if (d1 != d) padded = false;
+			}
+			
+			for (int i = 32; i < array.length; i++)
+			{
+				int d1 = array[i] - array[i-1];
+				
+				d1 = ((d1 % s) + s) % s;
+				
+				if ((d1 != d) || (i == array.length-1))
+				{
+					if (array[i] != array[i-1])
+					
+					    padded = false;
+					
+					break;
+				}
+			}
+			
+			if (padded) return true;
+		}
+		
+		return false;
+	}
+	
 	
 	
 	
@@ -63202,7 +63321,7 @@ class Cipher
 		//  The read positions are 0*size, 1*size, 2*size, 3*size, 4*size, ...
 		//  the write positions are 64, 64 + padlen + 1*size, 64 + padlen + 2*size, ...
 		
-		final int arraysize = 256*1024*1024;
+		final int arraysize = 128*1024*1024;
 		
 		String filepath = file.getPath();
 		
@@ -63406,7 +63525,7 @@ class Cipher
 		//  The read positions are 64 + 0*size, 64 + 1*size, 64 + 2*size, 64 + 3*size, ...
 		//  the write positions are 0*size, 1*size - padlen - 64, 2*size - padlen - 64, ...
 		
-		final int arraysize = 256*1024*1024;
+		final int arraysize = 128*1024*1024;
 		
 		String filepath = file.getPath();
 		
@@ -64709,79 +64828,6 @@ class Cipher
 		
 		return runs;
 	}
-	
-	
-	
-	
-	public static boolean isPadded(byte[] array)
-	{
-		return isPadded(array, true) || isPadded(array, false);
-	}
-	
-	
-	public static boolean isPadded(byte[] array, boolean front)
-	{
-	
-		//  tests if a decrypted array is padded
-		
-		if (array.length < 8) return false;
-		
-		final int s = 256; // the size of a byte
-		
-		if (front == false)
-		{
-			//  Calculate the difference between the last two elements
-			
-			boolean padded = true;
-			
-			int d = array[array.length -1]
-			      - array[array.length -2];
-			
-			d = ((d % s) + s) % s;
-			
-			//  Calculate the difference between the next several elements
-			
-			for (int i = 0; i < 8; i++)
-			{
-				int d1 = array[array.length -i -1]
-			               - array[array.length -i -2];
-				
-				d1 = ((d1 % s) + s) % s;
-				
-				if (d1 != d) padded = false;
-			}
-			
-			if (padded) return true;
-		}
-		
-		
-		else // if (front == true)
-		{
-			//  Calculate the difference between the first two elements
-			
-			boolean padded = true;
-			
-			int d = array[1] - array[0];
-			
-			d = ((d % s) + s) % s;
-			
-			//  Calculate the difference between the next several elements
-			
-			for (int i = 1; i < 8; i++)
-			{
-				int d1 = array[i] - array[i-1];
-				
-				d1 = ((d1 % s) + s) % s;
-				
-				if (d1 != d) padded = false;
-			}
-			
-			if (padded) return true;
-		}
-		
-		return false;
-	}
-	
 	
 	
 	
