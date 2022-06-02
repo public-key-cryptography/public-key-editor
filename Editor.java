@@ -192,18 +192,24 @@
 	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
 	
 	a FileChannelReader and FileChannelWriter class were also added to the software to encrypt and decrypt
-	large files and to hash files larger than the array size limit which is 2G Bytes; the hash value com-
+	large files and to hash files larger than the array size limit which is 2 G Bytes; the hash value com-
 	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename; the
-	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2G bytes
+	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2 G bytes
 	because there was no FileChannelReader or FileChannelWriter class to encrypt large files; the synchro-
 	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; the documents display
 	method was modified to correct for an error in Java that would cause the view attached file dialog
 	frame to throw a negative array size exception and expand to the size of the screen for large files
 	that are unwrapped such as source code files because the lines are all short, but not for documents
 	such as word processor files that are wrapped by the text area because every paragraph is one line;
-	and an additional test was added to the isPadded method because it would return true for files that
-	contain an increasing sequence of bytes such as the files created by the code example in the Encrypt-
-	Directory class; other padding methods could be used in future versions of the program.
+	
+	two additional tests were added to the isPadded method because it would return true for files that
+	contain a repeating or increasing sequence of bytes such as the files created by the code example in
+	the EncryptDirectory class; an indexer was also added to the code example to increment the size of
+	each file to test the padding for all file sizes modulo 32; the max file size in the FileEncryptor
+	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
+	Writer classes instead of the DataStream class because the encryption would throw an exception that
+	says java.lang.OutOfMemoryError:Java heap space; and two decrypt methods that were misplaced in the
+	FileEncryptor class were removed.
 	
 	
 	
@@ -40405,7 +40411,7 @@ class RenameFileListener implements ActionListener
 //		
 //		File file = new File(filename);
 //		
-//		byte[] array = new byte[filesize];
+//		byte[] array = new byte[filesize + i];
 //		
 //		for (int j = 0; j < array.length; j++)
 //		
@@ -41060,6 +41066,10 @@ class EncryptDirectory
 			return;
 		}
 		
+		int totalfiles = 0;
+		
+		for (File file : files) if (file.isFile()) totalfiles++;
+		
 		String message = "\n" + numberoffiles + " " + __.files
 		
 		   + "  " + totalbytes/1024/1024 + " " + "M" + __.bytes
@@ -41068,7 +41078,7 @@ class EncryptDirectory
 		
 		message += "\n" + __.encrypteddirectory + " " + directory;
 		
-		if (!test) append(message); else append("\n");
+		append(message);
 	}
 	
 	
@@ -41197,15 +41207,22 @@ class EncryptDirectory
 		
 		if (canceled) { append(__.canceled); running = false; return; }
 		
-		String message = "\n" + numberoffiles.get() + " " + __.files
 		
-		   + "  " + totalbytes/1024/1024 + " " + "M" + __.bytes
+		int totalfiles = 0;
 		
-		   + "  " + seconds + " " + __.seconds;
+		for (File file : files) if (file.isFile()) totalfiles++;
 		
-		message += "\n" + __.decrypteddirectory + " " + directory;
+		String message = "\n" + (test ? totalfiles : numberoffiles)
 		
-		if (!test) append(message);
+		   + " " + __.files + "  " + totalbytes/1024/1024 + " " + "M"
+		
+		   + __.bytes + "  " + seconds + " " + __.seconds;
+		
+		if (test) append(message);
+		
+		else append(message + "\n" +
+		
+		    __.encrypteddirectory + " " + directory);
 	}
 	
 	
@@ -41936,7 +41953,13 @@ class FileEncryptor
 		
 		byte[] plaindata, cipherdata = null;
 		
-		if (file.length() < 2L*1024*1024*1024)
+		//  Set the file size <= 256 K bytes to so the code
+		//  doesn't throw an exception that says java.lang.
+		//  OutOfMemoryError: Java heap space
+		
+		int maxfilesize = 256*1024*1024;
+		
+		if (file.length() < maxfilesize)
 		{
 			plaindata = DataStream.read(file);
 			
@@ -41952,7 +41975,7 @@ class FileEncryptor
 			}
 		}
 		
-		else // if (file.length() >= 2L*1024*1024*1024)
+		else // if (file.length() >= maxfilesize)
 		{
 			boolean bool = Cipher.encryptLargeFile(
 			
@@ -42004,307 +42027,6 @@ class FileEncryptor
 		DataStream.write(file, cipherdata);
 		
 		file.setLastModified(time);
-		
-		return true;
-	}
-	
-	
-	
-	
-	//  Decryption methods
-	
-	
-	public boolean decrypt(File file)
-	{
-	
-		int maxfilesize = Cipher.maxfilesize;
-		
-		if (!Cipher.isEncrypted(file)) return false;
-		
-		if (file.length() <= maxfilesize)
-		{
-			byte[] input;
-			
-			try { input = DataStream.read(file); }
-			
-			catch (IOException ex)
-			{
-				System.out.println(ex);
-				
-				return false;
-			}
-			
-			byte[] plaindata = decrypt(input);
-			
-			if (plaindata == null) return false;
-			
-			
-			//  Save the last modified time before writing
-			
-			long time = file.lastModified();
-			
-			//  Save the decrypted file and restore the last modified time
-			
-			if (plaindata != null)
-			{
-				try
-				{	DataStream.write(file, plaindata);
-					
-					file.setLastModified(time);
-				}
-				
-				catch (IOException ex) { System.out.println(ex); }
-			}
-			
-			
-			if (Number.isBase16(file.getName())
-			
-			    && (file.getName().length() >= 32))
-			{
-				//  Decrypt the file name
-				
-				String name1 = FileNameEncryptor
-				
-				  .decryptFileName(file.getName(), filekey);
-				
-				String path1 = file.getParent() + File.separator + name1;
-				
-				file.renameTo(new File(path1));
-			}
-			
-			return true;
-		}
-		
-		
-		else // if (file.length() > maxfilesize)
-		{
-			//  Find the decryption key
-			
-			//  First try the secret passphrase SP
-			
-			boolean bool = false;
-			
-			if ((SP != null) && !SP.isEmpty())
-			{
-				try { bool = decrypt(file, Cipher.passphraseToKey(SP)); }
-				
-				catch (IOException ex) { System.out.println(ex); }
-			}
-			
-			//  If the file was decrypted by the secret passphrase
-			//
-			//  update the filekey and return
-			
-			if (bool)
-			{
-				if (filekey == null)
-				
-				    this.filekey = Cipher.passphraseToKey(SP);
-				
-				return true;
-			}
-			
-			//  Create a passphrase dialog
-			
-			PassphraseDialog pd = new PassphraseDialog(frame,
-			
-			    PassphraseDialog.passphrase_only);
-			
-			pd.setTitle(title);
-			pd.setMinimumLength(minlength);
-			pd.setForeground1(foreground);
-			pd.setBackground1(background);
-			pd.setFont1(font != null ?
-			    font : frame.getFont());
-			
-			
-			while (true)
-			{
-				if (filekey != null)
-				{
-					//  Try the file key and return true if the file decrypts
-					
-					try { bool = decrypt(file, filekey); }
-					
-					catch (IOException ex) { System.out.println(ex); }
-					
-					if (bool == true) return true;
-					
-					else filekey = null;
-				}
-				
-				//  Request a passphrase from the user
-				
-				String passphrase = pd.readPassphrase();
-				
-				if ((passphrase == null) || passphrase.isEmpty())
-				
-				    return false;
-				
-				filekey = Cipher.passphraseToKey(passphrase);
-			}
-		}
-	}
-	
-	
-	
-	public byte[] decrypt(byte[] data)
-	{
-	
-		//  This method is required because the editor programs
-		//  have to be able to read and view files without
-		//  decrypting the files.
-		//
-		//  The method first tries the secret passphrase and file
-		//  key and then prompts the user to enter a passphrase.
-		
-		
-		//  Verify that the data is encrypted or random
-		
-		if (!Cipher.isEncrypted(data)) return null;
-		
-		
-		//  Find the decryption key
-		
-		byte[] cipherdata = data;
-		
-		byte[]  plaindata = null;
-		
-		
-		//  First try the secret passphrase SP
-		
-		if ((SP != null) && !SP.isEmpty())
-		
-		    plaindata = Cipher.decrypt(cipherdata,
-		
-			Cipher.passphraseToKey(SP));
-		
-		
-		//  If the file was decrypted by the secret passphrase
-		//
-		//  update the filekey and return
-		
-		if ((plaindata != null) && !Cipher.isEncrypted(plaindata))
-		{
-			if (filekey == null) this.filekey
-			
-			    = Cipher.passphraseToKey(SP);
-			
-			return plaindata;
-		}
-		
-		//  Create a passphrase dialog
-		
-		PassphraseDialog pd = new PassphraseDialog(
-		
-		   frame, PassphraseDialog.passphrase_only);
-		
-		pd.setTitle(title);
-		pd.setMinimumLength(minlength);
-		pd.setForeground1(foreground);
-		pd.setBackground1(background);
-		pd.setFont1(font != null ?
-		    font : frame.getFont());
-		
-		
-		while (true)
-		{
-			//  Try the file key or request a passphrase from the user
-			
-			if (filekey == null)
-			{
-				String passphrase = pd.readPassphrase();
-				
-				if ((passphrase == null) || passphrase.isEmpty())
-				
-				    return null;
-				
-				filekey = Cipher.passphraseToKey(passphrase);
-				
-				if (filekey == null)  return null;
-			}
-			
-			//  Try the file key
-			
-			plaindata = Cipher.decrypt(cipherdata, filekey);
-			
-			if (plaindata == null)  //  wrong file key
-			
-			    { filekey = null; continue; }
-			
-			else break;
-		}
-		
-		return plaindata;
-	}
-	
-	
-	
-	public boolean decrypt(File file, byte[] decryptionkey)
-	
-		throws IOException, FileNotFoundException
-	{
-		//  decrypts a file using the decryption key
-		
-		//  If the file is null or not encrypted then return false
-		
-		if ((file == null) || !Cipher.isEncrypted(file)) return false;
-		
-		//  Read and decrypt the cipherdata
-		
-		byte[] plaindata = null, cipherdata = null;
-		
-		boolean largefile = file.length() < 2L*1024*1024*1024;
-		
-		//  Save the last modified time before writing
-		
-		long time = file.lastModified();
-		
-		if (largefile == false)
-		{
-			cipherdata = DataStream.read(file);
-			
-			plaindata = Cipher.decrypt(cipherdata, decryptionkey);
-			
-			if (plaindata == null)  return false;
-		}
-		
-		else // if (largefile)
-		{
-			boolean bool = Cipher.decryptLargeFile(
-			
-			    file, decryptionkey);
-			
-			if (bool == false) return false;
-		}
-		
-		
-		//  Save the plaindata
-		
-		if (largefile == false)
-		
-		    DataStream.write(file, plaindata);
-		
-		
-		file.setLastModified(time);
-		
-		
-		//  Decrypt the file name
-		
-		if (Number.isBase16(file.getName())
-		
-		    && (file.getName().length() >= 32))
-		{
-			//  Decrypt the file name
-			
-			String name1 = FileNameEncryptor
-			
-			  .decryptFileName(file.getName(), filekey);
-			
-			String path1 = file.getParent() + File.separator + name1;
-			
-			file.renameTo(new File(path1));
-		}
 		
 		return true;
 	}
@@ -42701,7 +42423,9 @@ class FileDecryptor
 		
 		long time = file.lastModified();
 		
-		boolean largefile = file.length() >= 2L*1024*1024*1024;
+		int maxfilesize = 256*1024*1024;
+		
+		boolean largefile = file.length() >= maxfilesize;
 		
 		if (largefile == false)
 		{
@@ -43508,9 +43232,9 @@ class PopMail
 		byte[] filedata2 = Documents.gpl.getBytes();
 		byte[] filedata3 = Documents.table_example.getBytes();
 		
-		filedata1 = new Programs().new Mail().compress(filedata1);
-		filedata2 = new Programs().new Mail().compress(filedata2);
-		filedata3 = new Programs().new Mail().compress(filedata3);
+		filedata1 = Programs.Mail.compress(filedata1);
+		filedata2 = Programs.Mail.compress(filedata2);
+		filedata3 = Programs.Mail.compress(filedata3);
 		
 		String filetext01 = Convert.byteArrayToBase64(filedata1);
 		String filetext02 = Convert.byteArrayToBase64(filedata2);
@@ -51644,7 +51368,11 @@ class PublicKey
 	//  Public key generation
 	//
 	//  Each entity A that wants to receive encrypted messages chooses
-	//  a private key x and then computes a composite public key y[].
+	//  a private key x[] and then computes a composite public key
+	//
+	//  y[i] = f[i](a[i], x[i])
+	//
+	//  where f[i] is a one-way function and a[i] is a public parameter.
 	//
 	//
 	//  Public key encryption
@@ -53481,8 +53209,9 @@ class PublicKey
 	
 	//  These PublicKey methods can decrypt the message key, use the key
 	//  to decrypt the partial ciphertext to read the subject, from address,
-	//  and first few lines of the message for email clients, and then the
-	//  caller can reuse the key to decrypt the message.
+	//  and first few lines of the message, and then save the message key so
+	//  the caller can reuse the key to decrypt the message if the user clicks
+	//  on the message / subject line to read the message.
 	
 	
 	//  The decryptMessageKey() method is the first half of the decrypt()
@@ -54157,6 +53886,8 @@ class PublicKey
 			
 			System.out.println(Arrays.toString(plaindata1));
 			System.out.println(Arrays.toString(Cipher.removePadding(plaindata)));
+			
+			return null;
 		}
 		
 		
@@ -62718,10 +62449,39 @@ class Cipher
 		
 		    try { throw new ArithmeticException(); }
 		
-		    catch (ArithmeticException ex) { ex.printStackTrace(); }
+		    catch (ArithmeticException ex)
+		    {
+			ex.printStackTrace();
+			
+			return null;
+		    }
 		
 		return paddeddata;
 	}
+	
+	
+	
+	//  Padding is used to make an array or file a multiple of the cipher block size
+	//  such as a multiple of 32 bytes or 256 bits and to test if the cipherdata de-
+	//  crypted properly because encryption and decryption generate random bytes of
+	//  data unless the correct decryption key is used. The padding also has to have
+	//  a pattern that can be detected so that it can be removed without removing bytes
+	//  from the plaindata or plaintext. Of course any non-random pattern could be used
+	//  to pad the plaindata. (For example, the padding could append a 1 and then use
+	//  the Fibonacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded method
+	//  could test if each byte is the sum of each two preceding bytes modulo 256 to
+	//  remove the padding.) But the simplest pattern is to repeat the last char or byte
+	//  and then use a repeating increment. The padding could also append the number of
+	//  bytes which would require up to five bytes for files larger than 4 G unless the
+	//  size is reduced modulo 256 or 64 K.
+	//
+	//  For email encryption the front of the array should be padded so the recipient
+	//  can download the tops of the messages and decrypt the partial ciphertexts to 
+	//  read the subject lines and from addresses. Otherwise the program would have to
+	//  do a randomness test to determine if the ciphertext decrypted correctly.
+	//
+	//  This padding method could be replaced by another pattern in future versions of
+	//  the software and then the isPadded method would test for different patterns.
 	
 	
 	public static byte[] addPadding(byte[] plaindata, int bytes, boolean front)
@@ -62787,7 +62547,7 @@ class Cipher
 	
 	
 	
-	public static byte[] removePadding(byte[] plaindata1)
+	public static byte[] removePadding(final byte[] plaindata1)
 	{
 	
 		if (plaindata1.length < 8) return null;
@@ -62903,13 +62663,15 @@ class Cipher
 		
 		if (array.length == 0)
 		
-		    try { throw new ArithmeticException(); }
+		try { throw new ArithmeticException(); }
 		
 		catch (ArithmeticException ex)
 		{
 			System.out.println(Arrays.toString(plaindata));
 			
 			ex.printStackTrace();
+			
+			return null;
 		}
 		
 		return array;
@@ -62943,19 +62705,11 @@ class Cipher
 			
 			d = ((d % s) + s) % s;
 			
+			if (d == 0) return false;
+			
 			//  Calculate the difference between the next several elements
 			
-			for (int i = 0; i < 32 -1; i++)
-			{
-				int d1 = array[array.length -i -1]
-				       - array[array.length -i -2];
-				
-				d1 = ((d1 % s) + s) % s;
-				
-				if (d1 != d) padded = false;
-			}
-			
-			for (int i = 32; array.length -i -2 >= 0; i++)
+			for (int i = 0; array.length -i -2 >= 0; i++)
 			{
 				int d1 = array[array.length -i -1]
 				       - array[array.length -i -2];
@@ -62987,18 +62741,11 @@ class Cipher
 			
 			d = ((d % s) + s) % s;
 			
+			if (d == 0) return false;
+			
 			//  Calculate the difference between the next several elements
 			
-			for (int i = 1; i < 32 -1; i++)
-			{
-				int d1 = array[i] - array[i-1];
-				
-				d1 = ((d1 % s) + s) % s;
-				
-				if (d1 != d) padded = false;
-			}
-			
-			for (int i = 32; i < array.length; i++)
+			for (int i = 1; i < array.length; i++)
 			{
 				int d1 = array[i] - array[i-1];
 				
@@ -63120,7 +62867,12 @@ class Cipher
 		
 		    try { throw new ArithmeticException(); }
 		
-		    catch (ArithmeticException ex) { ex.printStackTrace(); }
+		    catch (ArithmeticException ex)
+		    {
+			ex.printStackTrace();
+			
+			return null;
+		    }
 		
 		
 		//  Generate a one-time encryption key
@@ -63327,11 +63079,16 @@ class Cipher
 		
 		FileChannelReader reader = new FileChannelReader(filepath);
 		
+		String tempfilepath = null;
+		
+		try
+		{
+		
 		File tempfile = File.createTempFile(
 		
 		    file.getName(), null, new File(file.getParent()));
 		
-		String tempfilepath = tempfile.getPath();
+		tempfilepath = tempfile.getPath();
 		
 		FileChannelWriter writer = new FileChannelWriter(tempfilepath);
 		
@@ -63367,10 +63124,6 @@ class Cipher
 		int padlen = numberofpadbytes;
 		
 		plaindata = addPadding(plaindata, padlen, true);
-		
-		if (!isPadded(plaindata))
-		
-		    throw new ArithmeticException();
 		
 		
 		//  Generate a one-time encryption key
@@ -63500,9 +63253,15 @@ class Cipher
 		
 		boolean rename = tempfile.renameTo(new File(filepath));
 		
-		new File(tempfilepath).delete();
-		
 		return true;
+		
+		}
+		
+		finally
+		{	if (tempfilepath != null)
+			
+			    new File(tempfilepath).delete();
+		}
 	}
 	
 	
@@ -63531,11 +63290,16 @@ class Cipher
 		
 		FileChannelReader reader = new FileChannelReader(filepath);
 		
+		String tempfilepath = null;
+		
+		try
+		{
+		
 		File tempfile = File.createTempFile(
 		
 		    file.getName(), null, new File(file.getParent()));
 		
-		String tempfilepath = tempfile.getPath();
+		tempfilepath = tempfile.getPath();
 		
 		FileChannelWriter writer = new FileChannelWriter(tempfilepath);
 		
@@ -63707,6 +63471,14 @@ class Cipher
 		new File(tempfilepath).delete();
 		
 		return true;
+		
+		}
+		
+		finally
+		{	if (tempfilepath != null)
+			
+			    new File(tempfilepath).delete();
+		}
 	}
 	
 	

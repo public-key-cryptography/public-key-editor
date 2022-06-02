@@ -162,18 +162,24 @@
 	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
 	
 	a FileChannelReader and FileChannelWriter class were also added to the software to encrypt and decrypt
-	large files and to hash files larger than the array size limit which is 2G Bytes; the hash value com-
+	large files and to hash files larger than the array size limit which is 2 G Bytes; the hash value com-
 	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename; the
-	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2G bytes
+	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2 G bytes
 	because there was no FileChannelReader or FileChannelWriter class to encrypt large files; the synchro-
 	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; the documents display
 	method was modified to correct for an error in Java that would cause the view attached file dialog
 	frame to throw a negative array size exception and expand to the size of the screen for large files
 	that are unwrapped such as source code files because the lines are all short, but not for documents
 	such as word processor files that are wrapped by the text area because every paragraph is one line;
-	and an additional test was added to the isPadded method because it would return true for files that
-	contain an increasing sequence of bytes such as the files created by the code example in the Encrypt-
-	Directory class; other padding methods could be used in future versions of the program.
+	
+	two additional tests were added to the isPadded method because it would return true for files that
+	contain a repeating or increasing sequence of bytes such as the files created by the code example in
+	the EncryptDirectory class; an indexer was also added to the code example to increment the size of
+	each file to test the padding for all file sizes modulo 32; the max file size in the FileEncryptor
+	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
+	Writer classes instead of the DataStream class because the encryption would throw an exception that
+	says java.lang.OutOfMemoryError:Java heap space; and two decrypt methods that were misplaced in the
+	FileEncryptor class were removed.
 	
 	
 	
