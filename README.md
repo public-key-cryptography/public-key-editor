@@ -175,7 +175,7 @@
 	two additional tests were added to the isPadded method because it would return true for files that
 	contain a repeating or increasing sequence of bytes such as the files created by the code example in
 	the EncryptDirectory class; an indexer was also added to the code example to increment the size of
-	each file to test the padding for all file sizes modulo 32; the max file size in the FileEncryptor
+	each file to test the padding for all file sizes modulo 256; the max file size in the FileEncryptor
 	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
 	Writer classes instead of the DataStream class because the encryption would throw an exception that
 	says java.lang.OutOfMemoryError:Java heap space; and two decrypt methods that were misplaced in the

@@ -205,7 +205,7 @@
 	two additional tests were added to the isPadded method because it would return true for files that
 	contain a repeating or increasing sequence of bytes such as the files created by the code example in
 	the EncryptDirectory class; an indexer was also added to the code example to increment the size of
-	each file to test the padding for all file sizes modulo 32; the max file size in the FileEncryptor
+	each file to test the padding for all file sizes modulo 256; the max file size in the FileEncryptor
 	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
 	Writer classes instead of the DataStream class because the encryption would throw an exception that
 	says java.lang.OutOfMemoryError:Java heap space; and two decrypt methods that were misplaced in the
@@ -41953,7 +41953,7 @@ class FileEncryptor
 		
 		byte[] plaindata, cipherdata = null;
 		
-		//  Set the file size <= 256 K bytes to so the code
+		//  Set the file size <= 256 K bytes so the code
 		//  doesn't throw an exception that says java.lang.
 		//  OutOfMemoryError: Java heap space
 		
@@ -62467,13 +62467,26 @@ class Cipher
 	//  data unless the correct decryption key is used. The padding also has to have
 	//  a pattern that can be detected so that it can be removed without removing bytes
 	//  from the plaindata or plaintext. Of course any non-random pattern could be used
-	//  to pad the plaindata. (For example, the padding could append a 1 and then use
-	//  the Fibonacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded method
+	//  to pad the plaindata. (For example, the padding could append a 1 and then the
+	//  Fibonacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded method
 	//  could test if each byte is the sum of each two preceding bytes modulo 256 to
 	//  remove the padding.) But the simplest pattern is to repeat the last char or byte
 	//  and then use a repeating increment. The padding could also append the number of
 	//  bytes which would require up to five bytes for files larger than 4 G unless the
 	//  size is reduced modulo 256 or 64 K.
+	//
+	//  No padding is scheme is perfect because if the user intentionally creates a doc-
+	//  ument that uses the padding scheme, then the test will return true even though
+	//  the padding is part of the document. For example, if the user types a document,
+	//  appends an 'A' and then the Latin alphabet A to Z followed by the six chars
+	//  [\]^_`, the isPadded method should return true depending on the text encoding.
+	//  But it wouldn't matter because if the encrypt and decrypt methods pad and remove
+	//  from the same end of the array, then only the encrypt padding would get removed,
+	//  unless the encrypt method does an isPadded test before padding. And even if it
+	//  does get removed it wouldn't matter if the user is padding the document inten-
+	//  tionally, and if the padding is unintentional then the recipient will only be
+	//  missing an increasing sequence of bytes (or a sequence of Fibonacci numbers
+	//  modulo 256).
 	//
 	//  For email encryption the front of the array should be padded so the recipient
 	//  can download the tops of the messages and decrypt the partial ciphertexts to 
@@ -62716,11 +62729,14 @@ class Cipher
 				
 				d1 = ((d1 % s) + s) % s;
 				
+				//  Test for a minimum number of increments
+				//  and then a repeating char or byte
+				
 				if ((d1 != d) || (array.length -i -2 == 0))
 				{
-					if (array[array.length -i -1]
-					 != array[array.length -i -2])
-					
+					if ((array[array.length -i -1]
+					  != array[array.length -i -2]) || (i < 32))
+					 
 					    padded = false;
 					
 					break;
@@ -62751,9 +62767,12 @@ class Cipher
 				
 				d1 = ((d1 % s) + s) % s;
 				
+				//  Test for a minimum number of increments
+				//  and then a repeating char or byte
+				
 				if ((d1 != d) || (i == array.length-1))
 				{
-					if (array[i] != array[i-1])
+					if ((array[i] != array[i-1]) || (i < 32))
 					
 					    padded = false;
 					
@@ -62861,7 +62880,9 @@ class Cipher
 		
 		//  Pad the plaindata to a multiple of 32 bytes
 		
-		plaindata = addPadding(plaindata);
+		if (!isPadded(plaindata))
+		
+		    plaindata = addPadding(plaindata);
 		
 		if ((plaindata.length % 32) != 0)
 		
