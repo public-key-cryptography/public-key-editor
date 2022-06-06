@@ -158,27 +158,24 @@
 	they get set immediately after the user clicks the list or read button or else the color button would
 	still be enabled until the list or read thread is started which caused two background colors to appear 
 	on the same list panel if two email tabs were open and the user clicked the reverse color button while
-	the program was listing the messages because Swing is not thread safe; the dialog.setSize(dialog.get-
-	PreferredSize()) statement that was between the dialog.setVisible(false) and setVisible(true) state-
-	ments was moved in front of the setVisible(false) statement because the passphrase dialog box wasn't
-	getting packed or repainted correctly; an error in the passphrase dialog that caused the line width to
-	stay at 56 chars if the user checked and unchecked the max cipher box and then clicked another button
-	was corrected; the Delete menu item was modified so it also deletes folders by recursively listing the
-	files in the directory, deleting the files, and then deleting the empty folders because Java will not
-	delete an un-empty directory; the PublicKey decrypt(String, byte[]) method was modified so it can de-
-	crypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
-	such as "\n\n", "-", or the base 16 chars 0 to f; a missing statement in the send mail frame setFont
-	method was added to assign the font parameter to the font member / variable so that changing the re-
-	trieve mail frame font type also changes the send mail frame font type; the Filechooser class was mod-
-	ified to use a static font type so the dialog box size doesn't change if the font type is changed; the
-	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
-	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
-	sub-directories; an error in the EncryptDirectory class that caused it to display two JOptionPane dia-
-	logs was corrected; the directory label in the dialog was added to a disabled button to create a bor-
-	der around the label so the user knows to click on the label or button to change the directory name;
-	the JOptionPane static factory method showConfirmDialog() in the EncryptDirectory class was replaced
-	by the JOptionPane constructor so the dialog can be re-packed if the user changes the directory or
-	else the encrypt and decrypt buttons would collapse;
+	the program was listing the messages because Swing is not thread safe; an error in the passphrase dia-
+	log that caused the line width to stay at 56 chars if the user checked and unchecked the max cipher 
+	box and then clicked another button was corrected; the Delete menu item was modified so it also de-
+	letes folders by recursively listing the files in the directory, deleting the files, and then deleting
+	the empty folders because Java will not delete an un-empty directory; the PublicKey decrypt(String,
+	byte[]) method was modified so it can decrypt ciphertext using any delimiter for the prepended one-
+	time, transient or ephemeral public keys such as "\n\n", "-", or the base 16 chars 0 to f; a missing
+	statement in the send mail frame setFont method was added to assign the font parameter to the font
+	member / variable so that changing the retrieve mail frame font type also changes the send mail frame
+	font type; the Filechooser class was modified to use a static font type so the dialog box size doesn't
+	change if the font type is changed; the EncryptDirectory class was modified to test if each file ob-
+	ject is a file or a directory so the DataStream class doesn't try to read the file which caused it to
+	throw a java.io.FileNotFoundException for sub-directories; an error in the EncryptDirectory class that
+	caused it to display two JOptionPane dialogs was corrected; the directory label in the dialog was add-
+	ed to a disabled button to create a border around the label so the user knows to click on the label or
+	button to change the directory name; the JOptionPane static factory method showConfirmDialog() in the
+	EncryptDirectory class was replaced by the JOptionPane constructor so the dialog can be re-packed if
+	the user changes the directory or else the encrypt and decrypt buttons would collapse;
 	
 	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
 	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
@@ -208,8 +205,11 @@
 	each file to test the padding for all file sizes modulo 256; the max file size in the FileEncryptor
 	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
 	Writer classes instead of the DataStream class because the encryption would throw an exception that
-	says java.lang.OutOfMemoryError:Java heap space; and two decrypt methods that were misplaced in the
-	FileEncryptor class were removed.
+	says java.lang.OutOfMemoryError:Java heap space; two decrypt methods that were misplaced in the File-
+	Encryptor class were removed; the PublicKeyDialog readDialogInput method was modified by moving the
+	frame.setSize statement because the dialog frame would collapse sometimes; and the FileChooser class
+	was modified so the Dialog font style changes from plain to bold if the screen font size < 17 which
+	makes the file names easier to read if the font size is small.
 	
 	
 	
@@ -12844,11 +12844,13 @@ class Programs
 			
 			int product = rows * cols;
 			
-			if (((product >= 512*1024) && (cols >  16))
-			 || ((product >= 256*1024) && (cols >  32))
-			 || ((product >= 128*1024) && (cols >  64))
-			 || ((product >=  64*1024) && (cols > 128))
-			 || ((product >=  32*1024) && (cols > 256)))
+			if (((product >= 2048*1024) && (cols >   4))
+			 || ((product >= 1024*1024) && (cols >   8))
+			 || ((product >=  512*1024) && (cols >  16))
+			 || ((product >=  256*1024) && (cols >  32))
+			 || ((product >=  128*1024) && (cols >  64))
+			 || ((product >=   64*1024) && (cols > 128))
+			 || ((product >=   32*1024) && (cols > 256)))
 			{
 				String message =
 				
@@ -14673,9 +14675,9 @@ class Programs
 				
 				Box hbox = Box.createHorizontalBox();
 				
-				hbox.add(textfield1); hbox.add(Box.createHorizontalStrut(5));
-				hbox.add(timeslabel); hbox.add(Box.createHorizontalStrut(5));
-				hbox.add(textfield2); hbox.add(Box.createHorizontalStrut(10));
+				hbox.add(textfield1);  hbox.add(Box.createHorizontalStrut(5));
+				hbox.add(timeslabel);  hbox.add(Box.createHorizontalStrut(5));
+				hbox.add(textfield2);  hbox.add(Box.createHorizontalStrut(10));
 				hbox.add(equalslabel); hbox.add(Box.createHorizontalStrut(10));
 				hbox.add(textfield3);
 				
@@ -14813,7 +14815,7 @@ class Programs
 					
 					if (e.getSource() == textfield1)
 					
-					    if (textfield.getText().trim().length() >= 6)
+					    if (textfield.getText().trim().length() > 6)
 					
 						e.consume();
 					
@@ -39919,6 +39921,7 @@ class SaveFile
 
 
 
+
 class FileChooser extends JFileChooser
 {
 
@@ -39939,7 +39942,6 @@ class FileChooser extends JFileChooser
 		super(directory);
 	}
 	
-	
 	public void setFont(Font font1)
 	{
 		//  sets the font size
@@ -39951,9 +39953,15 @@ class FileChooser extends JFileChooser
 		if (size < minsize) font1 = font.deriveFont(minsize);
 		if (size > maxsize) font1 = font.deriveFont(maxsize);
 		
-		font = new Font(font.getName(),
+		String name  = font .getName();
+		  int style  = font .getStyle();
+		   int size1 = font1.getSize();
 		
-		    font.getStyle(), font1.getSize());
+		//  < size 17 == bold font, >= 17 == plain font
+		
+		style = (size1 >= 17) ? Font.PLAIN : Font.BOLD;
+		
+		font = new Font(name, style, size1);
 		
 		this.font = font;
 		
@@ -40415,7 +40423,9 @@ class RenameFileListener implements ActionListener
 //		
 //		for (int j = 0; j < array.length; j++)
 //		
-//		    //  0123456789 ... abcdefgh ...
+//		//  ... !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO
+//		//
+//		//  PQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ...
 //		
 //		    array[j] = (byte) j;
 //		
@@ -41078,7 +41088,7 @@ class EncryptDirectory
 		
 		message += "\n" + __.encrypteddirectory + " " + directory;
 		
-		append(message);
+		if (!test) append(message);
 	}
 	
 	
@@ -41220,7 +41230,7 @@ class EncryptDirectory
 		
 		if (test) append(message);
 		
-		else append(message + "\n" +
+		if (!test) append(message + "\n" +
 		
 		    __.encrypteddirectory + " " + directory);
 	}
@@ -51036,9 +51046,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setModal(true);
 		
-		Dimension newsize = this.getPreferredSize();
-		this.setSize(newsize.width, newsize.height);
-		
 		if ((passphrasefield == null) || passphrasefield.isVisible())
 		
 		     passphrasearea.requestFocusInWindow();
@@ -51047,6 +51054,10 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//  and then to true to force the method to block
 		
 		this.setVisible(false);
+		
+		Dimension newsize = this.getPreferredSize();
+		this.setSize(newsize.width, newsize.height);
+		
 		this.setVisible(true);
 		
 		if (!validpassphrase || closed)  return null;
@@ -51074,14 +51085,20 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setModal(true);
 		
-		Dimension newsize = this.getPreferredSize();
-		this.setSize(newsize.width, newsize.height);
-		
 		//  The frame visibility has to be set to false
 		//  and then to true to force the method to block
 		
 		this.setVisible(false);
+		
+		//  this.setSize has to be between setVisible(false)
+		//  and setVisible(true) or else the dialog frame
+		//  will collapse sometimes
+		
+		Dimension newsize = this.getPreferredSize();
+		this.setSize(newsize.width, newsize.height);
+		
 		this.setVisible(true);
+		
 		
 		if (!validpassphrase || closed) return null;
 		
@@ -51368,7 +51385,7 @@ class PublicKey
 	//  Public key generation
 	//
 	//  Each entity A that wants to receive encrypted messages chooses
-	//  a private key x[] and then computes a composite public key
+	//  a private key x[] and computes a composite public key
 	//
 	//  y[i] = f[i](a[i], x[i])
 	//
@@ -53745,7 +53762,8 @@ class PublicKey
 		
 		//  if (randkey == true)  the method generates a random encryption key
 		//  and appends the encrypted encryption key to the document; this option
-		//  is used if the sender is using a static public key.
+		//  is used if the sender is using a static public key because the public
+		//  key agreement is a userpass.
 		
 		//  if (randkey == false) the method uses the public key agreement as
 		//  the encryption key; this option is used if the sender is using a
@@ -53772,15 +53790,6 @@ class PublicKey
 			    onetimeprivatekey, y);
 		}
 		
-		
-		//  Pad the plaintext to a multiple of 32 bytes
-		
-		//  The plaintext is padded to a multiple of 32 bytes or 256 bits so
-		//  that any private key cipher can encrypt and decrypt the message.
-		//
-		//  The length of the padding can be random so that if the same message
-		//  is sent twice or sent to more than one recipient it will not encrypt
-		//  to the same size.
 		
 		
 		//  Compute an array of one-time public keys
@@ -53848,9 +53857,80 @@ class PublicKey
 		
 		String plaintext = new String(message);
 		
+		
+		//  Convert the plaintext to plaindata
+		
+		byte[] plaindata = Convert.charArrayToByteArray(
+		
+			plaintext.toCharArray());
+		
+		
+		
+		//  Pad the front of the plaindata to a multiple of 32 bytes or else
+		//  the Cipher encrypt method will pad the front or back of the data
+		//  depending on the implementation which could change. The Cipher en-
+		//  crypt method only pads the data if the data is not already padded.
+		
+		
+		//  The plaindata is padded to a multiple of 32 bytes or 256 bits so
+		//  that any private key cipher can encrypt and decrypt the message.
+		//
+		//  The length of the padding can be random so that if the same message
+		//  is sent twice or sent to more than one recipient it will not encrypt
+		//  to the same size.
+		
+		//  Use the System nano time to initialize the Math rng
+		
+		Math.initRng(System.nanoTime());
+		
+		double multiplier = 0;
+		
+		if      (plaintext.length() < (128*1024)) multiplier = 0.75; // < 2 x
+		else if (plaintext.length() < (512*1024)) multiplier = 0.50; // < 3/2
+		else                                      multiplier = 0.33; // < 4/3
+		
+		//  Use a random pad length < the size of the
+		//  multiplier to hide the size of the message
+		
+		int textlength = plaintext.length();
+		
+		int padlength = 16 + (int) (textlength
+		
+		    * Math.random(1.0D) * multiplier);
+		
+		while (((textlength + padlength)
+		
+		    % 32) != 0) padlength++;
+		
+		
+		
+		//  Pad the plaindata using the random
+		//  length to hide the size of the file
+		
+		boolean front = true;
+		
+		plaindata = Cipher.addPadding(
+		
+		    plaindata, front);
+		
+		
+		
 		if (randkey) // if randkey == true
 		{
-			//  Use a random number instead of the secret composite key
+			//  If a random key is used instead of the secret composite key
+			//  then the method will compute the encrypted encyption key k'
+			//  = k (+) e[] where e[] is the secret composite key or public
+			//  key agreement and append the encrypted key k' to the one-time
+			//  public keys.
+			//
+			//  (A random key is not used because the public key agreement or
+			//  shared secret key can be used as the one-time encryption key.
+			//  If some programs require static public keys instead of one-time
+			//  public keys because the key agreement is used to log in to an
+			//  account or to verify the sender, then the sender would set rand-
+			//  key = true and the method would append the encrypted encryption
+			//  key k' = k (+) e[] so the secret key k doesn't get reused for
+			//  encryption.)
 			
 			String randstr = Number.random(16, 16) .toString(16);
 			
@@ -53858,13 +53938,6 @@ class PublicKey
 			
 			messagekey = Cipher.hash((plaintext + randstr) .getBytes());
 		}
-		
-		
-		//  Convert the plaintext to plaindata
-		
-		byte[] plaindata = Convert.charArrayToByteArray(
-		
-			plaintext.toCharArray());
 		
 		
 		//  Encrypt the plaindata using a private key cipher
@@ -53885,7 +53958,8 @@ class PublicKey
 			ex.printStackTrace();
 			
 			System.out.println(Arrays.toString(plaindata1));
-			System.out.println(Arrays.toString(Cipher.removePadding(plaindata)));
+			System.out.println(Arrays.toString(
+			    Cipher.removePadding(plaindata)));
 			
 			return null;
 		}
@@ -62358,10 +62432,10 @@ class Signature
 class Cipher
 {
 
-
+	//  The Private Key / Cipher class
+	
 
 	//  static variables for static encryption methods
-	
 	
 	//  The default encryption methods
 	
@@ -62372,11 +62446,20 @@ class Cipher
 	
 	public static int encrypt_method = encrypt_method_3;
 	
-	//  The second encrypt method is 10 times faster for file encryption
+	//  The second and third encrypt methods are 10 times faster
+	//  than the first encrypt method for file encryption
 	
 	
 	//  Hash encryption ciphers are used in the private key /
-	//  cipher class because hash ciphers are unbreakable
+	//  cipher class because hash ciphers are unbreakable.
+	//  
+	//  For a hash cipher, c[i] = p[i] (+) H(k + i)
+	//
+	//  where p is the plaintext, c is the ciphertext, k is
+	//  a one-time encryption key, and i is an indexer. The
+	//  secret key k can be generated from the hash of the
+	//  plaintext, the system nano time, and the passphrase.
+	
 	
 	//  These encryption methods could change in future versions
 	//  of the software. If the hash functions or encryption
@@ -62433,6 +62516,63 @@ class Cipher
 	
 	
 	
+	
+	//  Padding is used to make an array or file a multiple of the cipher block size
+	//  such as a multiple of 32 bytes or 256 bits and to test if the cipherdata de-
+	//  crypted properly because encryption and decryption generate random bytes of
+	//  data unless the correct decryption key is used. The padding also has to have
+	//  a pattern that can be detected so that it can be removed without removing bytes
+	//  from the plaindata or plaintext. Of course any non-random pattern could be used
+	//  to pad the plaindata. (For example, the padding could append a 1 and then the
+	//  Fibonacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded method
+	//  could test if each byte is the sum of the two preceding bytes modulo 256 to re-
+	//  move the padding.) But the simplest pattern is to repeat the last char or byte
+	//  and then use a repeating increment such as 1,2,3,4,5,6,7,8,... The padding could
+	//  also append the number of bytes which would require up to five bytes for files
+	//  larger than 4 G unless the size is reduced modulo 256 or 64 K.
+	//
+	//  No padding scheme is perfect because if the user intentionally creates a docu-
+	//  ment that uses the padding scheme, then the test will return true even though
+	//  the padding is part of the document. A user would have to repeat the last char
+	//  and then append at least 32 + 1 consecutive chars from the ASCII set ... !"#$%&'
+	//  ()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuv
+	//  wxyz{|}~ ... to create a padded document which couldn't happen accidentally.
+	//
+	//  For example, if the user types a document, appends an 'A' and then the Latin
+	//  alphabet A to Z followed by the seven chars [\]^_`a, or the user types the 32 +
+	//  2 chars 00123456789:;<=>?@ABCDEFGHIJKLMNOP the isPadded method will return true.
+	//  If the chars are reversed it will also return true because the front of the ar-
+	//  ray will be padded. But it wouldn't matter because if the encrypt and decrypt
+	//  methods pad and remove from the same end of the array, then only the encrypt
+	//  padding would get removed, unless the encrypt method does an isPadded test.
+	//  And even if it does get removed it wouldn't matter if the user is padding the
+	//  document intentionally, and if the padding is unintentional then the recipient
+	//  will only be missing an increasing sequence of bytes (or a sequence of Fibonacci
+	//  numbers modulo 256).
+	//
+	//  For email encryption the front of the array should be padded so the recipient
+	//  can download the tops of the messages and decrypt the partial ciphertexts to 
+	//  read the subject lines and from addresses. Otherwise the program would have to
+	//  do a randomness test to determine if the ciphertext decrypted correctly. Any
+	//  randomness test would work for plaintext because decryption generates perfectly
+	//  random numbers if the wrong decryption key is used. (Multiple random tests are
+	//  only required for chosen plaintext or plaindata. For example, the increasing
+	//  sequence of bytes 0,1,2,...,255 passes some randomness tests and the isRandom()
+	//  method may return true unless more tests are added.) Even a randomness test
+	//  wouldn't be a perfect solution to test for decryption because a sender could
+	//  choose a random sequence of bytes such as a secret key or one-time pad and then
+	//  the receiver or decryption method wouldn't know if the ciphertext decrypted cor-
+	//  rectly because the plaintext would be perfectly random. This is why padding is
+	//  used to test for decryption.
+	//
+	//  This padding method could be replaced by another pattern in future versions of
+	//  the software if there is a reason to replace it and then the isPadded method
+	//  would have to test for different patterns. For example, if some file types use
+	//  a repeating char and an incrementing sequence, then the padding method could
+	//  be replaced by another pattern such as the Fibonacci sequence.
+	
+	
+	
 	public static byte[] addPadding(byte[] plaindata)
 	{
 		//  Pad at least 32 and less than 64 bytes at the end of the array
@@ -62445,56 +62585,24 @@ class Cipher
 		
 		byte[] paddeddata = addPadding(plaindata, bytes, false);
 		
-		if ((paddeddata.length % 32) != 0)
-		
-		    try { throw new ArithmeticException(); }
-		
-		    catch (ArithmeticException ex)
-		    {
-			ex.printStackTrace();
-			
-			return null;
-		    }
-		
 		return paddeddata;
 	}
 	
 	
-	
-	//  Padding is used to make an array or file a multiple of the cipher block size
-	//  such as a multiple of 32 bytes or 256 bits and to test if the cipherdata de-
-	//  crypted properly because encryption and decryption generate random bytes of
-	//  data unless the correct decryption key is used. The padding also has to have
-	//  a pattern that can be detected so that it can be removed without removing bytes
-	//  from the plaindata or plaintext. Of course any non-random pattern could be used
-	//  to pad the plaindata. (For example, the padding could append a 1 and then the
-	//  Fibonacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded method
-	//  could test if each byte is the sum of each two preceding bytes modulo 256 to
-	//  remove the padding.) But the simplest pattern is to repeat the last char or byte
-	//  and then use a repeating increment. The padding could also append the number of
-	//  bytes which would require up to five bytes for files larger than 4 G unless the
-	//  size is reduced modulo 256 or 64 K.
-	//
-	//  No padding is scheme is perfect because if the user intentionally creates a doc-
-	//  ument that uses the padding scheme, then the test will return true even though
-	//  the padding is part of the document. For example, if the user types a document,
-	//  appends an 'A' and then the Latin alphabet A to Z followed by the six chars
-	//  [\]^_`, the isPadded method should return true depending on the text encoding.
-	//  But it wouldn't matter because if the encrypt and decrypt methods pad and remove
-	//  from the same end of the array, then only the encrypt padding would get removed,
-	//  unless the encrypt method does an isPadded test before padding. And even if it
-	//  does get removed it wouldn't matter if the user is padding the document inten-
-	//  tionally, and if the padding is unintentional then the recipient will only be
-	//  missing an increasing sequence of bytes (or a sequence of Fibonacci numbers
-	//  modulo 256).
-	//
-	//  For email encryption the front of the array should be padded so the recipient
-	//  can download the tops of the messages and decrypt the partial ciphertexts to 
-	//  read the subject lines and from addresses. Otherwise the program would have to
-	//  do a randomness test to determine if the ciphertext decrypted correctly.
-	//
-	//  This padding method could be replaced by another pattern in future versions of
-	//  the software and then the isPadded method would test for different patterns.
+	public static byte[] addPadding(byte[] plaindata, boolean front)
+	{
+		//  Pad at least 32 and less than 64 bytes at the end of the array
+		
+		//  if (isPadded(plaindata)) System.out
+		//
+		//      .println("data is already padded");
+		
+		int bytes = 64 - (plaindata.length % 32);
+		
+		byte[] paddeddata = addPadding(plaindata, bytes, front);
+		
+		return paddeddata;
+	}
 	
 	
 	public static byte[] addPadding(byte[] plaindata, int bytes, boolean front)
@@ -62506,7 +62614,7 @@ class Cipher
 		//  Use the same last byte of the array and then increment
 		//  each byte by one so the two increments are different
 		
-		byte c = 0, d = 1;
+		byte c = 0, d = 1; // c = plaindata[0] or plaindata[-1]
 		
 		byte[] array = new byte[plaindata.length + bytes];
 		
@@ -62560,38 +62668,38 @@ class Cipher
 	
 	
 	
-	public static byte[] removePadding(final byte[] plaindata1)
+	public static byte[] removePadding(final byte[] plaindata)
 	{
 	
-		if (plaindata1.length < 8) return null;
+		if (plaindata.length < 8) return null;
 		
 		final int s = 256; // the size of a byte
 		
-		byte[] plaindata = Arrays.copyOf(
+		byte[] plaindata1 = Arrays.copyOf(
 		
-		   plaindata1, plaindata1.length);
+		   plaindata, plaindata.length);
 		
-		if (!isPadded(plaindata)) return plaindata;
+		if (!isPadded(plaindata1)) return plaindata1;
 		
 		byte[] array = null;
 		
 		
-		if (isPadded(plaindata, false))
+		if (isPadded(plaindata1, false))
 		{
 			//  Remove back padding and truncate the array
 			
 			//  The increment between two consecutive bytes
 			//  is reduced modulo the size of a byte
 			
-			int d = plaindata[plaindata.length -1]
-			      - plaindata[plaindata.length -2];
+			int d = plaindata1[plaindata1.length -1]
+			      - plaindata1[plaindata1.length -2];
 			
 			d = ((d % s) + s) % s;
 			
 			for (int i = 0; i < 8; i++)
 			{
-				int d1 = plaindata[plaindata.length -1 -i]
-			               - plaindata[plaindata.length -2 -i];
+				int d1 = plaindata1[plaindata1.length -1 -i]
+			               - plaindata1[plaindata1.length -2 -i];
 				
 				d1 = ((d1 % s) + s) % s;
 				
@@ -62602,10 +62710,10 @@ class Cipher
 			
 			int index = 0;
 			
-			while (index < plaindata.length -1)
+			while (index < plaindata1.length -1)
 			{
-				int d1 = plaindata[plaindata.length -1 -index]
-				       - plaindata[plaindata.length -2 -index];
+				int d1 = plaindata1[plaindata1.length -1 -index]
+				       - plaindata1[plaindata1.length -2 -index];
 				
 				d1 = ((d1 % s) + s) % s;
 				
@@ -62618,28 +62726,30 @@ class Cipher
 			{
 				int padlength = index + 1;
 				
-				array = new byte[plaindata.length - padlength];
+				array = new byte[plaindata1.length - padlength];
 				
 				for (int i = 0; i < array.length; i++)
 				
-				    array[i] = plaindata[i];
+				    array[i] = plaindata1[i];
 			}
 			
-			plaindata = array;
+			//  Re-assign the array
+			
+			plaindata1 = array;
 		}
 		
 		
-		if (isPadded(plaindata, true))
+		if (isPadded(plaindata1, true))
 		{
 			//  Remove front padding and truncate the array
 			
-			int d = plaindata[1] - plaindata[0];
+			int d = plaindata1[1] - plaindata1[0];
 			
 			d = ((d % s) + s) % s;
 			
 			for (int i = 1; i < 8; i++)
 			{
-				int d1 = plaindata[i] - plaindata[i-1];
+				int d1 = plaindata1[i] - plaindata1[i-1];
 			
 				d1 = ((d1 % s) + s) % s;
 				
@@ -62650,9 +62760,9 @@ class Cipher
 			
 			int index = 0;
 			
-			while (index < plaindata.length -1)
+			while (index < plaindata1.length -1)
 			{
-				int d1 = plaindata[index+1] - plaindata[index];
+				int d1 = plaindata1[index+1] - plaindata1[index];
 				
 				d1 = ((d1 % s) + s) % s;
 				
@@ -62665,11 +62775,11 @@ class Cipher
 			{
 				int padlength = index + 1;
 				
-				array = new byte[plaindata.length - padlength];
+				array = new byte[plaindata1.length - padlength];
 				
 				for (int i = 0; i < array.length; i++)
 				
-				    array[i] = plaindata[padlength + i];
+				    array[i] = plaindata1[padlength + i];
 			}
 		}
 		
@@ -62680,7 +62790,7 @@ class Cipher
 		
 		catch (ArithmeticException ex)
 		{
-			System.out.println(Arrays.toString(plaindata));
+			System.out.println(Arrays.toString(plaindata1));
 			
 			ex.printStackTrace();
 			
@@ -62706,6 +62816,7 @@ class Cipher
 		if (array.length < 32) return false;
 		
 		final int s = 256; // the size of a byte
+		
 		
 		if (front == false)
 		{
@@ -62743,7 +62854,7 @@ class Cipher
 				}
 			}
 			
-			if (padded) return true;
+			return padded;
 		}
 		
 		
@@ -62780,10 +62891,8 @@ class Cipher
 				}
 			}
 			
-			if (padded) return true;
+			return padded;
 		}
-		
-		return false;
 	}
 	
 	
@@ -62880,20 +62989,15 @@ class Cipher
 		
 		//  Pad the plaindata to a multiple of 32 bytes
 		
+		//  Test if the plaindata is already padded so the data
+		//  doesn't get padded twice because the PublicKey
+		//  encrypt method may also pad the plaindata
+		
+		boolean front = false;
+		
 		if (!isPadded(plaindata))
 		
-		    plaindata = addPadding(plaindata);
-		
-		if ((plaindata.length % 32) != 0)
-		
-		    try { throw new ArithmeticException(); }
-		
-		    catch (ArithmeticException ex)
-		    {
-			ex.printStackTrace();
-			
-			return null;
-		    }
+		    plaindata = addPadding(plaindata, front);
 		
 		
 		//  Generate a one-time encryption key
@@ -64365,7 +64469,7 @@ class Cipher
 			
 			return false;
 		}
-			
+		
 		
 		//  Test if the first 32 bytes equals
 		//  the hash of the second 32 bytes

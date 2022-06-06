@@ -128,27 +128,24 @@
 	they get set immediately after the user clicks the list or read button or else the color button would
 	still be enabled until the list or read thread is started which caused two background colors to appear 
 	on the same list panel if two email tabs were open and the user clicked the reverse color button while
-	the program was listing the messages because Swing is not thread safe; the dialog.setSize(dialog.get-
-	PreferredSize()) statement that was between the dialog.setVisible(false) and setVisible(true) state-
-	ments was moved in front of the setVisible(false) statement because the passphrase dialog box wasn't
-	getting packed or repainted correctly; an error in the passphrase dialog that caused the line width to
-	stay at 56 chars if the user checked and unchecked the max cipher box and then clicked another button
-	was corrected; the Delete menu item was modified so it also deletes folders by recursively listing the
-	files in the directory, deleting the files, and then deleting the empty folders because Java will not
-	delete an un-empty directory; the PublicKey decrypt(String, byte[]) method was modified so it can de-
-	crypt ciphertext using any delimiter for the prepended one-time, transient or ephemeral public keys
-	such as "\n\n", "-", or the base 16 chars 0 to f; a missing statement in the send mail frame setFont
-	method was added to assign the font parameter to the font member / variable so that changing the re-
-	trieve mail frame font type also changes the send mail frame font type; the Filechooser class was mod-
-	ified to use a static font type so the dialog box size doesn't change if the font type is changed; the
-	EncryptDirectory class was modified to test if each file object is a file or a directory so the Data-
-	Stream class doesn't try to read the file which caused it to throw a java.io.FileNotFoundException for
-	sub-directories; an error in the EncryptDirectory class that caused it to display two JOptionPane dia-
-	logs was corrected; the directory label in the dialog was added to a disabled button to create a bor-
-	der around the label so the user knows to click on the label or button to change the directory name;
-	the JOptionPane static factory method showConfirmDialog() in the EncryptDirectory class was replaced
-	by the JOptionPane constructor so the dialog can be re-packed if the user changes the directory or
-	else the encrypt and decrypt buttons would collapse;
+	the program was listing the messages because Swing is not thread safe; an error in the passphrase dia-
+	log that caused the line width to stay at 56 chars if the user checked and unchecked the max cipher 
+	box and then clicked another button was corrected; the Delete menu item was modified so it also de-
+	letes folders by recursively listing the files in the directory, deleting the files, and then deleting
+	the empty folders because Java will not delete an un-empty directory; the PublicKey decrypt(String,
+	byte[]) method was modified so it can decrypt ciphertext using any delimiter for the prepended one-
+	time, transient or ephemeral public keys such as "\n\n", "-", or the base 16 chars 0 to f; a missing
+	statement in the send mail frame setFont method was added to assign the font parameter to the font
+	member / variable so that changing the retrieve mail frame font type also changes the send mail frame
+	font type; the Filechooser class was modified to use a static font type so the dialog box size doesn't
+	change if the font type is changed; the EncryptDirectory class was modified to test if each file ob-
+	ject is a file or a directory so the DataStream class doesn't try to read the file which caused it to
+	throw a java.io.FileNotFoundException for sub-directories; an error in the EncryptDirectory class that
+	caused it to display two JOptionPane dialogs was corrected; the directory label in the dialog was add-
+	ed to a disabled button to create a border around the label so the user knows to click on the label or
+	button to change the directory name; the JOptionPane static factory method showConfirmDialog() in the
+	EncryptDirectory class was replaced by the JOptionPane constructor so the dialog can be re-packed if
+	the user changes the directory or else the encrypt and decrypt buttons would collapse;
 	
 	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
 	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
@@ -178,8 +175,11 @@
 	each file to test the padding for all file sizes modulo 256; the max file size in the FileEncryptor
 	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
 	Writer classes instead of the DataStream class because the encryption would throw an exception that
-	says java.lang.OutOfMemoryError:Java heap space; and two decrypt methods that were misplaced in the
-	FileEncryptor class were removed.
+	says java.lang.OutOfMemoryError:Java heap space; two decrypt methods that were misplaced in the File-
+	Encryptor class were removed; the PublicKeyDialog readDialogInput method was modified by moving the
+	frame.setSize statement because the dialog frame would collapse sometimes; and the FileChooser class
+	was modified so the Dialog font style changes from plain to bold if the screen font size < 17 which
+	makes the file names easier to read if the font size is small.
 	
 	
 	
