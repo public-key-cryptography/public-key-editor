@@ -177,9 +177,14 @@
 	Writer classes instead of the DataStream class because the encryption would throw an exception that
 	says java.lang.OutOfMemoryError:Java heap space; two decrypt methods that were misplaced in the File-
 	Encryptor class were removed; the PublicKeyDialog readDialogInput method was modified by moving the
-	frame.setSize statement because the dialog frame would collapse sometimes; and the FileChooser class
-	was modified so the Dialog font style changes from plain to bold if the screen font size < 17 which
-	makes the file names easier to read if the font size is small.
+	frame.setSize statement so the dialog frame doesn't collapse sometimes; the FileChooser class was mod-
+	ified so the Dialog font style changes from plain to bold if the screen font size is less than 17
+	which makes the file names easier to read if the font size is small; the PublicKey isEncrypted(String)
+	method was modified so that it truncates the partial ciphertext if the text length is not a multiple
+	of 4 bytes because the isBase64(String) method would return false if the string was padded to a mul-
+	tiple of 4; and a statement was removed from the viewAttachedFile and saveAttachedFile methods which
+	tested if the file description was in base 64 and incorrectly converted plaintext file names such as
+	abcd or abcdefgh which look like base-64 encoding to unreadable file descriptions or non-Ascii chars.
 	
 	
 	

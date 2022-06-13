@@ -207,9 +207,14 @@
 	Writer classes instead of the DataStream class because the encryption would throw an exception that
 	says java.lang.OutOfMemoryError:Java heap space; two decrypt methods that were misplaced in the File-
 	Encryptor class were removed; the PublicKeyDialog readDialogInput method was modified by moving the
-	frame.setSize statement because the dialog frame would collapse sometimes; and the FileChooser class
-	was modified so the Dialog font style changes from plain to bold if the screen font size < 17 which
-	makes the file names easier to read if the font size is small.
+	frame.setSize statement so the dialog frame doesn't collapse sometimes; the FileChooser class was mod-
+	ified so the Dialog font style changes from plain to bold if the screen font size is less than 17
+	which makes the file names easier to read if the font size is small; the PublicKey isEncrypted(String)
+	method was modified so that it truncates the partial ciphertext if the text length is not a multiple
+	of 4 bytes because the isBase64(String) method would return false if the string was padded to a mul-
+	tiple of 4; and a statement was removed from the viewAttachedFile and saveAttachedFile methods which
+	tested if the file description was in base 64 and incorrectly converted plaintext file names such as
+	abcd or abcdefgh which look like base-64 encoding to unreadable file descriptions or non-Ascii chars.
 	
 	
 	
@@ -3350,9 +3355,14 @@ class Programs
 		private class MouseListener extends MouseAdapter
 		{
 		
-			private JPopupMenu popupmenu, tabpopupmenu;
+			private JPopupMenu popupmenu;
+			private JPopupMenu tabpopupmenu;
 			
-			private JMenuItem cutmenuitem, copymenuitem, pastemenuitem;
+			private JMenuItem cutmenuitem;
+			private JMenuItem copymenuitem;
+			private JMenuItem pastemenuitem;
+			private JMenuItem selectallmenuitem;
+			private JMenuItem hashmenuitem;
 			
 			
 			public MouseListener()
@@ -3361,8 +3371,6 @@ class Programs
 				popupmenu = new JPopupMenu();
 				
 				tabpopupmenu = new JPopupMenu();
-				
-				JMenuItem menuitem;
 				
 				
 				//  Create the text area popup menu
@@ -3384,19 +3392,21 @@ class Programs
 				
 				popupmenu.addSeparator();
 				
-				menuitem = new JMenuItem(__.selectall);
-				menuitem.addActionListener(new SelectAllListener());
-				menuitem.setFont(menuitemfont);
-				popupmenu.add(menuitem);
+				selectallmenuitem = new JMenuItem(__.selectall);
+				selectallmenuitem.addActionListener(new SelectAllListener());
+				selectallmenuitem.setFont(menuitemfont);
+				popupmenu.add(selectallmenuitem);
 				
-				menuitem = new JMenuItem(__.hash);
-				menuitem.addActionListener(new HashListener());
-				menuitem.setFont(menuitemfont);
-				popupmenu.add(menuitem);
+				hashmenuitem = new JMenuItem(__.hash);
+				hashmenuitem.addActionListener(new HashListener());
+				hashmenuitem.setFont(menuitemfont);
+				popupmenu.add(hashmenuitem);
 				
 				
 				
 				//  Create the tabbed pane popup menu
+				
+				JMenuItem menuitem;
 				
 				menuitem = new JMenuItem(__.close);
 				menuitem.addActionListener(new CloseListener());
@@ -5741,18 +5751,21 @@ class Programs
 					
 					textfield1.setForeground(foreground);
 					textfield2.setForeground(foreground);
-					textfield1.setBackground(background);
-					textfield2.setBackground(background);
+					
 					textfield1.setCaretColor(foreground);
 					textfield2.setCaretColor(foreground);
+					
+					textfield1.setBackground(background);
+					textfield2.setBackground(background);
 				}
 				
 				
 				private void setFont(Font font)
 				{
-					//  Set the font of the find box
+					//  Sets the font of the find and replace fields
 					
 					Font font1 = font.deriveFont((float)
+					
 					    Math.min(font.getSize(), 24));
 					
 					textfield1.setFont(font1);
@@ -5777,6 +5790,7 @@ class Programs
 				
 				private JTextField textfield1;
 				private JTextField textfield2;
+				private JTextArea textarea3;
 				
 				private String replacestring;
 				
@@ -5803,6 +5817,7 @@ class Programs
 					{
 						textfield1.setText("");
 						textfield2.setText("");
+						textarea3.setText("");
 						
 						matchcasebox.setSelected(false);
 						
@@ -5922,14 +5937,24 @@ class Programs
 							{
 								if (e.getSource() == textfield1)
 								{
-									findbutton.doClick();
+									findbutton.doClick(33);
 								}
 								
 								else if (e.getSource() == textfield2)
 								{
-									replacebutton.doClick();
+									replacebutton.doClick(33);
 								}
+								
+								String text1 = textfield1.getText();
+								
+								if (textareapanel != null) textarea3
+								
+								    .setText(countNumber(text1, matchcase));
 							}
+							
+							else if (textareapanel != null)
+							
+							    textarea3.setText("");
 						}
 					};
 					
@@ -5968,12 +5993,25 @@ class Programs
 								else replace(textfield1.getText(),
 								             textfield2.getText(), matchcase);
 							}
+							
+							String text1 = textfield1.getText();
+							
+							if (textareapanel != null) textarea3
+							
+							    .setText(countNumber(text1, matchcase));
 						}
 					};
 					
 					
-					textfield1 = new JTextField(10);
-					textfield2 = new JTextField(10);
+					textfield1 = new JTextField(12);
+					textfield2 = new JTextField(12);
+					textarea3  = new JTextArea(1, 6);
+					
+					textarea3.setEditable(false);
+					textarea3.setForeground(new Color(0x080808));
+					textarea3.setBackground(new JPanel()
+					    .getBackground());
+					
 					
 					FocusAdapter focusadapter = new FocusAdapter()
 					{
@@ -6025,35 +6063,46 @@ class Programs
 					textfield2.addKeyListener(keylistener);
 					
 					
-					Box vbox = Box.createVerticalBox();
-					Box hbox = Box.createHorizontalBox();
+					Box hbox1 = Box.createHorizontalBox();
 					
-					hbox.add(matchcasebox);
-					hbox.add(textfield1);
-					hbox.add(Box.createHorizontalStrut(10));
-					hbox.add(textfield2);
+					hbox1.add(matchcasebox);
+					hbox1.add(textfield1);
+					hbox1.add(Box.createHorizontalStrut(10));
+					hbox1.add(textfield2);
 					
-					vbox.add(hbox);
-					vbox.add(Box.createVerticalStrut(10));
-					hbox = Box.createHorizontalBox();
+					hbox1.add(Box.createHorizontalStrut(10));
+					hbox1.add(textarea3);
 					
-					hbox.add(prevbutton);
-					hbox.add(Box.createHorizontalStrut(10));
-					hbox.add(findbutton);
-					hbox.add(Box.createHorizontalStrut(10));
-					hbox.add(replacebutton);
 					
-					vbox.add(hbox);
+					Box hbox2 = Box.createHorizontalBox();
+					
+					hbox2.add(prevbutton);
+					hbox2.add(Box.createHorizontalStrut(10));
+					hbox2.add(findbutton);
+					hbox2.add(Box.createHorizontalStrut(10));
+					hbox2.add(replacebutton);
 					
 					JPanel panel = new JPanel();
 					
-					panel.add(vbox);
+					panel.setLayout(new GridBagLayout());
+					
+					Gbc gbc = new Gbc();
+					gbc.setPosition(0, 0);
+					
+					panel.add(hbox1, gbc);
+					
+					gbc = new Gbc();
+					gbc.setPosition(0, 1);
+					gbc.setAnchor(Gbc.left);
+					
+					panel.add(hbox2, gbc);
 					
 					
 					String title = __.replace;
 					
 					textfield1.setText("");
 					textfield2.setText("");
+					textarea3 .setText("");
 					
 					dialog = new JDialog(frame);
 					dialog.setResizable(false);
@@ -6073,7 +6122,7 @@ class Programs
 				
 				private void setColor()
 				{
-					//  sets the color of the replace box
+					//  sets the color of the replace field
 					
 					if (textareapanel == null) return;
 					
@@ -6082,26 +6131,27 @@ class Programs
 					
 					textfield1.setForeground(foreground);
 					textfield2.setForeground(foreground);
-					textfield1.setBackground(background);
-					textfield2.setBackground(background);
+					
 					textfield1.setCaretColor(foreground);
 					textfield2.setCaretColor(foreground);
+					
+					textfield1.setBackground(background);
+					textfield2.setBackground(background);
 				}
 				
 				
 				
 				private void setFont(Font font)
 				{
-					//  sets the font of the replace box
+					//  Sets the font of the find and replace fields
 					
 					Font font1 = font.deriveFont((float)
 					
-					    font.getSize() > 12 ?
-					    font.getSize() < 24 ?
-					    font.getSize() : 24 : 12);
+					    Math.min(font.getSize(), 24));
 					
 					textfield1.setFont(font1);
 					textfield2.setFont(font1);
+					textarea3 .setFont(labelfont);
 					
 					prevbutton.setFont(font1);
 					findbutton.setFont(font1);
@@ -6110,6 +6160,7 @@ class Programs
 					//  Pack the frame
 					
 					dialog.setSize(dialog
+					
 					   .getPreferredSize());
 				}
 			}
@@ -6868,7 +6919,7 @@ class Programs
 				
 				//  Convert the string array to a partitioned string
 				
-				StringBuilder sb = new StringBuilder("");
+				StringBuilder sb = new StringBuilder();
 				
 				
 				//  For each string in the array, add an opening quote,
@@ -7399,7 +7450,7 @@ class Programs
 			
 			public void setFont(Font font)
 			{
-				//  sets the font of the goto box
+				//  Sets the font of the goto box
 				
 				Font font1 = font.deriveFont((float)
 				
@@ -8089,7 +8140,7 @@ class Programs
 		private void setFont1(Font font)
 		{
 		
-			//  sets the fonts and fontsizes of
+			//  Sets the fonts and fontsizes of
 			//  all text areas and text fields
 			
 			for (TextAreaPanel textareapanel : textareapanellist)
@@ -8098,14 +8149,12 @@ class Programs
 			
 			this.font = font;
 			
-			this.fontname = font.getName();
-			this.fontsize = font.getSize();
+			this.fontname  = font.getName();
+			this.fontsize  = font.getSize();
 			this.fontstyle = font.getStyle();
 			
-			findlistener.setFont(font);
-			
-			replacelistener.setFont(font);
-			
+			    findlistener.setFont(font);
+			 replacelistener.setFont(font);
 			gotolinelistener.setFont(font);
 			
 			
@@ -8748,6 +8797,7 @@ class Programs
 				}
 				
 				    findlistener.setColor();
+				 replacelistener.setColor();
 				gotolinelistener.setColor();
 				
 				foreground = color;
@@ -8782,6 +8832,7 @@ class Programs
 				    textareapanel.textarea.setBackground(color);
 				
 				    findlistener.setColor();
+				 replacelistener.setColor();
 				gotolinelistener.setColor();
 				
 				background = color;
@@ -9474,7 +9525,7 @@ class Programs
 				
 				//  Convert the signature array to a signature block
 				
-				StringBuilder sb = new StringBuilder("");
+				StringBuilder sb = new StringBuilder();
 				
 				for (String str : signarray)
 				
@@ -9730,7 +9781,7 @@ class Programs
 						index1 = i; break;
 					}
 					
-					StringBuilder sb = new StringBuilder("");
+					StringBuilder sb = new StringBuilder();
 					
 					for (int i = 0; i < lines.length; i++)
 					
@@ -14729,25 +14780,10 @@ class Programs
 					if (!text1.isEmpty()) rows = Integer.valueOf(text1);
 					if (!text2.isEmpty()) cols = Integer.valueOf(text2);
 					
-					product = new Number(rows).multiply(cols);
+					boolean bool = setTableSize(rows, cols);
 					
-					if (((product.intValue() >= 512*1024) && (cols >  16))
-					 || ((product.intValue() >= 256*1024) && (cols >  32))
-					 || ((product.intValue() >= 128*1024) && (cols >  64))
-					 || ((product.intValue() >=  64*1024) && (cols > 128))
-					 || ((product.intValue() >=  32*1024) && (cols > 256)))
-					{
-						String message =
-						
-						    "Cols is too large for this number of rows (cells)";
-						
-						JOptionPane.showMessageDialog(frame, message);
-					}
-					
-					else break;
+					if (bool) break; // else continue;
 				}
-				
-				setTableSize(rows, cols);
 			}
 			
 			
@@ -14813,15 +14849,17 @@ class Programs
 					if (text.equals("0") && (keychar == '0')) e.consume();
 					
 					
+					int maxrowdigits = 6, maxcoldigits = 3;
+					
 					if (e.getSource() == textfield1)
 					
-					    if (textfield.getText().trim().length() > 6)
+					    if (textfield.getText().trim().length() > maxrowdigits)
 					
 						e.consume();
 					
 					if (e.getSource() == textfield2)
 					
-					    if (textfield.getText().trim().length() >= 3)
+					    if (textfield.getText().trim().length() > maxcoldigits)
 					
 						e.consume();
 					
@@ -15681,11 +15719,12 @@ class Programs
 					textfield1.setForeground(foreground);
 					textfield2.setForeground(foreground);
 					
+					textfield1.setCaretColor(foreground);
+					textfield2.setCaretColor(foreground);
+					
 					textfield1.setBackground(background);
 					textfield2.setBackground(background);
 					
-					textfield1.setCaretColor(foreground);
-					textfield2.setCaretColor(foreground);
 				}
 				
 				
@@ -16018,10 +16057,12 @@ class Programs
 					
 					textfield1.setForeground(foreground);
 					textfield2.setForeground(foreground);
-					textfield1.setBackground(background);
-					textfield2.setBackground(background);
+					
 					textfield1.setCaretColor(foreground);
 					textfield2.setCaretColor(foreground);
+					
+					textfield1.setBackground(background);
+					textfield2.setBackground(background);
 				}
 				
 				
@@ -16032,9 +16073,7 @@ class Programs
 					
 					Font font1 = font.deriveFont((float)
 					
-					    font.getSize() > 12 ?
-					    font.getSize() < 24 ?
-					    font.getSize() : 24 : 12);
+					    Math.min(font.getSize(), 24));
 					
 					textfield1.setFont(font1);
 					textfield2.setFont(font1);
@@ -16043,7 +16082,9 @@ class Programs
 					findbutton.setFont(font1);
 					replacebutton.setFont(font1);
 					
-					dialog.setSize(dialog.getPreferredSize());
+					dialog.setSize(dialog
+					
+					    .getPreferredSize());
 				}
 			}
 			
@@ -21323,7 +21364,8 @@ class Programs
 			
 			private boolean disposed = false;
 			
-			private JLabel[] labels, iconlabels;
+			private JLabel[] labels;
+			private JLabel[] iconlabels;
 			
 			private JLabel   tolabel;
 			private JLabel fromlabel;
@@ -22930,7 +22972,7 @@ class Programs
 								
 								String sizestr = String.valueOf(filesize / 1024);
 								
-								int maxstrlen = 12;
+								int maxstrlen = 24;
 								
 								if (filedesc.length() > maxstrlen)
 								
@@ -23406,6 +23448,7 @@ class Programs
 									
 									textfield.setText(file.getName());
 									textfield.setForeground(foreground);
+									textfield.setCaretColor(foreground);
 									textfield.setBackground(background);
 									textfield.setFont(font);
 									
@@ -30408,9 +30451,7 @@ class Programs
 			
 				private int msno; // message number
 				
-				private Enum<MessageState> msgstate;
-				
-				//  the mouse listener sets the indexer
+				//  the mouse listener sets the indexer / msno
 				//  so the icon listener knows the icon number
 				
 				public void setNumber(int msno) { this.msno = msno; }
@@ -30421,13 +30462,14 @@ class Programs
 					{
 						String str = ((JMenuItem) e.getSource()).getText();
 						
-						     JLabel label = emailpanel.listpanel.iconlabels2[msno];
 						ImageIcon[] icons = emailpanel.listpanel.imageicons2;
 						
 						//  Set the message state and the message icon
 						
+						Enum<MessageState> msgstate = MessageState.unread;
+						
 						if (str.equalsIgnoreCase(__.unread))    { msgstate = MessageState.unread;    icons[msno] =  unreadicon; }
-						if (str.equalsIgnoreCase(__.read))      { msgstate = MessageState.  read;    icons[msno] =    readicon; }
+						if (str.equalsIgnoreCase(__.read))      { msgstate = MessageState.read;      icons[msno] =    readicon; }
 						if (str.equalsIgnoreCase(__.repliedto)) { msgstate = MessageState.replied;   icons[msno] = repliedicon; }
 						if (str.equalsIgnoreCase(__.delete))    { msgstate = MessageState.delete;    icons[msno] =  deleteicon; }
 						if (str.equalsIgnoreCase(__.important)) { msgstate = MessageState.important; icons[msno] =  importicon; }
@@ -30439,10 +30481,6 @@ class Programs
 						//  Set the message state in the arraylist1
 						
 						emailpanel.list1.setMessageState(msno, msgstate.ordinal());
-						
-						//  Change the icon label to the popup menu item
-						
-						label.setIcon(icons[msno]);
 						
 						setFont1(font);
 						
@@ -30510,7 +30548,6 @@ class Programs
 							ImageIcon imageicon = imageicons2[msgstate.ordinal()];
 							
 							icons[msno] = imageicon;
-							label.setIcon(imageicon);
 							
 							setFont1(font);
 							
@@ -30596,7 +30633,6 @@ class Programs
 					
 					
 					//  The menu for changing the message state
-					//  if pop mail servers can be upgraded
 					
 					iconpopupmenu = new JPopupMenu();
 					
@@ -31760,12 +31796,7 @@ class Programs
 			
 			private void viewAttachedFile(String filedesc, byte[] filedata)
 			{
-			
-				//  Displays an image, text, or html document
-				
-				if (Number.isBase64(filedesc))
-				
-				    filedesc = Convert.base64ToString(filedesc);
+				//  Displays an image, text, table, or html document
 				
 				int maxdesclength = 64;
 				
@@ -31908,14 +31939,9 @@ class Programs
 			
 			private void saveAttachedFile(String filedesc, byte[] filedata)
 			{
-				//  Saves an image, text, or html document
-				
-				if (Number.isBase64(filedesc))
-				
-				    filedesc = Convert.base64ToString(filedesc);
+				//  Saves an image, text, table, or html document
 				
 				String title = filedesc;
-				
 				
 				//  Prompt the user to choose a file name
 				
@@ -34774,7 +34800,7 @@ class Programs
 					
 					int numberoffiles = this.numberoffiles[index];
 					
-					StringBuilder sb = new StringBuilder("");
+					StringBuilder sb = new StringBuilder();
 					
 					for (int i = 0; i < numberoffiles; i++)
 					{
@@ -38905,7 +38931,7 @@ class Programs
 			{
 				//  Save the list to file
 				
-				StringBuilder sb = new StringBuilder("");
+				StringBuilder sb = new StringBuilder();
 				
 				for (String str : list)
 				
@@ -42157,7 +42183,6 @@ class FileDecryptor
 		fc.setFont(font);
 		
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		
 		
 		String title = __.decryptfile;
 		
@@ -51634,6 +51659,13 @@ class PublicKey
 	//  lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^
 	//  (lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7.
 	//
+	//  The gcd function only requires O(n) multi-precision subtractions or O(n^2) single-precision oper-
+	//  ations to compute a mod b == c, b mod c == d, c mod d == e, ... until the residue equals 0, and
+	//  then the previous residue equals the greatest common divisor (which could be 1 if 1 is the greatest
+	//  factor) because a common factor doesn't get removed by subtraction; only the coefficients get re-
+	//  duced by subtraction. (For example, for the numbers 187 and 77, 187 mod 77 == 33; 77 mod 33 == 11;
+	//  33 mod 11 == 0; therefore (187, 77) == 11)
+	//
 	//  If the factorization algorithm requires a matrix then there would also be large space requirements
 	//  unless the matrix is sparse because a 10^6 x 10^6 matrix that has a 10^6 modulus would occupy 10^18
 	//  bits or 10^17 bytes which is a hundred petabytes of memory. (A 512 K-bit number would reduce the
@@ -51917,7 +51949,8 @@ class PublicKey
 	//
 	//  (Block array exponentiation, multiplication, and addition)
 	//
-	//  Compute the secret key block vector E [] =
+	//  Compute the block vector E [] =
+	//
 	//                x1                x1
 	//  | E1 |    | M1   |  | Z1 |  | M2   |
 	//  |    |    |   x2 |  |    |  |   x2 |
@@ -52698,9 +52731,13 @@ class PublicKey
 		
 		String lastline = lines[lines.length -1].trim();
 		
-		//  Pad the last line if not a multiple of 4 6-bit chars or 24 bits
+		//  The last line has to be a multiple of 4 6-bit chars or 24 bits
+		//
+		//  Truncate the last line for partial ciphertext decryption
 		
-		while ((lastline.length() % 4) != 0) lastline += "=";
+		while ((lastline.length() % 4) != 0) lastline =
+		
+		    lastline.substring(0, lastline.length() -1);
 		
 		
 		if (!Number.isBase64(lastline)
@@ -52882,10 +52919,13 @@ class PublicKey
 		//  Verify that each public key is valid
 		
 		for (String publickey : publickeys)
-		
-		    if (!isValidKeySize(publickey.length()))
-		
-			return false;
+		{
+			int length = publickey.length();
+			
+			if (!isValidKeySize(length))
+			
+			    return false;
+		}
 		
 		//  Verify that no two public keys have the same size
 		
@@ -53091,7 +53131,7 @@ class PublicKey
 		
 		else delimiter = "-";
 		
-		publickeys = publickey .split(delimiter);
+		publickeys = publickey.split(delimiter);
 		
 		return publickeys;
 	}
@@ -53719,7 +53759,9 @@ class PublicKey
 	
 	public static String encrypt(String message, String publickey)
 	{
-		if (!isValidKey(publickey)) throw new IllegalArgumentException();
+		if (!isValidKey(publickey)) throw
+		
+		    new IllegalArgumentException();
 		
 		String[] publickeys = splitKeys(publickey);
 		
@@ -58210,7 +58252,7 @@ class PublicKey
 			
 			for (int i = 0; sb.length() < digits; i++)
 			
-			    sb.append(pi16.charAt(i));
+			     sb.append(pi16.charAt(i));
 			
 			this.publickey = sb.toString();
 		}
@@ -58555,6 +58597,8 @@ class PublicKey
 		//
 		//  The method knows whether a public key cipher is asymmetric or symmetric
 		//  from the size of z because no two ciphers are allowed to have the same size.
+		
+		
 		
 		
 		if (z.trim().length() == -1)  return null;
@@ -59449,7 +59493,7 @@ class PublicKey
 			
 			//  Convert the array to number
 			
-			StringBuilder sb = new StringBuilder("");
+			StringBuilder sb = new StringBuilder();
 			
 			for (int i = 0; i < e0.length; i++)
 			
@@ -60020,7 +60064,6 @@ class PublicKey
 		
 		
 		
-		
 		else if ((z.trim().length() == size56x29)
 		      || (z.trim().length() == size48x49))
 		{
@@ -60501,7 +60544,13 @@ class PublicKey
 		}
 		
 		
-		else return null;
+		else
+		{	System.out.println("z.length() == "
+			
+			    + z.trim().length());
+			
+			return null;
+		}
 	}
 	
 	
@@ -60892,14 +60941,19 @@ class Signature
 	//
 	//  where q = p-1 for Latin squares / matrices
 	//
-	//  and r is a hash or integer value
-	//  of R such as r = (r11||r12) mod q
+	//  and r is a hash or integer value of R
+	//
+	//  such as r = (r11 || r12) mod q
 	//
 	//    m   r        s1   s2
 	//  R   Y   ==  A1   A2   (mod p)  verification equation
 	//
 	//  The signature is the quadruple { m, r, s, y } where
-	//  m = H(M), r == r11||r12, s = s1||s2, and y = y11||y12 }.
+	//
+	//  { m = H(M), r == r11 || r12, s = s1 || s2, y = y11 || y12 }
+	//
+	//  and || denotes the string concatenation operator.
+	
 	
 	
 	//  The one-time private key k could be a function of the static private key x
@@ -60918,14 +60972,13 @@ class Signature
 	//  for the variables k and x instead of one equation.
 	
 	
-	//  The signature { m, r, s, y } is appended to a document as a block of 4 or
-	//  6 x 40 chars. In future versions of the software the signature block could
-	//  be enclosed in two ---------------- lines just like the public keys. The
-	//  lines could include or omit the words signature block. If more than one sig-
-	//  nature algorithm uses the same the number of lines, then the software will
-	//  verify the signature starting with the fastest algorithm first and if the
-	//  signature verifies then it will display the signature algorithm that was
-	//  used to sign the document.
+	//  The signature { m, r, s, y } is appended to a document as a block of 4 x 40 or
+	//  9 x 40 chars. In future versions of the software the signature block could be
+	//  enclosed in two ------------- lines just like the public keys. The lines could
+	//  include or omit the words signature block. If more than one signature algorithm
+	//  uses the same the number of lines, then the software will verify the signature
+	//  starting with the fastest algorithm first and if the signature verifies then it
+	//  will display the signature algorithm that was used to sign the document.
 	
 	
 	
@@ -60979,7 +61032,7 @@ class Signature
 	//
 	//  The signature is the quadruple
 	//
-	//  { m, R, s = s1||s2, Y }
+	//  { m, R, s = s1 || s2, Y }
 	//
 	//  where || is the concatenation operator
 	//
@@ -61009,10 +61062,29 @@ class Signature
 	//  sign for a package and the buyer would have the responsibility of providing the
 	//  seller with the static public key before the package could be shipped. This may
 	//  be the reason why online retailers and shipping companies are still using hand-
-	//  written signatures instead of digital signatures for expensive packages. By us-
-	//  ing a hash signature, the retailer or seller could provide the customer or buyer
-	//  with the pre-image, bar code, and/or QR code to sign for the package and the
-	//  courier could verify the signature by hashing the pre-image.
+	//  written signatures instead of digital signatures for expensive packages. Hand-
+	//  written signatures work for bank checks but they don't provide any security for
+	//  credit cards or for packages because any resident, neighbor or employee at the
+	//  shipping address can scribble a signature and walk off with someone else's pack-
+	//  age. This may be one of the reasons why a million packages are stolen every day
+	//  in the US. In response to the problem of package theft, Amazon has installed
+	//  secure locker l cations in 900 US cities.
+	//
+	//  By using a hash signature, the retailer or vendor could provide the customer or
+	//  buyer with the pre-image, bar code, and/or QR code to sign for the package and
+	//  the courier could verify the signature by hashing the pre-image and comparing it
+	//  to a list of a few different hash standards that are used by different retailers.
+	//  This would prove that the shipping company delivered the package to a recipient
+	//  who was authorized to receive the package. A hand-written signature doesn't prove
+	//  anything for a package or for a credit card.
+	//
+	//  Messages can also be signed without a signature algorithm if two computers have
+	//  a shared secret key such or message authentication code. The sender can sign mes-
+	//  sages by computing the hash of the message + secret key and appending the hash to
+	//  the message and then the receiver can verify the signature by removing the hash,
+	//  computing the hash of the message + the secret key or H(m || e) and comparing the
+	//  two hash values.
+	
 	
 	
 	
@@ -62539,16 +62611,17 @@ class Cipher
 	//  wxyz{|}~ ... to create a padded document which couldn't happen accidentally.
 	//
 	//  For example, if the user types a document, appends an 'A' and then the Latin
-	//  alphabet A to Z followed by the seven chars [\]^_`a, or the user types the 32 +
-	//  2 chars 00123456789:;<=>?@ABCDEFGHIJKLMNOP the isPadded method will return true.
-	//  If the chars are reversed it will also return true because the front of the ar-
-	//  ray will be padded. But it wouldn't matter because if the encrypt and decrypt
-	//  methods pad and remove from the same end of the array, then only the encrypt
-	//  padding would get removed, unless the encrypt method does an isPadded test.
-	//  And even if it does get removed it wouldn't matter if the user is padding the
-	//  document intentionally, and if the padding is unintentional then the recipient
-	//  will only be missing an increasing sequence of bytes (or a sequence of Fibonacci
-	//  numbers modulo 256).
+	//  alphabet A to Z followed by the seven chars [\]^_`a, or the user types 001234567
+	//  89:;<=>?@ABCDEFGHIJKLMNOP the isPadded method will return true. If the chars are
+	//  reversed it will also return true because the front of the array will be padded.
+	//  But it wouldn't matter because if the encrypt and decrypt methods pad and remove
+	//  from the same end of the array, then only the encrypt padding would get removed,
+	//  unless the encrypt method does an isPadded test (which it does so the plaindata
+	//  doesn't get padded twice by the PublicKey and the Private Key / Cipher encrypt
+	//  methods). And even if it does get removed it wouldn't matter if the user is pad-
+	//  ding the document intentionally, and if the padding is unintentional then the
+	//  recipient will only be missing an increasing sequence of bytes (or a sequence
+	//  of Fibonacci numbers modulo 256).
 	//
 	//  For email encryption the front of the array should be padded so the recipient
 	//  can download the tops of the messages and decrypt the partial ciphertexts to 
@@ -62562,14 +62635,13 @@ class Cipher
 	//  wouldn't be a perfect solution to test for decryption because a sender could
 	//  choose a random sequence of bytes such as a secret key or one-time pad and then
 	//  the receiver or decryption method wouldn't know if the ciphertext decrypted cor-
-	//  rectly because the plaintext would be perfectly random. This is why padding is
-	//  used to test for decryption.
+	//  rectly because the plaintext would be perfectly random.
 	//
 	//  This padding method could be replaced by another pattern in future versions of
 	//  the software if there is a reason to replace it and then the isPadded method
 	//  would have to test for different patterns. For example, if some file types use
-	//  a repeating char and an incrementing sequence, then the padding method could
-	//  be replaced by another pattern such as the Fibonacci sequence.
+	//  a repeating char and an incrementing sequence, then the padding method would
+	//  have to be replaced by another pattern such as the Fibonacci sequence.
 	
 	
 	
@@ -62988,10 +63060,6 @@ class Cipher
 		
 		
 		//  Pad the plaindata to a multiple of 32 bytes
-		
-		//  Test if the plaindata is already padded so the data
-		//  doesn't get padded twice because the PublicKey
-		//  encrypt method may also pad the plaindata
 		
 		boolean front = false;
 		
@@ -73167,11 +73235,11 @@ class Number implements Comparable<Number>
 	//                        _              _
 	//   Set a[0]  =  6 - 4 \/2,  y[0]  =  \/2 - 1, and iterate
 	//
-	//                            4  1/4
-	//   	   1 - ( 1 - y[k] )               1 - z
-	//   y[k+1]  =  --------------------  ==  ----- ,
-	//                            4  1/4      1 + z
-	//   	   1 + ( 1 - y[k] )
+	//                              4  1/4
+	//   	        1 - ( 1 - y[k] )            1 - z
+	//   y[k+1]  =  ----------------------  ==  ----- ,
+	//                              4  1/4      1 + z
+	//   	        1 + ( 1 - y[k] )
 	//
 	//                               4     2k+3        1        2        3
 	//   a[k+1]  =  a[k] (1 + y[k+1])  -  2    ( y[k+1] + y[k+1] + y[k+1] ).
@@ -79369,7 +79437,7 @@ class Matrix
 			if (digitsize > mindigits)  mindigits = digitsize;
 		}
 		
-		StringBuilder sb = new StringBuilder(""), sbdigit;
+		StringBuilder sb = new StringBuilder(), sbdigit;
 		
 		for (int i = 0; i < this.matrix.length; i++)
 		{
