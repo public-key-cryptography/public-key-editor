@@ -5023,8 +5023,8 @@ class Programs
 					textfield.setFont(font1);
 					
 					textfield.setForeground(foreground);
-					textfield.setBackground(background);
 					textfield.setCaretColor(foreground);
+					textfield.setBackground(background);
 					
 					textfieldlist.add(textfield);
 					
@@ -7123,8 +7123,10 @@ class Programs
 				String title = __.highlighttext;
 				
 				textfield = new JTextField(16);
+				
 				textfield.setFont(font);
 				textfield.setForeground(foreground);
+				textfield.setCaretColor(foreground);
 				textfield.setBackground(background);
 				textfield.requestFocus();
 				
@@ -7439,18 +7441,18 @@ class Programs
 				Color background = textareapanel.textarea.getBackground();
 				
 				//  textfield.setForeground(foreground);
-				//  textfield.setBackground(background);
 				//  textfield.setCaretColor(foreground);
+				//  textfield.setBackground(background);
 				
 				currentlinefield.setForeground(foreground);
-				currentlinefield.setBackground(background);
 				currentlinefield.setCaretColor(foreground);
+				currentlinefield.setBackground(background);
 			}
 			
 			
 			public void setFont(Font font)
 			{
-				//  Sets the font of the goto box
+				//  Sets the font of the current line field
 				
 				Font font1 = font.deriveFont((float)
 				
@@ -7569,6 +7571,7 @@ class Programs
 				textfield.setFont(font.deriveFont(fontsize));
 				
 				textfield.setForeground(foreground);
+				textfield.setCaretColor(foreground);
 				textfield.setBackground(background);
 				
 				String title = __.setprogramtitle;
@@ -8089,6 +8092,9 @@ class Programs
 				
 				textfield1.setForeground(foreground);
 				textfield2.setForeground(foreground);
+				
+				textfield1.setCaretColor(foreground);
+				textfield2.setCaretColor(foreground);
 				
 				textfield1.setBackground(background);
 				textfield2.setBackground(background);
@@ -9239,6 +9245,7 @@ class Programs
 				
 				passphrasearea.setFont(font);
 				passphrasearea.setForeground(foreground);
+				passphrasearea.setCaretColor(foreground);
 				passphrasearea.setBackground(background);
 				
 				hashfield = new JTextField(length);
@@ -9254,6 +9261,7 @@ class Programs
 				signkeyfield.setEditable(false);
 				signkeyfield.setFont(font);
 				signkeyfield.setForeground(foreground);
+				signkeyfield.setCaretColor(foreground);
 				signkeyfield.setBackground(background);
 				
 				final JScrollPane scrollpane1 =
@@ -10668,9 +10676,11 @@ class Programs
 				decryptbutton.setFont(font1);
 				
 				passphrasefield.setForeground(foreground);
+				passphrasefield.setCaretColor(foreground);
 				passphrasefield.setBackground(background);
 				
 				sizefield.setForeground(foreground);
+				sizefield.setCaretColor(foreground);
 				sizefield.setBackground(background);
 				
 				passphrasefield.addKeyListener(keylistener1);
@@ -11311,6 +11321,7 @@ class Programs
 				
 				colorbutton1 .setForeground(
 				 new JPanel().getBackground());
+				
 				colorbutton2 .setForeground(
 				 new JPanel().getBackground());
 				
@@ -11488,8 +11499,8 @@ class Programs
 			//
 			//  running these commands as "user" ...
 			//
-			//  home directory = /home/<username>
-			//  working directory = /home/<username>/EditorClassFiles
+			//  home directory = /home/username
+			//  working directory = /home/username/EditorClassFiles
 			//  java home dir = /usr/jdk/jdk-16
 			//  classpath = .
 			//
@@ -11859,7 +11870,7 @@ class Programs
 			File file = new File(filename);
 			
 			
-			if (!file.exists())
+			if (!file.exists() && !homedir.equals("/root"))
 			{
 				String message = "";
 				
@@ -14706,6 +14717,10 @@ class Programs
 				
 				textfield1.setForeground(foreground);
 				textfield2.setForeground(foreground);
+				
+				textfield1.setCaretColor(foreground);
+				textfield2.setCaretColor(foreground);
+				
 				textfield1.setBackground(background);
 				textfield2.setBackground(background);
 				
@@ -14917,8 +14932,8 @@ class Programs
 			private boolean undo;
 			private boolean redo;
 			
-			public boolean enter  = false;
-			public boolean delete = false;
+			private boolean enter  = false;
+			private boolean delete = false;
 			
 			
 			public Undo(JTable table)
@@ -24681,6 +24696,10 @@ class Programs
 					  tofield .setForeground(color);
 					fromfield .setForeground(color);
 					subjfield .setForeground(color);
+					
+					  tofield .setCaretColor(color);
+					fromfield .setCaretColor(color);
+					subjfield .setCaretColor(color);
 				}
 				
 				if (keyboardlistener.keyboard != null)
@@ -24716,6 +24735,10 @@ class Programs
 					  tofield .setForeground(color);
 					fromfield .setForeground(color);
 					subjfield .setForeground(color);
+					
+					  tofield .setCaretColor(color);
+					fromfield .setCaretColor(color);
+					subjfield .setCaretColor(color);
 				}
 				
 				if (keyboardlistener.keyboard != null)
@@ -27422,6 +27445,7 @@ class Programs
 						listpanel.setBackground1(foreground);
 						
 						textarea.setForeground(background);
+						textarea.setCaretColor(background);
 						textarea.setBackground(foreground);
 					}
 					
@@ -27431,6 +27455,7 @@ class Programs
 						listpanel.setBackground1(background);
 						
 						textarea.setForeground(foreground);
+						textarea.setCaretColor(foreground);
 						textarea.setBackground(background);
 					}
 				}
@@ -28471,6 +28496,10 @@ class Programs
 							
 							textfield1.setForeground(emailpanel.foreground);
 							textarea1 .setForeground(emailpanel.foreground);
+							
+							textfield1.setCaretColor(emailpanel.foreground);
+							textarea1 .setCaretColor(emailpanel.foreground);
+							
 							textfield1.setBackground(emailpanel.background);
 							textarea1 .setBackground(emailpanel.background);
 							
@@ -28639,6 +28668,7 @@ class Programs
 					useremailaddresslabel.setBackground(emailpanel.background);
 					
 					userpassfield.setForeground(emailpanel.foreground);
+					userpassfield.setCaretColor(emailpanel.foreground);
 					userpassfield.setBackground(emailpanel.background);
 					
 					userpassfield .requestFocus();
@@ -29506,7 +29536,10 @@ class Programs
 					if (!emailpanel.reverse_colors)
 					{
 						if (emailpanel.textarea != null)
+						{
 						    emailpanel.textarea.setForeground(color);
+						    emailpanel.textarea.setCaretColor(color);
+						}
 						
 						if (emailpanel.listpanel != null)
 						    emailpanel.listpanel.setForeground1(color);
@@ -29600,7 +29633,10 @@ class Programs
 					
 					else
 					{	if (emailpanel.textarea != null)
+						{
 						    emailpanel.textarea.setForeground(color);
+						    emailpanel.textarea.setCaretColor(color);
+						}
 						
 						if (emailpanel.listpanel != null)
 						    emailpanel.listpanel.setForeground1(color);
@@ -35711,6 +35747,7 @@ class Programs
 					textfield.setFont(font.deriveFont(fontsize));
 					
 					textfield.setForeground(emailpanel.foreground);
+					textfield.setCaretColor(emailpanel.foreground);
 					textfield.setBackground(emailpanel.background);
 					
 					String title = __.setprogramtitle;
@@ -35760,6 +35797,7 @@ class Programs
 					textfield.setFont(font.deriveFont(fontsize));
 					
 					textfield.setForeground(emailpanel.foreground);
+					textfield.setCaretColor(emailpanel.foreground);
 					textfield.setBackground(emailpanel.background);
 					
 					String title = __.settabtitle;
@@ -37291,8 +37329,8 @@ class Programs
 								textarea.setWrapStyleWord(true);
 								
 								textarea.setForeground(emailpanel.foreground);
-								textarea.setBackground(emailpanel.background);
 								textarea.setCaretColor(emailpanel.caretcolor);
+								textarea.setBackground(emailpanel.background);
 								
 								textarea.setFont(font);
 								textarea.setHighlighter(null);
@@ -40772,23 +40810,23 @@ class EncryptDirectory
 	{
 	
 	
-		//   ____________________________________________________
-		//  |                                                    |
-		//  |              [x] Encrypt file names                |
-		//  |              /home/username/folder                 |
-		//  |             Encrypt directory with key             |
-		//  |                0123 4567 89ab cdef                 |
-		//  |      ________________________________________      |
-		//  |     |  Encrypting file /home/username/file1  |     |
-		//  |     |  Encrypting file /home/username/file2  |     |
-		//  |     |  Encrypting file /home/username/file3  |     |
-		//  |     |  Encrypting file /home/username/file4  |     |
-		//  |     |________________________________________|     |
-		//  |      ______   _________   _________   ________     |
-		//  |     |_Test_| |_Encrypt_| |_Decrypt_| |_Cancel_|    |
-		//  |                        ____                        |
-		//  |                       |_OK_|                       |
-		//  |____________________________________________________|
+		//   _____________________________________________________
+		//  |                                                     |
+		//  |               [x] Encrypt file names                |
+		//  |               /home/username/folder                 |
+		//  |              Encrypt directory with key             |
+		//  |                 0123 4567 89ab cdef                 |
+		//  |      _________________________________________      |
+		//  |     |  Encrypting file /home/username/file1   |     |
+		//  |     |  Encrypting file /home/username/file2   |     |
+		//  |     |  Encrypting file /home/username/file3   |     |
+		//  |     |  Encrypting file /home/username/file4   |     |
+		//  |     |_________________________________________|     |
+		//  |      ______   _________   _________   ________      |
+		//  |     |_Test_| |_Encrypt_| |_Decrypt_| |_Cancel_|     |
+		//  |                        ____                         |
+		//  |                       |_OK_|                        |
+		//  |_____________________________________________________|
 		
 		
 		//  Create the encrypt / decrypt directory panel
@@ -40859,9 +40897,9 @@ class EncryptDirectory
 		vbox.add(hbox4); vbox.add(strut4);
 		
 		
-		//  The highlighter must be disabled or set to null
-		//  or else the program will hang if the user clicks
-		//  on the text area as the file names are scrolling.
+		//  The highlighter must be disabled or set to null or
+		//  else the program can become deadlocked if the user
+		//  clicks on the text area as the file names are scrolling
 		
 		filearea = new JTextArea(10, 56);
 		filearea.setEditable(false);
@@ -49519,7 +49557,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	private MouseListener mouselistener1;
 	
-	JPanel keyboardpanel;
+	private JPanel keyboardpanel;
 	
 	private boolean showkeyboard = false;
 	
@@ -49530,16 +49568,16 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	//  MessagesPerScreen(...), setMailDirectory(...), setAscension(...), ...
 	
 	
-	public String SP;
-	public String email;
-	public int numberofciphers;
-	public int linewidth;
+	private String SP;
+	private String email;
+	private int numberofciphers;
+	private int linewidth;
 	
-	public String incomingmailserver;
-	public String outgoingmailserver;
-	public String maildirectory;
-	public boolean ascending = true;
-	public int messagesperscreen = 50;
+	private String incomingmailserver;
+	private String outgoingmailserver;
+	private String maildirectory;
+	private boolean ascending = true;
+	private int messagesperscreen = 50;
 	
 	private boolean validpassphrase;
 	
@@ -49607,7 +49645,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//    _____________________________________________________
 		//   |                      _______________________________|
 		//   |                     |_______________________________|
-		//   |  Secret passphrase  |                               |
+		//   |    passphrase       |                               |
 		//   |                     |_______________________________|
 		//   |                       0123 4567 89ab cdef           |
 		//   |                                                     |
@@ -50080,7 +50118,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//    _____________________________________________________
 			//   |                      _______________________________|
 			//   |                     |_______________________________|
-			//   |  Secret passphrase  |                               |
+			//   |     passphrase      |                               |
 			//   |                     |_______________________________|
 			//   |                       0123 4567 89ab cdef           |
 			//   |                                                     |
@@ -51410,11 +51448,12 @@ class PublicKey
 	//  Public key generation
 	//
 	//  Each entity A that wants to receive encrypted messages chooses
-	//  a private key x[] and computes a composite public key
+	//  an array of private keys x[] and computes a composite public key
 	//
-	//  y[i] = f[i](a[i], x[i])
+	//  y[] = f[](a[], x[])
 	//
-	//  where f[i] is a one-way function and a[i] is a public parameter.
+	//  where f[] is an array of one-way functions
+	//  and a[] is an array of public parameters.
 	//
 	//
 	//  Public key encryption
@@ -51432,7 +51471,7 @@ class PublicKey
 	//
 	//     where a[i] is the blank public key or public key parameter.
 	//
-	//  2. Calculate the composite key agreement e = xor( e[] ).
+	//  2. Calculate the composite key agreement e = xor(e[]).
 	//
 	//  3. Compute the encrypted message
 	//
@@ -51496,11 +51535,12 @@ class PublicKey
 	
 	
 	//  The encrypted encryption key k' is optional because the sender can use
-	//  the public key agreement as the encryption key. The default setting uses
-	//  the public key agreement as the encryption key because the one-time pub-
-	//  lic key z[] uses a one-time private key k[] which is a function of the
-	//  message hash and the time in nanoseconds. The random number generator is
-	//  initialized by Math.initRng(System.nanoTime()).
+	//  the public key agreement or shared secret key as the encryption key.
+	//
+	//  The default setting uses the public key agreement as the encryption key
+	//  because the one-time public key z[] uses a one-time private key k[] which
+	//  is a function of the message hash and the time in nanoseconds. The random
+	//  number generator is initialized using the system nano time.
 	
 	
 	
@@ -54950,10 +54990,8 @@ class PublicKey
 			
 			for (int i = 1; i < x.length; i++) x[i] = x[i] .mod(n);
 			
-			
-			//  Compute the public key
-			//          x
-			//  Y  =  A   X
+			//                               x
+			//  Compute the public key Y = A   X
 			
 			Matrix X = new Matrix(new Number[] { x[1], x[2], x[3] }, 1) .mod(p);
 			
@@ -61062,13 +61100,13 @@ class Signature
 	//  sign for a package and the buyer would have the responsibility of providing the
 	//  seller with the static public key before the package could be shipped. This may
 	//  be the reason why online retailers and shipping companies are still using hand-
-	//  written signatures instead of digital signatures for expensive packages. Hand-
-	//  written signatures work for bank checks but they don't provide any security for
-	//  credit cards or for packages because any resident, neighbor or employee at the
-	//  shipping address can scribble a signature and walk off with someone else's pack-
-	//  age. This may be one of the reasons why a million packages are stolen every day
-	//  in the US. In response to the problem of package theft, Amazon has installed
-	//  secure locker l cations in 900 US cities.
+	//  written signatures for expensive packages. Hand-written signatures work for bank
+	//  checks but they don't provide any security for credit cards or for packages be-
+	//  cause any resident, neighbor or employee at the shipping address can scribble a
+	//  signature and walk off with someone else's package. This may be one of the rea-
+	//  sons why a million packages are stolen every day in the US. In response to the
+	//  problem of package theft Amazon has installed secure locker locations in over
+	//  900 US cities.
 	//
 	//  By using a hash signature, the retailer or vendor could provide the customer or
 	//  buyer with the pre-image, bar code, and/or QR code to sign for the package and
@@ -61079,7 +61117,7 @@ class Signature
 	//  anything for a package or for a credit card.
 	//
 	//  Messages can also be signed without a signature algorithm if two computers have
-	//  a shared secret key such or message authentication code. The sender can sign mes-
+	//  a shared secret key or a message authentication code. The sender can sign mes-
 	//  sages by computing the hash of the message + secret key and appending the hash to
 	//  the message and then the receiver can verify the signature by removing the hash,
 	//  computing the hash of the message + the secret key or H(m || e) and comparing the
@@ -62506,7 +62544,7 @@ class Cipher
 
 	//  The Private Key / Cipher class
 	
-
+	
 	//  static variables for static encryption methods
 	
 	//  The default encryption methods
@@ -62524,7 +62562,7 @@ class Cipher
 	
 	//  Hash encryption ciphers are used in the private key /
 	//  cipher class because hash ciphers are unbreakable.
-	//  
+	//
 	//  For a hash cipher, c[i] = p[i] (+) H(k + i)
 	//
 	//  where p is the plaintext, c is the ciphertext, k is
@@ -63444,7 +63482,7 @@ class Cipher
 		
 		boolean delete = file.delete();
 		
-		boolean rename = tempfile.renameTo(new File(filepath));
+		tempfile.renameTo(new File(filepath));
 		
 		return true;
 		
@@ -63659,9 +63697,7 @@ class Cipher
 		
 		boolean delete = file.delete();
 		
-		boolean rename = tempfile.renameTo(new File(filepath));
-		
-		new File(tempfilepath).delete();
+		tempfile.renameTo(new File(filepath));
 		
 		return true;
 		
