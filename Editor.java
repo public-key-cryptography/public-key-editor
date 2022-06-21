@@ -74,6 +74,14 @@
 	any invertible function that is used more than once is secure, and private keys are not supposed to
 	be reused for public or private key ciphers.
 	
+	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
+	the system nano time, and the plaintext hash as sources of entropy), hashing the random number to
+	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the ci-
+	pherdata or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad
+	to encrypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing
+	the encrypted random number using the shared secret key, hashing the random number to create the
+	one-time pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
+	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to
 	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
 	as RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as
@@ -211,10 +219,22 @@
 	ified so the Dialog font style changes from plain to bold if the screen font size is less than 17
 	which makes the file names easier to read if the font size is small; the PublicKey isEncrypted(String)
 	method was modified so that it truncates the partial ciphertext if the text length is not a multiple
-	of 4 bytes because the isBase64(String) method would return false if the string was padded to a mul-
-	tiple of 4; and a statement was removed from the viewAttachedFile and saveAttachedFile methods which
-	tested if the file description was in base 64 and incorrectly converted plaintext file names such as
-	abcd or abcdefgh which look like base-64 encoding to unreadable file descriptions or non-Ascii chars.
+	of 4 bytes because the isBase64(String) method would return false if the string was padded to a multi-
+	ple of 4; a statement was removed from the viewAttachedFile and saveAttachedFile methods which tested
+	if the file description was in base 64 and incorrectly converted plaintext file names that contain
+	multiples of 4 chars such as the word "file" or "filename" to unreadable file descriptions or non-as-
+	cii chars; the find and replace dialog box was modified to display the number of occurrences and the
+	index of the search string just like the find / replace field on the menu bar;
+	
+	the constructor parameters in the FileEncryptor, FileDecryptor, and PassphraseDialog classes were
+	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so
+	that JDialog frames can use these classes by passing their own reference pointer as the argument to
+	the constructor parameter and then the passphrase dialog box will be centered in the JDialog frame
+	instead of the Jframe so that users don't have to move their focus to the parent frame to enter the
+	passphrase and then move back to the child frame; and the display method parameter in the Documents
+	class was also changed from JFrame to Window so the calling method can use a JFrame, JDialog, or a
+	JWindow object.
+	
 	
 	
 	
@@ -4665,14 +4685,12 @@ class Programs
 					
 					Object[] options = new Object[] { __.Yes, __.No };
 					
-					int choice = JOptionPane.showOptionDialog(
+					int choice = JOptionPane.showConfirmDialog(
 					
 					    frame, label, null,
 					
-						JOptionPane.DEFAULT_OPTION,
-						JOptionPane.QUESTION_MESSAGE,
-						
-						    null, options, options[0]);
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null);
 					
 					//  If yes encrypt the data
 					
@@ -6479,11 +6497,12 @@ class Programs
 				
 				String title = __.replaceall;
 				
-				JOptionPane.showOptionDialog(frame, null,
+				JOptionPane.showConfirmDialog(
 				
-				    title, 0, JOptionPane.PLAIN_MESSAGE, null,
+				    frame, vbox, title,
 				
-					new Object[] { vbox }, null);
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null);
 				
 				textfield1.setText("");
 				textfield2.setText("");
@@ -6611,13 +6630,10 @@ class Programs
 				
 				caretposition = textarea.getCaretPosition();
 				
-				Object[] options = { "OK", "Cancel" };
+				int choice = JOptionPane.showConfirmDialog(frame, hbox, null,
 				
-				int choice = JOptionPane.showOptionDialog(frame, hbox, null,
-				
-				    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-				
-					null, options, options[0]);
+					JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null);
 				
 				if (choice != JOptionPane.OK_OPTION)
 				{
@@ -8117,21 +8133,16 @@ class Programs
 				vbox.add(textfield2);
 				vbox.add(Box.createVerticalStrut(10));
 				
-				//  Create a horizontal box for the button
-				
-				Box hbox = Box.createHorizontalBox();
-				
-				hbox.add(selectrangebutton);
-				
-				vbox.add(hbox);
-				
 				String title = __.selectrange;
 				
-				JOptionPane.showOptionDialog(frame, null,
+				Object[] options = new Object[] { selectrangebutton };
 				
-				    title, 0, JOptionPane.PLAIN_MESSAGE, null,
+				JOptionPane.showOptionDialog(frame, vbox, title,
 				
-					new Object[] { vbox }, null);
+				    JOptionPane.DEFAULT_OPTION,
+				    JOptionPane.PLAIN_MESSAGE,
+				
+					null, options, null);
 				
 				//  Clear the text fields
 				
@@ -9180,13 +9191,13 @@ class Programs
 			}
 			
 			
-			private class MouseListener1 extends MouseAdapter
+			private class MouseListener extends MouseAdapter
 			{
 				private JPopupMenu popupmenu;
 				
 				private JTextComponent comp;
 				
-				public MouseListener1(JTextComponent comp)
+				public MouseListener(JTextComponent comp)
 				{
 					this.comp = comp;
 					
@@ -9271,8 +9282,8 @@ class Programs
 				      JScrollPane  .VERTICAL_SCROLLBAR_NEVER,
 				      JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				
-				MouseListener1 mouselistener1 = new MouseListener1(passphrasearea);
-				MouseListener1 mouselistener2 = new MouseListener1(signkeyfield);
+				MouseListener mouselistener1 = new MouseListener(passphrasearea);
+				MouseListener mouselistener2 = new MouseListener(signkeyfield);
 				
 				KeyListener1 keylistener1 = new KeyListener1();
 				
@@ -9428,13 +9439,13 @@ class Programs
 			}
 			
 			
-			private class MouseListener1 extends MouseAdapter
+			private class MouseListener extends MouseAdapter
 			{
 				private JPopupMenu popupmenu;
 				
 				private JTextComponent comp;
 				
-				public MouseListener1(JTextComponent comp)
+				public MouseListener(JTextComponent comp)
 				{
 					this.comp = comp;
 					
@@ -9613,7 +9624,7 @@ class Programs
 				JTextArea textarea = new JTextArea();
 				
 				textarea.addMouseListener(
-				        new MouseListener1(textarea));
+				        new MouseListener(textarea));
 				
 				
 				while (true)
@@ -14194,49 +14205,6 @@ class Programs
 				setFrameTitle();
 			}
 		}
-		
-		
-		
-		private boolean isCSV(String text)
-		{
-			//  verifies that a String contains
-			//  character separated values
-			//  (tabs, commas, or semicolons)
-			
-			String delimiter;
-			
-			if (text.contains("\t")) delimiter = "\t";
-			
-			else if (text.contains(";")) delimiter = ";";
-			
-			else delimiter = ",";
-			
-			text = text .replaceAll(
-			
-			    delimiter, " " + delimiter + " ");
-			
-			String[] rows = text.split("\n");
-			
-			String[] values = rows[0].split(delimiter);
-			
-			if (values.length == 1) return false;
-			
-			int prevcount = values.length;
-			
-			for (String row : rows)
-			{
-				values = row.split(delimiter);
-				
-				if (values.length != prevcount)
-				
-				    return false;
-				
-				prevcount = values.length;
-			}
-			
-			return true;
-		}
-		
 		
 		
 		
@@ -24017,9 +23985,21 @@ class Programs
 							{
 								//  Prompt the user to enter or confirm a password
 								
-								password = JOptionPane.showInputDialog(frame,
+								JTextField textfield;
 								
-								    title, (userpass != null) ? userpass : "");
+								textfield = new JTextField(24);
+								
+								textfield.setFont(font);
+								
+								textfield.setText(userpass != null ? userpass : "");
+								
+								JOptionPane.showMessageDialog(frame, textfield,
+								
+								    title, JOptionPane.PLAIN_MESSAGE);
+								
+								String input = textfield.getText();
+								
+								password = input;
 								
 								if (password == null)
 								{
@@ -25700,7 +25680,7 @@ class Programs
 			FocusListener1 focuslistener1;
 			ChangeListener changelistener1;
 			IconListener iconlistener;
-			MouseListener1 mouselistener1;
+			MouseListener mouselistener1;
 			MouseMotionListener mousemotionlistener;
 			
 			WindowListener1 windowlistener1;
@@ -28305,8 +28285,6 @@ class Programs
 					vbox.add(hbox1); vbox.add(vstrut); vbox.add(hbox2);
 					
 					Object object = (Object) vbox;
-					
-					Object[] options = null;
 					
 					int choice = JOptionPane.showConfirmDialog(
 					
@@ -31468,6 +31446,7 @@ class Programs
 							           - Integer.valueOf('0');
 							
 							final int msno = emailpanel.msno;
+							
 							int numberoffiles = emailpanel.list1
 							
 							    .getNumberOfFiles(msno);
@@ -31759,53 +31738,6 @@ class Programs
 			
 			
 			
-			private Programs.TableFrame tableframe;
-			
-			//  Test if the text contains
-			//  character separated values
-			
-			private boolean isCSV(String text)
-			{
-				//  verifies that a String contains
-				//  character separated values
-				
-				String delimiter;
-				
-				if (text.contains("\t")) delimiter = "\t";
-				
-				else if (text.contains(";")) delimiter = ";";
-				
-				else delimiter = ",";
-				
-				text = text .replaceAll(
-				
-				    delimiter, " " + delimiter + " ");
-				
-				String[] rows = text.split("\n");
-				
-				String[] values = rows[0].split(delimiter);
-				
-				if (values.length == 1) return false;
-				
-				int prevcount = values.length;
-				
-				for (String row : rows)
-				{
-					values = row.split(delimiter);
-					
-					if (values.length != prevcount)
-					
-					    return false;
-					
-					prevcount = values.length;
-				}
-				
-				return true;
-			}
-			
-			
-			
-			
 			private void viewAttachedFile(int msno, int fileno)
 			{
 				//  Displays an image, text, or html document
@@ -31930,7 +31862,9 @@ class Programs
 				{
 					//  Open a table editor to display the table
 					
-					tableframe = new Programs() .new TableFrame();
+					TableFrame tableframe;
+					
+					tableframe = new TableFrame();
 					
 					tableframe.setData(filetext);
 					
@@ -39376,18 +39310,69 @@ class Programs
 	
 	
 	
-	//  Methods and inner classes of the Programs class that are
-	//  shared by the TextFrame and TableFrame classes could be
-	//  placed here or outside the Programs class to avoid repli-
-	//  cation of code. Some classes such as the FontSize and Font-
-	//  Type classes would have to be rewritten so the variables
-	//  could be passed by reference (such as inside an array)
-	//  instead of by value which just creates a copy instead
-	//  of a pointer to a variable.
+	//  Methods and inner classes of the Programs class that are shared
+	//  by the TextFrame and TableFrame classes could be placed here or
+	//  outside the Programs class to avoid replication of code. Some
+	//  classes such as the FontSize and FontType classes would have to
+	//  be rewritten so the variables could be passed by reference (such
+	//  as inside an array) instead of by value which just creates a copy
+	//  instead of a reference or pointer to a variable.
 	
-	//  ...
 	
-	//  ...
+	
+	
+	private boolean isCSV(String text)
+	{
+		//  tests if a string contains
+		//  character separated values
+		//  (tabs, commas, or semicolons)
+		
+		String delimiter;
+		
+		if (text.contains("\t")) delimiter = "\t";
+		
+		else if (text.contains(",")) delimiter = ",";
+		
+		else delimiter = ";";
+		
+		text = text .replaceAll(delimiter,
+		
+		    " " + delimiter + " ");
+		
+		String[] rows = text.split("\n");
+		
+		//  Count the number of elements in the first row
+		
+		String[] values = rows[0].split(delimiter);
+		
+		if (values.length == 1) return false;
+		
+		//  Test for an indented text document
+		
+		if (rows[0].trim().split(delimiter)
+		
+		    .length == 1) return false;
+		
+		int prevcount = values.length;
+		
+		//  test if all rows have the
+		//  same number of elements
+		
+		for (String row : rows)
+		{
+			values = row.split(delimiter);
+			
+			if (values.length != prevcount)
+			
+			    return false;
+			
+			prevcount = values.length;
+		}
+		
+		return true;
+	}
+	
+	
 	
 	
 	private boolean showCheckBoxMessageDialog(
@@ -39422,6 +39407,8 @@ class Programs
 		
 		return checkbox.isSelected();
 	}
+	
+	
 }
 
 
@@ -40331,6 +40318,12 @@ class RenameFileListener implements ActionListener
 	
 	private JFrame frame;
 	
+	String title = __.renamefileorfolder;
+	
+	private Font font = new JPanel()
+	
+	    .getFont() .deriveFont(18.0f);
+	
 	
 	public RenameFileListener(JFrame frame)
 	{
@@ -40366,9 +40359,21 @@ class RenameFileListener implements ActionListener
 			{
 				String title = __.newfilename;
 				
-				newfilename = JOptionPane
+				JTextField textfield;
 				
-				    .showInputDialog(frame, title, filename);
+				textfield = new JTextField(24);
+				
+				textfield.setFont(font);
+				
+				textfield.setText(filename);
+				
+				JOptionPane.showMessageDialog(frame, textfield,
+				
+				    title, JOptionPane.PLAIN_MESSAGE);
+				
+				String input = textfield.getText();
+				
+				newfilename = input;
 				
 				if ((newfilename == null)
 				  || newfilename.isBlank())
@@ -40419,8 +40424,6 @@ class RenameFileListener implements ActionListener
 		JFileChooser fc;
 		
 		fc = new FileChooser(directory);
-		
-		String title = __.renamefileorfolder;
 		
 		fc.setDialogTitle(title);
 		
@@ -41056,7 +41059,7 @@ class EncryptDirectory
 			}
 		}
 		
-		//  Reset the numberoffiles
+		//  Reset the number of files
 		
 		numberoffiles.set(0);
 		
@@ -41202,7 +41205,7 @@ class EncryptDirectory
 			}
 		}
 		
-		//  Reset the numberoffiles
+		//  Reset the number of files
 		
 		numberoffiles.set(0);
 		
@@ -41729,7 +41732,7 @@ class FileEncryptor
 	//  Dialog and the select and confirm file key dialog box
 	
 	
-	private JFrame frame;
+	private Window window;
 	
 	private byte[] filekey;
 	
@@ -41751,9 +41754,9 @@ class FileEncryptor
 	
 	//  FileEncryptor constructor
 	
-	public FileEncryptor(JFrame frame)
+	public FileEncryptor(Window window)
 	{
-		this.frame = frame;
+		this.window = window;
 	}
 	
 	
@@ -41836,7 +41839,7 @@ class FileEncryptor
 		
 		fc.setApproveButtonText(__.encryptfile);
 		
-		int choice = fc.showDialog(frame, null);
+		int choice = fc.showDialog(window, null);
 		
 		if (choice == JFileChooser.APPROVE_OPTION)
 		{
@@ -41853,8 +41856,6 @@ class FileEncryptor
 	}
 	
 	
-	
-	//  Encryption methods
 	
 	
 	public boolean encrypt(File file)
@@ -41900,7 +41901,7 @@ class FileEncryptor
 			
 			PassphraseDialog pd = new PassphraseDialog(
 			
-			   frame, PassphraseDialog.passphrase_only);
+			   window, PassphraseDialog.passphrase_only);
 			
 			pd.setMinimumLength(minlength);
 			pd.setForeground1(foreground);
@@ -41957,7 +41958,7 @@ class FileEncryptor
 			
 			int choice = JOptionPane
 			
-			   .showConfirmDialog(frame, vbox);
+			   .showConfirmDialog(window, vbox);
 			
 			if ((choice == JOptionPane.CANCEL_OPTION)
 			 || (choice == JOptionPane.CLOSED_OPTION))
@@ -41971,13 +41972,13 @@ class FileEncryptor
 				
 				PassphraseDialog pd = new PassphraseDialog(
 				
-				   frame, PassphraseDialog.passphrase_only);
+				   window, PassphraseDialog.passphrase_only);
 				
 				pd.setMinimumLength(minlength);
 				pd.setForeground1(foreground);
 				pd.setBackground1(background);
 				pd.setFont1(font != null ?
-				    font : frame.getFont());
+				    font : window.getFont());
 				
 				String passphrase = pd.readPassphrase();
 				
@@ -42133,7 +42134,7 @@ class FileDecryptor
 	//  because there is no need to confirm a passphrase for decryption)
 	
 	
-	private JFrame frame;
+	private Window window;
 	
 	private byte[] filekey;
 	
@@ -42153,9 +42154,9 @@ class FileDecryptor
 	//  FileDecryptor constructor
 	
 	
-	public FileDecryptor(JFrame frame)
+	public FileDecryptor(Window window)
 	{
-		this.frame = frame;
+		this.window = window;
 	}
 	
 	
@@ -42228,7 +42229,7 @@ class FileDecryptor
 		
 		fc.setApproveButtonText(title);
 		
-		int choice = fc.showDialog(frame, null);
+		int choice = fc.showDialog(window, null);
 		
 		if (choice == JFileChooser.APPROVE_OPTION)
 		{
@@ -42356,14 +42357,14 @@ class FileDecryptor
 				
 				PassphraseDialog pd = new PassphraseDialog(
 				
-				   frame, PassphraseDialog.passphrase_only);
+				   window, PassphraseDialog.passphrase_only);
 				
 				pd.setTitle(title);
 				pd.setMinimumLength(minlength);
 				pd.setForeground1(foreground);
 				pd.setBackground1(background);
 				pd.setFont1(font != null ?
-				    font : frame.getFont());
+				    font : window.getFont());
 				
 				String passphrase = pd.readPassphrase();
 				
@@ -42431,13 +42432,13 @@ class FileDecryptor
 		
 		PassphraseDialog pd = new PassphraseDialog(
 		
-		   frame, PassphraseDialog.passphrase_only);
+		   window, PassphraseDialog.passphrase_only);
 		
 		pd.setMinimumLength(minlength);
 		
 		pd.setFont1(font != null ?
 		
-		    font : frame.getFont());
+		    font : window.getFont());
 		
 		pd.setForeground1(foreground);
 		pd.setBackground1(background);
@@ -43118,7 +43119,7 @@ class PopMail
 	
 	private String t = "\r\n";
 	
-	private Socket socket;
+	private SSLSocket socket;
 	
 	private int timeout = 20*1000;
 	
@@ -43508,7 +43509,7 @@ class PopMail
 	}
 	
 	
-	private Socket createSocket(String host, int port) throws IOException
+	private SSLSocket createSocket(String host, int port) throws IOException
 	{
 		SSLSocketFactory f = (SSLSocketFactory) SSLSocketFactory.getDefault();
 		SSLSocket sslsock  = (SSLSocket) f.createSocket(host, port);
@@ -43574,12 +43575,18 @@ class PopMail
 		
 		socket = createSocket(incomingmailserver, incomingmailport);
 		
-		in  = new BufferedReader(new  InputStreamReader(socket.getInputStream()));
-		out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		
+		InputStreamReader inputstreamreader = new
+		InputStreamReader(socket.getInputStream());
+		
+		OutputStreamWriter outputstreamwriter = new
+		OutputStreamWriter(socket.getOutputStream());
+		
+		in  = new BufferedReader( inputstreamreader);
+		out = new BufferedWriter(outputstreamwriter);
 		
 		
 		response = readLine(in);
-		
 		
 		if (!response.trim().startsWith("+OK") )
 		{
@@ -43904,6 +43911,7 @@ class PopMail
 			    testmaillist = createTestMailList();
 			
 			//  Test the SocketTimeoutException
+			//
 			//  if (true) throw new SocketTimeoutException();
 			
 			writeLine(out, "STAT");
@@ -44198,7 +44206,7 @@ class SendMail
 	}
 	
 	
-	private Socket createSocket(String host, int port) throws IOException
+	private SSLSocket createSocket(String host, int port) throws IOException
 	{
 		int timeout = 12*1000;
 		
@@ -44317,7 +44325,7 @@ class SendMail
 		
 		
 		
-		Socket socket = null;
+		SSLSocket socket = null;
 		
 		BufferedReader in  = null;
 		BufferedWriter out = null;
@@ -44338,8 +44346,14 @@ class SendMail
 		{
 			socket = createSocket(outgoingmailserver, outgoingmailport);
 			
-			in  = new BufferedReader(new  InputStreamReader(socket.getInputStream()));
-			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			InputStreamReader inputstreamreader = new
+			InputStreamReader(socket.getInputStream());
+			
+			OutputStreamWriter outputstreamwriter = new
+			OutputStreamWriter(socket.getOutputStream());
+			
+			in  = new BufferedReader( inputstreamreader);
+			out = new BufferedWriter(outputstreamwriter);
 		}
 		
 		
@@ -45854,7 +45868,7 @@ class Documents
 	
 	public static void display(
 	
-	    JFrame frame, String title, String document,
+	    Window window, String title, String document,
 	
 		Font font, Color foreground, Color background)
 	{
@@ -45976,7 +45990,9 @@ class Documents
 		
 		boolean modal = true;
 		
-		JDialog dialog = new JDialog(frame, modal);
+		JDialog dialog = new JDialog(window);
+		
+		dialog.setModal(modal);
 		
 		KeyAdapter closelistener = new KeyAdapter()
 		{
@@ -46000,7 +46016,7 @@ class Documents
 		dialog.setTitle(title);
 		
 		
-		Point p = frame.getLocation();
+		Point p = window.getLocation();
 		
 		int xpos = p.x, ypos = p.y;
 		
@@ -46029,7 +46045,7 @@ class Documents
 	
 	public static String displayHTML(
 	
-	    JFrame frame, String title, String html,
+	    Window window, String title, String html,
 	
 		Font font, Color foreground, Color background)
 	{
@@ -46159,7 +46175,9 @@ class Documents
 		
 		boolean modal = true;
 		
-		JDialog dialog = new JDialog(frame, modal);
+		JDialog dialog = new JDialog(window);
+		
+		dialog.setModal(modal);
 		
 		KeyAdapter closelistener = new KeyAdapter()
 		{
@@ -46187,7 +46205,7 @@ class Documents
 		dialog.setTitle(title);
 		
 		
-		Point p = frame.getLocation();
+		Point p = window.getLocation();
 		
 		int xpos = p.x, ypos = p.y;
 		
@@ -49514,7 +49532,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	private String numberofciphersstring = __.numberofciphers;
 	
 	
-	private JFrame frame;
+	private Window window;
 	
 	private int dialogtype;
 	
@@ -49585,9 +49603,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	
 	
-	public PassphraseDialog(
-	
-		final JFrame frame, int dialogtype)
+	public PassphraseDialog(Window window, int dialogtype)
 	{
 	
 		//	passphrase_only
@@ -49605,7 +49621,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//          |                              |
 		//          |                              |
 		//          |______________________________|
-		//          |    0123 4567 89ab cdef       |
+		//          | 0123 4567 89ab cdef          |
 		//          |             ____             |
 		//          |            |_OK_|            |
 		//          |______________________________|
@@ -49647,7 +49663,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//   |                     |_______________________________|
 		//   |    passphrase       |                               |
 		//   |                     |_______________________________|
-		//   |                       0123 4567 89ab cdef           |
+		//   |                      0123 4567 89ab cdef            |
 		//   |                                                     |
 		//   |                      _______________________________|
 		//   | Incoming mail server|_____________________________|_|
@@ -49662,9 +49678,11 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		
 		
-		super(frame);
+		super(window);
 		
 		dialog = this;
+		
+		this.window = window;
 		
 		this.dialogtype = dialogtype;
 		
@@ -49687,7 +49705,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//  |                              |
 			//  |                              |
 			//  |______________________________|
-			//  |    0123 4567 89ab cdef       |
+			//  | 0123 4567 89ab cdef          |
 			//  |             ____             |
 			//  |            |_OK_|            |
 			//  |______________________________|
@@ -50120,7 +50138,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//   |                     |_______________________________|
 			//   |     passphrase      |                               |
 			//   |                     |_______________________________|
-			//   |                       0123 4567 89ab cdef           |
+			//   |                      0123 4567 89ab cdef            |
 			//   |                                                     |
 			//   |                      _______________________________|
 			//   | Incoming mail server|_____________________________|_|
@@ -50399,7 +50417,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 					
 					fc.setDialogTitle(__.setmaildirectory);
 					
-					int choice = fc.showOpenDialog(frame);
+					int choice = fc.showOpenDialog(window);
 					
 					if (choice == JFileChooser.APPROVE_OPTION)
 					
@@ -50595,14 +50613,14 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		passphrasearea.requestFocusInWindow();
 		
 		
-		//  Center the dialog in the parent frame
+		//  Center the dialog in the parent window
 		
-		Point p = frame.getLocation();
+		Point p = window.getLocation();
 		
 		int xpos = p.x, ypos = p.y;
 		
-		int  width = frame.getWidth();
-		int height = frame.getHeight();
+		int  width = window.getWidth();
+		int height = window.getHeight();
 		
 		int  width1 = dialog.getWidth();
 		int height1 = dialog.getHeight();
@@ -51675,7 +51693,7 @@ class PublicKey
 	//  (k1 x2 + k2 x1) a3^(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a
 	//  matrix-like cipher because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use
 	//  matrix arithmetic. This cipher can still be broken by quantum computing because the function has a
-	//  periodicity and the solution is unambiguous or the function has a one-to-one mapping.
+	//  periodicity and the solution is unambiguous since the function has a one-to-one mapping.
 	//
 	//  Elliptic curve ciphers, 1x1 polynomial matrix discrete log ciphers, integer log ciphers, and the
 	//  Rabin / factorization cipher are not used in the public key class because these ciphers are sus-
@@ -52157,8 +52175,8 @@ class PublicKey
 		//  tdl = tesseract discrete log
 		//
 		//  mpdl = matrix polynomial discrete log
-		//  lsdl = Latin square discrete log / X^-1 A^x X
-		//  lsd  = Latin square discrete cipher / X A X
+		//  lsdl = Latin square discrete log  X^-1 A^x X
+		//  lsd  = Latin square discrete cipher X A X
 		//  vcp  = vector cross product cipher A (x) X
 		//
 		//  ....   ....
@@ -53009,7 +53027,7 @@ class PublicKey
 		
 		Scanner sc = new Scanner(str);
 		
-		for (int i = 0, n = 0; ; i++)
+		for (int i = 0, n = 0;  ; i++)
 		{
 			if (!sc.hasNextLine()) break;
 			
@@ -61116,12 +61134,14 @@ class Signature
 	//  who was authorized to receive the package. A hand-written signature doesn't prove
 	//  anything for a package or for a credit card.
 	//
-	//  Messages can also be signed without a signature algorithm if two computers have
-	//  a shared secret key or a message authentication code. The sender can sign mes-
-	//  sages by computing the hash of the message + secret key and appending the hash to
-	//  the message and then the receiver can verify the signature by removing the hash,
-	//  computing the hash of the message + the secret key or H(m || e) and comparing the
-	//  two hash values.
+	//  Messages can also be signed without a signature algorithm if two computers have a
+	//  shared secret key or a message authentication code. The sender can sign messages
+	//  by computing the hash of the message + secret key and appending the hash to the
+	//  message and then the receiver can verify the signature by removing the hash, com-
+	//  puting the hash of the message + authentication code or H(m || e) and comparing
+	//  the two hash values. If two computers communicate over a secure channel or use an
+	//  encrypted / SSL socket, the sender could prepend the code but the message hash
+	//  would still be required to verify that the ciphertext is not modified.
 	
 	
 	
@@ -61139,10 +61159,11 @@ class Signature
 	//             x1   x2
 	//  Y  =  x  A1   A2    (mod p)
 	
-	//  This cipher is used as an example and was used to test
-	//  the Signature class. The Latin square discrete log sig-
-	//  nature algorithm could be replaced by another matrix
-	//  signature algorithm.
+	//  This cipher is used as an example and was used to test the
+	//  Signature class. The Latin square discrete log signature
+	//  algorithm could be replaced by another matrix algorithm.
+	
+	//  A 120-bit Latin square discrete log digital signature algorithm
 	
 	final public static String lsdl120 = "lsdl120";
 	
@@ -62556,33 +62577,60 @@ class Cipher
 	
 	public static int encrypt_method = encrypt_method_3;
 	
-	//  The second and third encrypt methods are 10 times faster
-	//  than the first encrypt method for file encryption
-	
-	
-	//  Hash encryption ciphers are used in the private key /
-	//  cipher class because hash ciphers are unbreakable.
-	//
-	//  For a hash cipher, c[i] = p[i] (+) H(k + i)
-	//
-	//  where p is the plaintext, c is the ciphertext, k is
-	//  a one-time encryption key, and i is an indexer. The
-	//  secret key k can be generated from the hash of the
-	//  plaintext, the system nano time, and the passphrase.
-	
-	
-	//  These encryption methods could change in future versions
-	//  of the software. If the hash functions or encryption
-	//  protocols are changed, users will have to upgrade to
-	//  the new software and re-encrypt their files, folders
-	//  or directories.
-	
 	
 	//  member variables for non-static encryption methods
 	
 	//  ...
 	
 	
+	//  The second and third encrypt methods are 10 times faster
+	//  than the first encrypt method for file encryption
+	
+	
+	//  Hash encryption ciphers are used in the private key /
+	//  cipher class because hash ciphers are unbreakable.
+	
+	
+	//  These encryption methods could change in future versions
+	//  of the software. If the hash functions or encryption proto-
+	//  cols are changed, users will have to upgrade to the new
+	//  software and re-encrypt their files, folders or directories.
+	
+	
+	
+	
+	//  Messages are encrypted by choosing a random number or one-time encryption key
+	//  (using the passphrase, the system nano time, and the plaintext hash as sources
+	//  of entropy), hashing the random number to create a one-time pad, xor-ing the one-
+	//  time pad and the plaindata or plaintext to generate the cipherdata or ciphertext,
+	//  and then using the shared secret key or passphrase hash as a re-usable pad to en-
+	//  crypt the random number. The receiver decrypts a message by xor-ing the encrypted
+	//  random number using the shared secret key as a one-time or reusable pad, hashing
+	//  the random number to create the one-time pad, and then xor-ing the one-time pad
+	//  and the cipherdata to recover the plaindata.
+	
+	
+	
+	//  For a hash cipher, c[i] = p[i] (+) H(k + i)
+	//
+	//  where p is the plaintext, c is the ciphertext, k is a one-time encryption key,
+	//  and i is an indexer. The secret key k can be generated from the hash of the
+	//  plaintext, the system nano time, and the passphrase.
+	//
+	//  The encrypted one-time encryption key is k' = k (+) SK where the secret key
+	//  SK = the hash of the passphrase for private key encryption or SK = the public
+	//  key agreement or shared secret key for public key encryption. The encrypted one-
+	//  time encryption key k' can be prepended or appended to the ciphertext because
+	//  only the encryptor or recipient knows the value of SK to decrypt k' and recover
+	//  the one-time encryption key k.
+	
+	//  An encrypted or secret message can be called a cryptogram or cryptograph, or it
+	//  can be called cipherdata, ciphertext, or cipher. Cipher can refer to the secret
+	//  message or to the algorithm or method used to encipher the message.
+	
+	//  The words encipher and encrypt can be used synonymously because they have similar
+	//  meanings. To encipher means to make empty or zero and to encrypt means to make
+	//  secret or hidden.
 	
 	
 	
@@ -62639,7 +62687,9 @@ class Cipher
 	//  move the padding.) But the simplest pattern is to repeat the last char or byte
 	//  and then use a repeating increment such as 1,2,3,4,5,6,7,8,... The padding could
 	//  also append the number of bytes which would require up to five bytes for files
-	//  larger than 4 G unless the size is reduced modulo 256 or 64 K.
+	//  larger than 4 G unless the size is reduced modulo 256 or 64 K. Appending the
+	//  number of bytes would verify the length of the message, but it wouldn't verify
+	//  the integrity of the message unless a hash value were appended to the padding.
 	//
 	//  No padding scheme is perfect because if the user intentionally creates a docu-
 	//  ment that uses the padding scheme, then the test will return true even though
@@ -70192,7 +70242,10 @@ class Number implements Comparable<Number>
 	public static Number e(int digits)
 	{
 	
-		//  computes the base of the natural logarithm
+		//  computes the value of e or the base of the natural logarithm
+		//
+		//  using 1 / n! == 1/0! + 1/1! + 1/2! + 1/3! + ... == 1 + 1 + 1/2 + 1/6 + ...
+		
 		
 		//  Example  Compute the value of e up to 16 K digits
 		//
@@ -73149,10 +73202,16 @@ class Number implements Comparable<Number>
 	//   Formulas for pi
 	//
 	//
-	//   (Archimedes)    ...  ...  ...
+	//   (Archimedes) 
 	//
+	//   a[0] = 1; a[n+1] = (1 + 1 / (1 + 2 n)) a[n];
 	//
-	//   (Isaac Newton)  ...  ...  ...
+	//                 pi = limit a[n]^2 / n
+	//
+	//                           _          (n^2-n)/2
+	//   (Isaac Newton)  pi / 2\/2 == 4 (-1)         / (1 + 2 n)
+	//
+	//                             == + 1 + 1/3 - 1/5 - 1/7 + ...
 	//
 	//
 	//                        ___  4 n^2 - 0    2 2  4 4  6 6  8 8
@@ -73295,6 +73354,9 @@ class Number implements Comparable<Number>
 	public static Number pi(int digits)
 	{
 	
+		//  Computes the value of pi or the ratio of the circumference of a circle
+		//  to its diameter
+		
 		//  The pi method is used to generate random public digits for cryptography
 		//  and to test the square root, division, and (quadratic / karatsuba / fft)
 		//  multiplication methods.
@@ -82594,8 +82656,14 @@ class SSLSocket extends Socket
 	
 	public void init() throws IOException
 	{
-		in  = new BufferedReader(new  InputStreamReader(getInputStream()));
-		out = new BufferedWriter(new OutputStreamWriter(getOutputStream()));
+		InputStreamReader inputstreamreader = new
+		InputStreamReader(this.getInputStream());
+		
+		OutputStreamWriter outputstreamwriter = new
+		OutputStreamWriter(this.getOutputStream());
+		
+		in  = new BufferedReader( inputstreamreader);
+		out = new BufferedWriter(outputstreamwriter);
 	}
 	
 	public void setPrivateKey(byte[] SK)

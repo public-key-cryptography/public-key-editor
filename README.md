@@ -44,6 +44,14 @@
 	any invertible function that is used more than once is secure, and private keys are not supposed to
 	be reused for public or private key ciphers.
 	
+	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
+	the system nano time, and the plaintext hash as sources of entropy), hashing the random number to
+	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the ci-
+	pherdata or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad
+	to encrypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing
+	the encrypted random number using the shared secret key, hashing the random number to create the
+	one-time pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
+	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to
 	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
 	as RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as
@@ -181,10 +189,22 @@
 	ified so the Dialog font style changes from plain to bold if the screen font size is less than 17
 	which makes the file names easier to read if the font size is small; the PublicKey isEncrypted(String)
 	method was modified so that it truncates the partial ciphertext if the text length is not a multiple
-	of 4 bytes because the isBase64(String) method would return false if the string was padded to a mul-
-	tiple of 4; and a statement was removed from the viewAttachedFile and saveAttachedFile methods which
-	tested if the file description was in base 64 and incorrectly converted plaintext file names such as
-	abcd or abcdefgh which look like base-64 encoding to unreadable file descriptions or non-Ascii chars.
+	of 4 bytes because the isBase64(String) method would return false if the string was padded to a multi-
+	ple of 4; a statement was removed from the viewAttachedFile and saveAttachedFile methods which tested
+	if the file description was in base 64 and incorrectly converted plaintext file names that contain
+	multiples of 4 chars such as the word "file" or "filename" to unreadable file descriptions or non-as-
+	cii chars; the find and replace dialog box was modified to display the number of occurrences and the
+	index of the search string just like the find / replace field on the menu bar;
+	
+	the constructor parameters in the FileEncryptor, FileDecryptor, and PassphraseDialog classes were
+	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so
+	that JDialog frames can use these classes by passing their own reference pointer as the argument to
+	the constructor parameter and then the passphrase dialog box will be centered in the JDialog frame
+	instead of the Jframe so that users don't have to move their focus to the parent frame to enter the
+	passphrase and then move back to the child frame; and the display method parameter in the Documents
+	class was also changed from JFrame to Window so the calling method can use a JFrame, JDialog, or a
+	JWindow object.
+	
 	
 	
 	
