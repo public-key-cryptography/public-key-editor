@@ -192,18 +192,16 @@
 	of 4 bytes because the isBase64(String) method would return false if the string was padded to a multi-
 	ple of 4; a statement was removed from the viewAttachedFile and saveAttachedFile methods which tested
 	if the file description was in base 64 and incorrectly converted plaintext file names that contain
-	multiples of 4 chars such as the word "file" or "filename" to unreadable file descriptions or non-as-
-	cii chars; the find and replace dialog box was modified to display the number of occurrences and the
-	index of the search string just like the find / replace field on the menu bar;
+	multiples of 4 chars such as the word "file" or "filename" to unreadable file descriptions or non-
+	ascii chars; the find and replace dialog box was modified to display the number of occurrences and
+	the index of the search string just like the find / replace field on the menu bar;
 	
 	the constructor parameters in the FileEncryptor, FileDecryptor, and PassphraseDialog classes were
 	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so
 	that JDialog frames can use these classes by passing their own reference pointer as the argument to
 	the constructor parameter and then the passphrase dialog box will be centered in the JDialog frame
-	instead of the Jframe so that users don't have to move their focus to the parent frame to enter the
-	passphrase and then move back to the child frame; and the display method parameter in the Documents
-	class was also changed from JFrame to Window so the calling method can use a JFrame, JDialog, or a
-	JWindow object.
+	instead of the JFrame; and the display method parameter in the Documents class was also changed from
+	JFrame to Window so the calling method can use a JFrame, JDialog, or a JWindow object.
 	
 	
 	

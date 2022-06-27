@@ -222,18 +222,16 @@
 	of 4 bytes because the isBase64(String) method would return false if the string was padded to a multi-
 	ple of 4; a statement was removed from the viewAttachedFile and saveAttachedFile methods which tested
 	if the file description was in base 64 and incorrectly converted plaintext file names that contain
-	multiples of 4 chars such as the word "file" or "filename" to unreadable file descriptions or non-as-
-	cii chars; the find and replace dialog box was modified to display the number of occurrences and the
-	index of the search string just like the find / replace field on the menu bar;
+	multiples of 4 chars such as the word "file" or "filename" to unreadable file descriptions or non-
+	ascii chars; the find and replace dialog box was modified to display the number of occurrences and
+	the index of the search string just like the find / replace field on the menu bar;
 	
 	the constructor parameters in the FileEncryptor, FileDecryptor, and PassphraseDialog classes were
 	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so
 	that JDialog frames can use these classes by passing their own reference pointer as the argument to
 	the constructor parameter and then the passphrase dialog box will be centered in the JDialog frame
-	instead of the Jframe so that users don't have to move their focus to the parent frame to enter the
-	passphrase and then move back to the child frame; and the display method parameter in the Documents
-	class was also changed from JFrame to Window so the calling method can use a JFrame, JDialog, or a
-	JWindow object.
+	instead of the JFrame; and the display method parameter in the Documents class was also changed from
+	JFrame to Window so the calling method can use a JFrame, JDialog, or a JWindow object.
 	
 	
 	
@@ -2069,6 +2067,9 @@ class Programs
 	private int miniconsize = 14;
 	private int maxiconsize = 24;
 	
+	private Clipboard cb = Toolkit
+	
+	   .getDefaultToolkit() .getSystemClipboard();
 	
 	private Dimension d = Toolkit
 	
@@ -2078,10 +2079,10 @@ class Programs
 	
 	private double screenarea = d.getWidth() * d.getHeight();
 	
-	private Font textfont;
-	private Font labelfont;
-	private Font menufont;
-	private Font menuitemfont;
+	private static Font textfont;
+	private static Font labelfont;
+	private static Font menufont;
+	private static Font menuitemfont;
 	
 	
 	{	//  Scale the font sizes so the size is proportional to the
@@ -2111,12 +2112,6 @@ class Programs
 	
 	
 	
-	//  ...
-	
-	//  ...
-	
-	
-	
 	
 	
 	private JMenuBar menubar;
@@ -2129,7 +2124,7 @@ class Programs
 	//  e.g., Mydocument - Editor
 	
 	
-	private boolean showkeyboard = false;
+	private boolean showkeyboard;
 	
 	
 	
@@ -2356,7 +2351,6 @@ class Programs
 		
 		ArrayList<JMenuItem> listmenuitem;
 		
-		//  ...
 		
 		
 		
@@ -3191,10 +3185,11 @@ class Programs
 			
 			private File file;
 			
-			private boolean filechanged = false;
-			private boolean encrypted = false;
-			private boolean gotoline = false;
-			private boolean indenting = false;
+			private boolean filechanged;
+			private boolean encrypted;
+			private boolean gotoline;
+			private boolean indenting;
+			
 			private boolean autoindent = true;
 			private boolean linewrap = true;
 			
@@ -3969,7 +3964,7 @@ class Programs
 			private void autoindent()
 			{
 				//  indents each time the enter key is pressed
-			
+				
 				JTextArea textarea = textareapanel.textarea;
 				
 				if (textarea.getSelectedText() != null) return;
@@ -4297,7 +4292,7 @@ class Programs
 			
 			
 			
-			public File chooseFile(String directory)
+			private File chooseFile(String directory)
 			{
 			
 				File file = null;
@@ -4327,7 +4322,7 @@ class Programs
 			
 			
 			
-			public byte[] open(File file)
+			private byte[] open(File file)
 			{
 			
 				title = file.getName();
@@ -5224,8 +5219,6 @@ class Programs
 					{
 						//  Paste from clipboard
 						
-						Clipboard cb = Toolkit .getDefaultToolkit() .getSystemClipboard();
-						
 						//  int cp = textfield .getCaretPosition();
 						
 						DataFlavor flavor = DataFlavor.stringFlavor;
@@ -5578,9 +5571,9 @@ class Programs
 					
 					textfield1.addKeyListener(keylistener1);
 					textfield2.addKeyListener(keylistener1);
+					
 					textfield1.addFocusListener(focusadapter);
 					textfield2.addFocusListener(focusadapter);
-					
 				}
 				
 				
@@ -5594,7 +5587,6 @@ class Programs
 					
 					public void keyPressed(KeyEvent e)
 					{
-					
 						keypressed = true;
 						
 						int keychar = e.getKeyChar();
@@ -5654,12 +5646,16 @@ class Programs
 							
 								.requestFocusInWindow();
 						}
+						
+						if ((control && (keycode == __.findkeycode))
+						 || (control && (keycode == __.replacekeycode)))
+						
+						    textarea3.setText(countNumber(text1, matchcase));
 					}
 					
 					
 					public void keyReleased(KeyEvent e)
 					{
-					
 						keypressed = false;
 						
 						int keychar = e.getKeyChar();
@@ -5673,8 +5669,6 @@ class Programs
 						
 						    { control = false; return; }
 						
-						
-						if (keychar != vk_enter) textarea3.setText("");
 						
 						//  If there are any capital letters in the string,
 						//  match the case of the string
@@ -5710,16 +5704,14 @@ class Programs
 					
 					public void keyTyped(KeyEvent e)
 					{
-					
 						int keychar = e.getKeyChar();
 						int keycode = e.getKeyCode();
 						
+						String text1 = textfield1.getText();
+						String text2 = textfield2.getText();
 						
 						if (keychar == vk_enter)
 						{
-							String text1 = textfield1.getText();
-							String text2 = textfield2.getText();
-							
 							//  Deselect the text in the text fields
 							
 							textfield1.setText(text1);
@@ -5749,13 +5741,13 @@ class Programs
 								
 								else replace(text1, text2, matchcase);
 							}
-							
-							if (textareapanel != null) textarea3
-							
-							    .setText(countNumber(text1, matchcase));
-							
-							setCurrentLineTextField();
 						}
+						
+						if (keychar == vk_enter)
+						
+						   textarea3.setText(countNumber(text1, matchcase));
+						
+						setCurrentLineTextField();
 					}
 				}
 				
@@ -5867,36 +5859,38 @@ class Programs
 							
 							else if (keycode == vk_control) control = true;
 							
+							String text1 = textfield1.getText();
+							String text2 = textfield2.getText();
+							
 							if (control && (keycode == __.findkeycode))
 							{
 								if (shift == false)
 								
-								     findNext(    textfield1.getText(), matchcase);
-								else findPrevious(textfield1.getText(), matchcase);
+								     findNext(    text1, matchcase);
+								else findPrevious(text1, matchcase);
 							}
 							
 							else if (control && (keycode == __.replacekeycode))
 							{
 								String text = textareapanel.textarea.getSelectedText();
 								
-								if ((text == null) || !text
-								
-								    .equalsIgnoreCase(textfield1.getText()))
+								if ((text == null) || !text.equalsIgnoreCase(text1))
 								{
 									if (shift == false)
 									
-									     findNext(    textfield1.getText(), matchcase);
-									else findPrevious(textfield1.getText(), matchcase);
+									     findNext(    text1, matchcase);
+									else findPrevious(text1, matchcase);
 								}
 								
-								else replace(textfield1.getText(),
-								             textfield2.getText(), matchcase);
+								else replace(text1, text2, matchcase);
 							}
 							
 							else if (keychar == vk_escape)
 							{
 								setVisible(false);
 							}
+							
+							textarea3.setText(countNumber(text1, matchcase));
 						}
 						
 						
@@ -5947,32 +5941,33 @@ class Programs
 						
 						public void keyTyped(KeyEvent e)
 						{
-						
+							int clicktime = 33;
+							
 							int keychar = e.getKeyChar();
 							int keycode = e.getKeyCode();
+							
+							String text1 = textfield1.getText();
+							String text2 = textfield2.getText();
 							
 							if (keychar == vk_enter)
 							{
 								if (e.getSource() == textfield1)
 								{
-									findbutton.doClick(33);
+									if (shift == false)
+									
+									     findbutton.doClick(clicktime);
+									else prevbutton.doClick(clicktime);
 								}
 								
 								else if (e.getSource() == textfield2)
 								{
-									replacebutton.doClick(33);
+									replacebutton.doClick(clicktime);
 								}
 								
-								String text1 = textfield1.getText();
+								textarea3.setText(countNumber(text1, matchcase));
 								
-								if (textareapanel != null) textarea3
-								
-								    .setText(countNumber(text1, matchcase));
+								setCurrentLineTextField();
 							}
-							
-							else if (textareapanel != null)
-							
-							    textarea3.setText("");
 						}
 					};
 					
@@ -5986,37 +5981,39 @@ class Programs
 						
 							if (textareapanel == null) return;
 							
+							String text1 = textfield1.getText();
+							String text2 = textfield2.getText();
+							
 							if (e.getSource() == prevbutton)
 							
-							    findPrevious(textfield1.getText(), matchcase);
+							    findPrevious(text1, matchcase);
 							
 							else if (e.getSource() == findbutton)
 							
-							    findNext(textfield1.getText(), matchcase);
+							    findNext(text1, matchcase);
 							
 							else if (e.getSource() == replacebutton)
 							{
-								String text = textareapanel.textarea.getSelectedText();
+								String text = textareapanel
+								
+								    .textarea.getSelectedText();
 								
 								if ((text == null) || !text.
 								
-								    equalsIgnoreCase(textfield1.getText()))
+								    equalsIgnoreCase(text1))
 								{
 									if (shift == false)
 									
-									     findNext(    textfield1.getText(), matchcase);
-									else findPrevious(textfield1.getText(), matchcase);
+									     findNext(    text1, matchcase);
+									else findPrevious(text1, matchcase);
 								}
 								
-								else replace(textfield1.getText(),
-								             textfield2.getText(), matchcase);
+								else replace(text1, text2, matchcase);
 							}
 							
-							String text1 = textfield1.getText();
+							textarea3.setText(countNumber(text1, matchcase));
 							
-							if (textareapanel != null) textarea3
-							
-							    .setText(countNumber(text1, matchcase));
+							setCurrentLineTextField();
 						}
 					};
 					
@@ -6047,6 +6044,8 @@ class Programs
 								
 								textareapanel.textarea.setCaretPosition(
 								textareapanel.textarea.getCaretPosition());
+								
+								textarea3.setText("");
 							}
 						}
 					};
@@ -6057,6 +6056,7 @@ class Programs
 					matchcasebox.setToolTipText(__.matchcase);
 					
 					matchcasebox.addActionListener(new ActionListener()
+					
 					{ public void actionPerformed(ActionEvent e)
 					{ textfield1.requestFocusInWindow();
 					  matchcase = matchcasebox.isSelected(); } });
@@ -6106,12 +6106,14 @@ class Programs
 					
 					Gbc gbc = new Gbc();
 					gbc.setPosition(0, 0);
+					gbc.setFill(Gbc.both);
 					
 					panel.add(hbox1, gbc);
 					
 					gbc = new Gbc();
 					gbc.setPosition(0, 1);
 					gbc.setAnchor(Gbc.left);
+					gbc.setFill(Gbc.both);
 					
 					panel.add(hbox2, gbc);
 					
@@ -6648,14 +6650,20 @@ class Programs
 			
 			private class ActionListener1 implements ActionListener
 			{
-				private boolean clicked = false;
+				private boolean clicked;
 				
 				public void actionPerformed(ActionEvent e)
 				{
 					try
-					{  //  Disable the button until the finally block is executed
+					{
+					//  Disable the button until the
+					//
+					//  finally block is executed
 					
-					if (clicked) return; else clicked = true;
+					if (clicked) return;
+					
+					else clicked = true;
+					
 					
 					//  Read the partition size
 					
@@ -6789,27 +6797,12 @@ class Programs
 					
 						textarea.replaceSelection(text.trim());
 					
-					}  //  end try
-					
-					
-					finally
-					{
-						new Thread(() ->
-						{
-							//  Re-enable the buttons
-							
-							//  The sleep time allows the button clicks that accum-
-							//  ulated while the method was executing to be ignored
-							//  because the first line is if (clicked) return;
-							
-							try { Thread.sleep(200); }
-							
-							catch (InterruptedException ex) {  };
-							
-							clicked = false;
-						
-						} ).start();
 					}
+					
+					//  end try
+					
+					
+					finally { clicked = false; }
 				}
 			}
 			
@@ -7759,7 +7752,7 @@ class Programs
 			}
 			
 			
-			public void hashFile(File file)
+			private void hashFile(File file)
 			{
 			
 				byte[] hash;
@@ -7870,8 +7863,8 @@ class Programs
 		//  a webpage.
 		//
 		//  The public key hash does not include the email address but the
-		//  private key usually includes the email address to make the public
-		//  key different for each email address.
+		//  private key usually hashes the passphrase and the email address
+		//  to make the public key different for each email address.
 		
 		
 		
@@ -9137,10 +9130,11 @@ class Programs
 			//  This method opens a signature key passphrase
 			//  dialog box and displays a new signature key
 			//
-			//  The dialog box allows the user to select the
-			//  type of signature key (if there is more than
-			//  one type) and computes and displays the sig-
-			//  nature key as the user types the passphrase.
+			//  The dialog box will allow the user to select the
+			//  type of signature key (if there is more than one
+			//  signature algorithm). It also computes the signa-
+			//  ture key and displays the signature key hash as
+			//  the user types the passphrase.
 			//
 			//  Choose a signature key
 			//   _______________________________________
@@ -9383,48 +9377,30 @@ class Programs
 			//  The message is trimmed before hashing
 			
 			
-			//  For example, if the text is indented, such as
+			//  For example, if the text is indented, the text
+			//  will be hashed starting from the first hyphen
+			//  on the first line and ending at the last hyphen
+			//  on the last line
+			
+			
+			
+			//  Signing source code
 			//
+			//  The user can sign the source code using the
+			//  Encrypt -> Sign Document menu item, and then
+			//  type /******** and ********/ above and below
+			//  the signature block so the compiler will ig-
+			//  nore the signature. Otherwise the source code
+			//  won't compile.
 			//
-			//	------------ Public Key ------------
-			//	
-			//	5d7dda725251c4035ea64ae50233aadf7b1a
-			//	4f83c12d6c6f5d0fdf40a859e900-6036f7e
-			//	524b26c8c2487fd2f3da58e552a7b676ab86
-			//	d586f4383208ba6db4a725d7812e2bd80-e0
-			//	2fc053e57ce7ca87ed71d4fb6a21872ff84b
-			//	ef14c34e43c3eb587ae071bc357281e1adb7
-			//	60f72dc6ebb12742927a70d7679c4429271c
-			//	6026c350a59403c343945456602e3cc805-d
-			//	a335af91c250063a26e0b316b11fdb6af027
-			//	8fd42bb9824df8116871a38
-			//	
-			//	------------------------------------
-			//	
-			//	the text will be hashed starting from the
-			//	first hyphen on the first line and ending
-			//	at the last hyphen on the last line
-			
-			
-			
-			
-			//	Signing source code
-			//	
-			//	The user can sign the source code using the
-			//	Encrypt -> Sign Document menu item, and then
-			//	type /******** and ********/ above and below
-			//	the signature block so the compiler will ig-
-			//	nore the signature. Otherwise the source code
-			//	won't compile.
-			//	
-			//	/***************************************
-			//	
-			//	7a514412b792d856e79d017f7f97d82fe57eae16
-			//	0e6654447fc99b422879852198824d231e5dc1f8
-			//	e8d3d6e5c886949b5d2547f272c66521dbd50bc8
-			//	0123456789abcdef0123456789abcdef01234567
-			//	
-			//	***************************************/
+			//  /***************************************
+			//
+			//  7a514412b792d856e79d017f7f97d82fe57eae16
+			//  0e6654447fc99b422879852198824d231e5dc1f8
+			//  e8d3d6e5c886949b5d2547f272c66521dbd50bc8
+			//  0123456789abcdef0123456789abcdef01234567
+			//
+			//  ***************************************/
 			
 			
 			
@@ -9591,7 +9567,7 @@ class Programs
 			
 			
 			
-			public boolean selectAndConfirmSignKey(String title)
+			private boolean selectAndConfirmSignKey(String title)
 			{
 			
 				if (signatureSK == null)
@@ -9931,21 +9907,16 @@ class Programs
 				//  Search a key hash file (this feature is not yet implemented)
 				//
 				//  If the user has previously entered a name or comment for this
-				//  signature key, display the name or comment.
+				//  signature key, display the name and/or comment.
 				//
-				//  If the sign key hash has previously been verified by the user,
-				//  inform the user that the sign key is on a list of verified keys.
+				//  If the signature key hash has previously been verified by the user,
+				//  the method could inform the user if the signature key is on a list
+				//  of verified keys by displaying an icon such as a check mark or a
+				//  question mark in the dialog box.
 				//
-				//  If the key is new, display a dialog box to allow the user to store
-				//  the sign key hash (and optionally a key name and comment) in the
-				//  key hash array if the user knows that the signature key hash is
-				//  authentic.
-				//
-				//  Note that it is the user's responsibility to verify sign key hashes.
+				//  Note that it is the user's responsibility to verify signature keys.
 				//  The program can only store the keys and alert the user if a public
 				//  key or key hash has changed.
-				
-				
 			}
 		}
 		
@@ -10081,8 +10052,6 @@ class Programs
 							//  delete from the list because the focus listener
 							//  will keep finding the key on the clipboard
 							//  every time the focus is changed
-							
-							Clipboard cb = Toolkit.getDefaultToolkit() .getSystemClipboard();
 							
 							cb.setContents(new StringSelection(""), null);
 						}
@@ -10578,32 +10547,32 @@ class Programs
 			//  |                                         |
 			//  |  0123 4567 89ab cdef                    |
 			//  |          _________   _________          |
-			//  |         |_Encrypt | |_Decrypt_|         |
+			//  |         |_Encrypt_| |_Decrypt_|         |
 			//  |_________________________________________|
 			
 			
-			//  The private key class encrypts the text area without
-			//  formatting the data or prepending the hash of the
-			//  plaintext.
+			//  The private key class encrypts the text area without format-
+			//  ting the data or prepending the hash of the plaintext.
 			//
-			//  The user can get cipherdata or ciphertext by encoding
-			//  or decoding the data in base 64 using the check box.
-			//  (The ciphertext is partitioned using newline chars.)
+			//  The user can get cipherdata or ciphertext by encoding or de-
+			//  coding the data in base 64 using the check box. (The cipher-
+			//  text is partitioned using newline chars.)
 			//
-			//  The encrypt button will only encrypt once, but the user
-			//  could keep re-encrypting the cipherdata (not ciphertext)
-			//  by reopening the menu item. Unlike the encrypt button, the
-			//  decrypt button will keep decrypting the cipher each time
-			//  the button is pressed until the data is no longer decrypt-
-			//  able because the decrypted padding is not valid or contains
-			//  random data instead of sequential or repeating bytes.
-			//  (Note that repeating bytes are also sequential bytes in
-			//  which the increment equals 0 instead of 1, 2, 3, ...)
+			//  The encrypt button will only encrypt once, but the user can
+			//  keep re-encrypting the cipherdata (not ciphertext) by reopen-
+			//  ing the menu item. Unlike the encrypt button, the decrypt but-
+			//  ton will keep decrypting the cipher each time the button is
+			//  pressed until the data is no longer decryptable or the decrypt-
+			//  ed padding is not valid or contains random data instead of se-
+			//  quential or repeating bytes. (Note that repeating bytes are
+			//  also sequential bytes in which the increment equals 0 instead
+			//  of 1, 2, 3, ...)
 			//
-			//  If the user saves the file to disk or attaches the file to
-			//  an email, the program won't decrypt or prompt the user to
-			//  enter a passphrase to decrypt the file because the encrypted
-			//  data is not formatted.
+			//  If the user saves the encrypted data to disk without encrypting
+			//  the file and attaches the file to an email, the program will
+			//  not prompt the user to enter a passphrase to decrypt the data
+			//  because the encrypted data is not formatted.
+			
 			
 			
 			private int maxfontsize = 24;
@@ -11189,13 +11158,6 @@ class Programs
 				int cp = textarea.getCaretPosition();
 				
 				textarea.insert(publickeystr, cp);
-				
-				
-				//  Copy the key to the clipboard
-				//
-				//  Clipboard cb = Toolkit .getDefaultToolkit() .getSystemClipboard();
-				//
-				//  cb.setContents(new StringSelection(publickeystr), null);
 			}
 		}
 		
@@ -11276,8 +11238,6 @@ class Programs
 				colorbuttonlistener.init();
 				
 				//  ...
-				
-				//  ...
 			}
 		}
 		
@@ -11298,8 +11258,6 @@ class Programs
 			//
 			//  Clicking on the checkbox makes the buttons disappear
 			//  but the checkbox | doesn't disappear.
-			
-			//  ...
 			
 			
 			private void init()
@@ -11693,8 +11651,6 @@ class Programs
 						//  else if ...
 						
 						//  ...
-						
-						//  ...
 					}
 				}
 				
@@ -11786,10 +11742,6 @@ class Programs
 						filemenu.add(listmenuitem.get(i));
 					}
 				}
-				
-				//	...
-				
-				//	...
 			}
 		}
 		
@@ -11855,9 +11807,7 @@ class Programs
 				
 				//  Save other settings
 				
-				//	...
-				
-				//	...
+				//  ...   ...
 			}
 			
 			catch (Exception ex)
@@ -12646,11 +12596,6 @@ class Programs
 			//  Create a new TablePanel to add to the JTabbedPane
 			
 			newlistener.run();
-			
-			
-			//  ...
-			
-			//  ...
 		}
 		
 		
@@ -12782,8 +12727,9 @@ class Programs
 			private File file;
 			
 			private String delimiter;
-			private boolean filechanged = false;
-			private boolean encrypted = false;
+			private boolean filechanged;
+			private boolean encrypted;
+			
 			private boolean showgrid = true;
 			
 			private Undo undo;
@@ -13043,10 +12989,6 @@ class Programs
 				enablesortingmenuitem,
 				
 				//  setautoresizemenuitem,
-				
-				//  ...
-				
-				//  ...
 			};
 			
 			for (JMenuItem menuitem : menuitems)
@@ -13647,7 +13589,7 @@ class Programs
 				//  Verify that the file contains
 				//  character separated values or csv
 				
-				if (!isCSV(text))
+				if (!FileType.isTable(text))
 				{
 					String errormessage = __.noncsvfile;
 					
@@ -13724,7 +13666,7 @@ class Programs
 			
 			
 			
-			public byte[] open(File file)
+			private byte[] open(File file)
 			{
 				title = file.getName();
 				
@@ -13819,7 +13761,7 @@ class Programs
 			
 			
 			
-			public File chooseFile(String directory)
+			private File chooseFile(String directory)
 			{
 				File file = null;
 				
@@ -14571,7 +14513,7 @@ class Programs
 		
 		
 		
-		public void setForeground1(Color foreground)
+		private void setForeground1(Color foreground)
 		{
 			this.foreground = foreground;
 			
@@ -14580,7 +14522,7 @@ class Programs
 			    tablepanel.table.setForeground(foreground);
 		}
 		
-		public void setBackground1(Color background)
+		private void setBackground1(Color background)
 		{
 			this.background = background;
 			
@@ -14590,7 +14532,7 @@ class Programs
 		}
 		
 		
-		public void setFont1(Font font)
+		private void setFont1(Font font)
 		{
 			//  sets the fonts of the tables and row headers
 			//  and adjusts the row heights and column widths
@@ -14884,9 +14826,14 @@ class Programs
 		{
 		
 			//  This method undoes changes that were made up to the last back-
-			//  space key or delete key event. Each time the backspace key or
-			//  delete key is typed, the KeyListener class saves a copy of the
-			//  previous text on the stack.
+			//  space key, delete key, or enter key event. The first time that
+			//  a delete / backspace / enter key is pressed, the text is pushed
+			//  onto the stack, and then for multiple key events the keylistener
+			//  keeps popping and pushing the text onto the stack until a non-
+			//  delete / backspace / enter key is pressed. It would be wasteful
+			//  of memory and inconvenient for the user to undo changes if the
+			//  program pushed every key event onto the stack without first pop-
+			//  ping the previous change off the stack for multiple key events.
 			
 			
 			private JTable table;
@@ -14900,8 +14847,8 @@ class Programs
 			private boolean undo;
 			private boolean redo;
 			
-			private boolean enter  = false;
-			private boolean delete = false;
+			private boolean enter;
+			private boolean delete;
 			
 			
 			public Undo(JTable table)
@@ -15169,8 +15116,6 @@ class Programs
 					if (j < cols.length -1) sb.append("\t");
 				}
 				
-				Clipboard cb = Toolkit.getDefaultToolkit() .getSystemClipboard();
-				
 				cb.setContents(new StringSelection(sb.toString()), null);
 				
 				tablepanel.filechanged = true;
@@ -15190,8 +15135,6 @@ class Programs
 				if (tablepanel == null) return;
 				
 				JTable table = tablepanel.table;
-				
-				Clipboard cb = Toolkit .getDefaultToolkit() .getSystemClipboard();
 				
 				DataFlavor flavor = DataFlavor.stringFlavor;
 				
@@ -16973,7 +16916,7 @@ class Programs
 		
 		private class EnableReorderingListener implements ActionListener
 		{
-			private boolean bool = false;
+			private boolean bool;
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -16986,7 +16929,7 @@ class Programs
 		
 		private class EnableSortingListener implements ActionListener
 		{
-			private boolean bool = false;
+			private boolean bool;
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -17187,7 +17130,7 @@ class Programs
 				
 				swapcolorsbutton.addActionListener(new ActionListener()
 				{
-					boolean swap = false;
+					boolean swap;
 					
 					public void actionPerformed(ActionEvent e)
 					{
@@ -17369,18 +17312,18 @@ class Programs
 					directory = file.getParent();
 					
 					
-					//  File sizes > 32 bits should use RandomAccessFile
+					//  File sizes > 32 bits should use FileChannelReader and Writer
 					
 					if (file.length() >= 2L*1024*1024*1024) return;
 					
-					//   ...
-					
-					//   ...
+					//   ...   ...
 					
 					
 					if (Cipher.isEncrypted(file))
 					{
-						System.out.println(__.fileisalreadyencrypted);
+						System.out.println(
+						
+						   __.fileisalreadyencrypted);
 						
 						continue;
 					}
@@ -17474,7 +17417,9 @@ class Programs
 					
 					if (!Cipher.isEncrypted(file))
 					{
-						System.out.println(__.fileisnotencrypted);
+						System.out.println(
+						
+						   __.fileisnotencrypted);
 						
 						continue;
 					}
@@ -17544,8 +17489,6 @@ class Programs
 			//
 			//  Clicking on the checkbox makes the buttons disappear
 			//  but the checkbox | doesn't disappear.
-			
-			//  ...
 			
 			
 			private void init()
@@ -17774,9 +17717,7 @@ class Programs
 				
 				colorbuttonlistener.init();
 				
-				//  ...
-				
-				//  ...
+				//  ...   ...
 			}
 		}
 		
@@ -18211,23 +18152,22 @@ class Programs
 		
 		
 		
+		
 		private JPanel createIconPanel()
 		{
 		
-			openbutton = new JButton();
+			 openbutton = new JButton();
 			closebutton = new JButton();
 			
-			openbutton.addActionListener(opendirectorylistener);
+			 openbutton.addActionListener(opendirectorylistener);
 			closebutton.addActionListener(closelistener);
 			
-			openbutton.setToolTipText(__.open);
+			 openbutton.setToolTipText(__.open);
 			closebutton.setToolTipText(__.close);
 			
 			imageicons = new ImageIcon[] { openicon, closeicon, };
 			iconbuttons = new JButton[] { openbutton, closebutton, };
 			
-			
-			Box box = Box.createHorizontalBox();
 			
 			for (JButton button : iconbuttons)
 			{
@@ -18235,18 +18175,17 @@ class Programs
 				
 				button.setContentAreaFilled(false);
 				button.setBorderPainted(false);
-				
-				Component hstrut = Box
-				    .createHorizontalStrut(20);
-				
-				box.add(button);
-				box.add(hstrut);
 			}
 			
 			
-			int width = 24;
+			//     backbutton.setContentAreaFilled(false);
+			//  forwardbutton.setContentAreaFilled(false);
 			
-			setIconSize(width);
+			   backbutton.setBorderPainted(false);
+			forwardbutton.setBorderPainted(false);
+			
+			
+			setIconSizes();
 			
 			
 			
@@ -18255,11 +18194,12 @@ class Programs
 			panel.setLayout(new GridBagLayout());
 			
 			
+			
 			//    open   close     back         forward        file name / title
 			//   ______ ______ _____________ _____________ _________________________
 			//  |      |      |             |             |                         |
 			//  |______|______|_____________|_____________|_________________________|
-			//  0      1      2    (16)    18    (16)     34         (24)           58
+			//  0      1      2    (14)     16   (14)     30         (20)           50
 			
 			
 			Gbc gbc = new Gbc();
@@ -18267,7 +18207,7 @@ class Programs
 			gbc.setPosition(0, 0);
 			gbc.setSize(1, 1);
 			gbc.setFill(Gbc.both);
-			gbc.setWeight(1, 0);
+			gbc.setWeight(2, 0);
 			
 			panel.add(openbutton, gbc);
 			
@@ -18277,7 +18217,7 @@ class Programs
 			gbc.setPosition(1, 0);
 			gbc.setSize(1, 1);
 			gbc.setFill(Gbc.both);
-			gbc.setWeight(1, 0);
+			gbc.setWeight(2, 0);
 			
 			panel.add(closebutton, gbc);
 			
@@ -18285,29 +18225,29 @@ class Programs
 			gbc = new Gbc();
 			
 			gbc.setPosition(2, 0);
-			gbc.setSize(16, 1);
+			gbc.setSize(14, 1);
 			gbc.setFill(Gbc.both);
-			gbc.setWeight(16, 0);
+			gbc.setWeight(28, 0);
 			
 			panel.add(backbutton, gbc);
 			
 			
 			gbc = new Gbc();
 			
-			gbc.setPosition(18, 0);
-			gbc.setSize(16, 1);
+			gbc.setPosition(16, 0);
+			gbc.setSize(14, 1);
 			gbc.setFill(Gbc.both);
-			gbc.setWeight(16, 0);
+			gbc.setWeight(28, 0);
 			
 			panel.add(forwardbutton, gbc);
 			
 			
 			gbc = new Gbc();
 			
-			gbc.setPosition(34, 0);
-			gbc.setSize(24, 1);
+			gbc.setPosition(30, 0);
+			gbc.setSize(20, 1);
 			gbc.setFill(Gbc.both);
-			gbc.setWeight(24, 0);
+			gbc.setWeight(40, 0);
 			
 			panel.add(titlefield, gbc);
 			
@@ -18317,9 +18257,14 @@ class Programs
 		
 		
 		
-		private void setIconSize(int width)
+		private void setIconSizes()
 		{
 			//  sets the icon sizes for the image frame
+			
+			int miniconsize = 8;
+			int maxiconsize = 40;
+			
+			int width = (int) (1.25*frameSizeToFontSize());
 			
 			for (int i = 0; i < iconbuttons.length; i++)
 			{
@@ -18377,13 +18322,13 @@ class Programs
 			
 			private JLabel label; // the label to display the image
 			
-			private boolean filechanged = false;
+			private boolean filechanged;
 			
 			private ArrayList<Boolean> encrypted;
 			private ArrayList<Image> images;
 			private ArrayList<String> pages;
 			
-			private int currentpage = 0;
+			private int currentpage;
 			
 			
 			public LabelPanel()
@@ -18437,6 +18382,7 @@ class Programs
 				setFrameTitle();
 			}
 		}
+		
 		
 		
 		
@@ -18655,7 +18601,7 @@ class Programs
 			{
 				//  This is the ImageFrame MouseWheelListener
 				
-				private boolean resized = false;
+				private boolean resized;
 				
 				private int freq = 32; // 32 x per sec
 				
@@ -18726,7 +18672,7 @@ class Programs
 		
 		
 		
-		public void setFrameTitle()
+		private void setFrameTitle()
 		{
 			frame.setTitle(titlename);
 		}
@@ -18775,8 +18721,8 @@ class Programs
 				
 				File file = openlistener.chooseFile(
 				
-				  //  JFileChooser.DIRECTORIES_ONLY);
-				      JFileChooser.FILES_AND_DIRECTORIES);
+				     JFileChooser.DIRECTORIES_ONLY);
+				 //  JFileChooser.FILES_AND_DIRECTORIES);
 				
 				if (file == null) return;
 				
@@ -19369,10 +19315,11 @@ class Programs
 		
 		private void setFont1(Font font)
 		{
-			if ((labelpanel != null) &&
-			    (titlefield != null))
+			if ((labelpanel != null) && (titlefield != null))
 			
-			     titlefield.setFont(font);
+			    titlefield.setFont(font);
+			
+			setIconSizes();
 			
 			this.font = font;
 		}
@@ -19526,7 +19473,7 @@ class Programs
 		
 		private class ComponentListener1 extends ComponentAdapter
 		{
-			private boolean resized = false;
+			private boolean resized;
 			
 			private int freq = 4; // 4 x per sec
 			
@@ -19964,7 +19911,7 @@ class Programs
 			
 			private File file;
 			
-			private boolean encrypted = false;
+			private boolean encrypted;
 			
 			
 			public EditorPanePanel()
@@ -20310,7 +20257,7 @@ class Programs
 		
 		
 		
-		public void setFrameTitle()
+		private void setFrameTitle()
 		{
 			String title = (editorpanepanel != null)
 			
@@ -21234,7 +21181,7 @@ class Programs
 		private String maildirectory;
 		
 		
-		private boolean testmail = false;
+		private boolean testmail;
 		
 		private boolean mailcopytoself = true;
 		
@@ -21243,17 +21190,17 @@ class Programs
 		//  allow users to send and retrieve public keys
 		//  or change message states
 		
-		//////////////////////////////////////////////
-		private boolean sendretrievepublickey = false;
-		private boolean changemessagestate = false;
-		//////////////////////////////////////////////
+		//////////////////////////////////////
+		private boolean sendretrievepublickey;
+		private boolean changemessagestate;
+		//////////////////////////////////////
 		
 		//  this variable will be set to true if the
 		//  user sends the public key to the server
 		//  so the program doesn't keep prompting the
 		//  user to send a public key to the server
 		
-		private boolean sentpublickey = false;
+		private boolean sentpublickey;
 		
 		private String  testpassphrase = "recipient's passphrase";
 		private String replypassphrase = "sender's passphrase--";
@@ -21345,7 +21292,7 @@ class Programs
 			
 			private JFrame frame;
 			
-			private boolean disposed = false;
+			private boolean disposed;
 			
 			private JLabel[] labels;
 			private JLabel[] iconlabels;
@@ -21386,7 +21333,7 @@ class Programs
 			    fontname, fontstyle, (int) fontsize);
 			
 			
-			private boolean reverse_colors = false;
+			private boolean reverse_colors;
 			
 			private Color foreground = Color.black;
 			private Color background = Color.white;
@@ -21444,7 +21391,7 @@ class Programs
 			
 			JMenuItem[] menuitems;
 			
-			JMenu filemenu, editmenu; // ...
+			JMenu filemenu, editmenu;
 			
 			JMenuItem  attachmenuitem,
 			openmenuitem, saveasmenuitem,
@@ -21632,7 +21579,7 @@ class Programs
 				
 				subjlabel.addMouseListener(new MouseAdapter()
 				{
-					boolean isreply = false;
+					boolean isreply;
 					
 					public void mouseClicked(MouseEvent e)
 					{
@@ -22379,14 +22326,16 @@ class Programs
 			private class SendButtonListener implements ActionListener
 			{
 			
-				public  boolean sending = false;
-				private boolean clicked = false;
+				public  boolean sending;
+				private boolean clicked;
 				
-				private String plaintext, sendtext;
+				private String plaintext;
+				private String sendtext;
+				
 				private String clientservertext;
 				
-				private int   publickeymessages = 0;
-				private int replytoselfmessages = 0;
+				private int   publickeymessages;
+				private int replytoselfmessages;
 				
 				
 				public void actionPerformed(ActionEvent e)
@@ -22421,7 +22370,9 @@ class Programs
 					//  (unless the method throws an exception)
 					//  so the message can only be sent once
 					
-					if (clicked) return;  else clicked = true;
+					if (clicked) return;
+					
+					else clicked = true;
 					
 					
 					final String   tostring =   tofield.getText().trim();
@@ -22869,8 +22820,6 @@ class Programs
 								//  or a subset of the old public key
 								
 								//  ...
-								
-								//  ...
 							}
 							
 							//  Read the number of encrypt ciphers
@@ -23177,8 +23126,6 @@ class Programs
 							//  | Yes | Attach Files | Cancel | buttons
 							
 							
-							Icon icon = null;
-							
 							String title = __.Sendmessage;
 							
 							Object[] options = new Object[] {  };
@@ -23187,7 +23134,7 @@ class Programs
 							
 							    JOptionPane.PLAIN_MESSAGE, JOptionPane
 							
-								.DEFAULT_OPTION, icon, options, 0);
+								.DEFAULT_OPTION, null, options, 0);
 							
 							//  pane.set(...)
 							
@@ -24731,7 +24678,6 @@ class Programs
 				reverse_colors = bool;
 			}
 			
-			
 			public void setNumberOfCiphers(int numberofciphers)
 			{
 				this.numberofciphers = numberofciphers;
@@ -24741,7 +24687,6 @@ class Programs
 			{
 				this.usereplyaddresskey = usereplyaddresskey;
 			}
-			
 			
 			
 			public void setFont1(Font font)
@@ -24779,9 +24724,6 @@ class Programs
 					keyboardlistener.keyboardframe.getPreferredSize());
 				}
 				
-				// ...
-				
-				// ...
 				
 				
 				//  Set the max font size for the buttons,
@@ -25247,7 +25189,7 @@ class Programs
 				{
 					//  This is the SendMail Frame MouseWheelListener
 					
-					private boolean resized = false;
+					private boolean resized;
 					
 					private int freq = 8; // 8 x per sec
 					
@@ -26940,7 +26882,7 @@ class Programs
 				//  so that it does not have to keep trying two
 				//  public keys, hash(SP + email) and then hash(SP).
 				
-				private boolean nokeyaddress = false;
+				private boolean nokeyaddress;
 				
 				
 				//  The user's public key generated from hash(SP)
@@ -26953,9 +26895,9 @@ class Programs
 				
 				private int msno = -1; // msg number
 				
-				private boolean listscreen = false;
-				private boolean messagescreen = false;
-				private boolean readallscreen = false;
+				private boolean listscreen;
+				private boolean messagescreen;
+				private boolean readallscreen;
 				
 				private int caretposition;
 				
@@ -28950,8 +28892,6 @@ class Programs
 					{
 						//  Copy the key string to clipboard
 						
-						Clipboard cb = Toolkit .getDefaultToolkit() .getSystemClipboard();
-						
 						cb.setContents(new StringSelection(publickeystr), null);
 						
 						System.out.println("Public key copied to clipboard");
@@ -29696,8 +29636,6 @@ class Programs
 				//  Clicking on the checkbox makes the buttons disappear
 				//  but the checkbox | doesn't disappear.
 				
-				//  ...
-				
 				
 				private void init()
 				{
@@ -30374,7 +30312,7 @@ class Programs
 			
 			
 			
-			public void setFrameSize()
+			private void setFrameSize()
 			{
 				//  sets the RetrieveMail frame size
 				
@@ -30609,7 +30547,7 @@ class Programs
 				private JPopupMenu popupmenu;
 				private JPopupMenu iconpopupmenu;
 				
-				private boolean clicked = false;
+				private boolean clicked;
 				
 				private int iconnumber;
 				
@@ -31261,7 +31199,12 @@ class Programs
 					try
 					{
 					
-					if (clicked) return; else clicked = true;
+					//  Disable the button until the
+					//  finally block is executed
+					
+					if (clicked) return;
+					
+					else clicked = true;
 					
 					
 					if (emailpanel.listscreen)
@@ -31306,42 +31249,12 @@ class Programs
 					
 					}
 					
-					
 					catch (Exception ex)
 					{
 						ex.printStackTrace();
 					}
 					
-					
-					finally
-					{
-						new Thread(() ->
-						{
-							//  Re-enable the mouse button
-							
-							//  The sleep time allows the button clicks that accumulated
-							//  while the method was executing to be ignored because the
-							//  first line is if (clicked) return;
-							//
-							//  The sleep time for the mouse click is set much lower than
-							//  the sleep time for buttons because the user may want to
-							//  click the next label rapidly multiple times to move through
-							//  the messages as quickly as possible.
-							//
-							//  The sleep time cannot be set too close to zero because it
-							//  can take a second for the method to decrypt. If the time is
-							//  set too low, the user could click a few times and might skip
-							//  one or more messages because the text area only changes when
-							//  the message is decrypted.
-							
-							try { Thread.sleep(100); }
-							
-							catch (InterruptedException ex) {  };
-							
-							clicked = false;
-						
-						}).start();
-					}
+					finally { clicked = false; }
 				}
 			}
 			
@@ -31703,7 +31616,7 @@ class Programs
 			{
 				//  This is the RetrieveMailFrame MouseWheelListener
 				
-				private boolean resized = false;
+				private boolean resized;
 				
 				private int freq = 16; // only 16 events per sec
 				
@@ -31764,6 +31677,7 @@ class Programs
 			
 			private void viewAttachedFile(String filedesc, byte[] filedata)
 			{
+			
 				//  Displays an image, text, table, or html document
 				
 				int maxdesclength = 64;
@@ -31773,69 +31687,42 @@ class Programs
 				    filedesc = filedesc .substring(0, maxdesclength);
 				
 				
-				//  Determine if the file is a text / html document
+				//  Determine if the data is a text / html document
 				//  or an image file (document / file type detection)
 				
 				
-				//  Test if the text contains defined characters
+				final String filetext;
 				
-				final String filetext = new String(filedata);
+				filetext = new String(filedata);
 				
-				boolean text = true;
-				boolean html = false;
-				boolean table = false;
-				
-				for (byte c : filedata)
-				
-				    if (!Character.isDefined(c))
-				
-					{ text = false;  break; }
+				boolean text, table, html;
 				
 				
-				//  Test if the text starts with <! and contains the word html or htm
+				//  Test if the file data is text, table, or html
 				
-				if (filetext.startsWith("<") || filetext.startsWith("<!"))
-				{
-					int index = filetext.indexOf("\n");
-					
-					if (index != 0)
-					{
-						String s = filetext.substring(0, index).toLowerCase();
-						
-						if (s.contains("html") || s.contains("doctype")) html = true;
-					}
-				}
+				text = FileType.isText(filetext);
+				
+				//  Test if the data is a table
+				
+				table = FileType.isTable(filetext);
+				
+				//  Test if the file data is HTML
+				
+				html = FileType.isHTML(filetext);
 				
 				
-				//  Test if the text contains character-separated values
+				//  If the file data is a table, set text = false
+				//  so the method displays the text as a table
+				//  because table data is also text data.
 				
-				if (isCSV(filetext))
-				{
-					table = true;
-					
-					text = false;
-				}
+				//  If the file data is html, set text = false
+				//  so the method displays the text as html
+				//  because html data is also text data.
 				
+				if (table) { text = false; html = false; }
 				
-				if (text)
-				{
-					//  Validate the text
-					
-					try
-					{	byte[] utf8Bytes = filetext.getBytes("UTF8");
-						
-						String str = new String(utf8Bytes, "UTF8");
-					}
-					
-					catch (UnsupportedEncodingException ex)
-					{
-						text = false;
-						
-						System.out.println(ex);
-						
-						return;
-					}
-				}
+				if (html) { text = false; table = false; }
+				
 				
 				
 				//  If the document is text open a text area
@@ -31909,6 +31796,7 @@ class Programs
 			
 			private void saveAttachedFile(String filedesc, byte[] filedata)
 			{
+			
 				//  Saves an image, text, table, or html document
 				
 				String title = filedesc;
@@ -34113,6 +34001,7 @@ class Programs
 				//
 				//  outgoing mail port
 				//  465
+				//
 				//  ...
 				//
 				//  messages per screen
@@ -34699,9 +34588,7 @@ class Programs
 					
 					String[] tokens = plaintext.split("\n\n");
 					
-					boolean attachedfiles =
-					
-					    (tokens.length > 1) ? true : false;
+					boolean attachedfiles = tokens.length > 1;
 					
 					for (String token : tokens)
 					
@@ -35155,7 +35042,7 @@ class Programs
 				
 				private JPanel createPanel(int t)
 				{
-					final int rows = 16, cols = 56;
+					final int rows = 16, cols = 60;
 					
 					Box vbox = Box.createVerticalBox();
 					
@@ -35203,9 +35090,9 @@ class Programs
 								
 								for (int i = 0; i < t; i++)
 								
-								    panels[i].setVisible(((i == index)
+								    panels[i].setVisible(
 								
-									|| !match) ? true : false);
+									(i == index) || !match);
 							}
 							
 							else for (int i = 0; i < t; i++)
@@ -35774,14 +35661,14 @@ class Programs
 			private class ButtonListener extends MouseAdapter implements ActionListener
 			{
 			
-				private boolean clicked = false;
+				private boolean clicked;
 				
-				private boolean connecting = false;
-				private boolean decrypting = false;
-				private boolean    listing = false;
-				private boolean    reading = false;
-				private boolean   deleting = false;
-				private boolean   quitting = false;
+				private boolean connecting;
+				private boolean decrypting;
+				private boolean    listing;
+				private boolean    reading;
+				private boolean   deleting;
+				private boolean   quitting;
 				
 				
 				//  the threads that are created for listing, reading, and
@@ -35836,11 +35723,13 @@ class Programs
 					//  messages to update the message or read all screen.
 					
 					if ((e.getSource() == emailpanel.listbutton)
-					 || (e.getSource() == emailpanel.readbutton)
+					 || (e.getSource() == emailpanel.readbutton))
 				     //  || (e.getSource() == emailpanel.quitbutton)
-					)
 					
-					    if (clicked) return;  else clicked = true;
+					
+					    if (clicked) return;
+					
+					    else clicked = true;
 					
 					
 					
@@ -37575,17 +37464,10 @@ class Programs
 					
 					finally
 					{
-						if (listing || decrypting || reading || quitting) return;
+						if (listing || decrypting
+						 || reading || quitting) return;
 						
-						new Thread(() ->
-						{
-							try { Thread.sleep(500); }
-							
-							catch (InterruptedException ex) {  };
-							
-							clicked = false;
-						
-						}).start();
+						clicked = false;
 					}
 				}
 				
@@ -38302,7 +38184,7 @@ class Programs
 		
 		
 		
-		public String convertFilesToText(
+		private String convertFilesToText(
 		
 			ArrayList<String> filedesclist,
 			ArrayList<byte[]> filedatalist)
@@ -38344,7 +38226,7 @@ class Programs
 		}
 		
 		
-		public Object[] convertTextToFiles(String text)
+		private Object[] convertTextToFiles(String text)
 		{
 			String[] tokens = text.split("\n\n");
 			
@@ -38452,8 +38334,7 @@ class Programs
 		
 		
 		
-		
-		public int[] fontSizeToFrameSize(float fontsize)
+		private int[] fontSizeToFrameSize(float fontsize)
 		{
 			//  scales the frame size to the font size
 			
@@ -39296,13 +39177,44 @@ class Programs
 			
 			return Math.min(m, n);
 		}
+		
+		
+		public static boolean showCheckBoxMessageDialog(
+		
+			Component parent, String message, String checkboxmessage)
+		{
+			//  Displays a JOptionPane message dialog
+			//  that includes a check box option
+			
+			JTextArea textarea = new JTextArea(message);
+			textarea.setEditable(false);
+			textarea.setFont(labelfont);
+			textarea.setBackground(new
+			    JPanel().getBackground());
+			
+			JLabel label = new JLabel(checkboxmessage);
+			label.setFont(labelfont);
+			Box hbox = Box.createHorizontalBox();
+			Component hstrut = Box.createHorizontalStrut(4);
+			Component vstrut = Box.createVerticalStrut(8);
+			JCheckBox checkbox = new JCheckBox();
+			hbox.add(checkbox); hbox.add(hstrut); hbox.add(label);
+			Box vbox = Box.createVerticalBox();
+			vbox.add(textarea);
+			vbox.add(hbox);
+			
+			label.addMouseListener(new MouseAdapter()
+			{ public void mouseClicked(MouseEvent e)
+			{ checkbox.setSelected(!checkbox.isSelected()); } });
+			
+			JOptionPane.showMessageDialog(parent, vbox);
+			
+			return checkbox.isSelected();
+		}
 	}
 	
 	
 	//  End class Mail
-	
-	
-	
 	
 	
 	
@@ -39317,96 +39229,6 @@ class Programs
 	//  be rewritten so the variables could be passed by reference (such
 	//  as inside an array) instead of by value which just creates a copy
 	//  instead of a reference or pointer to a variable.
-	
-	
-	
-	
-	private boolean isCSV(String text)
-	{
-		//  tests if a string contains
-		//  character separated values
-		//  (tabs, commas, or semicolons)
-		
-		String delimiter;
-		
-		if (text.contains("\t")) delimiter = "\t";
-		
-		else if (text.contains(",")) delimiter = ",";
-		
-		else delimiter = ";";
-		
-		text = text .replaceAll(delimiter,
-		
-		    " " + delimiter + " ");
-		
-		String[] rows = text.split("\n");
-		
-		//  Count the number of elements in the first row
-		
-		String[] values = rows[0].split(delimiter);
-		
-		if (values.length == 1) return false;
-		
-		//  Test for an indented text document
-		
-		if (rows[0].trim().split(delimiter)
-		
-		    .length == 1) return false;
-		
-		int prevcount = values.length;
-		
-		//  test if all rows have the
-		//  same number of elements
-		
-		for (String row : rows)
-		{
-			values = row.split(delimiter);
-			
-			if (values.length != prevcount)
-			
-			    return false;
-			
-			prevcount = values.length;
-		}
-		
-		return true;
-	}
-	
-	
-	
-	
-	private boolean showCheckBoxMessageDialog(
-	
-		Component parent, String message, String checkboxmessage)
-	{
-		//  Displays a JOptionPane message dialog
-		//  that includes a check box option
-		
-		JTextArea textarea = new JTextArea(message);
-		textarea.setEditable(false);
-		textarea.setFont(labelfont);
-		textarea.setBackground(new
-		    JPanel().getBackground());
-		
-		JLabel label = new JLabel(checkboxmessage);
-		label.setFont(labelfont);
-		Box hbox = Box.createHorizontalBox();
-		Component hstrut = Box.createHorizontalStrut(4);
-		Component vstrut = Box.createVerticalStrut(8);
-		JCheckBox checkbox = new JCheckBox();
-		hbox.add(checkbox); hbox.add(hstrut); hbox.add(label);
-		Box vbox = Box.createVerticalBox();
-		vbox.add(textarea);
-		vbox.add(hbox);
-		
-		label.addMouseListener(new MouseAdapter()
-		{ public void mouseClicked(MouseEvent e)
-		{ checkbox.setSelected(!checkbox.isSelected()); } });
-		
-		JOptionPane.showMessageDialog(parent, vbox);
-		
-		return checkbox.isSelected();
-	}
 	
 	
 }
@@ -39471,8 +39293,8 @@ class Undo
 	private boolean undo;
 	private boolean redo;
 	
-	private boolean enter  = false;
-	private boolean delete = false;
+	private boolean enter;
+	private boolean delete;
 	
 	
 	public Undo(JTextArea textarea)
@@ -39692,6 +39514,115 @@ class Undo
 
 
 
+
+class FileType
+{
+
+	//  This class detects if the file type
+	//  is text, table, or html
+	
+	public static boolean isText(String str)
+	{
+		byte[] data = str.getBytes();
+		
+		for (byte c : data)
+		
+		    if (!Character.isDefined(c))
+		
+			return false;
+		
+		try
+		{	byte[] utf8Bytes = str.getBytes("UTF8");
+			
+			new String(utf8Bytes, "UTF8");
+		}
+		
+		catch (UnsupportedEncodingException ex)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
+	public static boolean isTable(String str)
+	{
+		//  tests if a string contains
+		//  character separated values
+		//  (tabs, commas, or semicolons)
+		
+		String delimiter;
+		
+		if (str.contains("\t")) delimiter = "\t";
+		
+		else if (str.contains(",")) delimiter = ",";
+		
+		else delimiter = ";";
+		
+		str = str .replaceAll(delimiter,
+		
+		    " " + delimiter + " ");
+		
+		String[] rows = str.split("\n");
+		
+		//  Count the number of elements in the first row
+		
+		String[] values = rows[0].split(delimiter);
+		
+		if (values.length == 1) return false;
+		
+		//  Test for an indented text document
+		
+		if (rows[0].trim().split(delimiter)
+		
+		    .length == 1) return false;
+		
+		int prevcount = values.length;
+		
+		//  test if all rows have the
+		//  same number of elements
+		
+		for (String row : rows)
+		{
+			values = row.split(delimiter);
+			
+			if (values.length != prevcount)
+			
+			    return false;
+			
+			prevcount = values.length;
+		}
+		
+		return true;
+	}
+	
+	
+	public static boolean isHTML(String str)
+	{
+	
+		//  Test if the text starts with <! and contains the word html or htm
+		
+		if (str.startsWith("<") || str.startsWith("<!"))
+		{
+			int index = str.indexOf("\n");
+			
+			if (index != 0)
+			{
+				String s = str.substring(0, index).toLowerCase();
+				
+				if (s.contains("html") || s.contains("doctype"))
+				
+				    return true;
+			}
+		}
+		
+		return false;
+	}
+}
+
+
+//  End class FileType
 
 
 
@@ -41282,7 +41213,9 @@ class EncryptDirectory
 		long seconds = (endtime - starttime) / 1000;
 		
 		
-		if (canceled) { append(__.canceled); running = false; return; }
+		if (canceled) { append(__.canceled);
+		
+		    running = false; return; }
 		
 		
 		int totalfiles = 0;
@@ -41654,7 +41587,7 @@ class PublicKeyRing
 		
 		String clipboardtext = "";
 		
-		Clipboard cb = Toolkit .getDefaultToolkit() .getSystemClipboard();
+		Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
 		
 		DataFlavor flavor = DataFlavor.stringFlavor;
 		
@@ -43649,9 +43582,7 @@ class PopMail
 		
 		String response = readLine(in);
 		
-		return response.trim().startsWith("+OK") ?
-		
-		   true : false;
+		return response.trim().startsWith("+OK");
 	}
 	
 	
@@ -43889,9 +43820,7 @@ class PopMail
 		
 		String response = readLine(in);
 		
-		return response.trim().startsWith("+OK") ?
-		
-		   true : false;
+		return response.trim().startsWith("+OK");
 	}
 	
 	
@@ -43982,9 +43911,7 @@ class PopMail
 		
 		String response = readLine(in);
 		
-		return response.trim().startsWith("+OK") ?
-		
-		   true : false;
+		return response.trim().startsWith("+OK");
 	}
 	
 	
@@ -44065,9 +43992,7 @@ class PopMail
 		
 		String response = readLine(in);
 		
-		return response.trim().startsWith("+OK") ?
-		
-		   true : false;
+		return response.trim().startsWith("+OK");
 	}
 	
 	
@@ -44087,9 +44012,7 @@ class PopMail
 		
 		out = null;  socket = null;
 		
-		return response.trim().startsWith("+OK") ?
-		
-		   true : false;
+		return response.trim().startsWith("+OK");
 	}
 	
 	
@@ -48086,7 +48009,7 @@ class Icons
 		
 		private int width, height;
 		
-		private boolean resized = false;
+		private boolean resized;
 		
 		private int freq = 16; // 16 x per sec
 		
@@ -49577,7 +49500,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	private JPanel keyboardpanel;
 	
-	private boolean showkeyboard = false;
+	private boolean showkeyboard;
 	
 	
 	
@@ -49884,8 +49807,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			singlebutton.setVisible(false);
 			doublebutton.setVisible(false);
 			
-			quadbutton.setVisible(n - n1 >  4 ? true : false);
-			 octbutton.setVisible(n - n1 >= 8 ? true : false);
+			quadbutton.setVisible(n - n1 >  4);
+			 octbutton.setVisible(n - n1 >= 8);
 			
 			maxbutton.setVisible(quadbutton.isVisible());
 			
@@ -51283,7 +51206,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	private boolean validatePassphrase()
 	{
-	
 		boolean selectedvalue = false;
 		
 		while (true)
@@ -53300,7 +53222,8 @@ class PublicKey
 		
 		char[] charray = teststr.toCharArray();
 		
-		boolean size8 = false, size16 = false;
+		boolean size8  = false;
+		boolean size16 = false;
 		
 		for (char c : charray)
 		{
@@ -53793,7 +53716,8 @@ class PublicKey
 		
 		char[] charray = teststr.toCharArray();
 		
-		boolean size8 = false, size16 = false;
+		boolean size8  = false;
+		boolean size16 = false;
 		
 		for (char c : charray)
 		{
@@ -62621,8 +62545,8 @@ class Cipher
 	//  SK = the hash of the passphrase for private key encryption or SK = the public
 	//  key agreement or shared secret key for public key encryption. The encrypted one-
 	//  time encryption key k' can be prepended or appended to the ciphertext because
-	//  only the encryptor or recipient knows the value of SK to decrypt k' and recover
-	//  the one-time encryption key k.
+	//  only the encryptor, decryptor, or recipient knows the value of SK to decrypt
+	//  k' and recover the one-time encryption key k.
 	
 	//  An encrypted or secret message can be called a cryptogram or cryptograph, or it
 	//  can be called cipherdata, ciphertext, or cipher. Cipher can refer to the secret
@@ -62677,19 +62601,19 @@ class Cipher
 	
 	//  Padding is used to make an array or file a multiple of the cipher block size
 	//  such as a multiple of 32 bytes or 256 bits and to test if the cipherdata de-
-	//  crypted properly because encryption and decryption generate random bytes of
-	//  data unless the correct decryption key is used. The padding also has to have
-	//  a pattern that can be detected so that it can be removed without removing bytes
-	//  from the plaindata or plaintext. Of course any non-random pattern could be used
-	//  to pad the plaindata. (For example, the padding could append a 1 and then the
-	//  Fibonacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded method
-	//  could test if each byte is the sum of the two preceding bytes modulo 256 to re-
-	//  move the padding.) But the simplest pattern is to repeat the last char or byte
-	//  and then use a repeating increment such as 1,2,3,4,5,6,7,8,... The padding could
-	//  also append the number of bytes which would require up to five bytes for files
-	//  larger than 4 G unless the size is reduced modulo 256 or 64 K. Appending the
-	//  number of bytes would verify the length of the message, but it wouldn't verify
-	//  the integrity of the message unless a hash value were appended to the padding.
+	//  crypted properly because encryption and decryption generate random bytes of data
+	//  unless the correct decryption key is used. The padding also has to have a pat-
+	//  tern that can be detected so that it can be removed without removing bytes from
+	//  the plaindata or plaintext. Of course any non-random pattern could be used to
+	//  pad the plaindata. (For example, the padding could append a 1 and then the Fibo-
+	//  nacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded method could
+	//  test if each byte is the sum of the two preceding bytes modulo 256 to remove the
+	//  padding.) But the simplest pattern is to repeat the last char or byte and then
+	//  use a repeating increment such as 1,2,3,4,5,6,7,8,... The padding could also ap-
+	//  pend the number of bytes which would require up to five bytes for files larger
+	//  than 4 G unless the size is reduced modulo 256 or 64 K. Appending the number of
+	//  bytes would verify the length of the message, but it wouldn't verify the integ-
+	//  rity of the message unless a hash value were appended to the padding.
 	//
 	//  No padding scheme is perfect because if the user intentionally creates a docu-
 	//  ment that uses the padding scheme, then the test will return true even though
@@ -62712,7 +62636,7 @@ class Cipher
 	//  of Fibonacci numbers modulo 256).
 	//
 	//  For email encryption the front of the array should be padded so the recipient
-	//  can download the tops of the messages and decrypt the partial ciphertexts to 
+	//  can download the tops of the messages and decrypt the partial ciphertexts to
 	//  read the subject lines and from addresses. Otherwise the program would have to
 	//  do a randomness test to determine if the ciphertext decrypted correctly. Any
 	//  randomness test would work for plaintext because decryption generates perfectly
@@ -63061,12 +62985,12 @@ class Cipher
 	private static byte[] oneTimeEncryptionKey(byte[] encryptionkey)
 	{
 	
-		//  Choose a one-time secret encryption key k
+		//  Chooses a one-time secret encryption key k
 		//  using multiple sources of entropy
 		//
-		//  (The three sources of entropy are the user's private key,
-		//  the message, and the current time in nano seconds.
-		//  Secure Random is too slow for file encryption.)
+		//  (The three sources of entropy are the user's private key or
+		//  passphrase, the plaintext message, and the current time in
+		//  nano seconds. Secure Random is too slow for file encryption.)
 		
 		
 		//  Generate random bytes using the current time
@@ -63130,7 +63054,7 @@ class Cipher
 		
 		//  (encrypted encryption key k' = one-time encryption key k (+) static / file key e)
 		//
-		//   k'= k (+) e   random bytes          plaindata or cipherdata
+		//   k'= k (+) e   random bytes           plaindata or cipherdata
 		//    xxxx xxxx     xxxx xxxx     xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx ....
 		
 		
@@ -63335,21 +63259,20 @@ class Cipher
 	{
 		//  Encrypts a large file using the FileChannelReader and FileChannel Writer class
 		
-		//  The encryption method was tested by hashing a large file before encryption and
-		//  hashing the file after decryption and verifying that the hashes are identical
+		//  The encryption method was tested by hashing a large file before
+		//  and after encryption and verifying that the hashes are identical
 		
-		//  Note that using using force() after each write operation makes file
-		//  encryption and decryption one-third slower. The updates will be written
-		//  to storage anyway because the file channel reader and writer are closed
-		//  at the end of the method.
+		//  Note that using using force() after each write operation makes file encryption
+		//  and decryption one-third slower. The updates will be written to storage anyway
+		//  because the file channel reader and writer are closed at the end of the method.
 		
 		
 		//  Set the array size for the buffer and read the array size plaindata;
 		//  write the encrypted encryption key to the file channel writer and
 		//  write the encrypted encryption key hash to the file channel writer
-		//  using a 32-byte buffer; for each array size read the plaindata from
-		//  the file channel reader while bytes read >= 0, encrypt the plaindata,
-		//  and write the cipherdata to the file channel writer.
+		//  using a 32-byte buffer; then for each array size read the plaindata
+		//  from the file channel reader while bytes read >= 0, encrypt the
+		//  plaindata, and write the cipherdata to the file channel writer.
 		
 		//  The read positions are 0*size, 1*size, 2*size, 3*size, 4*size, ...
 		//  the write positions are 64, 64 + padlen + 1*size, 64 + padlen + 2*size, ...
@@ -63551,16 +63474,16 @@ class Cipher
 	{
 		//  Decrypts a large file using the FileChannelReader and FileChannel Writer class
 		
-		//  The encryption method was tested by hashing a large file before encryption and
-		//  hashing the file after decryption and verifying that the hashes are identical
+		//  The encryption method was tested by hashing a large file before
+		//  and after encryption and verifying that the hashes are identical
 		
 		
 		//  Read the encrypted encryption key from the file channel reader and
 		//  read the encrypted encryption key hash from the file channel reader
-		//  using a 32-byte buffer; set the arraysize for the byte buffer; read
-		//  the array size cipherdata from the file channel reader while bytes
-		//  read >= 0, decrypt the cipherdata, and write the plaindata to the
-		//  file channel writer.
+		//  using a 32-byte buffer; set the arraysize for the byte buffer; then
+		//  for each array size read the cipherdata from the file channel reader
+		//  while bytes read >= 0, decrypt the cipherdata, and write the plaindata
+		//  to the file channel writer.
 		
 		//  The read positions are 64 + 0*size, 64 + 1*size, 64 + 2*size, 64 + 3*size, ...
 		//  the write positions are 0*size, 1*size - padlen - 64, 2*size - padlen - 64, ...
@@ -64682,11 +64605,11 @@ class Cipher
 	
 	
 	
-	//  The isRandom(byte[]) method should have more
-	//  tests for randomness because it returns true
-	//  for byte arrays such as the consecutive integers
-	//  { 0, 1, 2, 3, ..., n }
+	//  The isRandom(byte[]) method should have more tests for
+	//  randomness because it returns true for byte arrays such
+	//  as the consecutive integers { 0, 1, 2, 3, ..., n }
 	//
+	//  For example,
 	//
 	//  byte[] a = new byte[64*1024];
 	//
@@ -64694,7 +64617,7 @@ class Cipher
 	//
 	//  boolean random = Cipher.isRandom(a);
 	//
-	//  System.out.println("random == " + random);
+	//  System.out.println("random == " + random); // true
 	
 	
 	public static boolean isRandom(byte[] array)
@@ -64854,8 +64777,7 @@ class Cipher
 	
 	private static int countRuns(byte[] array)
 	{
-		//  counts the number of consecutive
-		//  sequences of ones and zeros
+		//  counts the number of consecutive sequences of zeros and ones
 		
 		//  01010101 has 8 runs, 00110011 has 4 runs,
 		//  00001111 has 2 runs, 11111111 has 1 run
@@ -64886,17 +64808,16 @@ class Cipher
 	public static byte[] passphraseToKey(String passphrase)
 	{
 	
-		//  This method converts a passphrase or string to an
-		//  encryption key, signature key, or file key which is
-		//  20 bytes or 160 bits.
+		//  This method converts a passphrase or string to an encryption
+		//  key, signature key, or file key which is 20 bytes or 160 bits.
 		//
-		//  If the string is 40 hex digits, then the string is
-		//  assumed to be the hash of the original passphrase
-		//  and the string is converted to a 20 byte array.
+		//  If the string is 40 hex digits, then the string is assumed to
+		//  be the hash of the original passphrase and the string is con-
+		//  verted to a 20 byte array.
 		//
-		//  If the string is empty or contains only white space
-		//  then the method returns a null byte array so that
-		//  the secret key gets assigned to null.
+		//  If the string is empty or contains only white space then the
+		//  method returns a null byte array so that the secret key gets
+		//  assigned to null.
 		
 		
 		passphrase = passphrase.trim();
@@ -67905,7 +67826,7 @@ class Math
 		
 		else
 		{	int precision = n.getPrecision() == 0 ?
-		
+			
 			    8 : n.getPrecision();
 			
 			for (int i = 0; i < m; i++)
@@ -71236,7 +71157,7 @@ class Number implements Comparable<Number>
 		
 		    p.subtract(1), p) .modPow(p, p);
 		
-		return residue.equals(1) ? true : false;
+		return residue.equals(1);
 	}
 	
 	
@@ -72696,20 +72617,20 @@ class Number implements Comparable<Number>
 	public Number modSqrt2(Number p)
 	{
 	
-		//  Cipolla's algorithm for modular square roots
-		//  uses a single modular exponentiation to find the
-		//  squre root of a number modulo p
+		//  Cipolla's algorithm for modular square roots uses a
+		//  single modular exponentiation to find the squre root
+		//  of a number modulo p
 		//
-		//  Cipolla's algorithm is faster than Tonelli's algo-
-		//  rithm if the totient has a large number of twos;
-		//  but it is slower for random moduli because the algo-
-		//  rithm has to do a modular exponentiation which re-
-		//  quires O(p^3) steps or operations and it also uses
-		//  complex multiplication which makes it 4 times slower.
+		//  Cipolla's algorithm is faster than Tonelli's algorithm
+		//  if the totient has a large number of twos; but it is
+		//  slower for random moduli because the algorithm has to
+		//  do a modular exponentiation which requires O(p^3) steps
+		//  or operations and it also uses complex multiplication
+		//  which makes it 4 times slower.
 		
 		
 		
-		//  Algorithm:
+		//  Modular square root algorithm:
 		//
 		//  Input:  a quadratic residule n modulo p
 		//  Output: a square root r = n^(1/2) mod p
@@ -73199,19 +73120,18 @@ class Number implements Comparable<Number>
 	
 	
 	
-	//   Formulas for pi
+	//   Iterative formulas for pi
 	//
-	//
-	//   (Archimedes) 
 	//
 	//   a[0] = 1; a[n+1] = (1 + 1 / (1 + 2 n)) a[n];
 	//
-	//                 pi = limit a[n]^2 / n
+	//   pi = limit a[n]^2 / n
 	//
-	//                           _          (n^2-n)/2
-	//   (Isaac Newton)  pi / 2\/2 == 4 (-1)         / (1 + 2 n)
+	//                           n
+	//   (Newton)  pi/4  ==  (-1)  / (1 + 2 n) == 1 - 1/3 + 1/5 - 1/7 + ...
 	//
-	//                             == + 1 + 1/3 - 1/5 - 1/7 + ...
+	//           _        (n^2-n)/2
+	//   pi / 2\/2 == (-1)         / (1 + 2 n) == 1 + 1/3 - 1/5 - 1/7 + ...
 	//
 	//
 	//                        ___  4 n^2 - 0    2 2  4 4  6 6  8 8
@@ -73220,7 +73140,7 @@ class Number implements Comparable<Number>
 	//
 	//
 	//                i pi
-	//   (L. Euler)  e    +  1 == 0
+	//   (L. Euler)  e     +  1 == 0
 	//
 	//    pi^2      __    1
 	//    ----  ==  \    ---   ==  1/1 + 1/4 + 1/9 + 1/16 + ...
@@ -73290,8 +73210,8 @@ class Number implements Comparable<Number>
 	//   A quadratically convergent formula for pi
 	//
 	//   (Eugene Salamin and Richard Brent)
-	//                         _
-	//   Set a0 = 1, b0 = 1/ \/2, s0 = 1/2, then iterate
+	//                          _
+	//   Set a0 = 1, b0 = 1 / \/2, s0 = 1/2, then iterate
 	//
 	//   a[k] = (a[k-1] + b[k-1])/2,
 	//            _____________
