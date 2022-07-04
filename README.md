@@ -25,12 +25,12 @@
 	Imap allows users to change the state of the messages on the server, but the POP mail protocol could
 	be amended or the email servers could be upgraded to include this feature. POP mail servers could
 	also be upgraded to allow multiple users to retrieve and delete emails by assigning a hash value or
-	time stamp to each message so that the retrieve and delete commands could use the number assigned to
-	the messages instead of the ordinal / cardinal numbers that are used to enumerate the messages.
-	Otherwise if multiple users list the emails and try to delete messages using the ordinal numbers,
-	the email messages on the clients' computers will not correspond to messages on the server computer
-	because the messages get re-numbered every time one of the users deletes a message and signs out,
-	and the wrong messages will get deleted or retrieved.
+	time stamp in milliseconds to each message so the retrieve and delete commands could use the number
+	assigned to the messages instead of the ordinal / cardinal numbers that are used to enumerate the
+	messages. Otherwise if multiple users list the emails and try to delete messages using the ordinal
+	numbers, the email messages on the clients' computers will not correspond to messages on the server
+	computer because the messages get re-numbered every time one of the users deletes a message and
+	signs out, and the wrong messages will get deleted or retrieved.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -131,29 +131,30 @@
 	modified so that checking a delete box doesn't do a read all button click which caused the screen com-
 	ponents to get resized every time a box was checked or unchecked and also caused the textarea setText
 	method to throw an exception if a check box was checked and unchecked; the reverse colors button was
-	modified so that the button is disabled while the program is listing or reading the messages; the
-	listing = true and reading = true statements were moved outside of the list and read threads so that
-	they get set immediately after the user clicks the list or read button or else the color button would
-	still be enabled until the list or read thread is started which caused two background colors to appear 
-	on the same list panel if two email tabs were open and the user clicked the reverse color button while
-	the program was listing the messages because Swing is not thread safe; an error in the passphrase dia-
-	log that caused the line width to stay at 56 chars if the user checked and unchecked the max cipher 
-	box and then clicked another button was corrected; the Delete menu item was modified so it also de-
-	letes folders by recursively listing the files in the directory, deleting the files, and then deleting
-	the empty folders because Java will not delete an un-empty directory; the PublicKey decrypt(String,
-	byte[]) method was modified so it can decrypt ciphertext using any delimiter for the prepended one-
-	time, transient or ephemeral public keys such as "\n\n", "-", or the base 16 chars 0 to f; a missing
-	statement in the send mail frame setFont method was added to assign the font parameter to the font
-	member / variable so that changing the retrieve mail frame font type also changes the send mail frame
-	font type; the Filechooser class was modified to use a static font type so the dialog box size doesn't
-	change if the font type is changed; the EncryptDirectory class was modified to test if each file ob-
-	ject is a file or a directory so the DataStream class doesn't try to read the file which caused it to
-	throw a java.io.FileNotFoundException for sub-directories; an error in the EncryptDirectory class that
-	caused it to display two JOptionPane dialogs was corrected; the directory label in the dialog was add-
-	ed to a disabled button to create a border around the label so the user knows to click on the label or
-	button to change the directory name; the JOptionPane static factory method showConfirmDialog() in the
-	EncryptDirectory class was replaced by the JOptionPane constructor so the dialog can be re-packed if
-	the user changes the directory or else the encrypt and decrypt buttons would collapse;
+	modified so that the button is disabled while the program is listing messages if more than one tab or
+	username is open; the listing = true and reading = true statements were moved outside of the list and
+	read threads so that they get set immediately after the user clicks the list or read button or else
+	the color button would still be enabled until the list or read thread is started which caused two
+	background colors to appear on the same list panel if two email tabs were open and the user clicked
+	the reverse color button while the program was listing the messages because Swing is not thread safe;
+	an error in the passphrase dialog that caused the line width to stay at 56 chars if the user checked
+	and unchecked the max cipher box and then clicked another button was corrected; the Delete menu item
+	was modified so it also deletes folders by recursively listing the files in the directory, deleting
+	the files, and then deleting the empty folders because Java will not delete an un-empty directory;
+	the PublicKey decrypt(String, byte[]) method was modified so it can decrypt ciphertext using any de-
+	limiter for the prepended one-time, transient or ephemeral public keys such as "\n\n", "-", or the
+	base 16 chars 0 to f; a missing statement in the send mail frame setFont method was added to assign
+	the font parameter to the font member / variable so that changing the retrieve mail frame font type
+	also changes the send mail frame font type; the Filechooser class was modified to use a static font
+	type so the dialog box size doesn't change if the font type is changed; the EncryptDirectory class
+	was modified to test if each file object is a file or a directory so the DataStream class doesn't try
+	to read the file which caused it to throw a java.io.FileNotFoundException for sub-directories; an
+	error in the EncryptDirectory class that caused it to display two JOptionPane dialogs was corrected;
+	the directory label in the dialog was added to a disabled button to create a border around the label
+	so the user knows to click on the label or button to change the directory name; the JOptionPane stat-
+	ic factory method showConfirmDialog() in the EncryptDirectory class was replaced by the JOptionPane
+	constructor so the dialog can be re-packed if the user changes the directory or else the encrypt and
+	decrypt buttons would collapse;
 	
 	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
 	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
@@ -184,24 +185,42 @@
 	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
 	Writer classes instead of the DataStream class because the encryption would throw an exception that
 	says java.lang.OutOfMemoryError:Java heap space; two decrypt methods that were misplaced in the File-
-	Encryptor class were removed; the PublicKeyDialog readDialogInput method was modified by moving the
-	frame.setSize statement so the dialog frame doesn't collapse sometimes; the FileChooser class was mod-
-	ified so the Dialog font style changes from plain to bold if the screen font size is less than 17
-	which makes the file names easier to read if the font size is small; the PublicKey isEncrypted(String)
-	method was modified so that it truncates the partial ciphertext if the text length is not a multiple
-	of 4 bytes because the isBase64(String) method would return false if the string was padded to a multi-
-	ple of 4; a statement was removed from the viewAttachedFile and saveAttachedFile methods which tested
-	if the file description was in base 64 and incorrectly converted plaintext file names that contain
-	multiples of 4 chars such as the word "file" or "filename" to unreadable file descriptions or non-
-	ascii chars; the find and replace dialog box was modified to display the number of occurrences and
-	the index of the search string just like the find / replace field on the menu bar;
+	Encryptor class were removed; a setPosition and setSize error in the PassphraseDialog was corrected
+	that caused the frame to collapse sometimes, and setWeight statements were added to prevent the frame
+	from collapsing; the position error only became obvious as the cause of the collapse after the set-
+	Weight statements were added which moved the buttons to the right and expanded the size of the dialog;
+	
+	the FileChooser class was modified so the Dialog font style changes from plain to bold if the screen
+	font size is less than 17 which makes the file names easier to read if the font size is small; the
+	PublicKey isEncrypted(String) method was modified so that it truncates the partial ciphertext if the
+	text length is not a multiple of 4 bytes because the isBase64(String) method would return false if the
+	string was padded to a multiple of 4; a statement was removed from the viewAttachedFile and saveAt-
+	tachedFile methods which tested if the file description was in base 64 and incorrectly converted
+	plaintext file names that contain multiples of 4 chars such as the word "file" or "filename" to un-
+	readable file descriptions or non-ascii chars; the find and replace dialog box was modified to dis-
+	play the number of occurrences and the index of the search string just like the find / replace field
+	on the menu bar, and setWeight statements were added to prevent the find and replace fields from mov-
+	ing as the number of occurrences text expands and contracts.
 	
 	the constructor parameters in the FileEncryptor, FileDecryptor, and PassphraseDialog classes were
-	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so
-	that JDialog frames can use these classes by passing their own reference pointer as the argument to
-	the constructor parameter and then the passphrase dialog box will be centered in the JDialog frame
-	instead of the JFrame; and the display method parameter in the Documents class was also changed from
-	JFrame to Window so the calling method can use a JFrame, JDialog, or a JWindow object.
+	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so that
+	JDialog frames can use these classes by passing their own reference pointer as the argument to the
+	constructor parameter and then the passphrase dialog box will be centered in the JDialog frame instead
+	of the JFrame; the display method parameter in the Documents class was also changed from JFrame to
+	Window so the calling method can use a JFrame, JDialog, or a JWindow object; an error in the FileType
+	class was corrected that caused some attached source code files to be displayed as image files because
+	they were not detected as text files;
+	
+	the FontTypeListener dialogs were changed to non-modal because there is no reason to use a modal win-
+	dow unless an input is required such as a password, passphrase, or file name, or the dialog is dis-
+	playing a message, warning, or error, or requesting a confirmation; the Icons and Documents display
+	methods were modified to use a non-modal dialog so the user can open more than one attached file si-
+	multaneously to view or compare two or more files and can leave the document or JDialog frame open
+	while continuing to retrieve, read, and send other email messages; removing this restriction required
+	adding an ArrayList to store the text or byte[] data to prevent the user from opening multiple copies
+	of the same attached file; and a setFont, setForeground, and setBackground method was added to the
+	Documents class so the email client can change the font, foreground and background colors of the open
+	dialogs if the user changes the font or color.
 	
 	
 	

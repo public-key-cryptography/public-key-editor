@@ -55,12 +55,12 @@
 	Imap allows users to change the state of the messages on the server, but the POP mail protocol could
 	be amended or the email servers could be upgraded to include this feature. POP mail servers could
 	also be upgraded to allow multiple users to retrieve and delete emails by assigning a hash value or
-	time stamp to each message so that the retrieve and delete commands could use the number assigned to
-	the messages instead of the ordinal / cardinal numbers that are used to enumerate the messages.
-	Otherwise if multiple users list the emails and try to delete messages using the ordinal numbers,
-	the email messages on the clients' computers will not correspond to messages on the server computer
-	because the messages get re-numbered every time one of the users deletes a message and signs out,
-	and the wrong messages will get deleted or retrieved.
+	time stamp in milliseconds to each message so the retrieve and delete commands could use the number
+	assigned to the messages instead of the ordinal / cardinal numbers that are used to enumerate the
+	messages. Otherwise if multiple users list the emails and try to delete messages using the ordinal
+	numbers, the email messages on the clients' computers will not correspond to messages on the server
+	computer because the messages get re-numbered every time one of the users deletes a message and
+	signs out, and the wrong messages will get deleted or retrieved.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
@@ -161,29 +161,30 @@
 	modified so that checking a delete box doesn't do a read all button click which caused the screen com-
 	ponents to get resized every time a box was checked or unchecked and also caused the textarea setText
 	method to throw an exception if a check box was checked and unchecked; the reverse colors button was
-	modified so that the button is disabled while the program is listing or reading the messages; the
-	listing = true and reading = true statements were moved outside of the list and read threads so that
-	they get set immediately after the user clicks the list or read button or else the color button would
-	still be enabled until the list or read thread is started which caused two background colors to appear 
-	on the same list panel if two email tabs were open and the user clicked the reverse color button while
-	the program was listing the messages because Swing is not thread safe; an error in the passphrase dia-
-	log that caused the line width to stay at 56 chars if the user checked and unchecked the max cipher 
-	box and then clicked another button was corrected; the Delete menu item was modified so it also de-
-	letes folders by recursively listing the files in the directory, deleting the files, and then deleting
-	the empty folders because Java will not delete an un-empty directory; the PublicKey decrypt(String,
-	byte[]) method was modified so it can decrypt ciphertext using any delimiter for the prepended one-
-	time, transient or ephemeral public keys such as "\n\n", "-", or the base 16 chars 0 to f; a missing
-	statement in the send mail frame setFont method was added to assign the font parameter to the font
-	member / variable so that changing the retrieve mail frame font type also changes the send mail frame
-	font type; the Filechooser class was modified to use a static font type so the dialog box size doesn't
-	change if the font type is changed; the EncryptDirectory class was modified to test if each file ob-
-	ject is a file or a directory so the DataStream class doesn't try to read the file which caused it to
-	throw a java.io.FileNotFoundException for sub-directories; an error in the EncryptDirectory class that
-	caused it to display two JOptionPane dialogs was corrected; the directory label in the dialog was add-
-	ed to a disabled button to create a border around the label so the user knows to click on the label or
-	button to change the directory name; the JOptionPane static factory method showConfirmDialog() in the
-	EncryptDirectory class was replaced by the JOptionPane constructor so the dialog can be re-packed if
-	the user changes the directory or else the encrypt and decrypt buttons would collapse;
+	modified so that the button is disabled while the program is listing messages if more than one tab or
+	username is open; the listing = true and reading = true statements were moved outside of the list and
+	read threads so that they get set immediately after the user clicks the list or read button or else
+	the color button would still be enabled until the list or read thread is started which caused two
+	background colors to appear on the same list panel if two email tabs were open and the user clicked
+	the reverse color button while the program was listing the messages because Swing is not thread safe;
+	an error in the passphrase dialog that caused the line width to stay at 56 chars if the user checked
+	and unchecked the max cipher box and then clicked another button was corrected; the Delete menu item
+	was modified so it also deletes folders by recursively listing the files in the directory, deleting
+	the files, and then deleting the empty folders because Java will not delete an un-empty directory;
+	the PublicKey decrypt(String, byte[]) method was modified so it can decrypt ciphertext using any de-
+	limiter for the prepended one-time, transient or ephemeral public keys such as "\n\n", "-", or the
+	base 16 chars 0 to f; a missing statement in the send mail frame setFont method was added to assign
+	the font parameter to the font member / variable so that changing the retrieve mail frame font type
+	also changes the send mail frame font type; the Filechooser class was modified to use a static font
+	type so the dialog box size doesn't change if the font type is changed; the EncryptDirectory class
+	was modified to test if each file object is a file or a directory so the DataStream class doesn't try
+	to read the file which caused it to throw a java.io.FileNotFoundException for sub-directories; an
+	error in the EncryptDirectory class that caused it to display two JOptionPane dialogs was corrected;
+	the directory label in the dialog was added to a disabled button to create a border around the label
+	so the user knows to click on the label or button to change the directory name; the JOptionPane stat-
+	ic factory method showConfirmDialog() in the EncryptDirectory class was replaced by the JOptionPane
+	constructor so the dialog can be re-packed if the user changes the directory or else the encrypt and
+	decrypt buttons would collapse;
 	
 	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
 	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
@@ -214,24 +215,42 @@
 	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
 	Writer classes instead of the DataStream class because the encryption would throw an exception that
 	says java.lang.OutOfMemoryError:Java heap space; two decrypt methods that were misplaced in the File-
-	Encryptor class were removed; the PublicKeyDialog readDialogInput method was modified by moving the
-	frame.setSize statement so the dialog frame doesn't collapse sometimes; the FileChooser class was mod-
-	ified so the Dialog font style changes from plain to bold if the screen font size is less than 17
-	which makes the file names easier to read if the font size is small; the PublicKey isEncrypted(String)
-	method was modified so that it truncates the partial ciphertext if the text length is not a multiple
-	of 4 bytes because the isBase64(String) method would return false if the string was padded to a multi-
-	ple of 4; a statement was removed from the viewAttachedFile and saveAttachedFile methods which tested
-	if the file description was in base 64 and incorrectly converted plaintext file names that contain
-	multiples of 4 chars such as the word "file" or "filename" to unreadable file descriptions or non-
-	ascii chars; the find and replace dialog box was modified to display the number of occurrences and
-	the index of the search string just like the find / replace field on the menu bar;
+	Encryptor class were removed; a setPosition and setSize error in the PassphraseDialog was corrected
+	that caused the frame to collapse sometimes, and setWeight statements were added to prevent the frame
+	from collapsing; the position error only became obvious as the cause of the collapse after the set-
+	Weight statements were added which moved the buttons to the right and expanded the size of the dialog;
+	
+	the FileChooser class was modified so the Dialog font style changes from plain to bold if the screen
+	font size is less than 17 which makes the file names easier to read if the font size is small; the
+	PublicKey isEncrypted(String) method was modified so that it truncates the partial ciphertext if the
+	text length is not a multiple of 4 bytes because the isBase64(String) method would return false if the
+	string was padded to a multiple of 4; a statement was removed from the viewAttachedFile and saveAt-
+	tachedFile methods which tested if the file description was in base 64 and incorrectly converted
+	plaintext file names that contain multiples of 4 chars such as the word "file" or "filename" to un-
+	readable file descriptions or non-ascii chars; the find and replace dialog box was modified to dis-
+	play the number of occurrences and the index of the search string just like the find / replace field
+	on the menu bar, and setWeight statements were added to prevent the find and replace fields from mov-
+	ing as the number of occurrences text expands and contracts.
 	
 	the constructor parameters in the FileEncryptor, FileDecryptor, and PassphraseDialog classes were
-	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so
-	that JDialog frames can use these classes by passing their own reference pointer as the argument to
-	the constructor parameter and then the passphrase dialog box will be centered in the JDialog frame
-	instead of the JFrame; and the display method parameter in the Documents class was also changed from
-	JFrame to Window so the calling method can use a JFrame, JDialog, or a JWindow object.
+	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so that
+	JDialog frames can use these classes by passing their own reference pointer as the argument to the
+	constructor parameter and then the passphrase dialog box will be centered in the JDialog frame instead
+	of the JFrame; the display method parameter in the Documents class was also changed from JFrame to
+	Window so the calling method can use a JFrame, JDialog, or a JWindow object; an error in the FileType
+	class was corrected that caused some attached source code files to be displayed as image files because
+	they were not detected as text files;
+	
+	the FontTypeListener dialogs were changed to non-modal because there is no reason to use a modal win-
+	dow unless an input is required such as a password, passphrase, or file name, or the dialog is dis-
+	playing a message, warning, or error, or requesting a confirmation; the Icons and Documents display
+	methods were modified to use a non-modal dialog so the user can open more than one attached file si-
+	multaneously to view or compare two or more files and can leave the document or JDialog frame open
+	while continuing to retrieve, read, and send other email messages; removing this restriction required
+	adding an ArrayList to store the text or byte[] data to prevent the user from opening multiple copies
+	of the same attached file; and a setFont, setForeground, and setBackground method was added to the
+	Documents class so the email client can change the font, foreground and background colors of the open
+	dialogs if the user changes the font or color.
 	
 	
 	
@@ -1984,9 +2003,9 @@ class __
 		"save file dialog box.\n\n" +
 		
 		"You can close the popup window by pressing the escape key or enter key on the " +
-		"keyboard. You can also change the size of an image by moving the mouse wheel if " +
-		"the caret / cursor is over the image. (If you don't have a mouse you can use the " +
-		"arrow keys to change the image size.)\n\n" +
+		"keyboard if the popup window has the focus. You can also change the size of an " +
+		"image by moving the mouse wheel if the caret / cursor is over the image. (If you " +
+		"don't have a mouse you can use the arrow keys to change the image size.)\n\n" +
 		
 		"If the (decrypted or unencrypted) message starts with a line that has the word " +
 		"HTML or html in it, a popup window will display the document. If the html document " +
@@ -3451,6 +3470,8 @@ class Programs
 					    setCurrentLineTextField();
 					
 					if (e.getSource() == currentlinefield)
+					
+					    //  Select the current line field text
 					
 					    currentlinefield.selectAll();
 				}
@@ -5270,14 +5291,23 @@ class Programs
 				
 				if (e.getSource() == undobutton) undo();
 				if (e.getSource() == redobutton) redo();
+			}
+			
+			public void undo()
+			{
+				textareapanel.undo.undo();
 				
 				textareapanel.filechanged = true;
-				
 				textareapanel.textarea.requestFocusInWindow();
 			}
 			
-			public void undo() { textareapanel.undo.undo(); }
-			public void redo() { textareapanel.undo.redo(); }
+			public void redo()
+			{
+				textareapanel.undo.redo();
+				
+				textareapanel.filechanged = true;
+				textareapanel.textarea.requestFocusInWindow();
+			}
 		}
 		
 		
@@ -5889,8 +5919,6 @@ class Programs
 							{
 								setVisible(false);
 							}
-							
-							textarea3.setText(countNumber(text1, matchcase));
 						}
 						
 						
@@ -5910,6 +5938,8 @@ class Programs
 							    { control = false; return; }
 							
 							
+							String text1 = textfield1.getText().trim();
+							
 							if ((e.getSource() == textfield1) && (keychar != vk_enter))
 							{
 								//  If there are any capital letters in the string,
@@ -5917,11 +5947,9 @@ class Programs
 								
 								matchcase = false;
 								
-								String str = textfield1.getText().trim();
-								
-								for (int i = 0; i < str.length(); i++)
+								for (int i = 0; i < text1.length(); i++)
 								{
-									int ch = str.charAt(i);
+									int ch = text1.charAt(i);
 									
 									if ((ch >= 'A') && (ch <= 'Z'))
 									{
@@ -5936,6 +5964,8 @@ class Programs
 								     matchcasebox.setSelected(true);
 								else matchcasebox.setSelected(false);
 							}
+							
+							textarea3.setText(countNumber(text1, matchcase));
 						}
 						
 						
@@ -5963,8 +5993,6 @@ class Programs
 								{
 									replacebutton.doClick(clicktime);
 								}
-								
-								textarea3.setText(countNumber(text1, matchcase));
 								
 								setCurrentLineTextField();
 							}
@@ -6024,8 +6052,7 @@ class Programs
 					
 					textarea3.setEditable(false);
 					textarea3.setForeground(new Color(0x080808));
-					textarea3.setBackground(new JPanel()
-					    .getBackground());
+					textarea3.setBackground(new JPanel().getBackground());
 					
 					
 					FocusAdapter focusadapter = new FocusAdapter()
@@ -6084,11 +6111,13 @@ class Programs
 					Box hbox1 = Box.createHorizontalBox();
 					
 					hbox1.add(matchcasebox);
+					
 					hbox1.add(textfield1);
 					hbox1.add(Box.createHorizontalStrut(10));
-					hbox1.add(textfield2);
 					
+					hbox1.add(textfield2);
 					hbox1.add(Box.createHorizontalStrut(10));
+					
 					hbox1.add(textarea3);
 					
 					
@@ -6096,9 +6125,12 @@ class Programs
 					
 					hbox2.add(prevbutton);
 					hbox2.add(Box.createHorizontalStrut(10));
+					
 					hbox2.add(findbutton);
 					hbox2.add(Box.createHorizontalStrut(10));
+					
 					hbox2.add(replacebutton);
+					
 					
 					JPanel panel = new JPanel();
 					
@@ -6107,13 +6139,14 @@ class Programs
 					Gbc gbc = new Gbc();
 					gbc.setPosition(0, 0);
 					gbc.setFill(Gbc.both);
+					gbc.setWeight(100, 100);
 					
 					panel.add(hbox1, gbc);
 					
 					gbc = new Gbc();
 					gbc.setPosition(0, 1);
-					gbc.setAnchor(Gbc.left);
 					gbc.setFill(Gbc.both);
+					gbc.setWeight(100, 100);
 					
 					panel.add(hbox2, gbc);
 					
@@ -6379,9 +6412,9 @@ class Programs
 				
 				String[] tokens = null;
 				
-				//  Pattern.quote returns a literal pattern String for the
-				//  specified String. Meta characters or escape sequences
-				//  in the input sequence are given no special meaning.
+				//  Pattern.quote(String) returns a literal pattern String
+				//  for the specified String. Meta characters or escape se-
+				//  quences in the input are given no special meaning.
 				
 				String regex = Pattern.quote(text1);
 				
@@ -7233,14 +7266,13 @@ class Programs
 				
 				panel.setVisible(bool);
 				
-				//  textfield.requestFocusInWindow();
-				//
-				//  textfield.setText("");
-				
 				currentlinefield.requestFocusInWindow();
+				
 				currentlinefield.setText("");
 				
-				setFont(font); setColor();
+				setFont(font);
+				
+				setColor();
 			}
 			
 			
@@ -7261,6 +7293,7 @@ class Programs
 				currentlinefield.setEditable(true);
 				currentlinefield.setBackground(
 				    new JPanel().getBackground());
+				
 				
 				currentlinefield.addFocusListener( new FocusAdapter()
 				{
@@ -7742,6 +7775,7 @@ class Programs
 				fc.setDialogTitle(__.hashfile);
 				
 				int choice = fc.showOpenDialog(frame);
+				
 				if (choice == JFileChooser.APPROVE_OPTION)
 				
 				    selectedfile = fc.getSelectedFile();
@@ -8464,14 +8498,12 @@ class Programs
 			
 			private JCheckBox stylebox;
 			
-			private final boolean[] ok
-			
-			   = new boolean[] { false };
+			Font font0;
 			
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				Font font0 = font;
+				font0 = font;
 				
 				style = (font != null) ?
 				
@@ -8481,23 +8513,9 @@ class Programs
 				
 				//  JDialog setVisible() blocks
 				//  until the dialog is disposed
-				//  because modal is set to true
+				//  only if modal is set to true
 				
 				dialog.setVisible(true);
-				
-				
-				//  Set the new font
-				
-				if ((fontname != null) && !fontname.isEmpty())
-				
-				    font = new Font(fontname, style, (int) fontsize);
-				
-				fontname  = font.getName();
-				fontstyle = font.getStyle();
-				fontsize  = font.getSize();
-				
-				if (ok[0]) setFont1(font);
-				else       setFont1(font0);
 			}
 			
 			
@@ -8538,7 +8556,7 @@ class Programs
 			}
 			
 			
-			private JDialog getFontDialog(final Font font)
+			private JDialog getFontDialog(Font font)
 			{
 				//  The font dialog allows the user to select a font type
 				//  and shows the user what each font type looks like as
@@ -8587,10 +8605,12 @@ class Programs
 				scrollpane.setViewportView(vbox);
 				
 				
-				//        [ OK ] [ Cancel ]
-				//
-				//       [x] bold  font name
 				//   ____________________________
+				//  |                            |
+				//  |     [ OK ] [ Cancel ]      |
+				//  |                            |
+				//  |    [x] bold  font name     |
+				//  |____________________________|
 				//  |____________________________|
 				//  |____________________________|
 				//  |____________________________|
@@ -8633,7 +8653,7 @@ class Programs
 				vbox.add(Box.createVerticalStrut(10)); vbox.add(scrollpane);
 				
 				
-				boolean modal = true;
+				boolean modal = false;
 				
 				String title = __.selectfonttype;
 				
@@ -8641,25 +8661,46 @@ class Programs
 				
 				dialog.setTitle(title);
 				
+				
 				//  Clicking ok or cancel or pressing
 				//  the escape key closes the dialog
 				
 				okbutton .addActionListener( new ActionListener()
-				{ public void actionPerformed(ActionEvent e)
-				{ ok[0] = true;  dialog.dispose(); } } );
+				{
+				    public void actionPerformed(ActionEvent e)
+				    {
+					//  Set the new font
+					
+					Font font1 = font0;
+					
+					if ((fontname != null) && !fontname.isEmpty())
+					
+					    font1 = new Font(fontname, style, (int) fontsize);
+					
+					fontname  = font1.getName();
+					fontstyle = font1.getStyle();
+					fontsize  = font1.getSize();
+					
+					setFont1(font1);
+					
+					dialog.dispose();
+				} } );
+				
 				
 				cancelbutton .addActionListener( new ActionListener()
 				{ public void actionPerformed(ActionEvent e)
-				{ ok[0] = false;  dialog.dispose(); } } );
+				{ setFont1(font0); dialog.dispose(); } } );
 				
 				KeyAdapter closelistener = new KeyAdapter()
 				{ public void keyPressed(KeyEvent e)
 				{ if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				  dialog.dispose(); } };
+				  setFont1(font0); dialog.dispose(); } };
 				
 				
 				scrollpane.addKeyListener(closelistener);
 				scrollpane.requestFocusInWindow();
+				scrollpane.setHorizontalScrollBarPolicy(
+				    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				
 				Dimension d = new Dimension(400, 800);
 				
@@ -14811,12 +14852,23 @@ class Programs
 				
 				if (e.getSource() == undobutton) undo();
 				if (e.getSource() == redobutton) redo();
-				
-				tablepanel.filechanged = true;
 			}
 			
-			public void undo() { tablepanel.undo.undo(); }
-			public void redo() { tablepanel.undo.redo(); }
+			public void undo()
+			{
+				tablepanel.undo.undo();
+				
+				tablepanel.filechanged = true;
+				tablepanel.table.requestFocusInWindow();
+			}
+			
+			public void redo()
+			{
+				tablepanel.undo.redo();
+				
+				tablepanel.filechanged = true;
+				tablepanel.table.requestFocusInWindow();
+			}
 		}
 		
 		
@@ -16667,14 +16719,12 @@ class Programs
 			
 			private JCheckBox stylebox;
 			
-			private final boolean[] ok
-			
-			   = new boolean[] { false };
+			Font font0;
 			
 			
 			public void actionPerformed(ActionEvent e)
 			{
-				Font font0 = font;
+				font0 = font;
 				
 				style = (font != null) ?
 				
@@ -16684,23 +16734,9 @@ class Programs
 				
 				//  JDialog setVisible() blocks
 				//  until the dialog is disposed
-				//  because modal is set to true
+				//  only if modal is set to true
 				
 				dialog.setVisible(true);
-				
-				
-				//  Set the new font
-				
-				if ((fontname != null) && !fontname.isEmpty())
-				
-				    font = new Font(fontname, style, fontsize);
-				
-				fontname  = font.getName();
-				fontstyle = font.getStyle();
-				fontsize  = font.getSize();
-				
-				if (ok[0]) setFont1(font);
-				else       setFont1(font0);
 			}
 			
 			
@@ -16741,7 +16777,7 @@ class Programs
 			}
 			
 			
-			private JDialog getFontDialog(final Font font)
+			private JDialog getFontDialog(Font font)
 			{
 				//  The font dialog allows the user to select a font type
 				//  and shows the user what each font type looks like as
@@ -16790,10 +16826,11 @@ class Programs
 				scrollpane.setViewportView(vbox);
 				
 				
-				//        [ OK ] [ Cancel ]
-				//
-				//       [x] bold  font name
 				//   ____________________________
+				//  |                            |
+				//  |     [ OK ] [ Cancel ]      |
+				//  |                            |
+				//  |    [x] bold  font name     |
 				//  |____________________________|
 				//  |____________________________|
 				//  |____________________________|
@@ -16802,7 +16839,7 @@ class Programs
 				//  |____________________________|
 				//  |____________________________|
 				//  |____________________________|
-				
+				//  |____________________________|
 				
 				stylebox = new JCheckBox();
 				stylelabel = new JLabel(__.bold);
@@ -16837,7 +16874,7 @@ class Programs
 				vbox.add(Box.createVerticalStrut(10)); vbox.add(scrollpane);
 				
 				
-				boolean modal = true;
+				boolean modal = false;
 				
 				String title = __.selectfonttype;
 				
@@ -16845,25 +16882,46 @@ class Programs
 				
 				dialog.setTitle(title);
 				
+				
 				//  Clicking ok or cancel or pressing
 				//  the escape key closes the dialog
 				
 				okbutton .addActionListener( new ActionListener()
-				{ public void actionPerformed(ActionEvent e)
-				{ ok[0] = true;  dialog.dispose(); } } );
+				{
+				    public void actionPerformed(ActionEvent e)
+				    {
+					//  Set the new font
+					
+					Font font1 = font0;
+					
+					if ((fontname != null) && !fontname.isEmpty())
+					
+					    font1 = new Font(fontname, style, (int) fontsize);
+					
+					fontname  = font1.getName();
+					fontstyle = font1.getStyle();
+					fontsize  = font1.getSize();
+					
+					setFont1(font1);
+					
+					dialog.dispose();
+				} } );
+				
 				
 				cancelbutton .addActionListener( new ActionListener()
 				{ public void actionPerformed(ActionEvent e)
-				{ ok[0] = false;  dialog.dispose(); } } );
+				{ setFont1(font0); dialog.dispose(); } } );
 				
 				KeyAdapter closelistener = new KeyAdapter()
 				{ public void keyPressed(KeyEvent e)
 				{ if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				  dialog.dispose(); } };
+				  setFont1(font0); dialog.dispose(); } };
 				
 				
 				scrollpane.addKeyListener(closelistener);
 				scrollpane.requestFocusInWindow();
+				scrollpane.setHorizontalScrollBarPolicy(
+				    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				
 				Dimension d = new Dimension(400, 800);
 				
@@ -21349,8 +21407,6 @@ class Programs
 			
 			private boolean usereplyaddresskey = true;
 			
-			private int textlength;
-			
 			
 			//  Userpass is required for esmtp authorization
 			
@@ -22010,7 +22066,6 @@ class Programs
 					}
 				}
 			}
-			
 			
 			
 			
@@ -24909,12 +24964,6 @@ class Programs
 			}
 			
 			
-			public void setTextLength(int length)
-			{
-				this.textlength = length;
-			}
-			
-			
 			public void requestFocusInWindow(String field)
 			{
 				if (field.equals("tofield"))
@@ -25786,8 +25835,6 @@ class Programs
 				windowlistener1 = new WindowListener1();
 				windowstatelistener1 = new WindowStateListener1();
 				
-				componentlistener1 = new ComponentListener1();
-				
 				frame.addWindowListener(windowlistener1);
 				frame.addWindowStateListener(windowstatelistener1);
 				
@@ -26413,9 +26460,8 @@ class Programs
 				
 				private void highlight(int msno)
 				{
-					//  Highlight the message header
-					//  by swapping the foreground and
-					//  background colors
+					//  Highlight the messages by swapping
+					//  the foreground and background colors
 					
 					setForeground(background, msno);
 					setBackground(foreground, msno);
@@ -27591,7 +27637,7 @@ class Programs
 						//  Exception in thread "AWT-EventQueue-0" java.util.ConcurrentModificationException
 						//  at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
 						//  at java.base/java.util.ArrayList$Itr.next(ArrayList.java:967)
-						//  at Programs$Mail$RetrieveMailFrame$ChangeListener1.stateChanged(Editor.java:27650)
+						//  at Programs$Mail$RetrieveMailFrame$ChangeListener1.stateChanged(Editor.java:...)
 						//
 						//  This line throws an exception every time two email addresses (tabs) are open and
 						//  the user clicks the right tab and opens a non-reply frame, clicks the left tab
@@ -28816,7 +28862,7 @@ class Programs
 					
 					SP0 = passphrase0;
 					
-					// Compute the public key hash and partition the hash string
+					//  Compute the public key hash and partition the hash string
 					
 					String publickeyhash = PublicKey.hashPublicKey(publickeystr);
 					
@@ -28858,8 +28904,6 @@ class Programs
 					vbox.add(hbox);
 					
 					
-					Icon icon = null;
-					
 					//  options has to equal the empty array instead of
 					//  null or else the JOptionPane will add an OK button
 					
@@ -28869,9 +28913,10 @@ class Programs
 					
 					    JOptionPane.PLAIN_MESSAGE, JOptionPane
 					
-						.DEFAULT_OPTION, icon, options, 0);
+						.DEFAULT_OPTION, null, options, 0);
 					
 					//  pane.set(...)
+					
 					
 					JDialog dialog = pane.createDialog(frame, title);
 					
@@ -28954,14 +28999,12 @@ class Programs
 				
 				private JCheckBox stylebox;
 				
-				private final boolean[] ok
-				
-				   = new boolean[] { false };
+				Font font0;
 				
 				
 				public void actionPerformed(ActionEvent e)
 				{
-					Font font0 = font;
+					font0 = font;
 					
 					style = (font != null) ?
 					
@@ -28971,23 +29014,9 @@ class Programs
 					
 					//  JDialog setVisible() blocks
 					//  until the dialog is disposed
-					//  because modal is set to true
+					//  only if modal is set to true
 					
 					dialog.setVisible(true);
-					
-					
-					//  Set the new font
-					
-					if ((fontname != null) && !fontname.isEmpty())
-					
-					    font = new Font(fontname, style, (int) fontsize);
-					
-					fontname  = font.getName();
-					fontstyle = font.getStyle();
-					fontsize  = font.getSize();
-					
-					if (ok[0]) setFont1(font);
-					else       setFont1(font0);
 				}
 				
 				
@@ -29028,7 +29057,7 @@ class Programs
 				}
 				
 				
-				private JDialog getFontDialog(final Font font)
+				private JDialog getFontDialog(Font font)
 				{
 					//  The font dialog allows the user to select a font type
 					//  and shows the user what each font type looks like as
@@ -29077,10 +29106,11 @@ class Programs
 					scrollpane.setViewportView(vbox);
 					
 					
-					//        [ OK ] [ Cancel ]
-					//
-					//       [x] bold  font name
 					//   ____________________________
+					//  |                            |
+					//  |     [ OK ] [ Cancel ]      |
+					//  |                            |
+					//  |    [x] bold  font name     |
 					//  |____________________________|
 					//  |____________________________|
 					//  |____________________________|
@@ -29089,7 +29119,7 @@ class Programs
 					//  |____________________________|
 					//  |____________________________|
 					//  |____________________________|
-					
+					//  |____________________________|
 					
 					stylebox = new JCheckBox();
 					stylelabel = new JLabel(__.bold);
@@ -29124,7 +29154,7 @@ class Programs
 					vbox.add(Box.createVerticalStrut(10)); vbox.add(scrollpane);
 					
 					
-					boolean modal = true;
+					boolean modal = false;
 					
 					String title = __.selectfonttype;
 					
@@ -29132,25 +29162,46 @@ class Programs
 					
 					dialog.setTitle(title);
 					
+					
 					//  Clicking ok or cancel or pressing
 					//  the escape key closes the dialog
 					
 					okbutton .addActionListener( new ActionListener()
-					{ public void actionPerformed(ActionEvent e)
-					{ ok[0] = true;  dialog.dispose(); } } );
+					{
+					    public void actionPerformed(ActionEvent e)
+					    {
+						//  Set the new font
+						
+						Font font1 = font0;
+						
+						if ((fontname != null) && !fontname.isEmpty())
+						
+						    font1 = new Font(fontname, style, (int) fontsize);
+						
+						fontname  = font1.getName();
+						fontstyle = font1.getStyle();
+						fontsize  = font1.getSize();
+						
+						setFont1(font1);
+						
+						dialog.dispose();
+					} } );
+					
 					
 					cancelbutton .addActionListener( new ActionListener()
 					{ public void actionPerformed(ActionEvent e)
-					{ ok[0] = false;  dialog.dispose(); } } );
+					{ setFont1(font0); dialog.dispose(); } } );
 					
 					KeyAdapter closelistener = new KeyAdapter()
 					{ public void keyPressed(KeyEvent e)
 					{ if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-					  dialog.dispose(); } };
+					  setFont1(font0); dialog.dispose(); } };
 					
 					
 					scrollpane.addKeyListener(closelistener);
 					scrollpane.requestFocusInWindow();
+					scrollpane.setHorizontalScrollBarPolicy(
+					    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 					
 					Dimension d = new Dimension(400, 800);
 					
@@ -29200,7 +29251,8 @@ class Programs
 				
 				private JPanel panel;
 				
-				private JButton plusbutton, minusbutton;
+				private JButton  plusbutton;
+				private JButton minusbutton;
 				
 				private JTextField textfield;
 				
@@ -29351,12 +29403,10 @@ class Programs
 			
 				private JColorChooser cc;
 				
-				
 				private ColorListener()
 				{
 					cc = new JColorChooser();
 				}
-				
 				
 				public void actionPerformed(ActionEvent e)
 				{
@@ -29437,8 +29487,10 @@ class Programs
 				{
 					//  Set the emailpanel foreground
 					
-					if (emailpanel.buttonlistener.listing
-					 || emailpanel.buttonlistener.reading) return;
+					if ((tabbedpane.getTabCount() > 1)
+					
+					 && (emailpanel.buttonlistener.listing
+					  || emailpanel.buttonlistener.reading)) return;
 					
 					if (!color.equals(Color.white))
 					{
@@ -29517,6 +29569,14 @@ class Programs
 						
 						emailpanel.savedemails.setForeground(color);
 					}
+					
+					if (!emailpanel.reverse_colors)
+					
+					    Documents.setForeground(color);
+					
+					else // if (reverse_colors)
+					
+					    Documents.setBackground(color);
 				}
 				
 				
@@ -29525,8 +29585,10 @@ class Programs
 					//  Set the emailpanel foreground (not background)
 					//  because the colors may be reversed
 					
-					if (emailpanel.buttonlistener.listing
-					 || emailpanel.buttonlistener.reading) return;
+					if ((tabbedpane.getTabCount() > 1)
+					
+					 && (emailpanel.buttonlistener.listing
+					  || emailpanel.buttonlistener.reading)) return;
 					
 					if (!color.equals(Color.white))
 					{
@@ -29602,6 +29664,14 @@ class Programs
 						
 						emailpanel.savedemails.setBackground(color);
 					}
+					
+					if (!emailpanel.reverse_colors)
+					
+					    Documents.setBackground(color);
+					
+					else // if (reverse_colors)
+					
+					    Documents.setForeground(color);
 				}
 				
 				
@@ -29717,7 +29787,10 @@ class Programs
 						
 						public void mousePressed(MouseEvent e)
 						{
-							if (emailpanel.buttonlistener.listing) return;
+							if ((tabbedpane.getTabCount() > 1)
+							
+							 && (emailpanel.buttonlistener.listing
+							  || emailpanel.buttonlistener.reading)) return;
 							
 							if (e.getSource() == checkbox)
 							{
@@ -29888,8 +29961,10 @@ class Programs
 				
 				public void run()
 				{
-					if (emailpanel.buttonlistener.listing
-					 || emailpanel.buttonlistener.reading) return;
+					if ((tabbedpane.getTabCount() > 1)
+					
+					 && (emailpanel.buttonlistener.listing
+					  || emailpanel.buttonlistener.reading)) return;
 					
 					emailpanel.reverse_colors = !emailpanel.reverse_colors;
 					
@@ -30293,8 +30368,6 @@ class Programs
 				}
 				
 				
-				//  Set the font
-				
 				if (emailpanel.savedemails != null)
 				
 				    emailpanel.savedemails.setFont(font);
@@ -30308,6 +30381,8 @@ class Programs
 				    if (menuitem != null) menuitem
 				
 					.setFont(menuitemfont);
+				
+				Documents.setFont(font);
 			}
 			
 			
@@ -30479,15 +30554,22 @@ class Programs
 								
 								    SavedEmails(emailpanel.username);
 								
-								if (numberoffiles == 0)
-								
-								    emailpanel.savedemails.saveMessage(message, null, from);
-								
-								else // save the message and files (file text)
-								{
-									String filetext = emailpanel.list1.getFileText(msno);
+								try
+								{	if (numberoffiles == 0)
 									
-									emailpanel.savedemails.saveMessage(message, filetext, from);
+									    emailpanel.savedemails.saveMessage(message, null, from);
+									
+									else // save the message and files (file text)
+									{
+										String filetext = emailpanel.list1.getFileText(msno);
+										
+										emailpanel.savedemails.saveMessage(message, filetext, from);
+									}
+								}
+								
+								catch (IOException ex)
+								{
+									JOptionPane.showMessageDialog(frame, ex);
 								}
 							}
 						}
@@ -31749,9 +31831,7 @@ class Programs
 				{
 					//  Open a table editor to display the table
 					
-					TableFrame tableframe;
-					
-					tableframe = new TableFrame();
+					TableFrame tableframe = new TableFrame();
 					
 					tableframe.setData(filetext);
 					
@@ -32176,24 +32256,7 @@ class Programs
 					//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 					
 					
-					//  Count the number of lines and subtract 1 (or 2)
-					
-					int numberoflines = 1;
-					
-					for (int i = 0; i < message.length(); i++)
-					
-					    if ((message.charAt(i+0) == '\n')
-					     && (message.charAt(i+1) == '\n'))
-					
-						{ numberoflines++; i++; }
-					
-					int numberofciphers = 0;
-					
-					String[] lines = message.split("\n{2,}");
-					
-					for (String line : lines) if (PublicKey.isValidKeySize(
-					
-					    line.length())) numberofciphers++;
+					int numberofciphers = PublicKey.countNumberOfCiphers(message);
 					
 					emailpanel.list1.setNumberOfCiphers(msno, numberofciphers);
 				}
@@ -32274,7 +32337,7 @@ class Programs
 						
 						  && ((i+1) < tokens.length))
 						{
-							// token[i] is the filedesc;
+							// token[i+0] is the filedesc;
 							// token[i+1] is the filetext
 							
 							filedesc = tokens[i];
@@ -32303,7 +32366,7 @@ class Programs
 						
 						  && Number.isBase64(tokens[i+1].replaceAll("\n", "")))
 						{
-							// token[i] is the filedesc;
+							// token[i+0] is the filedesc;
 							// token[i+1] is the filetext
 							
 							filedesc = tokens[i];
@@ -32400,7 +32463,7 @@ class Programs
 					}
 					
 					//  if the file wasn't compressed or deflated then
-					//  the code just throws a data format exception
+					//  decompressing just throws a data format exception
 					
 					catch (DataFormatException ex) {  }
 				}
@@ -33465,7 +33528,7 @@ class Programs
 				final String str1 = str;
 				
 				sendmailframe.setText(str1);
-				sendmailframe.setTextLength(str1.length());
+				
 				sendmailframe.setCaretPosition(0);
 				
 				
@@ -34344,11 +34407,50 @@ class Programs
 					
 					dirname = maildirectory + File.separator + userhash;
 					
+					if (!new File(maildirectory).exists())
+					     new File(maildirectory).mkdir();
+					
+					File dir = new File(dirname);
+					if (!dir.exists()) dir.mkdir();
+					
 					mouselistener1 = new MouseListener1();
 				}
 				
 				
-				public void saveMessage(String message, String filetext, String from)
+				
+				private String messageToFilePath(String message)
+				{
+					String filehash = Cipher.hash2(message).substring(0, 12);
+					
+					String filepath = dirname + File.separator + filehash;
+					
+					return filepath;
+				}
+				
+				
+				public boolean isSavedMessage(String message)
+				{
+					String filepath = messageToFilePath(message);
+					
+					File file = new File(filepath);
+					
+					if (!file.exists()) return false;
+					
+					String filetext;
+					
+					try { filetext = readAndDecrypt(file); }
+					
+					catch (IOException ex)
+					
+					    { System.out.println(ex); return false; }
+					
+					return filetext.contains(message);
+				}
+				
+				
+				public void saveMessage(String message,
+				
+					String attachedfiletext, String from) throws IOException
 				{
 				
 					//  This method saves a message to file so the user can
@@ -34361,18 +34463,12 @@ class Programs
 					//  or without the attached files.
 					
 					
-					if (!new File(maildirectory).exists())
-					     new File(maildirectory).mkdir();
+					String filehash = Cipher.hash2(message).substring(0, 12);
 					
-					File dir = new File(dirname);
-					if (!dir.exists()) dir.mkdir();
+					String filepath = dirname + File.separator + filehash;
 					
+					File file = new File(filepath);
 					
-					String fileno = Cipher.hash2(message) .substring(0, 12);
-					
-					String filename = dirname + File.separator + fileno;
-					
-					File file = new File(filename);
 					
 					//  Append the sender's address to the message
 					
@@ -34382,13 +34478,13 @@ class Programs
 					
 					    message = Convert.stringToBase64(message);
 					
-					if ((filetext != null) && !filetext.isBlank())
+					if ((attachedfiletext != null) && !attachedfiletext.isBlank())
 					{
 						//  Convert the message to base 64 and append the file text
 						
 						if (message.trim().isEmpty()) message = "    ";
 						
-						message += "\n\n" + filetext;
+						message += "\n\n" + attachedfiletext;
 					}
 					
 					saveMessage(message, file);
@@ -34396,25 +34492,19 @@ class Programs
 				
 				
 				
-				private void saveMessage(String message, File file)
+				private void saveMessage(String message, File file) throws IOException
 				{
 				
 					long time = 0;
 					
-					try
-					{	if (!file.exists()) file.createNewFile();
-						
-						else if (file.exists())
-						
-						    time = file.lastModified();
-					}
+					if (!file.exists())
 					
-					catch (IOException ex)
-					{
-						System.out.println(ex);
-						
-						return;
-					}
+					     file.createNewFile();
+					
+					else if (file.exists())
+					
+					    time = file.lastModified();
+					
 					
 					//  Encrypt the message and write to file
 					
@@ -34424,19 +34514,46 @@ class Programs
 					
 					    plaindata, Cipher.passphraseToKey(SP));
 					
-					try
-					{	//  Write the cipherdata to file
-						//  and restore the last file time
+					
+					//  Write the cipherdata to file
+					//  and restore the last file time
+					
+					DataStream.write(file, cipherdata);
+					
+					if (time > 0) file.setLastModified(time);
+				}
+				
+				
+				
+				
+				private String readAndDecrypt(File file) throws IOException
+				{
+					//  Read the cipherdata from file
+					
+					byte[] cipherdata = DataStream.read(file);
+					
+					//  Decrypt the cipherdata
+					
+					//  The user may have decrypted the mail directory using
+					//  the text editor and passphrase so we have to test if
+					//  the file is unencrypted before decrypting
+					
+					boolean encrypted = Cipher.isEncrypted(cipherdata);
+					
+					byte[] plaindata = cipherdata;
+					
+					if (encrypted)
+					{
+						plaindata = Cipher.decrypt(cipherdata,
 						
-						DataStream.write(file, cipherdata);
+						    Cipher.passphraseToKey(SP));
 						
-						if (time > 0) file.setLastModified(time);
+						if (plaindata == null)
+						
+						    throw new IOException();
 					}
 					
-					catch (IOException ex)
-					{
-						System.out.println(ex);
-					}
+					return new String(plaindata);
 				}
 				
 				
@@ -34509,47 +34626,19 @@ class Programs
 						
 						long time = file.lastModified();
 						
-						//  Read the cipherdata from file
+						boolean encrypted = Cipher.isEncrypted(file);
 						
-						byte[] cipherdata;
 						
-						try { cipherdata = DataStream.read(file); }
+						//  Read and decrypt the file data
+						
+						String plaintext;
+						
+						try { plaintext = readAndDecrypt(file); }
 						
 						catch (IOException ex)
-						{
-							System.out.println(ex);
-							
-							continue;
-						}
 						
-						//  Decrypt the cipherdata
+						    { System.out.println(ex); continue; }
 						
-						//  The user may have decrypted the mail directory using
-						//  the text editor and passphrase so we have to test if
-						//  the file is unencrypted before decrypting
-						
-						boolean encrypted = Cipher
-						
-						    .isEncrypted(cipherdata);
-						
-						byte[] plaindata = cipherdata;
-						
-						if (encrypted)
-						{
-							plaindata = Cipher.decrypt(
-							
-							    cipherdata, Cipher.passphraseToKey(SP));
-							
-							if (plaindata == null)
-							{
-								continue;
-							}
-						}
-						
-						
-						String plaintext = new String(plaindata);
-						
-						//  Read the message and files
 						
 						readMessage(plaintext, i);
 						
@@ -35035,7 +35124,9 @@ class Programs
 							text = text .trim();
 						}
 						
-						saveMessage(text, file);
+						try { saveMessage(text, file); }
+						
+						catch (IOException ex) { System.out.println(ex); }
 					}
 				}
 				
@@ -35388,10 +35479,6 @@ class Programs
 									
 									String filedesc = filedescs[index][i];
 									
-									if (Number.isBase64(filedesc))
-									
-									    filedesc = Convert.base64ToString(filedesc);
-									
 									int maxfilename = 36;
 									
 									if (filedesc.length() > maxfilename) filedesc
@@ -35459,6 +35546,8 @@ class Programs
 			
 			
 			//  End class SavedEmails
+			
+			
 			
 			
 			
@@ -35965,6 +36054,7 @@ class Programs
 										System.out.println("my public server key == \n" + publickey);
 										
 										if ((publickey == null) || publickey.isEmpty()
+										
 										 || !PublicKey.isValidKey(publickey))
 										{
 											//  Prompt the user to send the user's key to the pop
@@ -38184,12 +38274,32 @@ class Programs
 		
 		
 		
+		
+		
+		
+		private String convertFilesToText(String[] filedescs, byte[][] filedatas)
+		{
+			ArrayList<String> filedesclist = new ArrayList<String>();
+			ArrayList<byte[]> filedatalist = new ArrayList<byte[]>();
+			
+			for (int i = 0; i < filedatas.length; i++)
+			{
+				filedesclist.add(filedescs[i]);
+				filedatalist.add(filedatas[i]);
+			}
+			
+			return convertFilesToText(
+			
+			    filedesclist, filedatalist);
+		}
+		
+		
 		private String convertFilesToText(
 		
-			ArrayList<String> filedesclist,
-			ArrayList<byte[]> filedatalist)
+			ArrayList<String> filedesclist, ArrayList<byte[]> filedatalist)
 		{
 			if (filedatalist.size() != filedesclist.size())
+			
 			    throw new IllegalArgumentException();
 			
 			StringBuilder sb = new StringBuilder();
@@ -38231,11 +38341,13 @@ class Programs
 			String[] tokens = text.split("\n\n");
 			
 			if ((tokens.length % 2) != 0)
+			
 			    throw new IllegalArgumentException();
 			
 			for (int i = 0; i < tokens.length; i++)
 			
 			    if (!Number.isBase64(tokens[i].trim()))
+			
 			        throw new IllegalArgumentException();
 			
 			ArrayList<String> filedesclist = new ArrayList<String>();
@@ -39523,11 +39635,11 @@ class FileType
 	
 	public static boolean isText(String str)
 	{
-		byte[] data = str.getBytes();
+		byte[] filedata = str.getBytes();
 		
-		for (byte c : data)
+		for (byte c : filedata)
 		
-		    if (!Character.isDefined(c))
+		    if (!Character.isValidCodePoint(c))
 		
 			return false;
 		
@@ -39935,9 +40047,9 @@ class FileChooser extends JFileChooser
 		if (size < minsize) font1 = font.deriveFont(minsize);
 		if (size > maxsize) font1 = font.deriveFont(maxsize);
 		
-		String name  = font .getName();
-		  int style  = font .getStyle();
-		   int size1 = font1.getSize();
+		String name = font .getName();
+		  int style = font .getStyle();
+		  int size1 = font1.getSize();
 		
 		//  < size 17 == bold font, >= 17 == plain font
 		
@@ -40028,7 +40140,7 @@ class Print
 		//  Make the print font size smaller
 		//  than the text font size
 		
-		font = font .deriveFont(
+		font = font.deriveFont(
 		
 		    font.getSize() - 6.0f);
 		
@@ -45789,12 +45901,28 @@ class Documents
 	
 	
 	
+	
+	private static ArrayList<JTextComponent>
+	
+	    textcomps = new ArrayList<JTextComponent>();
+	
+	private static ArrayList<String> list = new ArrayList<String>();
+	
+	
 	public static void display(
 	
-	    Window window, String title, String document,
+	    Window window, String title, final String document,
 	
 		Font font, Color foreground, Color background)
 	{
+		//  Test if the string list already contains a copy of
+		//  the document to be displayed so the user doesn't
+		//  open multiple copies of the same attached file
+		
+		for (String str : list)
+		
+		    if (str.equals(document)) return;
+		
 		JTextArea textarea;
 		
 		JScrollPane scrollpane;
@@ -45842,7 +45970,10 @@ class Documents
 		
 		    cols = linechars;
 		
-		if (cols > 64) cols = 64;
+		int maxcols = 64;
+		
+		if (cols > maxcols)
+		    cols = maxcols;
 		
 		
 		float maxfontsize = 40;
@@ -45853,20 +45984,19 @@ class Documents
 			
 			    font.getSize(), (int) maxfontsize);
 			
-			font = font .deriveFont(fontsize);
+			font = font.deriveFont(fontsize);
 		}
 		
 		
 		textarea = new JTextArea();
 		
 		textarea.setLineWrap(linewrap);
-		
 		textarea.setWrapStyleWord(linewrap);
-		
 		textarea.setEditable(false);
-		
 		textarea.setFont(font);
 		
+		textarea.setText(document);
+		textarea.setCaretPosition(0);
 		
 		if (foreground != null) textarea.setForeground(foreground);
 		if (background != null) textarea.setBackground(background);
@@ -45874,10 +46004,6 @@ class Documents
 		textarea.addMouseListener(new Documents()
 		
 		    .new MouseListener(textarea));
-		
-		textarea.setText(document);
-		
-		textarea.setCaretPosition(0);
 		
 		scrollpane = new JScrollPane(textarea,
 		
@@ -45911,22 +46037,54 @@ class Documents
 		
 		//  Create a dialog box
 		
-		boolean modal = true;
-		
 		JDialog dialog = new JDialog(window);
-		
-		dialog.setModal(modal);
 		
 		KeyAdapter closelistener = new KeyAdapter()
 		{
 			public void keyPressed(KeyEvent e)
 			{
 				if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				 || (e.getKeyChar() == '\n'))
 				
-				    dialog.dispose();
+				 || (e.getKeyChar() == '\n'))
+				{
+					for (int i = 0; i < list.size(); i++)
+					
+					    if (list.get(i).equals(document))
+					
+						list.remove(list.get(i));
+					
+					if (textcomps.contains(textarea))
+					
+					    textcomps.remove(textarea);
+					
+					dialog.dispose();
+				}
 			}
 		};
+		
+		
+		dialog.addWindowListener(new WindowAdapter()
+		{
+			public void windowClosing(WindowEvent e)
+			{
+				//  Don't use the for-each loop  for (String str : list)
+				//  because Java will throw a concurrent modification exception
+				//  Exception in thread "AWT-EventQueue-0" java.util.ConcurrentModificationException
+				//  at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
+				//  at java.base/java.util.ArrayList$Itr.next(ArrayList.java:967)
+				
+				for (int i = 0; i < list.size(); i++)
+				
+				    if (list.get(i).equals(document))
+				
+					list.remove(list.get(i));
+				
+				if (textcomps.contains(textarea))
+				
+				    textcomps.remove(textarea);
+			}
+		});
+		
 		
 		textarea.addKeyListener(closelistener);
 		
@@ -45960,9 +46118,14 @@ class Documents
 		
 		dialog.setSize(size);
 		
+		//  this method blocks only if modal = true
+		
 		dialog.setVisible(true);
+		
+		list.add(document);
+		
+		textcomps.add(textarea);
 	}
-	
 	
 	
 	
@@ -45972,6 +46135,8 @@ class Documents
 	
 		Font font, Color foreground, Color background)
 	{
+		for (String str : list) if (str.equals(html)) return "";
+		
 		JEditorPane editorpane = new JEditorPane();
 		
 		JScrollPane scrollpane = new JScrollPane(editorpane,
@@ -46009,24 +46174,18 @@ class Documents
 		editorpane.setPreferredSize(new Dimension(width, height));
 		editorpane.setMinimumSize  (new Dimension(width, height));
 		
-		
 		editorpane.setEditable(false);
-		
-		editorpane.addMouseListener(new Documents()
-		
-		    .new MouseListener(editorpane));
-		
-		
 		editorpane.setContentType("text/html");
 		
 		editorpane.getDocument().putProperty(
-		
 		    "IgnoreCharsetDirective", true);
 		
 		editorpane.setText(html);
 		
-		editorpane.setFont(new Font(
+		editorpane.addMouseListener(new Documents()
+		    .new MouseListener(editorpane));
 		
+		editorpane.setFont(new Font(
 		    "monospaced", Font.PLAIN, 20));
 		
 		
@@ -46064,17 +46223,14 @@ class Documents
 				    editorpane.setContentType(doctype1);
 				
 				editorpane.getDocument() .putProperty(
-				
 				    "IgnoreCharsetDirective", true);
 				
 				editorpane.setText(html1[0]);
-				
 				editorpane.setCaretPosition(0);
 				
 				if (editorpane.getContentType() == doctype1)
 				{
 					editorpane.setEditable(true);
-					
 					editorpane.requestFocusInWindow();
 					
 					if ((foreground != null) && (background != null))
@@ -46096,22 +46252,48 @@ class Documents
 		
 		//  Create a dialog box
 		
-		boolean modal = true;
-		
 		JDialog dialog = new JDialog(window);
-		
-		dialog.setModal(modal);
 		
 		KeyAdapter closelistener = new KeyAdapter()
 		{
 			public void keyPressed(KeyEvent e)
 			{
 				if ((e.getKeyCode() == KeyEvent.VK_ESCAPE)
-				 || (e.getKeyChar() == '\n'))
 				
-				    dialog.dispose();
+				 || (e.getKeyChar() == '\n'))
+				{
+					for (int i = 0; i < list.size(); i++)
+					
+					    if (list.get(i).equals(html))
+					
+						list.remove(list.get(i));
+					
+					if (textcomps.contains(editorpane))
+					
+					    textcomps.remove(editorpane);
+					
+					dialog.dispose();
+				}
 			}
 		};
+		
+		
+		dialog.addWindowListener(new WindowAdapter()
+		{
+			public void windowClosing(WindowEvent e)
+			{
+				for (int i = 0; i < list.size(); i++)
+				
+				    if (list.get(i).equals(html))
+				
+					list.remove(list.get(i));
+				
+				if (textcomps.contains(editorpane))
+				
+				    textcomps.remove(editorpane);
+			}
+		});
+		
 		
 		editorpane.setCaretPosition(0);
 		
@@ -46151,7 +46333,47 @@ class Documents
 		
 		dialog.setVisible(true);
 		
+		list.add(html);
+		
+		textcomps.add(editorpane);
+		
 		return html1[0];
+	}
+	
+	
+	public static void setFont(Font font)
+	{
+		for (JTextComponent textcomp : textcomps)
+		
+		    textcomp.setFont(font);
+	}
+	
+	public static void setForeground(Color foreground)
+	{
+		for (JTextComponent textcomp : textcomps)
+		{
+			if (textcomp instanceof JTextArea)
+			
+			    ((JTextArea) textcomp).setForeground(foreground);
+			
+			if (textcomp instanceof JEditorPane)
+			
+			    ((JEditorPane) textcomp).setForeground(foreground);
+		}
+	}
+	
+	public static void setBackground(Color background)
+	{
+		for (JTextComponent textcomp : textcomps)
+		{
+			if (textcomp instanceof JTextArea)
+			
+			    ((JTextArea) textcomp).setBackground(background);
+			
+			if (textcomp instanceof JEditorPane)
+			
+			    ((JEditorPane) textcomp).setBackground(background);
+		}
 	}
 }
 
@@ -48130,9 +48352,22 @@ class Icons
 	
 	
 	
-	public static void display(JFrame frame, String title, byte[] imagedata)
+	
+	private static ArrayList<byte[]> list = new ArrayList<byte[]>();
+	
+	public static void display(Window window, String title, byte[] imagedata)
 	{
-		//  displays an image in a JDialog frame
+		//  Displays an image in a JDialog frame
+		
+		//  Test if the byte[] list already contains a reference
+		//  to the image data to be displayed so the user doesn't
+		//  open multiple copies of the same attached file
+		
+		//  This test can use the == operator instead of the
+		//  Arrays.equals(array1, array2) method but the Doc-
+		//  uments display method has to use the equals method
+		
+		for (byte[] array : list) if (array == imagedata) return;
 		
 		ImageIcon imageicon = new ImageIcon(imagedata, "");
 		
@@ -48142,11 +48377,10 @@ class Icons
 		
 		label.setIcon(imageicon);
 		
-		boolean modal = true;
+		JDialog dialog = new JDialog(window);
 		
-		JDialog dialog = new JDialog(frame, modal);
-		
-		MouseWheelListener1 mwl1 = new MouseWheelListener1(dialog, label);
+		MouseWheelListener1 mwl1 = new
+		MouseWheelListener1(dialog, label);
 		
 		dialog.addKeyListener(new KeyAdapter()
 		{
@@ -48169,8 +48403,34 @@ class Icons
 				
 				if ((d == KeyEvent.VK_ESCAPE)
 				 || (d == KeyEvent.VK_ENTER))
+				{
+					for (int i = 0; i < list.size(); i++)
+					
+					    if (list.get(i) == imagedata)
+					
+						list.remove(list.get(i));
+				}
 				
-				    dialog.dispose();
+				dialog.dispose();
+			}
+		});
+		
+		dialog.addWindowListener(new WindowAdapter()
+		{
+			public void windowClosing(WindowEvent e)
+			{
+				//  Don't use the for-each iterator loop  for (byte[] array : list)
+				//
+				//  because Java will throw a concurrent modication exception
+				//  Exception in thread "AWT-EventQueue-0" java.util.ConcurrentModificationException
+				//  at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
+				//  at java.base/java.util.ArrayList$Itr.next(ArrayList.java:967)
+				
+				for (int i = 0; i < list.size(); i++)
+				
+				    if (list.get(i) == imagedata)
+				
+					list.remove(list.get(i));
 			}
 		});
 		
@@ -48180,20 +48440,23 @@ class Icons
 		int height = imageicon.getIconHeight();
 		
 		dialog.add(new JPanel().add(label));
-		dialog.setLocation(
-		    frame.getX(), frame.getY());
+		dialog.setLocation(window.getX(), window.getY());
 		dialog.setSize(width, height);
 		dialog.setResizable(false);
 		dialog.setTitle(title);
 		
-		//  this method blocks because
-		//  modal is set to true
+		//  this method only blocks if modal = true
+		
 		dialog.setVisible(true);
+		
+		list.add(imagedata);
 	}
 }
 
 
 //  End class Icons
+
+
 
 
 
@@ -49226,7 +49489,7 @@ class PublicKeyDialog
 	//  / partitioned / printable public key document.
 	
 	
-	private JFrame frame;
+	private Window window;
 	
 	private Font font;
 	
@@ -49240,7 +49503,7 @@ class PublicKeyDialog
 	
 	
 	
-	public PublicKeyDialog(JFrame frame) { this.frame = frame; }
+	public PublicKeyDialog(Window window) { this.window = window; }
 	
 	public void setFont(Font font) { this.font = font; }
 	
@@ -49273,7 +49536,7 @@ class PublicKeyDialog
 		
 		PassphraseDialog pd = new PassphraseDialog(
 		
-		   frame, PassphraseDialog.passphrase_email_encrypt);
+		   window, PassphraseDialog.passphrase_email_encrypt);
 		
 		if (foreground != null) pd.setForeground1(foreground);
 		if (background != null) pd.setBackground1(background);
@@ -49672,11 +49935,13 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			this.setLayout(new GridBagLayout());
 			
+			
 			gbc = new Gbc();
 			
 			gbc.setPosition(0, 0);
 			gbc.setSize(1, 1);
 			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			
 			this.add(scrollpane1, gbc);
 			
@@ -49686,17 +49951,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setPosition(0, 1);
 			gbc.setSize(1, 1);
 			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			
 			this.add(hashfield, gbc);
-			
-			
-			gbc = new Gbc();
-			
-			gbc.setPosition(0, 2);
-			gbc.setSize(1, 1);
-			gbc.setFill(Gbc.both);
-			
-			this.add(okbutton, gbc);
 		}
 		
 		
@@ -49878,6 +50135,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc.setPosition(0, y = 0);
 			gbc.setSize(9, 1);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			
 			this.add(passphraselabel, gbc);
 			
@@ -49886,6 +50145,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc.setPosition(0, y += 4);
 			gbc.setSize(9, 1);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			
 			this.add(emaillabel, gbc);
 			
@@ -49904,6 +50165,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc.setPosition(9, y);
 			gbc.setSize(1, 1);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
 			
 			this.add(randcheckbox, gbc);
 			
@@ -49931,8 +50194,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setPosition(10, ++y);
 			gbc.setSize(size1, 1);
 			gbc.setFill(Gbc.both);
-			gbc.setWeight(100, 100);
 			gbc.setInsets(1, 0, 0, 0);
+			gbc.setWeight(100, 100);
 			
 			this.add(hashfield, gbc);
 			
@@ -49946,20 +50209,25 @@ class PassphraseDialog extends JDialog implements AncestorListener
 				gbc.setSize(10, 1);
 				gbc.setAnchor(Gbc.right);
 				gbc.setInsets(0, 0, 0, 5);
+				gbc.setFill(Gbc.both);
+				gbc.setWeight(100, 100);
 				
 				this.add(numberofcipherslabel, gbc);
 				
-				gbc.setPosition(11, y);
-				gbc.setSize(1, 1);
+				gbc.setPosition(10, y);
+				gbc.setSize(2, 1);
 				gbc.setAnchor(Gbc.right);
 				gbc.setInsets(0, 5, 0, 0);
+				gbc.setFill(Gbc.both);
+				gbc.setWeight(100, 100);
 				
 				this.add(numberofcipherslabel1, gbc);
 				
 				gbc.setPosition(12, y);
-				gbc.setSize(size1, 1);
+				gbc.setSize(size1 - 2, 1);
 				gbc.setAnchor(Gbc.left);
 				gbc.setInsets(0, 5, 0, 0);
+				gbc.setWeight(100, 100);
 				
 				this.add(buttonpanel, gbc);
 			}
@@ -50049,6 +50317,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			maxbutton    .addActionListener(buttonlistener);
 			maxcheckbox  .addActionListener(buttonlistener);
 		}
+		
 		
 		
 		
@@ -50165,39 +50434,53 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(passphraselabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, y += 4);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(new JLabel(" "), gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(new JLabel(" "), gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(new JLabel(" "), gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(incomingmailserverlabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(outgoingmailserverlabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(numberofmessageslabel, gbc);
 			
 			gbc = new Gbc();
@@ -50205,6 +50488,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setSize(size1, 1);
 			gbc.setInsets(10,0,0,0);
+			gbc.setWeight(100, 100);
+			
 			this.add(maildirectorylabel, gbc);
 			
 			
@@ -50218,11 +50503,14 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setPosition(pos1, ++y);
 			gbc.setSize(size1, 1);
 			gbc.setFill(Gbc.horizontal);
+			gbc.setWeight(100, 100);
+			
 			this.add(passphrasefield, gbc);
 			
 			gbc.setPosition(9, y);
 			gbc.setSize(1, 1);
 			gbc.setAnchor(Gbc.right);
+			gbc.setWeight(100, 100);
 			
 			this.add(randcheckbox, gbc);
 			
@@ -50232,11 +50520,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setPosition(pos1, ++y);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(scrollpane1, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, y += 3);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(new JLabel(" "), gbc);
 			
 			gbc = new Gbc();
@@ -50244,23 +50536,31 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setSize(size1, 1);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setInsets(1, 0, 0, 0);
+			gbc.setWeight(100, 100);
+			
 			this.add(hashfield, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
 			gbc.setSize(size1, 1);
+			gbc.setWeight(100, 100);
+			
 			this.add(new JLabel(" "), gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
 			gbc.setSize(size1, 1);
 			gbc.setFill(Gbc.horizontal);
+			gbc.setWeight(100, 100);
+			
 			this.add(incomingmailserverbox, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
 			gbc.setSize(size1, 1);
 			gbc.setFill(Gbc.horizontal);
+			gbc.setWeight(100, 100);
+			
 			this.add(outgoingmailserverbox, gbc);
 			
 			
@@ -50268,12 +50568,16 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setPosition(pos1, ++y);
 			gbc.setSize(4, 1);
 			gbc.setFill(Gbc.horizontal);
+			gbc.setWeight(100, 100);
+			
 			this.add(numberofmessagesbox, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1+4, y);
 			gbc.setSize(4, 1);
 			gbc.setFill(Gbc.horizontal);
+			gbc.setWeight(100, 100);
+			
 			this.add(ascensionbox, gbc);
 			
 			
@@ -50282,6 +50586,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setSize(size1, 1);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setInsets(10,0,0,0);
+			gbc.setWeight(100, 100);
+			
 			this.add(maildirectoryfield, gbc);
 			
 			
@@ -50496,8 +50802,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		gbc.setSize(length, 1);
 		gbc.setFill(Gbc.horizontal);
 		gbc.setAnchor(Gbc.center);
-		gbc.setWeight(100, 100);
 		gbc.setInsets(15, 0, 15, 0);
+		gbc.setWeight(100, 100);
+		
 		this.add(keyboardpanel, gbc);
 		
 		//  Add the OK button
@@ -50507,6 +50814,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		gbc.setSize(length, 1);
 		gbc.setAnchor(Gbc.center);
 		gbc.setInsets(10, 0, 10, 0);
+		gbc.setWeight(100, 100);
+		
 		this.add(okbutton, gbc);
 		
 		keyboardpanel.setVisible(showkeyboard);
@@ -50530,13 +50839,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setResizable(false);
 		
-		Dimension newsize = this.getPreferredSize();
-		this.setSize(newsize.width, newsize.height);
-		
 		passphrasearea.requestFocusInWindow();
 		
 		
-		//  Center the dialog in the parent window
+		//  Set the window size
+		
+		Dimension newsize = this.getPreferredSize();
+		this.setSize(newsize.width, newsize.height);
+		
+		//  Center the dialog in the parent frame
 		
 		Point p = window.getLocation();
 		
@@ -51054,14 +51365,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		     passphrasearea.requestFocusInWindow();
 		
-		//  The frame visibility has to be set to false
-		//  and then to true to force the method to block
-		
-		this.setVisible(false);
+		//  Set the dialog size or else the frame will collapse
 		
 		Dimension newsize = this.getPreferredSize();
 		this.setSize(newsize.width, newsize.height);
 		
+		//  The frame visibility has to be set to false
+		//  and then to true to force the method to block
+		
+		this.setVisible(false);
 		this.setVisible(true);
 		
 		if (!validpassphrase || closed)  return null;
@@ -51089,20 +51401,16 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setModal(true);
 		
-		//  The frame visibility has to be set to false
-		//  and then to true to force the method to block
-		
-		this.setVisible(false);
-		
-		//  this.setSize has to be between setVisible(false)
-		//  and setVisible(true) or else the dialog frame
-		//  will collapse sometimes
+		//  Set the dialog size or else the frame will collapse
 		
 		Dimension newsize = this.getPreferredSize();
 		this.setSize(newsize.width, newsize.height);
 		
-		this.setVisible(true);
+		//  The frame visibility has to be set to false
+		//  and then to true to force the method to block
 		
+		this.setVisible(false);
+		this.setVisible(true);
 		
 		if (!validpassphrase || closed) return null;
 		
@@ -51358,8 +51666,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 }
 
 //  End class PassphraseDialog
-
-
 
 
 
@@ -51982,7 +52288,6 @@ class PublicKey
 	private static final int size80 = 4*20; // 80 digits
 	
 	
-	
 	//  Non-exponential modular and non-modular ciphers
 	
 	//  circulant matrix / lsd cipher
@@ -51990,14 +52295,15 @@ class PublicKey
 	private static final int size144 = 576/4; // 144 digits
 	private static final int size88  = 4*22; // 88 digits
 	
-	//  (integer) vector cross product (vcp) cipher
+	
+	//  Vector cross product (vcp) cipher
 	
 	private static final int size120 = 3*40; // 120 digits
+	
 	
 	//  Polynomial matrix X A X cipher
 	
 	private static final int size150 = 50*3; // 150 digits
-	
 	
 	
 	
@@ -52046,7 +52352,7 @@ class PublicKey
 		
 		size120, //  Y = A (x) X  vector cross product / vcp
 		
-		size88,  //  rotate( A X1 ) X2   2 D multiplication
+		size88,  //  rotate( A X1 ) X2  2 D multiplication
 		
 		
 		size150, //  X1 A X2  polynomial matrix lsd
@@ -52105,22 +52411,27 @@ class PublicKey
 	};
 	
 	
-	//  These numbers are not accurate because the
-	//  threads are interrupted, but they show that
-	//  the vector cross product cipher is the fast-
-	//  est public key cipher
-	//
-	//  (The knapsack cipher is slow because it
-	//  has to compute the vector r[][] s[].)
-	
 	//  public key compute time (ms) ==
 	//
-	//  [58, 57, 68, 4, 88, 56, 49, 37]
-	//  [56, 32, 40, 3, 113, 72, 45, 45]
-	//  [40, 41, 33, 3, 77, 69, 39, 28]
+	//  [37, 15, 4, 5, 5, 97, 22, 18, 66, 134, 52, 35, 100, 34, 66, 112]
+	//  [63, 18, 6, 6, 7, 85, 19, 31, 68, 171, 68, 49, 156, 35, 93, 140]
+	//  [86, 28, 7, 7, 8, 97, 89, 43, 87, 257, 90, 90, 247, 48, 67, 56]
+	//  [40, 22, 4, 4, 9, 92, 21, 16, 57, 136, 56, 37, 116, 41, 55, 59]
 	//
-	//  [76, 75, 82, 3, 168, 84, 60, 113, 94, 69, 134, 156, 126, 145]
-	//  [22, 17, 26, 3, 169, 132, 66, 93, 131, 18, 153, 180, 107, 171]
+	//  These numbers are not accurate because the threads are inter-
+	//  rupted, but they show that the integer vector cross product,
+	//  the 2-dimensional matrix multiplication, and the polynomial
+	//  matrix lsd are the fastest public key ciphers.
+	//
+	//  (Smart cards or credit cards could use these ciphers because
+	//  they require only a few million processor operations. The
+	//  other ciphers require a hundred million operations.)
+	//
+	//  (The knapsack cipher is slow because it has to compute the
+	//  vector r[][] s[] or it has to try all the values of the
+	//  scalar m[] rand[] errors to solve the knapsack.)
+	
+	
 	
 	
 	
@@ -52140,18 +52451,31 @@ class PublicKey
 	//  The following code is inside a code block so it
 	//  can be executed outside of a function or method
 	
+	static
 	{
 		//  Verify that no two public keys have the same size
 		
-		int[] array = Arrays.copyOf(size, size.length);
+		int[] sizes = Arrays.copyOf(size, size.length);
 		
-		int[][] int_freq = Math.sortAndCollate(size);
+		//  System.out.println(Arrays.toString(sizes));
+		
+		int[][] int_freq = Math.sortAndCollate(sizes);
 		
 		for (int i = 0; i < int_freq.length; i++)
+		{
+			//  System.out.print(int_freq[i][0]
+			//           + " " + int_freq[i][1] + ", ");
+			
+			if (int_freq[i][1] != 1) throw
+			
+			    new IllegalArgumentException();
+		}
 		
-		   if (int_freq[i][1] != 1)
-		
-		      throw new IllegalArgumentException();
+		//  [64, 144, 120, 88, 150, 96, 56, 112, 60, 72, 84, 108, 80, 76, 1604, 2332]
+		//
+		//  56 1, 60 1, 64 1, 72 1, 76 1, 80 1, 84 1, 88 1,
+		//
+		//  96 1, 108 1, 112 1, 120 1, 144 1, 150 1, 1604 1, 2332 1
 	}
 	
 	
@@ -52182,11 +52506,9 @@ class PublicKey
 	
 	//  Random digits for public key parameters or blank public keys
 	//
-	//  If the blank public key is A, the static public key is Y = A X
-	//  or Y = A ^ x and the one-time public key is Z = A K or Z = A ^ k.
-	//  Both the sender and receiver have to use the same blank key A
-	//  to generate the public key and the secret key for a symmetrical
-	//  public key cipher.
+	//  The digits of pi are used as random numbers because pi is an ir-
+	//  rational and transcendental number and the digits are perfectly
+	//  random or chaotic.
 	
 	
 	//  Number pi = Number.pi(5*1024);
@@ -52618,41 +52940,55 @@ class PublicKey
 	}
 	
 	
-	public static int countNumberOfCiphers(String publickey)
+	public static int countNumberOfCiphers(String str)
 	{
-		//  counts the number of ciphers in a public key
+		//  counts the number of ciphers in
+		//  a public key or encrypted message
+		//
+		//  duplicate keys and keys that are pad-
+		//  ded with space chars are not counted
 		
-		//  The keys are usually delimited by the base-16
-		//  separator or '-' but any delimiter can be used
+		//  Verify that the string is a valid pub-
+		//  lic key or a valid encrypted message
 		
-		publickey = publickey.trim();
+		if (!isValidKey(str) && !isEncrypted(str))
 		
-		final String[] tokens;
+		    return 0;
+		
+		str = str .trim();
 		
 		String delimiter = "-";
 		
-		if (publickey.contains(Convert.base16Separator))
+		if (str.contains(Convert.base16Separator))
 		
 		    delimiter = Convert.base16Separator;
 		
-		tokens = publickey.split(delimiter);
+		else if (str.contains("\n\n")) delimiter = "\n\n";
 		
+		final String[] tokens = str.split(delimiter);
+		
+		if (tokens.length > 64) return 0;
+		
+		final int t = tokens.length;
 		
 		int numberofciphers = 0;
 		
-		ArrayList<String> publickeys;
+		ArrayList<String> publickeys
 		
-		publickeys = new ArrayList<String>();
+		    = new ArrayList<String>();
 		
 		for (String token : tokens)
-		
-		   if (isValidKeySize(token.length())
-		
-			&& !publickeys.contains(token))
 		{
-			publickeys.add(token);
+			token = token.trim();
 			
-			numberofciphers++;
+			if (isValidKeySize(token.length())
+			
+			    && !publickeys.contains(token))
+			{
+				publickeys.add(token);
+				
+				numberofciphers++;
+			}
 		}
 		
 		return numberofciphers;
@@ -54066,10 +54402,11 @@ class PublicKey
 	
 		byte[] privatekey, String[] receivedkey)
 	{
-		//  creates a matching one-time public key
+		//  creates a matching one-time, transient or ephemeral
+		//  public key using the ciphers in the static public key
 		//
 		//  If the received key is a public server key then the
-		//  generated matching public key is the public client key.
+		//  generated matching public key is a public client key.
 		//
 		//  This method is used by the encrypt method and by the SSL
 		//  Socket class.
@@ -54082,8 +54419,9 @@ class PublicKey
 		//  PublicKey constructor requires the corresponding static key.
 		//
 		//  Note that the static key variable is only required for asym-
-		//  metric public key ciphers. The other public key ciphers ig-
-		//  nore the static key because the public keys are symmetrical.
+		//  metric public key ciphers such as the Merkle-Hellman / knap-
+		//  sack ciphers. The other public key ciphers ignore the static
+		//  key because the public keys are symmetrical.
 		
 		
 		
@@ -54118,7 +54456,7 @@ class PublicKey
 				
 				if ((publickey == null) || (publickey.toString() == null))
 				
-				    throw new ArithmeticException();
+				    throw new NullPointerException();
 				
 				publickeys[i1] = publickey;
 			});
@@ -54243,7 +54581,7 @@ class PublicKey
 				
 				if ((publickey == null) || (publickey.toString() == null))
 				
-				    throw new ArithmeticException();
+				    throw new NullPointerException();
 				
 				publickeys[i1] = publickey;
 			});
@@ -55435,6 +55773,7 @@ class PublicKey
 			{
 				System.out.println(Arrays.toString(values));
 				System.out.println(Arrays.toString(values1));
+				
 				throw new ArithmeticException();
 			}
 			
@@ -57589,9 +57928,11 @@ class PublicKey
 		
 		for (int i = 1; i < t; i++)
 		
-		   CC[i] = A[i] .multiply(CC[i-1]) .multiply(B[i]) .mod(p)
+		   CC[i] = A[i] .multiply(CC[i-1])
 		
-		      .add(CC[i-1]) .mod(p).add(p).mod(p);
+		      .multiply(B[i]) .mod(p)
+		
+			  .add(CC[i-1]) .mod(p);
 		
 		Matrix Y = (A1 == null) ? C0 : A1;
 		
@@ -60265,7 +60606,7 @@ class PublicKey
 				
 				
 				
-				//  Try all the values of m[] * rand[] errors
+				//  Try all the values of m[] rand[] errors
 				
 				//  This loop can use any range of i such as for (int i =
 				//  4*1024; i < 5*1024; i++) and it still finds the key;
