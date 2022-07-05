@@ -662,14 +662,13 @@ import java.text.*;
 import java.math.BigInteger;
 
 import java.util.*;
-import java.util.regex.*;
+import java.util.regex.Pattern;
 import java.util.zip.*;
 
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 import java.util.concurrent.atomic.*;
 
-import javax.imageio.*;
 import javax.net.ssl.*;
 
 import javax.swing.*;
@@ -712,10 +711,11 @@ public class Editor
 			//  These member variables are not used by the program.
 			//  The code could just use new Programs().new TextFrame(),
 			//  new Programs().new TableFrame(), or new Programs().new
-			//  Mail().new RetrieveMailFrame() without assigning the
-			//  object returned by the constructor to a variable.
-			//  The variables are included to show the objects that
-			//  are created by the runnable class.
+			//  Mail().new RetrieveMailFrame() without assigning the ob-
+			//  ject returned by the constructor to a variable. The text-
+			//  frame, tableframe, imageframe, htmlframe, and mailframe
+			//  variables are only listed as members to show the objects
+			//  that are created by the run method.
 			
 			public void run()
 			{
@@ -11211,7 +11211,7 @@ class Programs
 			public void actionPerformed(ActionEvent e)
 			{
 				String title = __.about;
-				String copyright = "Copyright © 2020";
+				String copyright = "Copyright (c) 2020";
 				String authors = "The Java Editor authors";
 				
 				String message = program + "  ";
@@ -39630,29 +39630,29 @@ class Undo
 class FileType
 {
 
-	//  This class detects if the file type
-	//  is text, table, or html
+	//  This class detects if a file is text, table, or html
+	//
+	//  For text files such as source code documents the chars
+	//  are all < 256; for image files many chars are >= 256.
+	//  Testing the int values of the chars works for detecting
+	//  the file types of attached files for documents that use
+	//  the Latin alphabet. (This method might not work for other
+	//  character sets because it hasn't been tested.)
+	//
+	//  If a file is not text, table or html then the file is
+	//  image or audio. The program would have to use other tests
+	//  to distinguish between image and audio.
+	
 	
 	public static boolean isText(String str)
 	{
-		byte[] filedata = str.getBytes();
+		//  tests if a string contains text
 		
-		for (byte c : filedata)
+		char[] charray = str.toCharArray();
 		
-		    if (!Character.isValidCodePoint(c))
+		for (int c : charray)
 		
-			return false;
-		
-		try
-		{	byte[] utf8Bytes = str.getBytes("UTF8");
-			
-			new String(utf8Bytes, "UTF8");
-		}
-		
-		catch (UnsupportedEncodingException ex)
-		{
-			return false;
-		}
+		    if (c >= 256) return false;
 		
 		return true;
 	}
@@ -39660,8 +39660,8 @@ class FileType
 	
 	public static boolean isTable(String str)
 	{
-		//  tests if a string contains
-		//  character separated values
+		//  tests if a string contains character separated values
+		//
 		//  (tabs, commas, or semicolons)
 		
 		String delimiter;
@@ -48231,7 +48231,7 @@ class Icons
 		
 		private int width, height;
 		
-		private boolean resized;
+		private boolean resized = false;
 		
 		private int freq = 16; // 16 x per sec
 		
@@ -48251,7 +48251,8 @@ class Icons
 			int width  = imageicon.getIconWidth();
 			int height = imageicon.getIconHeight();
 			
-			this.width = width; this.height = height;
+			this.width  = width;
+			this.height = height;
 		}
 		
 		
@@ -48352,7 +48353,6 @@ class Icons
 	
 	
 	
-	
 	private static ArrayList<byte[]> list = new ArrayList<byte[]>();
 	
 	public static void display(Window window, String title, byte[] imagedata)
@@ -48409,9 +48409,9 @@ class Icons
 					    if (list.get(i) == imagedata)
 					
 						list.remove(list.get(i));
+					
+					dialog.dispose();
 				}
-				
-				dialog.dispose();
 			}
 		});
 		
@@ -48441,9 +48441,24 @@ class Icons
 		
 		dialog.add(new JPanel().add(label));
 		dialog.setLocation(window.getX(), window.getY());
-		dialog.setSize(width, height);
+		
 		dialog.setResizable(false);
 		dialog.setTitle(title);
+		
+		dialog.setSize(dialog
+		    .getPreferredSize());
+		
+		
+		//  Change the magnification or multiply the image
+		//  size by 1.0 so the user doesn't see a discontin-
+		//  uity in the image size; otherwise an image occu-
+		//  pies the entire screen and then shrinks to its
+		//  correct size even if the user rotates the mouse
+		//  wheel in the positive or magnifying direction
+		//  instead of the negative or minifying direction.
+		
+		mwl1.changeImageSize(1.0);
+		
 		
 		//  this method only blocks if modal = true
 		
@@ -62839,6 +62854,9 @@ class Cipher
 	final public static int encrypt_method_2 = 2; // big hash;
 	final public static int encrypt_method_3 = 3; // big hash;
 	
+	//  The second and third encrypt methods are 10 times faster
+	//  than the first encrypt method for file encryption
+	
 	
 	public static int encrypt_method = encrypt_method_3;
 	
@@ -62848,19 +62866,14 @@ class Cipher
 	//  ...
 	
 	
-	//  The second and third encrypt methods are 10 times faster
-	//  than the first encrypt method for file encryption
 	
+	//  Hash encryption ciphers are used in the private key / cipher
+	//  class because hash ciphers are unbreakable.
 	
-	//  Hash encryption ciphers are used in the private key /
-	//  cipher class because hash ciphers are unbreakable.
-	
-	
-	//  These encryption methods could change in future versions
-	//  of the software. If the hash functions or encryption proto-
-	//  cols are changed, users will have to upgrade to the new
-	//  software and re-encrypt their files, folders or directories.
-	
+	//  These encryption methods could change in future versions of
+	//  the software. If the hash functions or encryption protocols
+	//  are changed, users will have to upgrade to the new software
+	//  and re-encrypt their files, folders or directories.
 	
 	
 	
@@ -62892,7 +62905,7 @@ class Cipher
 	//  An encrypted or secret message can be called a cryptogram or cryptograph, or it
 	//  can be called cipherdata, ciphertext, or cipher. Cipher can refer to the secret
 	//  message or to the algorithm or method used to encipher the message.
-	
+	//
 	//  The words encipher and encrypt can be used synonymously because they have similar
 	//  meanings. To encipher means to make empty or zero and to encrypt means to make
 	//  secret or hidden.
@@ -72976,7 +72989,7 @@ class Number implements Comparable<Number>
 		//  Input:  a quadratic residule n modulo p
 		//  Output: a square root r = n^(1/2) mod p
 		//
-		//  Find an a such that a^2 − n is a
+		//  Find an a such that a^2 - n is a
 		//  quadratic non-residue modulo p;
 		//
 		//  then compute the value
@@ -83264,7 +83277,7 @@ class SSLSocket extends Socket
 //  cryptography authors. The copyright holders' signature
 //  key is 0000 2020 c685 5793 74c0 2d8d ef02 416c.
 
-//  Copyright © 2020  The Java Editor authors
+//  Copyright (c) 2020  The Java Editor authors
 
 
 
