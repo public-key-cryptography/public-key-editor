@@ -77,167 +77,18 @@
 	the ciphers or encryption protocols changes.
 	
 	
-	** The current version is backward compatible with the previous versions for file encryption, but
-	users should decrypt and re-encrypt their directories or folders using the new program because the
-	private key cipher was modified to include permutations and future versions may not be backward com-
-	patible. Also, the older versions may not accept the new public key as valid for sending encrypted
-	email because two new ciphers were added, but they will still be able to decrypt messages or read
-	encrypted emails.
-	
-	A few errors were also corrected in the software so the compiler's Xlint doesn't issue warnings
-	every time the program is compiled; errors in the Number and Fourier classes were corrected; errors
-	in the userpass menu item and private key encryption menu item were corrected; the file compression
-	was corrected so that attached files are compressed to ~ 1/4 of their size except for files that are
-	incompressible; the sign out / log out method was modified so that if the email server or mail pro-
-	gram becomes unresponsive or the wifi loses its connection it will end the program in a few seconds
-	so the user doesn't have to close the terminal or open the System monitor to find and terminate the
-	process; a redundant encoding was removed by replacing the newlines in the encrypted and encoded da-
-	ta with a base-16 separator to make it base 64; the public key ciphers were rearranged; errors in
-	the readMessage method were corrected so that the messages and attached files are detached and dis-
-	played correctly for encrypted and unencrypted emails; a public key padding error was corrected so
-	the decryption method removes the padding / space chars appended to the message; the SavedEmails
-	class was modified to sort the emails in chronological order and to view, save, or delete the at-
-	tached files and edit the messages; the mail class was modified to save the message states in the
-	user's mail directory by clicking on the message icons; an icon / font size error was corrected; a
-	file description error was corrected that caused the delete attached files to display the file de-
-	scriptions in base 64 for unencrypted emails; a passphrase substring error was corrected in the mail
-	class; the sendmailframe font size was adjusted to make it the same size as the retrievemail frame
-	font size and a line of code was removed from the mouse wheel listener that changed the size of the
-	frame instead of the font if the control button was pressed and the mouse wheel was scrolled; an
-	error in the readMessageStates method was corrected; the SavedEmails class was modified to append
-	the sender's from address to the saved messages even if they have attached files; the ViewSaved-
-	EmailsListener class was modified so that it creates only one instance of the SavedEmails class or
-	opens only one dialog box even if the user clicks more than once on the view saved emails menu item;
-	a few deprecated methods such as Frame pack() and Filechooser showDialog() were replaced even though
-	the compiler doesn't issue warnings for some deprecated methods because the warnings are suppressed;
-	the find class was modified so that it doesn't show the number of occurrences for an empty string;
-	an error that caused the message states to reset to the unread state when a message was deleted was
-	corrected; the PassphraseDialog class was rewritten to extend JDialog instead of JPanel and the code
-	was modified so that the modal variable is set to false so the constructor doesn't block and the pro-
-	gram can use the object returned by the constructor to set the font, color, and other variables, and
-	then the modality is changed to true by the readPassphrase and readDialog methods so that the Dialog
-	setVisible method blocks until the user clicks the ok button and the passphrase size and email address
-	are validated; the document / file type detection was corrected so the program correctly displays html
-	documents instead of trying to display them as image files which caused the dialog frame to collapse;
-	
-	the Hyperactive class was modified to copy the url address to the clipboard so the user can copy and
-	paste the address into a web browser if an email provider like yandex sends messages to clients using
-	html that has hyperlinks; an icon / font size error was corrected that caused different email panels
-	to have different button / icon sizes set by the readMailSettings method unless the frame was resized
-	for the unselected tabs or panels; the SavedEmails variable or object was moved from the RetrieveMail-
-	Frame class to the EmailPanel so that different email tabs have separate saved email frames; the state
-	Changed method for the RetrieveMailFrame was modified to show and hide the saved emails frames for
-	different usernames or email panels if a tab is selected or unselected; the checkDelete box method was
-	modified so that checking a delete box doesn't do a read all button click which caused the screen com-
-	ponents to get resized every time a box was checked or unchecked and also caused the textarea setText
-	method to throw an exception if a check box was checked and unchecked; the reverse colors button was
-	modified so that the button is disabled while the program is listing messages if more than one tab or
-	username is open; the listing = true and reading = true statements were moved outside of the list and
-	read threads so that they get set immediately after the user clicks the list or read button or else
-	the color button would still be enabled until the list or read thread is started which caused two
-	background colors to appear on the same list panel if two email tabs were open and the user clicked
-	the reverse color button while the program was listing the messages because Swing is not thread safe;
-	an error in the passphrase dialog that caused the line width to stay at 56 chars if the user checked
-	and unchecked the max cipher box and then clicked another button was corrected; the Delete menu item
-	was modified so it also deletes folders by recursively listing the files in the directory, deleting
-	the files, and then deleting the empty folders because Java will not delete an un-empty directory;
-	the PublicKey decrypt(String, byte[]) method was modified so it can decrypt ciphertext using any de-
-	limiter for the prepended one-time, transient or ephemeral public keys such as "\n\n", "-", or the
-	base 16 chars 0 to f; a missing statement in the send mail frame setFont method was added to assign
-	the font parameter to the font member / variable so that changing the retrieve mail frame font type
-	also changes the send mail frame font type; the Filechooser class was modified to use a static font
-	type so the dialog box size doesn't change if the font type is changed; the EncryptDirectory class
-	was modified to test if each file object is a file or a directory so the DataStream class doesn't try
-	to read the file which caused it to throw a java.io.FileNotFoundException for sub-directories; an
-	error in the EncryptDirectory class that caused it to display two JOptionPane dialogs was corrected;
-	the directory label in the dialog was added to a disabled button to create a border around the label
-	so the user knows to click on the label or button to change the directory name; the JOptionPane stat-
-	ic factory method showConfirmDialog() in the EncryptDirectory class was replaced by the JOptionPane
-	constructor so the dialog can be re-packed if the user changes the directory or else the encrypt and
-	decrypt buttons would collapse;
-	
-	the encryptFileName and decryptFileName methods were modified to use only the filekey and a random
-	number instead of the plaintext hash so the file name doesn't have to be re-encrypted or become un-
-	decryptable if the user re-saves a file that has an encrypted file name; encrypted file names are only
-	useful for the Pictures folder because the image viewer decrypts the file names, but for the Documents
-	folder the file names should not be encrypted because users have to be able to read the file names to
-	know which file or document to open unless the OpenListener class can prompt the user to enter the
-	passphrase to read, decrypt, and display the decrypted filenames; users who have encrypted file name
-	directories will have to decrypt the directories using a previous version of the program and then re-
-	encrypt the directories or else only the file contents will be decrypted and the file names will be
-	undecryptable; if the file names are not encrypted then the directories don't have to be re-encrypted;
-	
-	a FileChannelReader and FileChannelWriter class were also added to the software to encrypt and decrypt
-	large files and to hash files larger than the array size limit which is 2 G Bytes; the hash value com-
-	puted by the Hash File menu item is the same as using sha256sum /home/username/Downloads/filename; the
-	file size test was removed from the EncryptDirectory class that restricted file sizes to < 2 G bytes
-	because there was no FileChannelReader or FileChannelWriter class to encrypt large files; the synchro-
-	nized incrementNumberOfFiles method was replaced with an AtomicInteger variable; the documents display
-	method was modified to correct for an error in Java that would cause the view attached file dialog
-	frame to throw a negative array size exception and expand to the size of the screen for large files
-	that are unwrapped such as source code files because the lines are all short, but not for documents
-	such as word processor files that are wrapped by the text area because every paragraph is one line;
-	
-	two additional tests were added to the isPadded method because it would return true for files that
-	contain a repeating or increasing sequence of bytes such as the files created by the code example in
-	the EncryptDirectory class; an indexer was also added to the code example to increment the size of
-	each file to test the padding for all file sizes modulo 256; the max file size in the FileEncryptor
-	class was reduced from 2 G bytes to 256 K bytes so that it uses the FileChannelReader and FileChannel-
-	Writer classes instead of the DataStream class because the encryption would throw an exception that
-	says java.lang.OutOfMemoryError:Java heap space; two decrypt methods that were misplaced in the File-
-	Encryptor class were removed; a setPosition and setSize error in the PassphraseDialog was corrected
-	that caused the frame to collapse sometimes, and setWeight statements were added to prevent the frame
-	from collapsing; the position error only became obvious as the cause of the collapse after the set-
-	Weight statements were added which moved the buttons to the right and expanded the size of the dialog;
-	
-	the FileChooser class was modified so the Dialog font style changes from plain to bold if the screen
-	font size is less than 17 which makes the file names easier to read if the font size is small; the
-	PublicKey isEncrypted(String) method was modified so that it truncates the partial ciphertext if the
-	text length is not a multiple of 4 bytes because the isBase64(String) method would return false if the
-	string was padded to a multiple of 4; a statement was removed from the viewAttachedFile and saveAt-
-	tachedFile methods which tested if the file description was in base 64 and incorrectly converted
-	plaintext file names that contain multiples of 4 chars such as the word "file" or "filename" to un-
-	readable file descriptions or non-ascii chars; the find and replace dialog box was modified to dis-
-	play the number of occurrences and the index of the search string just like the find / replace field
-	on the menu bar, and setWeight statements were added to prevent the find and replace fields from mov-
-	ing as the number of occurrences text expands and contracts.
-	
-	the constructor parameters in the FileEncryptor, FileDecryptor, and PassphraseDialog classes were
-	changed from JFrame to Window because Window is the superclass of JFrame, JDialog, and JWindow so that
-	JDialog frames can use these classes by passing their own reference pointer as the argument to the
-	constructor parameter and then the passphrase dialog box will be centered in the JDialog frame instead
-	of the JFrame; the display method parameter in the Documents class was also changed from JFrame to
-	Window so the calling method can use a JFrame, JDialog, or a JWindow object; an error in the FileType
-	class was corrected that caused some attached source code files to be displayed as image files because
-	they were not detected as text files;
-	
-	the FontTypeListener dialogs were changed to non-modal because there is no reason to use a modal win-
-	dow unless an input is required such as a password, passphrase, or file name, or the dialog is dis-
-	playing a message, warning, or error, or requesting a confirmation; the Icons and Documents display
-	methods were modified to use a non-modal dialog so the user can open more than one attached file si-
-	multaneously to view or compare two or more files and can leave the document or JDialog frame open
-	while continuing to retrieve, read, and send other email messages; removing this restriction required
-	adding an ArrayList to store the text or byte[] data to prevent the user from opening multiple copies
-	of the same attached file; and a setFont, setForeground, and setBackground method was added to the
-	Documents class so the email client can change the font, foreground and background colors of the open
-	dialogs if the user changes the font or color.
 	
 	
 	
 	
-	
-	
-	
-	
-	
-	Instructions for running Java programs on Linux
+	Instructions for running java programs on Linux
 	
 	(Your computer should have at least 8 GB of memory
 	if you run Java and a web browser at the same time
 	or else your computer could run out of memory.)
 	
 	
-	Downloading the Java Development Kit (JDK)
+	Downloading the java development kit (JDK)
 	
 	To download the JDK, go to jdk.java.net
 	Click on the link that says  Ready for use: JDK 18.
@@ -249,14 +100,13 @@
 	A dialog box appears that says read or save file.
 	Click on the button that says Save File.
 	
-`	This should download and save the file
+	This should download and save the file
 	openjdk-18_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
-	
-	Installing the Java Development Kit (JDK) and running the Java Editor program
+	Installing the java development kit (JDK) and running the java editor program
 	
 	0.  Download the file openjdk-18_linux-x64_bin.tar.gz  from the website jdk.java.net/18.
 	
@@ -306,6 +156,8 @@
 	
 	
 	
+	Compiling the source code
+	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
 	If the jdk is not installed in your computer, you first have to untar the openjdk-18 using the command
@@ -327,6 +179,90 @@
 	To remove or delete the jdk directory from your computer, use the command
 	
 	sudo rm -r -f /usr/jdk
+	
+	
+	
+	
+	Creating a compiled / executable java .jar file
+	
+	
+	You can create a java archive or java jar file so the file doesn't have to
+	be compiled each time, If the Editor.java file is in the Downloads folder,
+	first compile the .java source code to create the .class files using
+	
+	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java
+	
+	Load the class files and create the .jar file using the jar (create verbose file) command
+	
+	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .  then use 
+	
+	cd; echo "Main-Class: Editor" > manifest.txt;  to create a manifest that contains the main class;
+	
+	finally, add the manifest file to the Editor.jar file using the command
+	
+	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt
+	
+	and then run the jar file using
+	
+	/usr/jdk/jdk-18/bin/java -jar Editor.jar
+	
+	
+	The Editor.jar file will save around 2 to 6 seconds each time the program is executed
+	depending on the speed of the processor or computer. Even on a laptop computer it only
+	takes about 3 seconds to start the program except for very slow processors that could
+	take up to 10 seconds.
+	
+	If you delete the compiled classes directory using rm -r -f EditorClassFiles, the Editor
+	.jar file will still execute because the classes were loaded into the file. The class files
+	are only required to create a jar file, not to run the file (unless the jar file is created
+	to use the directory by specifying the class path in the mainfest but then the jar file
+	would only work on the computer on which the code was compiled).
+	
+	Note that the cd command can be omitted because it just changes the directory to the home
+	directory, and the path name /usr/jdk/jdk-18/bin/java can be replaced by the file name java
+	if the terminal knows where to find the java command. The path name is included because
+	some users may be running a live version of Linux.
+	
+	
+	All of these commands can be concatenated into the single command
+	
+	/usr/jdk/jdk-18/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C TempDirectory .;
+	cd; echo "Main-Class: Editor" > temp.txt;
+	/usr/jdk/jdk-18/bin/jar -u -f Editor.jar -m temp.txt;
+	rm -r -f TempDirectory;
+	
+	which creates the jar file by creating and then deleting a temporary directory for the
+	compiled code or class files. (It doesn't matter if you run this command more than once
+	because it just re-creates the jar file, but the new jar file may not have the same hash
+	value as the previous jar file because it may include a time stamp.)
+	
+	
+	Then the jar file can be run using the command
+	
+	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar (text) for the text editor, or
+	
+	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar image
+	
+	for the email client, spreadsheet, or image viewer, and the file will be executed
+	immediately because the jar file contains the compiled classes or executable byte
+	code instead of the source code.
+	
+	If you execute a .jar file instead of a .java file, then you have to remember to
+	create a new jar file for each new version of the source code. You can do this either
+	by copying and pasting the single command for creating the jar file each time, or by
+	using the up arrow key on the keyboard to search the command history on the terminal
+	until you find the command for creating the jar file and then pressing enter.
+	
+	The five command lines are printed using newline chars for readability (and to keep
+	the horizontal scroll bar from expanding), but you could delete the four newline chars
+	and four tab chars in the terminal and replace them with single space chars before
+	executing the command to make it easier to scroll through the command history using
+	the up and down arrow keys.
+	
+	
 	
 	
 	
