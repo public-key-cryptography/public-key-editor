@@ -69,13 +69,17 @@
 	or ciphers. The composite key is then used to initialize a hash function that generates another
 	one-time pad for the message encryption.
 	
-	The private key encryption uses a hashing function that encrypts the private key and the data. No
-	encryption ciphers or invertible functions are used for encryption because there is no proof that
-	any invertible function that is used more than once is secure, and private keys are not supposed to
-	be reused for public or private key ciphers.
+	The public keys are based on the Diffie-Hellman ciphers Y = A X,  Y = X A X,  Y = A1^x1 A0 A2^x2
+	(mod p) and the Merkle-Hellman knapsack cipher c[] = r0 a[] + r[][] s[] (mod n) where A, A0, A1, A2
+	are public parameters and X, s, and n are private keys. The equations use integers, polynomials,
+	vectors, matrices, cubes, and tesseracts. The vector cross product cipher Y = A (x) X,  E = Y * K
+	uses a parallelogram as a public key and a parallelepiped as a shared secret key or public key
+	agreement. The matrix product cipher Y = A1 X1 X2 uses multi-dimensional arithmetic which multiplies
+	from left to right and from top to bottom. X2 The matrix polynomial discrete log cipher uses Y =
+	A^x C B^x + ... + A^0 C B^0 (mod p).
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
-	the system nano time, and the plaintext hash as sources of entropy), hashing the random number to
+	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
 	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the ci-
 	pherdata or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad
 	to encrypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing
@@ -88,6 +92,13 @@
 	factorization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-
 	Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
 	
+	If any of these ciphers can be broken they will just get replaced. For example, the vector cross
+	product cipher Y = A (x) X uses integers and a single equation but it could also use multiple equa-
+	tions and vectors of Latin squares, polynomials, or powers of a matrix (cube or tesseract) such as
+	the vector { A1, A2, A3 } and { A^x1, A^x2, A^x3 } where A, A1, A2, A3 are hypercomplex and multi-
+	dimensional numbers instead of the vectors { a1, a2, a3 } and { x1, x2, x3 } where a1, a2, a3 and
+	x1, x2, x3 are integers or zero-dimensional numbers.
+	
 	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
 	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
 	remove special characters from the encryption method such as newlines, carriage returns, and end
@@ -99,7 +110,8 @@
 	
 	The text editor and email program were written to test the public key software and to show develop-
 	ers how to use and implement the public key ciphers in other programs, but anybody who knows how to
-	install Java and run a java program can use the program to send and receive encrypted emails.
+	install Java and run a java program (a java source code file or a java jar file) can use the program
+	to send and receive encrypted emails.
 	
 	The sender and receiver have to be using the same ciphers and protocols because the software is not
 	compatible with other encryption programs. Users also may have to keep upgrading their software,
@@ -192,8 +204,8 @@
 	
 	If the jdk is not installed in your computer, you first have to untar the openjdk-18 using the command
 	
-	 cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
@@ -210,6 +222,18 @@
 	
 	sudo rm -r -f /usr/jdk
 	
+	The --recursive option is required because the file is a directory
+	and the rm command doesn't delete directories by default; the user
+	has to confirm that the file to be removed is a directory by speci-
+	fying the recursive option so that users cannot inadvertently delete
+	a directory instead of a file.
+	
+	The --force option tells the command not to prompt the user for a con-
+	firmation before deleting each file and subdirectory, and it ignores
+	nonexistent files and arguments which means that it will not inform
+	the user that it cannot remove the file if there is no such file or
+	directory.
+	
 	
 	
 	
@@ -217,20 +241,22 @@
 	
 	
 	You can create a java archive or java jar file so the file doesn't have to
-	be compiled each time, If the Editor.java file is in the Downloads folder,
-	first compile the .java source code to create the .class files using
+	be compiled each time.
 	
-	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java
+	If the Editor.java file is in the Downloads folder, first compile the
+	.java source code to create the executable .class files using
+	
+	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java;
 	
 	Load the class files and create the .jar file using the jar (create verbose file) command
 	
-	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .  then use 
+	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .;  then use 
 	
 	cd; echo "Main-Class: Editor" > manifest.txt;  to create a manifest that contains the main class;
 	
 	finally, add the manifest file to the Editor.jar file using the command
 	
-	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt
+	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt;
 	
 	and then run the jar file using
 	
@@ -254,18 +280,21 @@
 	some users may be running a live version of Linux.
 	
 	
+	
 	All of these commands can be concatenated into the single command
 	
 	/usr/jdk/jdk-18/bin/javac -d TempDirectory Downloads/Editor.java;
 	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
 	/usr/jdk/jdk-18/bin/jar -u -f Editor.jar -m temp.txt;
-	rm -r -f TempDirectory;
+	rm -r -f TempDirectory; rm temp.txt;
 	
 	which creates the jar file by creating and then deleting a temporary directory for the
-	compiled code or class files. (It doesn't matter if you run this command more than once
-	because it just re-creates the jar file, but the new jar file may not have the same hash
-	value as the previous jar file because it may include a time stamp.)
+	compiled code or class files, and by creating and deleting a temporary manifest file.
+	
+	(It doesn't matter if you run this command more than once because it just re-creates
+	the jar file, but the new jar file may not have the same hash value as the previous
+	jar file because it may include a time stamp.)
 	
 	
 	Then the jar file can be run using the command
@@ -368,7 +397,7 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1      k2               -x2  x1   x2           -k2  k1  k2
+	          x1  x2           k1      k2              -x2   x1   x2          -k2  k1  k2
 	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
@@ -531,7 +560,9 @@
 	periodicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic
 	curves makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem
 	if the parameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters
-	of the curves to protect against all unknown attacks.
+	of the curves to protect against all unknown attacks. If the parameters are chosen correctly and a
+	is congruent to zero modulo 3 then elliptic curve ciphers can be as secure as integer discrete log /
+	factorization ciphers.
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included
 	in the public key class because they are not secure for any key size.
@@ -1110,8 +1141,7 @@ class __
 	
 	nopublickey = "No public key or key is invalid",
 	
-	noclipboardkey = "No clipboard key\n"
-	               + "or key is invalid",
+	noclipboardkey = "No clipboard key\n or key is invalid",
 	
 	publickeyhaschanged = "Public key has changed",
 	
@@ -1164,6 +1194,7 @@ class __
 	entersecretpassphrase = "Enter secret passphrase",
 	
 	filenotfound = "File not found",
+	
 	largefile = "Large file",
 	
 	directory = "Directory",
@@ -2411,45 +2442,6 @@ class Programs
 			focuslistener = new FocusListener();
 			mouselistener = new MouseListener();
 			mousewheellistener1 = new MouseWheelListener1();
-			
-			
-			currentlinefield = new JTextField(7);
-			currentcolfield  = new JTextField(4);
-			currentposfield  = new JTextField(8);
-			
-			//  the default JTextField setting is JTextField.LEADING;
-			//  JTextField.LEADING expands the text from left to right as the user types
-			//  JTextField.TRAILING expands from right to left as in a calculator text field
-			//  JTextField.CENTER expands the text from center to left and right
-			
-			//  currentlinefield.setHorizontalAlignment(JTextField.TRAILING);
-			currentlinefield.setHorizontalAlignment(JTextField.CENTER);
-			
-			//  currentcolfield.setVisible(false);
-			//  currentposfield.setVisible(false);
-			
-			currentlinefield.setEditable(true);
-			currentcolfield .setEditable(false);
-			currentposfield .setEditable(false);
-			
-			currentlinefield.setForeground(Color.gray.darker());
-			currentcolfield .setForeground(Color.gray.darker());
-			currentposfield .setForeground(Color.gray.darker());
-			
-			currentlinefield.setBackground(new JPanel().getBackground());
-			currentcolfield .setBackground(new JPanel().getBackground());
-			currentposfield .setBackground(new JPanel().getBackground());
-			
-			currentlinefield.setBorder(null);
-			currentcolfield .setBorder(null);
-			currentposfield .setBorder(null);
-			
-			currentlinefield.setToolTipText(__.line);
-			currentcolfield .setToolTipText(__.column);
-			currentposfield .setToolTipText(__.position);
-			
-			currentlinefield.addMouseListener(mouselistener);
-			currentposfield .addMouseListener(mouselistener);
 			
 			
 			//  Create an array list of TextAreaPanel to hold the text area panels
@@ -4704,7 +4696,7 @@ class Programs
 					
 					if (choice == 0)
 					{
-						//  Display a dialog box to select a file key
+						//  Display a dialog to select a file key
 						
 						FileEncryptor fe = new FileEncryptor(frame);
 						
@@ -7285,6 +7277,46 @@ class Programs
 				    new JPanel().getBackground());
 				
 				
+				currentlinefield = new JTextField(6);
+				currentcolfield  = new JTextField(4);
+				currentposfield  = new JTextField(8);
+				
+				//  the default JTextField setting is JTextField.LEADING;
+				//  JTextField.LEADING expands the text from left to right as the user types
+				//  JTextField.TRAILING expands from right to left as in a calculator text field
+				//  JTextField.CENTER expands the text symmetrically from center to left and right
+				
+				//  currentlinefield.setHorizontalAlignment(JTextField.TRAILING);
+				currentlinefield.setHorizontalAlignment(JTextField.CENTER);
+				
+				//  currentcolfield.setVisible(false);
+				//  currentposfield.setVisible(false);
+				
+				currentlinefield.setEditable(true);
+				currentcolfield .setEditable(false);
+				currentposfield .setEditable(false);
+				
+				Color darkgray = Color.gray.darker().darker();
+				
+				currentlinefield.setForeground(darkgray);
+				currentcolfield .setForeground(darkgray);
+				currentposfield .setForeground(darkgray);
+				
+				currentlinefield.setBackground(new JPanel().getBackground());
+				currentcolfield .setBackground(new JPanel().getBackground());
+				currentposfield .setBackground(new JPanel().getBackground());
+				
+				currentlinefield.setBorder(null);
+				currentcolfield .setBorder(null);
+				currentposfield .setBorder(null);
+				
+				currentlinefield.setToolTipText(__.line);
+				currentcolfield .setToolTipText(__.column);
+				currentposfield .setToolTipText(__.position);
+				
+				currentlinefield.addMouseListener(mouselistener);
+				currentposfield .addMouseListener(mouselistener);
+				
 				currentlinefield.addFocusListener( new FocusAdapter()
 				{
 					public void focusGained(FocusEvent e) {  }
@@ -7482,17 +7514,30 @@ class Programs
 			
 			public void setFont(Font font)
 			{
-				//  Sets the font of the current line field
+				//  Sets the font of the current line,
+				//  column, and position fields
 				
-				Font font1 = font.deriveFont((float)
+				int maxfontsize = 24;
 				
-				    Math.min(font.getSize(), 24));
+				float fontsize = font.getSize();
+				
+				fontsize = Math.min(fontsize, maxfontsize);
+				
+				Font font1 = labelfont.deriveFont(fontsize);
+				
+				font1 = font1.deriveFont((font1.getSize() > 16) ?
+				
+				    Font.PLAIN : Font.BOLD);
 				
 				currentlinefield.setFont(font1);
 				currentcolfield .setFont(font1);
 				currentposfield .setFont(font1);
 			}
 		}
+		
+		
+		//  End class GotoListener
+		
 		
 		
 		
@@ -7957,7 +8002,7 @@ class Programs
 				String hash = PublicKey.hashPublicKey(text);
 				
 				
-				//  Display the public key hash in a dialog box
+				//  Display the public key hash in a dialog
 				
 				Font font1 = font.deriveFont(
 				
@@ -9167,13 +9212,13 @@ class Programs
 		{
 		
 			//  This method opens a signature key passphrase
-			//  dialog box and displays a new signature key
+			//  dialog and displays a new signature key
 			//
-			//  The dialog box will allow the user to select the
-			//  type of signature key (if there is more than one
-			//  signature algorithm). It also computes the signa-
-			//  ture key and displays the signature key hash as
-			//  the user types the passphrase.
+			//  The dialog will allow the user to select the type
+			//  of signature key (if there is more than one signa-
+			//  ture algorithm). It also computes the signature key
+			//  and displays the signature key hash as the user
+			//  types the passphrase.
 			//
 			//  Choose a signature key
 			//   _______________________________________
@@ -10748,7 +10793,7 @@ class Programs
 				passphrasefield.setText(passphrase);
 				
 				
-				//  Show the dialog box
+				//  Show the dialog
 				
 				String title = __.privatekeyencryption;
 				
@@ -11152,7 +11197,7 @@ class Programs
 			public void actionPerformed(ActionEvent e)
 			{
 				//  This method opens the public key passphrase
-				//  dialog box and prints a new public key
+				//  dialog and prints a new public key
 				
 				JTextArea textarea = textareapanel.textarea;
 				
@@ -14075,7 +14120,7 @@ class Programs
 					
 					if (choice == 0)
 					{
-						//  Display a dialog box to select a file key
+						//  Display a dialog to select a file key
 						
 						FileEncryptor fe = new FileEncryptor(frame);
 						
@@ -22603,7 +22648,7 @@ class Programs
 							
 							   label, "", JOptionPane.ERROR_MESSAGE);
 							
-							//  Allow the user to open the passphrase dialog box
+							//  Allow the user to open the passphrase dialog
 							//  to change the outgoing mail server domain
 							
 							authorized = false;
@@ -23026,7 +23071,7 @@ class Programs
 							{
 								public void mouseClicked(MouseEvent e)
 								{
-									//  Display the reply key size dialog box
+									//  Display the reply key size dialog
 									
 									int replykeysize = getReplyKeySize(frame,
 									
@@ -23377,8 +23422,8 @@ class Programs
 										if (decryptedfiledata == null)
 										{
 											//  If the user doesn't enter a password or closes
-											//  the dialog box then skip the file because the
-											//  recipient will be unable to read the file
+											//  the dialog then skip the file because the re-
+											//  cipient will be unable to read the file
 											
 											if (Cipher.isEncrypted(filedata))
 											{
@@ -24505,8 +24550,8 @@ class Programs
 						
 						if (choice == 0)
 						{
-							//  Display a dialog box to encrypt
-							//  and save the attached file to disk
+							//  Display a dialog to encrypt and
+							//  save the attached file to disk
 							
 							FileEncryptor fe;
 							
@@ -28350,7 +28395,7 @@ class Programs
 					Color foreground = emailpanel.foreground;
 					Color background = emailpanel.background;
 					
-					//  Open the passphrase dialog box and read
+					//  Open the passphrase dialog and read
 					//  the passhrase, servers, and directory
 					
 					parsePassphraseServersAndDirectory(
@@ -29561,12 +29606,8 @@ class Programs
 					emailpanel.caretcolor = color;
 					
 					if (emailpanel.savedemails != null)
-					{
-						emailpanel.savedemails.setReverseColors(
-						    emailpanel.reverse_colors);
-						
-						emailpanel.savedemails.setForeground(color);
-					}
+					
+					    emailpanel.savedemails.setForeground(color);
 					
 					if (!emailpanel.reverse_colors)
 					
@@ -29656,12 +29697,8 @@ class Programs
 					emailpanel.background = color;
 					
 					if (emailpanel.savedemails != null)
-					{
-						emailpanel.savedemails.setReverseColors(
-						    emailpanel.reverse_colors);
-						
+					
 						emailpanel.savedemails.setBackground(color);
-					}
 					
 					if (!emailpanel.reverse_colors)
 					
@@ -29898,7 +29935,7 @@ class Programs
 				
 				public void run()
 				{
-					//  Show a dialog box that allows the user
+					//  Show a dialog that allows the user
 					//  to check / uncheck different emails
 					//
 					//  [ ] sent         (hide sent emails)
@@ -29995,8 +30032,8 @@ class Programs
 				
 				private void listPublicKeys()
 				{
-					//  creates and displays a dialog box that en-
-					//  ables the user to view / delete public keys
+					//  creates and displays a dialog that enables
+					//  the user to view / delete public keys
 					
 					//  Read the public key file into a public key ring
 					
@@ -30552,16 +30589,37 @@ class Programs
 								
 								    SavedEmails(emailpanel.username);
 								
+								String subj = emailpanel.list1.getSubject(msno);
+								
+								
+								//  Prepend the subject to the message
+								
+								if ((subj != null) && !subj.isEmpty())
+								{
+									if (subj.length() < 16)
+									
+									     message = subj +  "  "  + message;
+									else message = subj + "\n\n" + message;
+								}
+								
+								//  Append the sender's address to the message
+								
+								message += "\n\n\n" + from;
+								
 								try
 								{	if (numberoffiles == 0)
 									
-									    emailpanel.savedemails.saveMessage(message, null, from);
+									    emailpanel.savedemails.saveMessage(
+									
+										message, null, from);
 									
 									else // save the message and files (file text)
 									{
 										String filetext = emailpanel.list1.getFileText(msno);
 										
-										emailpanel.savedemails.saveMessage(message, filetext, from);
+										emailpanel.savedemails.saveMessage(
+										
+										    message, filetext, from);
 									}
 								}
 								
@@ -31930,8 +31988,8 @@ class Programs
 					
 					if (choice == 0)
 					{
-						//  Display a dialog box to encrypt
-						//  and save the attached file to disk
+						//  Display a dialog to encrypt and
+						//  save the attached file to disk
 						
 						FileEncryptor fe;
 						
@@ -33672,8 +33730,8 @@ class Programs
 				
 				//  The next email address variable enables the user to change
 				//  the incoming or outgoing mail server because closing the
-				//  settings dialog box calls the readMailSettings and then
-				//  the saveMailSettings method.
+				//  settings dialog calls the readMailSettings and then the
+				//  saveMailSettings method.
 				//
 				//  Without the next email address, the readMailSettings method
 				//  would prevent the settings from being changed because it would
@@ -34329,11 +34387,11 @@ class Programs
 					
 					    emailpanel.savedemails = new SavedEmails(emailpanel.username);
 					
+					emailpanel.savedemails.viewSavedEmails();
+					
 					emailpanel.savedemails.setForeground(emailpanel.foreground);
 					emailpanel.savedemails.setBackground(emailpanel.background);
-					emailpanel.savedemails.setReverseColors(emailpanel.reverse_colors);
-					
-					emailpanel.savedemails.viewSavedEmails();
+					emailpanel.savedemails.setFont(font);
 				}
 			}
 			
@@ -34347,24 +34405,24 @@ class Programs
 				//  | |       ________________________       | |
 				//  | |      |________________________|      | |
 				//  | |______________________________________| |
-				//  | |_[ ]________day month year____________| |
+				//  | |_[][__]__day month year_______________| |
 				//  | |                                      | |
-				//  | |            message text 1            | |
-				//  | |                                      | |
-				//  | |______________________________________| |
-				//  | |_[ ]________day month year____________| |
-				//  | |                                      | |
-				//  | |            message text 2            | |
+				//  | |           message text 1             | |
 				//  | |                                      | |
 				//  | |______________________________________| |
-				//  | |_[ ]________day month year____________| |
+				//  | |_[][__]__day month year_______________| |
 				//  | |                                      | |
-				//  | |            message text 3            | |
+				//  | |           message text 2             | |
 				//  | |                                      | |
 				//  | |______________________________________| |
-				//  | |_[ ]________day month year____________| |
+				//  | |_[][__]__day month year_______________| |
 				//  | |                                      | |
-				//  | |            message text 4            | |
+				//  | |           message text 3             | |
+				//  | |                                      | |
+				//  | |______________________________________| |
+				//  | |_[][__]__day month year_______________| |
+				//  | |                                      | |
+				//  | |           message text 4             | |
 				//  | |                                      | |
 				//  | |______________________________________|_|
 				//  |_|_____________Close button_____________|_|
@@ -34377,8 +34435,9 @@ class Programs
 				private JPanel[] panels;
 				private JLabel[] datelabels;
 				private JLabel[] textlabels;
-				private JCheckBox[] deleteboxes;
+				private JCheckBox[] deleboxes;
 				private JButton[] editbuttons;
+				
 				private JScrollPane[] scrollpanes;
 				private JTextArea[] textareas;
 				
@@ -34393,12 +34452,9 @@ class Programs
 				private Boolean[] edited;
 				private Boolean[] encrypted;
 				
+				private Component[][] components;
+				
 				private JScrollPane scrollpane;
-				
-				private boolean reverse_colors;
-				
-				private Color foreground;
-				private Color background;
 				
 				private String dirname;
 				private String username;
@@ -34439,27 +34495,30 @@ class Programs
 				}
 				
 				
-				public boolean isSavedMessage(String message)
+				public boolean isSavedMessage(String message, String attachedtext)
 				{
+					if (attachedtext == null) attachedtext = "";
+					
 					String filepath = messageToFilePath(message);
 					
 					File file = new File(filepath);
 					
 					if (!file.exists()) return false;
 					
-					String filetext;
+					String text;
 					
-					try { filetext = readAndDecrypt(file); }
+					try { text = readAndDecrypt(file); }
 					
 					catch (IOException ex)
 					
 					    { System.out.println(ex); return false; }
 					
-					if (Number.isBase64(filetext))
+					if (Number.isBase64(text))
 					
-					    filetext = Convert.base64ToString(filetext);
+					    text = Convert.base64ToString(text);
 					
-					return filetext.contains(message);
+					return text.contains(message)
+					    && text.contains(attachedtext);
 				}
 				
 				
@@ -34467,7 +34526,6 @@ class Programs
 				
 					String attachedfiletext, String from) throws IOException
 				{
-				
 					//  This method saves a message to file so the user can
 					//  search previous email messages if they are deleted
 					//  from the email server
@@ -34483,15 +34541,6 @@ class Programs
 					String filepath = dirname + File.separator + filehash;
 					
 					File file = new File(filepath);
-					
-					
-					//  Append the sender's address to the message
-					
-					message += "\n\n\n" + from;
-					
-					if (!Number.isBase64(message))
-					
-					    message = Convert.stringToBase64(message);
 					
 					if ((attachedfiletext != null) && !attachedfiletext.isBlank())
 					{
@@ -34627,6 +34676,7 @@ class Programs
 					createDialog(t);
 					
 					
+					
 					//  Read and decrypt the saved emails
 					
 					//  (Note that if the user changes the passphrase,
@@ -34681,7 +34731,24 @@ class Programs
 						
 						datelabel.setText(String.valueOf(date));
 					}
+					
+					
+					Dimension d0 = Toolkit.getDefaultToolkit().getScreenSize();
+					
+					int width  = (int) (d0.getWidth()  * 5/10);
+					int height = (int) (d0.getHeight() * 9/10);
+					
+					dialog.setSize(width, height);
+					
+					//  set visible is done last so the user doesn't
+					//  see a collapsed frame for a second until the
+					//  dialog frame is packed or resized. (Note that
+					//  set visible doesn't block for this dialog be-
+					//  cause modal is false.)
+					
+					dialog.setVisible(true);
 				}
+				
 				
 				
 				private void readMessage(String plaintext, int index)
@@ -34980,61 +35047,6 @@ class Programs
 				
 				
 				
-				public void setReverseColors(boolean bool)
-				{
-					this.reverse_colors = bool;
-				}
-				
-				public void setForeground(Color color)
-				{
-					this.foreground = color;
-					
-					if ((dialog == null) || (textareas == null)) return;
-					
-					for (JTextArea textarea : textareas)
-					{
-						if (!reverse_colors)
-						{
-						     textarea.setForeground(color);
-						     textarea.setCaretColor(color);
-						}
-						
-						else textarea.setBackground(color);
-					}
-				}
-				
-				public void setBackground(Color color)
-				{
-					this.background = color;
-					
-					if ((dialog == null) || (textareas == null)) return;
-					
-					for (JTextArea textarea : textareas)
-					{
-						if (!reverse_colors) textarea.setBackground(color);
-						
-						else
-						{	textarea.setForeground(color);
-							textarea.setCaretColor(color);
-						}
-					}
-				}
-				
-				
-				public void setFont(Font font)
-				{
-					if ((dialog == null) || (textareas == null)) return;
-					
-					for (JTextArea textarea : textareas)
-					
-					    textarea.setFont(font);
-					
-					findfield.setFont(font);
-					
-					dialog.setSize(dialog.getPreferredSize());
-				}
-				
-				
 				public void setVisible(boolean bool)
 				{
 					if (dialog != null)
@@ -35062,29 +35074,9 @@ class Programs
 					dialog.setResizable(true);
 					
 					dialog.addWindowListener(new WindowListener1());
-					
-					Dimension d0 = Toolkit.getDefaultToolkit().getScreenSize();
-					
-					int width  = ((int) d0.getWidth())  * 5/8;
-					int height = ((int) d0.getHeight()) * 9/10;
-					
-					dialog.setSize(width, height);
-					
-					setFont1(font);
-					
-					setForeground(foreground);
-					setBackground(background);
-					
-					//  set visible is done last so the user doesn't
-					//  see a collapsed frame for a second until the
-					//  dialog frame is packed or resized. (Note that
-					//  set visible doesn't block for this dialog box
-					//  because modal is false.)
-					
-					dialog.setVisible(true);
-					
-					dialog.setSize(dialog.getPreferredSize());
 				}
+				
+				
 				
 				
 				private class WindowListener1 extends WindowAdapter
@@ -35098,9 +35090,9 @@ class Programs
 				
 				private void deleteCheckedMessages()
 				{
-					for (int i = 0; i < deleteboxes.length; i++)
+					for (int i = 0; i < deleboxes.length; i++)
 					
-					    if (deleteboxes[i].isSelected()) new File(
+					    if (deleboxes[i].isSelected()) new File(
 					
 						dirname + File.separator + filenames[i]) .delete();
 				}
@@ -35113,7 +35105,8 @@ class Programs
 					if (edited[i] || !encrypted[i])
 					{
 						if (textareas[i].isEditable())
-						    editbuttons[i].doClick();
+						
+						  editbuttons[i].doClick();
 						
 						String filename = dirname +
 						
@@ -35148,7 +35141,11 @@ class Programs
 				
 				private JPanel createPanel(int t)
 				{
-					final int rows = 16, cols = 60;
+					final int rows = 16, cols = 52;
+					
+					final int l_inset, r_inset;
+					
+					l_inset = r_inset = 100;
 					
 					Box vbox = Box.createVerticalBox();
 					
@@ -35210,7 +35207,7 @@ class Programs
 					
 					     panels = new JPanel[t];
 					 datelabels = new JLabel[t];
-					deleteboxes = new JCheckBox[t];
+					  deleboxes = new JCheckBox[t];
 					editbuttons = new JButton[t];
 					scrollpanes = new JScrollPane[t];
 					  textareas = new JTextArea[t];
@@ -35229,12 +35226,13 @@ class Programs
 					filedescs = new String[t][];
 					filedatas = new   byte[t][][];
 					
+					components = new Component[t][];
 					
 					for (int i = 0; i < t; i++)
 					{
 						     panels[i] = new JPanel();
 						 datelabels[i] = new JLabel();
-						deleteboxes[i] = new JCheckBox();
+						  deleboxes[i] = new JCheckBox();
 						editbuttons[i] = new JButton();
 						  textareas[i] = new JTextArea(rows, cols);
 						
@@ -35261,7 +35259,7 @@ class Programs
 						    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 						
 						scrollpane.setVerticalScrollBarPolicy(
-						    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+						    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 						
 						scrollpanes[i] = scrollpane;
 						
@@ -35272,13 +35270,13 @@ class Programs
 						
 						//  [x]  day month year
 						
-						JCheckBox deletebox = deleteboxes[i];
+						JCheckBox delebox = deleboxes[i];
 						
-						deletebox.setToolTipText(__.delete);
+						delebox.setToolTipText(__.delete);
 						
-						deletebox.addActionListener(new ActionListener()
+						delebox.addActionListener(new ActionListener()
 						{ public void actionPerformed(ActionEvent e)
-						{ textarea.setEnabled(!deletebox.isSelected()); } });
+						{ textarea.setEnabled(!delebox.isSelected()); } });
 						
 						
 						JButton editbutton = editbuttons[i];
@@ -35308,63 +35306,79 @@ class Programs
 						
 						
 						
-						//  Add the delete box, edit button, label,
+						//  Add the delete box, edit button,
+						//
+						//  date label, and text label
 						
-						Gbc gbc = new Gbc();
-						gbc.setPosition(0, 0);
-						gbc.setSize(10, 1);
-						gbc.setInsets(0, 15, 0, 15);
-						gbc.setFill(Gbc.none);
-						
-						panel.add(deletebox, gbc);
-						
-						
-						gbc = new Gbc();
-						gbc.setPosition(10, 0);
-						gbc.setSize(10, 1);
-						gbc.setFill(Gbc.none);
-						gbc.setInsets(0, 15, 0, 15);
-						
-						panel.add(editbutton, gbc);
-						
-						
-						gbc = new Gbc();
-						gbc.setPosition(20, 0);
-						gbc.setSize(10, 1);
-						gbc.setFill(Gbc.none);
-						gbc.setInsets(0, 15, 0, 15);
 						
 						JLabel datelabel = datelabels[i];
-						
-						panel.add(datelabel, gbc);
-						
-						
-						gbc = new Gbc();
-						gbc.setPosition(30, 0);
-						gbc.setSize(10, 1);
-						gbc.setFill(Gbc.none);
-						gbc.setInsets(0, 15, 0, 15);
-						
 						JLabel textlabel = textlabels[i];
 						
-						panel.add(textlabel, gbc);
+						components[i] = new Component[]
+						{
+							delebox, editbutton,
+							datelabel, textlabel,
+						};
+						
+						Box hbox = Box.createHorizontalBox();
+						
+						hbox.add(delebox);
+						hbox.add(Box.createHorizontalStrut(20));
+						
+						hbox.add(editbutton);
+						hbox.add(Box.createHorizontalStrut(20));
+						
+						hbox.add(datelabel);
+						hbox.add(Box.createHorizontalStrut(20));
+						
+						hbox.add(textlabel);
+						hbox.add(Box.createHorizontalStrut(20));
 						
 						
-						//  Add a large inset to the left and right mar-
-						//  gin of each text area's scrollpane so the
-						//  user can scroll through all the messages us-
-						//  ing the mouse without widening the window
+						
+						//  Add a large inset to the left and right margin of
+						//  each text area's scrollpane so the user can scroll
+						//  through all the messages using the mouse without
+						//  widening the window.
+						//
+						//  Also, set the x weight to 100 so the user can widen
+						//  and narrow the text areas by widening and narrowing
+						//  the window frame;
+						//
+						//  and set the y size so the user notices that the mes-
+						//  sage buttons and labels expand if the user types and
+						//  enters a search string and then contract as the user
+						//  deletes the search string; otherwise the user might
+						//  not notice or realize that the message panes disap-
+						//  pear whenever a search string is entered and then
+						//  reappear when the search string is deleted.
+						
+						
+						final int y_size = 20;
+						
+						Gbc gbc = new Gbc();
+						
+						gbc.setPosition(0, 0);
+						gbc.setSize(100, y_size);
+						gbc.setAnchor(Gbc.center);
+						gbc.setFill(Gbc.horizontal);
+						gbc.setWeight(100, y_size);
+						gbc.setInsets(0, l_inset, 0, r_inset);
+						
+						panel.add(hbox, gbc);
 						
 						
 						gbc = new Gbc();
-						gbc.setPosition(0, 1);
-						gbc.setSize(100, 1);
-						gbc.setFill(Gbc.both);
+						
+						gbc.setPosition(0, y_size);
+						gbc.setSize(100, 100 - y_size);
 						gbc.setAnchor(Gbc.center);
-						gbc.setWeight(0, 100);
-						gbc.setInsets(0, 60, 0, 60);
+						gbc.setFill(Gbc.both);
+						gbc.setWeight(100, 100 - y_size);
+						gbc.setInsets(0, l_inset, 0, r_inset);
 						
 						panel.add(scrollpane, gbc);
+						
 						
 						vbox.add(panel);
 					}
@@ -35417,32 +35431,33 @@ class Programs
 					Gbc gbc;
 					
 					gbc = new Gbc();
-					gbc.setPosition(25, 0);
-					gbc.setSize(50, 1);
+					gbc.setPosition(0, 0);
+					gbc.setSize(100, 5);
 					gbc.setFill(Gbc.horizontal);
-					gbc.setWeight(50, 1);
+					gbc.setWeight(100, 5);
 					
 					panel.add(findpanel, gbc);
 					
 					gbc = new Gbc();
-					gbc.setPosition(0, 1);
-					gbc.setSize(100, 95);
+					gbc.setPosition(0, 5);
+					gbc.setSize(100, 90);
 					gbc.setFill(Gbc.both);
-					gbc.setWeight(100, 95);
+					gbc.setWeight(100, 90);
 					
 					panel.add(scrollpane, gbc);
 					
 					gbc = new Gbc();
-					gbc.setPosition(25, 98);
-					gbc.setSize(50, 2);
+					gbc.setPosition(0, 95);
+					gbc.setSize(100, 5);
 					gbc.setFill(Gbc.horizontal);
-					gbc.setWeight(50, 2);
-					gbc.setInsets(5, 100, 5, 100);
+					gbc.setWeight(100, 5);
+					gbc.setInsets(5, l_inset, 5, r_inset);
 					
 					panel.add(closebutton, gbc);
 					
 					return panel;
 				}
+				
 				
 				
 				private class MouseListener1 extends MouseAdapter
@@ -35554,6 +35569,75 @@ class Programs
 									}
 								}
 							}
+						}
+					}
+				}
+				
+				
+				public void setFont(Font font)
+				{
+				
+					if ((dialog == null) || (textareas == null)) return;
+					
+					if (textareas != null)
+					
+					   for (JTextArea textarea : textareas)
+					
+					      textarea.setFont(font);
+					
+					float labelfontsize = font.getSize() - 4.0f;
+					
+					
+					for (Component[] comparray : components)
+					
+					    for (Component comp : comparray)
+					
+						if (comp instanceof JLabel)
+						
+						    ((JLabel) comp).setFont(font
+						
+							.deriveFont(labelfontsize));
+					
+					
+					findfield.setFont(font);
+					
+					
+					//  Set the font for the Documents dialogs
+					
+					Documents.setFont(font);
+				}
+				
+				
+				
+				public void setForeground(Color color)
+				{
+					if ((dialog == null) || (textareas == null)) return;
+					
+					for (JTextArea textarea : textareas)
+					{
+						if (!emailpanel.reverse_colors)
+						{
+						     textarea.setForeground(color);
+						     textarea.setCaretColor(color);
+						}
+						
+						else textarea.setBackground(color);
+					}
+				}
+				
+				public void setBackground(Color color)
+				{
+					if ((dialog == null) || (textareas == null)) return;
+					
+					for (JTextArea textarea : textareas)
+					{
+						if (!emailpanel.reverse_colors)
+						
+							textarea.setBackground(color);
+						
+						else
+						{	textarea.setForeground(color);
+							textarea.setCaretColor(color);
 						}
 					}
 				}
@@ -40037,7 +40121,7 @@ class FileChooser extends JFileChooser
 {
 
 	//  A static font type is used because some font
-	//  types can change the size of the dialog box
+	//  types can change the size of the dialog
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -40181,7 +40265,7 @@ class Print
 class DeleteFileListener implements ActionListener
 {
 
-	//  Ctrl + D  opens the Delete (file) dialog box
+	//  Ctrl + D  opens the Delete (file) dialog
 	
 	
 	private String directory;
@@ -41791,7 +41875,7 @@ class FileEncryptor
 {
 
 	//  The FileEncryptor class displays the JFileChooser
-	//  Dialog and the select and confirm file key dialog box
+	//  Dialog and the select and confirm file key dialog
 	
 	
 	private Window window;
@@ -42189,8 +42273,8 @@ class FileDecryptor
 {
 
 
-	//  The FileDecryptor class displays the JFileChooser Dialog and
-	//  the passphrase dialog box
+	//  The FileDecryptor class displays the JFileChooser Dialog
+	//  and the passphrase dialog
 	//
 	//  (The FileDecryptor class doesn't do passphrase confirmation
 	//  because there is no need to confirm a passphrase for decryption)
@@ -45844,11 +45928,6 @@ class Documents
 			{
 				int keycode = e.getKeyCode();
 				
-				if ((keycode == KeyEvent.VK_ESCAPE)
-				 || (keycode == KeyEvent.VK_ENTER))
-				
-				    { dialog.dispose(); }
-				
 				if (keycode == KeyEvent.VK_SHIFT) shift = true;
 				if (keycode == KeyEvent.VK_CONTROL) control = true;
 			}
@@ -46029,32 +46108,10 @@ class Documents
 		    JScrollPane.  VERTICAL_SCROLLBAR_ALWAYS,
 		    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		//  Read the screen size
-		
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		
-		Dimension d = tk.getScreenSize();
+		if (!linewrap) textarea.setSize(rows, cols);
 		
 		
-		if (linewrap)
-		{
-			//  Set the preferred size of the scrollpane
-			
-			int  width = d.width  * 5/10;
-			int height = d.height * 5/10;
-			
-			Dimension D = new Dimension(width, height);
-			
-			scrollpane.setPreferredSize(D);
-		}
-		
-		else // if (!linewrap)
-		{
-			textarea.setSize(rows, cols);
-		}
-		
-		
-		//  Create a dialog box
+		//  Create a dialog
 		
 		JDialog dialog = new JDialog(window);
 		
@@ -46107,25 +46164,14 @@ class Documents
 		
 		dialog.setLocation(xpos, ypos);
 		
-		Dimension size = dialog.getPreferredSize();
+		//  Read the screen size
 		
-		int x = (int) size.getWidth();
-		int y = (int) size.getHeight();
+		Toolkit tk = Toolkit.getDefaultToolkit();
 		
-		double multiply_x = 0.45;
-		double multiply_y = 0.60;
+		Dimension d = tk.getScreenSize();
 		
-		if (x > (int) (d.getWidth()*multiply_x))
-		    x = (int) (d.getWidth()*multiply_x);
-		
-		if (y > (int) (d.getHeight()*multiply_y))
-		    y = (int) (d.getHeight()*multiply_y);
-		
-		size = new Dimension(x, y);
-		
-		dialog.setSize(size);
-		
-		//  this method blocks only if modal = true
+		dialog.setSize((int) (d.width *0.6),
+		               (int) (d.height*0.6));
 		
 		dialog.setVisible(true);
 		
@@ -46266,7 +46312,7 @@ class Documents
 		});
 		
 		
-		//  Create a dialog box
+		//  Create a dialog
 		
 		JDialog dialog = new JDialog(window);
 		
@@ -48400,6 +48446,9 @@ class Icons
 		
 			{ delete(imagedata); return; }
 		
+		
+		JDialog dialog = new JDialog(window);
+		
 		ImageIcon imageicon = new ImageIcon(imagedata, "");
 		
 		Image image = imageicon.getImage();
@@ -48408,10 +48457,10 @@ class Icons
 		
 		label.setIcon(imageicon);
 		
-		JDialog dialog = new JDialog(window);
-		
 		MouseWheelListener1 mwl1 = new
 		MouseWheelListener1(dialog, label);
+		
+		label.addMouseWheelListener(mwl1);
 		
 		dialog.addKeyListener(new KeyAdapter()
 		{
@@ -48455,10 +48504,6 @@ class Icons
 			}
 		});
 		
-		label.addMouseWheelListener(mwl1);
-		
-		int  width = imageicon.getIconWidth();
-		int height = imageicon.getIconHeight();
 		
 		dialog.add(new JPanel().add(label));
 		
@@ -48481,25 +48526,39 @@ class Icons
 		    .getPreferredSize());
 		
 		
-		//  Change the magnification or multiply the image
-		//  size by 1.0 so the user doesn't see a discontin-
-		//  uity in the image size; otherwise an image occu-
-		//  pies the entire screen and then shrinks to its
-		//  correct size even if the user rotates the mouse
-		//  wheel in the positive or magnifying direction
-		//  instead of the negative or minifying direction.
+		//  Change the magnification by 1 or add 0 so the user
+		//  doesn't see a discontinuity in the image size;
+		//  otherwise an image occupies the entire screen and
+		//  then shrinks to its correct size even if the user
+		//  rotates the mouse wheel in the positive or magnify-
+		//  ing direction instead of the negative or minifying
+		//  direction.
 		
-		mwl1.changeImageSize(1.0);
-		
-		
-		//  this method only blocks if modal = true
+		mwl1.changeImageSize(0);
 		
 		dialog.setVisible(true);
+		
+		
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		
+		Dimension screensize = tk.getScreenSize();
+		
+		int width, height;
+		
+		do
+		{	width  = label.getIcon().getIconWidth();
+			height = imageicon.getIconHeight();
+			
+			mwl1.changeImageSize(-1.5);
+		}
+		
+		while (width > screensize.width / 3.3);
 		
 		dialogs.add(dialog);
 		
 		images.add(imagedata);
 	}
+	
 	
 	
 	private static void delete(byte[] imagedata)
@@ -52375,11 +52434,7 @@ class PublicKey
 	
 	//  Large ciphers
 	
-	//  Asymmetrical public key ciphers or invertible one-way functions
-	
-	//  Rabin / factorization / co-composite root extraction cipher
-	
-	private static final int size4x128 = 4*128; // 512 digits
+	//  Asymmetrical public keys or invertible one-way functions
 	
 	
 	//  The integer Merkle-Hellman / knapsack ciphers
@@ -52388,14 +52443,28 @@ class PublicKey
 	private static final int size48x49 = 48*49 - 20; // 48 terms x 4 bits
 	
 	
+	//  Rabin / factorization / co-composite root extraction cipher
+	//
+	//  The Rabin cipher is commented or disabled in the public key class
+	//  because the cipher is susceptible to quantum computing. It wouldn't
+	//  weaken the security because a composite key is as strong as the strong-
+	//  est ciphers, but it would be anomalous to include this cipher in the
+	//  public key because the cipher is not quantum resistant, and it could
+	//  slow the key generation and decryption because prime number generation
+	//  is probabilistic and it may not be portable because it requires fast
+	//  algorithms that may not be available in other programming languages.
+	
+	private static final int size4x128 = 4*128; // 512 digits
+	
+	
 	
 	
 	//  Public keys can be static / receiver or one-time / sender keys
 	//
 	//  The type of key is only important for asymmetric public key ciphers
 	//  such as the Rabin / fact and Merkle-Hellman / knapsack ciphers.
-	//  Symmetric public key methods or Diffie-Hellman ciphers ignore this
-	//  variable.
+	//
+	//  Symmetric public keys or Diffie-Hellman ciphers ignore this variable
 	
 	final static int receive_decrypt = 1; // receiver / static key
 	final static int    send_encrypt = 2; //  sender / one-time key
@@ -52429,7 +52498,7 @@ class PublicKey
 		         //  x (M1^x1 [ B ] M2^x1 + M1^x2 [ C ] M2^x2)
 		
 		
-		size60,  //  A^x C B^x + ... + A^0 C B^0  m-pdl
+		size60,  //  A^x C B^x + ... + A^0 C B^0  mpdl
 		
 		size72,  //  x A1^x1 B A2^x2  cube-dl / cdl
 		
@@ -52460,11 +52529,11 @@ class PublicKey
 		
 		//  cipher abbreviations
 		//
-		//  mdl = matrix discrete log
-		//  pdl = polynomial discrete log
-		//  qdl = quaternion discrete log
-		//  cdl = cube discrete log
-		//  tdl = tesseract discrete log
+		//  m-dl = matrix discrete log
+		//  p-dl = polynomial discrete log
+		//  q-dl = quaternion discrete log
+		//  c-dl = cube discrete log
+		//  t-dl = tesseract discrete log
 		//
 		//  mpdl = matrix polynomial discrete log
 		//  lsdl = Latin square discrete log  X^-1 A^x X
@@ -62958,6 +63027,96 @@ class Cipher
 	//  The words encipher and encrypt can be used synonymously because they have similar
 	//  meanings. To encipher means to make empty or zero and to encrypt means to make
 	//  secret or hidden.
+	
+	
+	
+	
+	//  Private key cipher notes
+	//
+	//  The private key / cipher class uses a hash function for encryption. Only one hash function is
+	//  required for encryption because a hash function is more complicated than a public key function.
+	//  Hash functions are more complicated than public key ciphers because public key ciphers are equa-
+	//  tions that have to be commutative or invertible for key agreement whereas hash functions are algo-
+	//  rithms that only have to be computable.
+	//
+	//  A hash function doesn't encrypt messages because a hash function is non-invertible. A hash func-
+	//  tion is used to generate a sequence of random numbers or a one-time pad which is xor-ed with the
+	//  plaintext to generate the ciphertext. A hash cipher is provably unbreakable because it uses a
+	//  non-invertible sequence of random numbers or a one-time pad for encryption.
+	//
+	//  A one-time pad is provably secure by the definition of randomness (all possible values are equally
+	//  probable) and the rotation of equal probabilities. To prove that a one-time pad is perfectly se-
+	//  cure, or that adding a non-random number m to a random number k still generates a random number c,
+	//  write the equation k + m == c and then solve for the message m = c - k. Since k is random, by def-
+	//  inition this means that all values of k are equally likely or probable; therefore all values of
+	//  m = c - k are also equally probable, because adding a constant to a random number just rotates the
+	//  probabilities modulo the number of digits or values.
+	//
+	//  The random and non-random numbers have to have the same modulus or number or else the probabilities
+	//  would be unequal and the one-time pad would be insecure. For example, if the random number k were a
+	//  binary number and m were a decimal number, then adding the two numbers modulo 10 would generate a
+	//  non-random number c because adding a binary number modulo 10 is equivalent to adding a decimal num-
+	//  ber in which the first two values 0 and 1 each have a 1/2 probability and the next eight values 2
+	//  to 9 have a zero probability. This would mean that a random binary number is really a non-random
+	//  decimal number being added to a decimal number. Adding or multiplying two numbers that have differ-
+	//  ent moduli is also an illegal or undefined operation in math.
+	//
+	//  A one-time pad is also proved to be secure by matrix theory because any system of simultaneous
+	//  linear equations in which there are more variables than equations is indeterminate or has an in-
+	//  finite or modular number of solutions. A system of linear equations that has more variables than
+	//  equations cannot be reduced to echelon (triangular) form and row canonical (diagonal) form or
+	//  solved by Gaussian elimination. This proves that a one-time pad is unsolvable or cannot be reduced
+	//  to echelon form because it has two variables but only one equation.
+	//
+	//  If the same one-time pad were reused for another message, then the ciphertext would no longer be
+	//  secure because there would be two equations k + m1 == c1 and k + m2 == c2 for each digit or char-
+	//  acter, and then the random value k could be eliminated by subtraction to get the non-random dif-
+	//  ference m1 - m2 == c1 - c2 == c3 for each character in the plaintext. This means that each message
+	//  would be encrypted with another message or a non-random one-time pad.
+	//
+	//  The only reason to use an (invertible) encryption cipher instead of a hash cipher or one-time pad
+	//  is to be able to reuse the same encryption key so the message or file does not have to expand to
+	//  include the one-time secret key. However, an encryption cipher may also require an initialization
+	//  vector because files that start with the same plaintext will also start with the same ciphertext
+	//  unless a different iv is used. The initialization vector or initial value negates the benefit of
+	//  using an encryption cipher because a one-time iv has to be stored instead of a one-time encrypted
+	//  encryption key.
+	//
+	//  The use of invertible private key ciphers violates a principle of cryptography that private keys
+	//  are not supposed to be reused for each block of data. Encryption ciphers also have a one-to-one
+	//  mapping of plaindata to cipherdata because the functions have to be invertible which makes them
+	//  vulnerable to cryptanalysis or susceptible to Fourier analysis.
+	//
+	//  Another problem with encryption ciphers is that nobody knows which ciphers are broken because the
+	//  methods of cryptanalysis are secret. By using a hash cipher instead of an encryption cipher, the
+	//  private key / cipher class sidesteps the problem of cryptanalysis and makes the knowledge that
+	//  cryptanalysts have worthless because hash functions are non-invertible. Even a quantum computer
+	//  would be unable to break a hash cipher. Moreover, the hash function uses a large memory buffer
+	//  which not only reduces the amount of work required to compute n multiplications for each hash value
+	//  from O(n) to O(n^0) or O(1) but also makes cryptanalysis impossible because the internal state of
+	//  the hash machine is unknown, and each hash value uses the sum of the four matrix elements at the
+	//  current index of the circular array instead of using the element values by themselves so a crypt-
+	//  analyst has no information about the cipher except for the sum of four numbers that are added to
+	//  the plaintext.
+	//
+	//  A hash cipher requires a one-time secret key such as H(m) (+) k0 for file encryption or the shared
+	//  secret key for message encryption. For file encryption the secret encryption key has to be encrypt-
+	//  ed by xor-ing it with a static or shared secret key so the key can be attached (prepended or ap-
+	//  pended) to the encrypted file. (The encrypted encryption key could be stored with the file name if
+	//  the operating system or file system allows programs to set a file key for each file just as it al-
+	//  lows programs to set the modification time and other information about the file.)
+	//
+	//  For email or asynchronous communication messages are converted to base 64 after encryption because
+	//  encrypted data or cipherdata contains random characters. If there are any missing data blocks the
+	//  ciphertext will not be decryptable even if CBC is used because the message will not decode from
+	//  base 64 unless it just happens to be missing a sequence of four consecutive base-64 chars.
+	//
+	//  The ciphers in the private key / cipher class are not compatible with other private key standards,
+	//  just as the ciphers in the public key class are not compatible with other public key standards;
+	//  the Mail program is not compatible with PCP; and the SSL class is not compatible with other SSL /
+	//  TLS classes because it uses different ciphers, multiple / composite keys, and a different key
+	//  exchange / key agreement protocol.
+	
 	
 	
 	

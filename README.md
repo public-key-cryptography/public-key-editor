@@ -39,13 +39,17 @@
 	or ciphers. The composite key is then used to initialize a hash function that generates another
 	one-time pad for the message encryption.
 	
-	The private key encryption uses a hashing function that encrypts the private key and the data. No
-	encryption ciphers or invertible functions are used for encryption because there is no proof that
-	any invertible function that is used more than once is secure, and private keys are not supposed to
-	be reused for public or private key ciphers.
+	The public keys are based on the Diffie-Hellman ciphers Y = A X,  Y = X A X,  Y = A1^x1 A0 A2^x2
+	(mod p) and the Merkle-Hellman knapsack cipher c[] = r0 a[] + r[][] s[] (mod n) where A, A0, A1, A2
+	are public parameters and X, s, and n are private keys. The equations use integers, polynomials,
+	vectors, matrices, cubes, and tesseracts. The vector cross product cipher Y = A (x) X,  E = Y * K
+	uses a parallelogram as a public key and a parallelepiped as a shared secret key or public key
+	agreement. The matrix product cipher Y = A1 X1 X2 uses multi-dimensional arithmetic which multiplies
+	from left to right and from top to bottom. X2 The matrix polynomial discrete log cipher uses Y =
+	A^x C B^x + ... + A^0 C B^0 (mod p).
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
-	the system nano time, and the plaintext hash as sources of entropy), hashing the random number to
+	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
 	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the ci-
 	pherdata or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad
 	to encrypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing
@@ -58,6 +62,13 @@
 	factorization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-
 	Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
 	
+	If any of these ciphers can be broken they will just get replaced. For example, the vector cross
+	product cipher Y = A (x) X uses integers and a single equation but it could also use multiple equa-
+	tions and vectors of Latin squares, polynomials, or powers of a matrix (cube or tesseract) such as
+	the vector { A1, A2, A3 } and { A^x1, A^x2, A^x3 } where A, A1, A2, A3 are hypercomplex and multi-
+	dimensional numbers instead of the vectors { a1, a2, a3 } and { x1, x2, x3 } where a1, a2, a3 and
+	x1, x2, x3 are integers or zero-dimensional numbers.
+	
 	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
 	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
 	remove special characters from the encryption method such as newlines, carriage returns, and end
@@ -69,7 +80,8 @@
 	
 	The text editor and email program were written to test the public key software and to show develop-
 	ers how to use and implement the public key ciphers in other programs, but anybody who knows how to
-	install Java and run a java program can use the program to send and receive encrypted emails.
+	install Java and run a java program (a java source code file or a java jar file) can use the program
+	to send and receive encrypted emails.
 	
 	The sender and receiver have to be using the same ciphers and protocols because the software is not
 	compatible with other encryption programs. Users also may have to keep upgrading their software,
@@ -162,8 +174,8 @@
 	
 	If the jdk is not installed in your computer, you first have to untar the openjdk-18 using the command
 	
-	 cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
@@ -180,6 +192,18 @@
 	
 	sudo rm -r -f /usr/jdk
 	
+	The --recursive option is required because the file is a directory
+	and the rm command doesn't delete directories by default; the user
+	has to confirm that the file to be removed is a directory by speci-
+	fying the recursive option so that users cannot inadvertently delete
+	a directory instead of a file.
+	
+	The --force option tells the command not to prompt the user for a con-
+	firmation before deleting each file and subdirectory, and it ignores
+	nonexistent files and arguments which means that it will not inform
+	the user that it cannot remove the file if there is no such file or
+	directory.
+	
 	
 	
 	
@@ -187,20 +211,22 @@
 	
 	
 	You can create a java archive or java jar file so the file doesn't have to
-	be compiled each time, If the Editor.java file is in the Downloads folder,
-	first compile the .java source code to create the .class files using
+	be compiled each time.
 	
-	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java
+	If the Editor.java file is in the Downloads folder, first compile the
+	.java source code to create the executable .class files using
+	
+	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java;
 	
 	Load the class files and create the .jar file using the jar (create verbose file) command
 	
-	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .  then use 
+	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .;  then use 
 	
 	cd; echo "Main-Class: Editor" > manifest.txt;  to create a manifest that contains the main class;
 	
 	finally, add the manifest file to the Editor.jar file using the command
 	
-	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt
+	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt;
 	
 	and then run the jar file using
 	
@@ -224,18 +250,21 @@
 	some users may be running a live version of Linux.
 	
 	
+	
 	All of these commands can be concatenated into the single command
 	
 	/usr/jdk/jdk-18/bin/javac -d TempDirectory Downloads/Editor.java;
 	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
 	/usr/jdk/jdk-18/bin/jar -u -f Editor.jar -m temp.txt;
-	rm -r -f TempDirectory;
+	rm -r -f TempDirectory; rm temp.txt;
 	
 	which creates the jar file by creating and then deleting a temporary directory for the
-	compiled code or class files. (It doesn't matter if you run this command more than once
-	because it just re-creates the jar file, but the new jar file may not have the same hash
-	value as the previous jar file because it may include a time stamp.)
+	compiled code or class files, and by creating and deleting a temporary manifest file.
+	
+	(It doesn't matter if you run this command more than once because it just re-creates
+	the jar file, but the new jar file may not have the same hash value as the previous
+	jar file because it may include a time stamp.)
 	
 	
 	Then the jar file can be run using the command
@@ -338,7 +367,7 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1      k2               -x2  x1   x2           -k2  k1  k2
+	          x1  x2           k1      k2              -x2   x1   x2          -k2  k1  k2
 	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
@@ -501,7 +530,9 @@
 	periodicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic
 	curves makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem
 	if the parameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters
-	of the curves to protect against all unknown attacks.
+	of the curves to protect against all unknown attacks. If the parameters are chosen correctly and a
+	is congruent to zero modulo 3 then elliptic curve ciphers can be as secure as integer discrete log /
+	factorization ciphers.
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included
 	in the public key class because they are not secure for any key size.
