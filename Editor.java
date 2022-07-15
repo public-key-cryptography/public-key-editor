@@ -58242,11 +58242,11 @@ class PublicKey
 	//
 	//  Choose a secret key m[] and then calculate the sum
 	//
-	//  b = c[] (m[] mod x) or
+	//  b = c[] (m[] mod p) or
 	//
-	//  B = C[] (m[] mod x)
+	//  B = C[] (m[] mod p)
 	//
-	//  where x is a modulus < a[i+1] / a[i]
+	//  where p is a modulus < a[i+1] / a[i]
 	//
 	//
 	//  Recovering the secret key m[]
@@ -58254,15 +58254,14 @@ class PublicKey
 	//  Subtract s and multiply b by the inverse of r
 	//  modulo x to get the superincreasing subset sum
 	//
-	//  b' = r^-1 (b - r[i][j] m[j] s[i]) == a[] (m'[] mod x) or
+	//  b' = r^-1 (b - r[i][j] m[j] s[i]) == a[] m'[] (mod x) or
 	//
-	//  B' = R1^-1 (B - R[i][j] m[j] S[i]) R2^-1 == A[] (m'[] mod x)
+	//  B' = R1^-1 (B - R[i][j] m[j] S[i]) R2^-1 == A[] m'[] (mod x)
 	//
 	//  and then solve for the permuted secret key m'[].
 	//
 	//  For a 2x2 matrix cipher, the recipient could use
-	//  any of the four equations to solve for m[] in
-	//  B'[][row][col] = A[][row][col] (m'[] mod x).
+	//  any of the four equations to solve for m[].
 	//
 	//  Permutate m'[] to recover m[].
 	
