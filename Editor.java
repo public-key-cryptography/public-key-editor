@@ -31,9 +31,9 @@
 	The Java Editor program contains a text editor, email editor, table editor, and image viewer.
 	
 	The program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert
-	classes. These classes contain all the ciphers, algorithms, protocols, and software required to
-	do cryptography. The Mail, PopMail, and SendMail classes contain the software required to send
-	and retrieve email.
+	classes. These classes contain all the ciphers, algorithms, protocols, and software required to do
+	cryptography. The Mail, PopMail, and SendMail classes contain the software required to send and
+	retrieve email.
 	
 	All the software is included in one file so the source code can be executed without compiling the
 	program. No other packages or modules are required to run the program or to use encrypted email.
@@ -41,16 +41,16 @@
 	grams that have compatible licenses. This means that the software can be used with a more permissive
 	license but not a more restrictive or proprietary license.
 	
-	The Mail program can send and retrieve messages using POP mail or Post Office Protocol. The Mail
-	program has a test mail feature on the help menu for the user to try the mail program without being
-	connected to the internet or using a real email account. The help menu of the Mail program also has
-	a document called "How to use pop mail" which explains how to use the program.
+	The Mail program can send and retrieve messages using POP mail or Post Office Protocol. The Mail pro-
+	gram has a test mail feature on the help menu for the user to try the mail program without being con-
+	nected to the internet or using a real email account. The help menu of the Mail program also has a
+	document called "How to use pop mail" which explains how to use the program.
 	
-	Imap is not included because the protocol is more complicated to implement than POP mail. Imap al-
-	lows multiple users to access an email account from different computers which is useful for some
-	companies or organizations that have to reply to large numbers of emails. POP mail also allows mult-
-	iple users to access an email account if none of the users deletes the new messages or only the old
-	messages are deleted.
+	Imap is not included because the protocol is more complicated to implement than POP mail. Imap allows
+	multiple users to access an email account from different computers which is useful for some companies
+	or organizations that have to reply to large numbers of emails. POP mail also allows multiple users
+	to access an email account if none of the users deletes the new messages or only the old messages are
+	deleted.
 	
 	Imap allows users to change the state of the messages on the server, but the POP mail protocol could
 	be amended or the email servers could be upgraded to include this feature. POP mail servers could
@@ -59,59 +59,60 @@
 	assigned to the messages instead of the ordinal / cardinal numbers that are used to enumerate the
 	messages. Otherwise if multiple users list the emails and try to delete messages using the ordinal
 	numbers, the email messages on the clients' computers will not correspond to messages on the server
-	computer because the messages get re-numbered every time one of the users deletes a message and
-	signs out, and the wrong messages will get deleted or retrieved.
+	computer because the messages get re-numbered every time one of the users deletes a message and signs
+	out, and the wrong messages will get deleted or retrieved.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
-	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to gener-
-	ate the composite secret key, session key or encryption key. Each public key agreement or cipher
-	functions as a one-time pad to encrypt the other public key agreements which are also one-time pads
-	or ciphers. The composite key is then used to initialize a hash function that generates another
-	one-time pad for the message encryption.
+	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate
+	the composite secret key, session key or encryption key. Each public key agreement or cipher func-
+	tions as a one-time pad to encrypt the other public key agreements which are also one-time pads or
+	ciphers. The composite key is then used to initialize a hash function that generates another one-time
+	pad for the message encryption.
 	
-	The public keys are based on the Diffie-Hellman ciphers Y = A X,  Y = X A X,  Y = A1^x1 A0 A2^x2
-	(mod p) and the Merkle-Hellman knapsack cipher c[] = r0 a[] + r[][] s[] (mod n) where A, A0, A1, A2
-	are public parameters and X, s, and n are private keys. The equations use integers, polynomials,
-	vectors, matrices, cubes, and tesseracts. The vector cross product cipher Y = A (x) X,  E = Y * K
-	uses a parallelogram as a public key and a parallelepiped as a shared secret key or public key
-	agreement. The matrix product cipher Y = A1 X1 X2 uses multi-dimensional arithmetic which multiplies
-	from left to right and from top to bottom. X2 The matrix polynomial discrete log cipher uses Y =
-	A^x C B^x + ... + A^0 C B^0 (mod p).
+	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X A X,  Y = A1^x1 A0 A2^x2
+	(mod p) and the Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod x) where A, A0, A1,
+	A2, a0, r and p are public parameters and s, x1, x2, x, and X are private keys. The equations use
+	polynomials, vectors, matrices, cubes, and tesseracts. The vector cross product cipher Y = A (x) X,
+	E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret key or key
+	agreement. The matrix product cipher  Y = |A1|X1|  uses multi-dimensional arithmetic which multiplies
+	from left to right and from top to bottom.|X2|   The matrix polynomial discrete log cipher uses Y =
+	A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected for public key cryptography be-
+	cause nonlinear, multivariate, multi-dimensional, modular and non-modular equations are unsolvable.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
 	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the ci-
 	pherdata or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad
 	to encrypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing
-	the encrypted random number using the shared secret key, hashing the random number to create the
-	one-time pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
+	the encrypted random number using the shared secret key, hashing the random number to create the one-
+	time pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
 	
-	The public key agreement or encryption is unbreakable since every public key cipher would have to
-	be broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such
-	as RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as
-	factorization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-
-	Hellman ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
+	The public key agreement or encryption is unbreakable since every public key cipher would have to be
+	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
+	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as factor-
+	ization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-Hellman
+	ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
 	
-	If any of these ciphers can be broken they will just get replaced. For example, the vector cross
-	product cipher Y = A (x) X uses integers and a single equation but it could also use multiple equa-
-	tions and vectors of Latin squares, polynomials, or powers of a matrix (cube or tesseract) such as
-	the vector { A1, A2, A3 } and { A^x1, A^x2, A^x3 } where A, A1, A2, A3 are hypercomplex and multi-
-	dimensional numbers instead of the vectors { a1, a2, a3 } and { x1, x2, x3 } where a1, a2, a3 and
-	x1, x2, x3 are integers or zero-dimensional numbers.
+	If any of these ciphers can be broken it will just get replaced. For example, the vector cross prod-
+	uct cipher Y = A (x) X uses vectors of integers and a single equation but it could also use multiple
+	equations and vectors of Latin squares, polynomials, or powers of a matrix (cube or tesseract) such
+	as the vector { A1, A2, A3 } and { A^x1, A^x2, A^x3 } where A, A1, A2, A3 are hypercomplex and multi-
+	dimensional numbers instead of the vectors { a1, a2, a3 } and { x1, x2, x3 } where a1, a2, a3 and x1,
+	x2, x3 are integers or zero-dimensional numbers.
 	
 	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
 	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
-	remove special characters from the encryption method such as newlines, carriage returns, and end
-	of message or end of file chars. This expands the data to (4/3)^2 = 16/9 the size because base-64
-	encoding maps 6 bits of data to 8-bit chars and two encodings are used to package the data. (The
-	public key encryption method includes a base-64 encoding because it has to encode the cipherdata to
-	attach the one-time public keys.) Other protocols may use one encoding but this would only reduce
-	the expansion to 3/4 the size.
+	remove special characters from the encryption method such as newlines, carriage returns, and end of
+	message or end of file chars. This expands the data to (4/3)^2 = 16/9 the size because base-64 en-
+	coding maps 6 bits of data to 8-bit chars and two encodings are used to package the data. (The public
+	key encryption method includes a base-64 encoding because it has to encode the cipherdata to attach
+	the one-time public keys.) Other protocols may use one encoding but this would only reduce the expan-
+	sion to 3/4 the size.
 	
-	The text editor and email program were written to test the public key software and to show develop-
-	ers how to use and implement the public key ciphers in other programs, but anybody who knows how to
-	install Java and run a java program (a java source code file or a java jar file) can use the program
-	to send and receive encrypted emails.
+	The text editor and email program were written to test the public key software and to show developers
+	how to use and implement the public key ciphers in other programs, but anybody who knows how to	in-
+	stall Java and run a java program (a java source code file or a java jar file) can use the program to
+	send and receive encrypted emails.
 	
 	The sender and receiver have to be using the same ciphers and protocols because the software is not
 	compatible with other encryption programs. Users also may have to keep upgrading their software,
@@ -222,17 +223,15 @@
 	
 	sudo rm -r -f /usr/jdk
 	
-	The --recursive option is required because the file is a directory
-	and the rm command doesn't delete directories by default; the user
-	has to confirm that the file to be removed is a directory by speci-
-	fying the recursive option so that users cannot inadvertently delete
-	a directory instead of a file.
+	The --recursive option is required because the file is a directory and the
+	rm command doesn't delete directories by default; the user has to confirm
+	that the file to be removed is a directory by specifying the recursive
+	option so users cannot inadvertently delete a directory instead of a file.
 	
-	The --force option tells the command not to prompt the user for a con-
-	firmation before deleting each file and subdirectory, and it ignores
-	nonexistent files and arguments which means that it will not inform
-	the user that it cannot remove the file if there is no such file or
-	directory.
+	The --force option tells the command not to prompt the user for a confirm-
+	ation before deleting each file and subdirectory, and it ignores nonexist-
+	ent files and arguments which means that it will not inform the user that
+	it cannot remove the file if there is no such file or directory.
 	
 	
 	
@@ -240,27 +239,19 @@
 	Creating a compiled / executable java .jar file
 	
 	
-	You can create a java archive or java jar file so the file doesn't have to
-	be compiled each time.
+	You can create a java archive or java jar file
+	so the file doesn't have to be compiled each time.
 	
-	If the Editor.java file is in the Downloads folder, first compile the
-	.java source code to create the executable .class files using
-	
-	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java;
-	
-	Load the class files and create the .jar file using the jar (create verbose file) command
-	
-	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .;  then use 
-	
-	cd; echo "Main-Class: Editor" > manifest.txt;  to create a manifest that contains the main class;
-	
-	finally, add the manifest file to the Editor.jar file using the command
-	
-	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt;
-	
-	and then run the jar file using
-	
-	/usr/jdk/jdk-18/bin/java -jar Editor.jar
+	If the Editor.java file is in the Downloads folder, first compile
+	the .java source code to create the executable .class files using
+	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java; then
+	load the class files and create the .jar file using the jar (create verbose file)
+	command /usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .; use cd;
+	echo "Main-Class: Editor" > manifest.txt; to create a manifest that contains the
+	main class; finally, add the manifest file to the Editor.jar file using the command
+	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt; delete
+	the directory and file using rm -r -f EditorClassFiles; rm manifest.txt; and then run
+	the jar file using /usr/jdk/jdk-18/bin/java -jar Editor.jar
 	
 	
 	The Editor.jar file will save around 2 to 6 seconds each time the program is executed
@@ -275,9 +266,13 @@
 	would only work on the computer on which the code was compiled).
 	
 	Note that the cd command can be omitted because it just changes the directory to the home
-	directory, and the path name /usr/jdk/jdk-18/bin/java can be replaced by the file name java
-	if the terminal knows where to find the java command. The path name is included because
-	some users may be running a live version of Linux.
+	directory. This is useful if the next command contains a relative path name or path that
+	doesn't start with a slash /, but it is redundant to use cd if the next command has an
+	absolute path name because then it doesn't do anything.
+	
+	The path name /usr/jdk/jdk-18/bin/java can be replaced by the file name java if the
+	terminal knows where to find the java command. The path name is included because some
+	users may be running a live version of Linux.
 	
 	
 	
@@ -289,12 +284,20 @@
 	/usr/jdk/jdk-18/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
-	which creates the jar file by creating and then deleting a temporary directory for the
-	compiled code or class files, and by creating and deleting a temporary manifest file.
+	that can be copied and pasted into the terminal.
 	
-	(It doesn't matter if you run this command more than once because it just re-creates
-	the jar file, but the new jar file may not have the same hash value as the previous
-	jar file because it may include a time stamp.)
+	This command creates the jar file by creating and then deleting a temporary directory for
+	the compiled code or class files, and by creating and deleting a temporary manifest file.
+	
+	The five command lines are printed using newline chars for readability (and to keep the
+	horizontal scroll bar from expanding), but you could delete the four newline chars and
+	four tab chars in the terminal and replace them with single space chars before executing
+	the command to make it easier to scroll through the command history using the up and down
+	arrow keys.
+	
+	(It doesn't matter if you run this command more than once because it just re-creates the
+	jar file, but the new jar file may not have the same hash value as the previous jar file
+	because it may include a time stamp.)
 	
 	
 	Then the jar file can be run using the command
@@ -314,12 +317,6 @@
 	by copying and pasting the single command for creating the jar file each time, or by
 	using the up arrow key on the keyboard to search the command history on the terminal
 	until you find the command for creating the jar file and then pressing enter.
-	
-	The five command lines are printed using newline chars for readability (and to keep
-	the horizontal scroll bar from expanding), but you could delete the four newline chars
-	and four tab chars in the terminal and replace them with single space chars before
-	executing the command to make it easier to scroll through the command history using
-	the up and down arrow keys.
 	
 	
 	
@@ -370,7 +367,7 @@
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
 	states. (The program uses the hash of the from address + the number of bytes because the program
-	doesn't know the hashes of the email messages from the List screen.)
+	doesn't know the hashes of the emails from the List screen or the tops of the messages.)
 	
 	Until the problem of storing public keys on email servers is solved, email encryption will not be-
 	come widely used. A few hundred thousand to a few million people might use encryption by copying
@@ -397,120 +394,123 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          x1  x2           k1      k2              -x2   x1   x2          -k2  k1  k2
-	  Y  =  A1  A2 ,   E  =  A1   Y  A2 ,  and  Y  =  A2   A1   A2 ,   E  =  A2   Y   A2   (mod p)
+	           x1       x2          -x2   x1   x2          -1   x               x
+	Y  =  x  A1   A0  A2 ,   Y  =  A2   A1   A2 ,   Y  =  X   A   X ,   Y  =  A   X ,     Y  =  X  A  X
+	
+	           k1       k2          -k2   k1   k2          -1   k               k
+	E  =  k  A1   Y   A2 ,   E  =  A2   Y    A2 ,   E  =  K   Y   K ,   E  =  A   Y  K ,  E  =  K  Y  K
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
-	use matrices or hypercomplex numbers instead of integers and they use multiple variables instead of
-	a single variable. These ciphers are a generalization of the Diffie-Hellman cipher because they re-
-	duce to the integer cipher y = a ^ x (mod p) if x2 = 0 and A1 is a 1x1 matrix.
+	use matrices or hypercomplex numbers instead of integers and they use multiple variables instead of a
+	single variable. These ciphers are a generalization of the Diffie-Hellman cipher because they reduce
+	to the integer cipher y = a ^ x (mod p) if x2 = 0 and A1 is a 1x1 matrix.
 	
-	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use poly-
-	nomials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also
-	use hypercomplex numbers such as quaternions or octonions.
+	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polynom-
+	ials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
+	hypercomplex numbers such as quaternions or octonions.
 	
-	All numbers are dimensional objects. A real or complex number is a point on an axis or a plane, or
-	a 0-dimensional object; an array or vector is a line or a 1-dimensional object; a matrix is a
-	square or rectangular array of numbers or 2-dimensional object; a cube is 3-dimensional; and a
-	tesseract is 4-dimensional.
+	All numbers are dimensional objects. A real or complex number is a point on an axis or a plane, or a
+	0-dimensional object; an array or vector is a line or a 1-dimensional object; a matrix is a square or
+	rectangular array of numbers or 2-dimensional object; a cube is 3-dimensional; and a tesseract is 4-
+	dimensional.
 	
-	A public key Y is created by using a public parameter A to encrypt a private variable X. The sim-
-	plest public key function is Y = A X. This is similar to private key encryption except that A is
-	a non-invertible public parameter instead of a secret message, and X is the secret message encrypt-
-	ed by the public parameter A. In private key cryptography A would be a plaintext message encrypted
-	by a secret key matrix X, but in public key cryptography the private key X is the plaintext message
-	encrypted by the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher.
-	Because the encryption key A is public, the security of public key cryptography is based entirely
-	on the non-invertibility of the function instead of the secrecy of the private key.
+	A public key Y is created by using a public parameter A to encrypt a private variable X. The simplest
+	public key function is Y = A X. This is similar to private key encryption except that A is a non-
+	invertible public parameter instead of a secret message, and X is the secret message encrypted by the
+	public parameter A. In private key cryptography A would be a plaintext message encrypted by a secret
+	key matrix X, but in public key cryptography the private key X is the plaintext message encrypted by
+	the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher. Because the
+	encryption key A is public, the security of public key cryptography is based entirely on the non-
+	invertibility of the function instead of the secrecy of the private key.
 	
-	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A send-
-	er who wants to send an encrypted message computes the one-time public key Y = A K if the private
-	variables are commutative or Y = K A if K and X are non-commutative. Then the sender and recipient
-	compute the same public key agreement or secret key E = A K X  or  E = K A X  using only multipli-
-	cation because each of them knows either K or X. A wiretapper would have to do an inversion to
-	solve for K or X, but this is a hard math problem because A is chosen to be non-invertible.
+	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A sender
+	who wants to send an encrypted message computes the one-time public key Y = A K if the private vari-
+	ables are commutative or Y = K A if K and X are non-commutative. Then the sender and recipient com-
+	pute the same public key agreement or secret key E = A K X  or  E = K A X  using only multiplication
+	because each of them knows either K or X. A wiretapper would have to do an inversion to solve for K
+	or X, but this is a hard math problem because A is chosen to be non-invertible.
 	
-	The cipher Y = A X doesn't work for integers or matrices (1 x 1 or n x n dimensional objects) be-
-	cause A can be inverted to solve for X = A^-1 Y; even if A is a singular matrix the equation can
-	still be solved for X. But the equation can be generalized to Y = X A X so that A is non-invertible
-	and immovable because matrix multiplication is not generally commutative. Multiplication is commu-
-	tative only for 0-dimensional numbers. (Also, because multiplication is non-commutative, there is
-	no division operation for matrices except for integers or scalars; to divide a matrix by a matrix,
-	the matrix has to be pre- or post-multiplied by the inverse of the divisor, and the divisor has to
-	be an invertible or non-singular matrix.)
+	The cipher Y = A X doesn't work for integers or matrices (1 x 1 or n x n dimensional objects) because
+	A can be inverted to solve for X = A^-1 Y; even if A is a singular matrix the equation can still be
+	solved for X. But the equation can be generalized to Y = X A X so that A is non-invertible and immov-
+	able because matrix multiplication is not generally commutative. Multiplication is commutative only
+	for 0-dimensional numbers. (Also, because multiplication is non-commutative, there is no division
+	operation defined for matrices except for integers or scalars; to divide a matrix by a matrix, the
+	matrix has to be pre- or post-multiplied by the inverse of the divisor, and the divisor has to be an
+	invertible or non-singular matrix.)
 	
-	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of
-	one-dimensional multiplication. For example, for 2 D multiplication, matrices can be multiplied
-	from left to right and from top to bottom. Ciphers can be generalized further to use multi-dimen-
-	sional algebra by using points on a plane a0 + a1 i instead of points on a line, points in a cube
-	a0 + a1 i + a2 j, points in a tesseract a0 + a1 i + a2 j + a3 k (which is a quaternion), or points
-	in any-dimensional space or hyperspace by defining i^2 == j^2 == k^2 == 1 and i j == k, j k == i,
-	k i == j, ... Matrices of multi-dimensional points such as quaternions can also use multi-dimen-
-	sional arithmetic in addition to multi-dimensional algebra.
+	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of one-
+	dimensional multiplication. For example, for 2 D multiplication, matrices can be multiplied from left
+	to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional algebra
+	by using points on a plane a0 + a1 i instead of points on a line, points in a cube a0 + a1 i + a2 j,
+	points in a tesseract a0 + a1 i + a2 j + a3 k (which is a quaternion), or points in any-dimensional
+	space or hyperspace by defining i^2 == j^2 == k^2 == 1 and i j == k, j k == i, k i == j, ... Matrices
+	of multi-dimensional points such as quaternions can also use multi-dimensional arithmetic in addition
+	to multi-dimensional algebra.
 	
-	Ciphers can also be generalized by using a symmetric matrix of matrices A[][] = { { A1, A2 }
-	{ A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1 block matrix or public
-	key vector Y[] = { A1^x1 A2^x2, A2^x1 A3^x2 } where x1, x2 are the private keys, and then reducing
-	the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1]^k1 Y2[2]^k2 == A1^(k1 x1)
-	A2^(k1 x2 + k2 x1) A3^(k2 x2).
+	Ciphers can also be generalized by using a symmetric matrix of matrices such as the 2x2 block matrix
+	A[][] = { { A1, A2 }, { A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1
+	block matrix or public key vector Y[] = { A1^x1  A2^x2 , A2^x1  A3^x2 } where x1, x2 are the private
+	keys, and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1] ^ k1
+	Y2[2] ^ k2 == A1 ^ (k1 x1) A2 ^ (k1 x2 + k2 x1) A3 ^ (k2 x2).
 	
-	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Be-
-	fore they were called matrices, rectangular arrays of numbers were referred to as blocks. A block
-	is a quantity, number, or section of things dealt with as a unit, such as a block of plaintext or
-	ciphertext. (J.J. Sylvester used the term matrix in 1850 to refer to a rectangular block of numbers
-	because a determinant is formed from a matrix, and a matrix is something from which something else
-	originates, develops, or takes form.)
+	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Before
+	they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
+	quantity, number, or section of things dealt with as a unit, such as a block of plaintext or cipher-
+	text. (J.J. Sylvester used the term matrix in 1850 to refer to a rectangular block of numbers because
+	a determinant is formed from a matrix, and a matrix is something from which something else origin-
+	ates, develops, or takes form.)
 	
-	Nonlinear multivariate equations are difficult or impossible to solve. If solving an equation such
-	as Y = X A X were as simple as diagonalizing a matrix, doing a Fourier transform, or reducing a
-	matrix to echelon and row canonical form, then math programs would have functions or methods for
-	solving these equations and math books would explain how to solve them. Matrix and linear algebra
-	books only explain how to solve the linear equation Y == A X or A X == B by pre-multiplying by the
-	inverse of A to get X = A^-1 B. Even multivariable integer equations such as Pell's equation x^2
-	- d y^2 == c or 1 are unsolvable without quantum computing, and the equations used in the public
-	key class are much more difficult to solve than Pell's equation.
+	Nonlinear multivariate equations are difficult or impossible to solve. If solving an equation such as
+	Y = X A X were as simple as diagonalizing a matrix, doing a Fourier transform, or reducing a matrix
+	to echelon and row canonical form, then math programs would have functions or methods for solving
+	these equations and math books would explain how to solve them. Matrix and linear algebra books only
+	explain how to solve the linear equation Y == A X or A X == B by pre-multiplying by the inverse of A
+	to get X = A^-1 B. Even multivariable integer equations such as Pell's equation x^2 - d y^2 == c or 1
+	are unsolvable without quantum computing, and the equations used in the public key class are much
+	more difficult to solve than Pell's equation.
 	
-	The public key class and email program were created to use these non-invertible or one-way func-
-	tions as public key ciphers. The class will eventually have tens of public key ciphers or puzzles
-	copied from matrix and linear algebra books. It is unlikely that these ciphers could be broken un-
-	less the Diffie-Hellman problem can be solved or the public key agreement can be computed without
-	breaking the public key, inverting the function, or solving the underlying math problem.
+	The public key class and email program were created to use these non-invertible or one-way functions
+	as public key ciphers. The class will eventually have tens of public key ciphers or puzzles copied
+	from matrix and linear algebra books. It is unlikely that these ciphers could be broken unless the
+	Diffie-Hellman problem can be solved or the public key agreement can be computed without breaking the
+	public key, inverting the function, or solving the underlying math problem.
 	
 	The public key class uses a composite key that includes several ciphers because there is no proof
 	that any one-way function is non-invertible or that the implementation is correct and because the
-	methods of cryptanalysis are secret. If cryptanalysts weren't secretive, users would know which
-	public key ciphers are broken and would stop using them, and cryptographers would figure out how
-	to strengthen the ciphers to resist these attacks. The only way to deal with this problem is to
-	use a redundancy of ciphers based on different math problems.
+	methods of cryptanalysis are secret. If cryptanalysts weren't secretive, users would know which pub-
+	lic key ciphers are broken and would stop using them, and cryptographers would figure out how to
+	strengthen the ciphers to resist these attacks. The only way to deal with this problem is to use a
+	redundancy of ciphers based on different math problems.
 	
 	Composite keys are a game changer because a cryptanalyst would have to break every cipher, invert
-	every function, or solve every equation in the public key class to read the encrypted messages.
-	The cryptographer or user has an advantage since only one of the ciphers has to be secure for the
-	encryption to be unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst anything
-	because breaking a composite key is an all-or-nothing game.
+	every function, or solve every equation in the public key class to read the encrypted messages. The
+	cryptographer or user has an advantage since only one of the ciphers has to be secure for the encryp-
+	tion to be unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst anything because
+	breaking a composite key is an all-or-nothing game.
 	
-	The ciphers in the public key class that have a many-to-one mapping of the private key X to the
-	public key Y may be unbreakable by classical and quantum computing because the solution is ambig-
-	uous and the private key X is only used once. Quantum computers are unable to solve math problems
-	that have ambiguous solutions because they wouldn't know which solution to solve for. This is why
-	a quantum computer can only attack the factorization problem by solving the discrete log problem.
-	Even if the solution is unambiguous, it doesn't mean that a quantum computer can solve it; there
-	has to be an algorithm or method for solving it, or the same private key X would have to be used
-	more than once with a different public parameter A such as Y1 = A1 X and Y2 = A2 X.
+	The ciphers in the public key class that have a many-to-one mapping of the private key X to the pub-
+	lic key Y may be unbreakable by classical and quantum computing because the solution is ambiguous and
+	the private key X is only used once. Quantum computers are unable to solve math problems that have
+	ambiguous solutions because they wouldn't know which solution to solve for. This is why a quantum
+	computer can only attack the factorization problem by solving the discrete log problem. Even if the
+	solution is unambiguous, it doesn't mean that a quantum computer can solve it; there has to be an
+	algorithm or method for solving it, or the same private key X would have to be used more than once
+	with a different public parameter A such as Y1 = A1 X and Y2 = A2 X.
 	
-	Encryption ciphers are not used in the software because they have a one-to-one mapping (function)
-	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-
-	to-one mapping because there may be quantum (and classical) algorithms for breaking all of these
-	ciphers. (A quantum algorithm already exists that can search for keys for any unknown function or
-	black box in sub-exponential time by trying only the square root of the number of combinations,
-	and there may be another quantum or classical algorithm that can find keys in polynomial time.)
+	Encryption ciphers are not used in the software because they have a one-to-one mapping (or function)
+	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-to-
+	one mapping because there may be quantum (and classical) algorithms for breaking all of these ciphers.
+	(A quantum algorithm already exists that can search for keys for any unknown function or black box in
+	sub-exponential time by trying only the square root of the number of combinations, and there may be
+	another quantum or classical algorithm that can find keys in polynomial time.)
 	
 	The RSA / coprime root extraction cipher c = m ^ e (mod n) where (e, phi(n)) == 1 (e and phi(n) are
 	coprime) is not included or allowed in the public key class because coprime root extraction is not
 	equivalent to integer factorization or based on any hard math problem. The problem with this cipher
 	is that there is a one-to-one correspondence of the private keys m to the public keys c which makes
-	the function invertible without factoring or unmultiplying the modulus n. This is why RSA was re-
-	jected for digital signature standards and for encryption.
+	the function invertible without factoring or unmultiplying the modulus n. This is why RSA was reject-
+	ed for digital signature standards and for encryption.
 	
 	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite) is equivalent
 	to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had thought of us-
@@ -519,31 +519,31 @@
 	number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime with the
 	totient.
 	
-	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squar-
-	ing and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the mes-
-	sage can be encrypted and decrypted by cubing and uncubing m modulo n. The root of c = m ^ e (mod
-	n) still has e ^ k solutions where k is the number of factors (or prime powers) in the modulus, but
-	the recipient can extract the message by inverting e modulo phi(n)/e instead of modulo phi because
-	the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
+	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squaring
+	and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the message can
+	be encrypted and decrypted by cubing and uncubing m modulo n. The root of c = m ^ e (mod n) still has
+	e ^ k solutions where k is the number of factors (or prime powers) in the modulus, but the recipient
+	can extract the message by inverting e modulo phi(n)/e instead of modulo phi because the message is a
+	perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
 	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
 	class because the factorization and integer discrete log problem are susceptible to quantum comput-
-	ing. The Rabin cipher was included in the public key class to test the software for asymmetrical
-	public key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ci-
-	phers are symmetrical which means that they use the same methods for public key generation and pub-
-	lic key agreement.
+	ing. The Rabin cipher was included in the public key class to test the software for asymmetrical pub-
+	lic key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers 
+	are symmetrical which means that they use the same methods for public key generation and public key
+	agreement.
 	
 	It doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
-	computing. The Rabin cipher can never be broken because factorization will always be harder than
-	multiplication, but the key size would have to be at least 1 megabit if the running time of the algo-
-	rithm is O(n^2) multi-precision multiplications or O(n^3.58) single-precision multiplications or op-
-	erations. The fastest classical algorithm is unlikely to be faster than prime number generation which
-	requires O(n^4) or O(n^3.58) operations, and if it requires a matrix then it would be O(n^3) multi-
-	precision multiplications or O(n^4.58) operations. A 1 M bit key would only require O(1) == O(n^0)
-	multi-precision multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multiplica-
-	tions for encryption using a sesquilinear or three-halves multiplier. (No key size is secure for RSA
-	because the coprime root extraction problem is completely broken. This means that the function can be
-	inverted as fast as it can be computed.)
+	computing. The Rabin cipher can never be completely broken because factorization will always be hard-
+	er than multiplication, but the key size would have to be at least 1 megabit if the running time of
+	the algorithm is O(n^2) multi-precision multiplications or O(n^3.58) single-precision multiplications
+	or operations. The fastest classical algorithm is unlikely to be faster than prime number generation
+	which requires O(n^4) or O(n^3.58) operations, and if it requires a matrix then it would be O(n^3)
+	multi-precision multiplications or O(n^4.58) operations. A 1 M bit key would only require O(1) == O(
+	n^0) multi-precision multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multi-
+	plications for encryption using a sesquilinear or three-halves multiplier. (No key size is secure for
+	RSA because the coprime root extraction problem is completely broken. This means that the function
+	can be inverted as fast as it can be computed.)
 	
 	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
@@ -552,50 +552,88 @@
 	the discrete log problem or dlp because it uses one equation for the static signature key y = a ^ x
 	(mod p), another equation for the one-time signature key r = a ^ k (mod p), and a third equation for
 	the signature s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
-	This signature algorithm is also not secure because the integer discrete log problem is just as bro-
-	ken as the integer factorization problem.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
 	periodicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic
 	curves makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem
 	if the parameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters
-	of the curves to protect against all unknown attacks. If the parameters are chosen correctly and a
-	is congruent to zero modulo 3 then elliptic curve ciphers can be as secure as integer discrete log /
-	factorization ciphers.
+	of the curves to protect against all unknown attacks. Many people are suspicious or distrustful of
+	elliptic curve ciphers because the equations are complicated and they have a large attack surface.
 	
-	Ciphers based on polynomial factorization and error-correcting codes also are not used or included
-	in the public key class because they are not secure for any key size.
+	If the parameters are chosen correctly and a is congruent to zero modulo 3 then elliptic curve ci-
+	phers can be as secure as integer discrete log / factorization ciphers, but they don't have any ad-
+	vantage over integer ciphers since they are also susceptible to quantum computing. Elliptic curve ci-
+	phers that are based on isogenies are quantum resistant but they are almost certainly broken since
+	they are being approved for standardization and cryptanalysts have had over a decade to study them.
+	(Just because a cipher is quantum resistant doesn't mean that the cipher is also classical resistant
+	or resistant to classical computing.)
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod n), b = c[] (m[] mod p) where
-	c[] is the recipient's static public key and b is the sender's one-time public key is included in
-	the public key class because the cipher is quantum resistant, but the cipher is not enabled by
-	default in the passphrase dialog because the key size is large. The knapsack key size is around
-	6 K to 8 K bits, 1 K byte, 2 K chars, or 30 to 40 lines per key. This could be a problem for public
-	keys that are printed on web pages because the keys occupy a lot of space, but it doesn't matter
-	for keys that are stored on email servers.
+	Ciphers based on polynomial factorization and error-correcting codes also are not used or included in
+	the public key class because they are not secure for any key size, and learning with errors ciphers
+	are not included because they are only based on the subset sum problem. Factorization and integer
+	discrete logarithms are harder to solve because they are based on the nonlinear subset product prob-
+	lem or the problem of solving for m[] in y = g^(x[i](2^t)) mod p where each x[i] == 0 or 1.
 	
-	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only asymmet-
-	rical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
-	only public key cipher that uses a private modulus. The knapsack cipher was also the world's first
-	quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but it has to be
+	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array A[], a
+	private key s, and a secret random error array e[] where the sum of the elements is smaller than q/2,
+	and then computes the static public key B[] = A[] s + e[] modulo q. (The random errors can be dis-
+	carded because they are not used for decryption.) To encrypt a message M[], for each bit in M the
+	sender chooses a subset of elements in A and B and then calculates u = the subset sum of the A ele-
+	ments mod q, and v = the subset sum of B[] + [q/2] M[i] (mod q) where q/2 M[i] is either 0 or q/2.
+	For each bit M[i] the one-time public key is the pair (u, v), and for M[] the one-time public key is
+	the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
+	
+	Since A[] s + e[] == B[], multiplying u (== a subset sum of A[]) by s approximately equals v (== a
+	subset sum of B[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
+	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference
+	v - s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the
+	quotient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the mes-
+	sage by inverting u to find the indexes of the samples and then using the indexes to find the sub-
+	set sum of B[] and solving for M[i] == (v - the subset of B[] (mod q)) / [q/2]. The cryptanalyst may
+	also be able to break the static public key because the equations are linear and the modulus is pub-
+	lic unlike the knapsack cipher which is also linear but uses a private modulus.
+	
+	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod x), b = c[] m[] where c[] is the
+	recipient's static public key and b is the sender's one-time public key is included in the public key
+	class because the cipher is quantum resistant and the one-time public key is unbreakable, but the ci-
+	pher is not enabled by default in the passphrase dialog because the key size is large. The knapsack
+	key size is around 6 K to 8 K bits, 1 K byte, 2 K chars, or 30 to 40 lines per key. This could be a
+	problem for public keys that are printed on web pages because the keys occupy a lot of space, but it
+	doesn't matter for keys that are stored on email servers.
+	
+	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only real asym-
+	metrical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
+	only public key cipher that uses a private modulus. (The Diffie-Hellman ciphers use commutative, sym-
+	metrical, and non-invertible one-way functions which means that the private variables x and k commute
+	with each other, or f(y = f(a, x), k) == f(z = f(a, k), x)) The knapsack cipher was also the world's
+	first quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but it has to be
 	implemented correctly or else it doesn't work.
 	
 	For example, if the public random table r[][] or the private / secret key s[] equals zero, then the
-	static public key can be broken unless the cipher includes small random errors that are added to
-	the static key. Moreover, if the one-time public key has a small solution set, then a cryptanalyst
-	can find the sender's private key m[] by solving the knapsack problem and trying all the solutions.
-	(Note that the multiplier r0 can be public because a cryptanalyst can find it anyway since one of
-	the equations has to start with a[0] = 1 and r[0][] = 0; a[] has to start with 1 because a[] is a
-	superincreasing sequence and the knapsack density has to equal 1.)
+	static public key can be broken unless the cipher includes small random errors that are added to the
+	static key. Moreover, if the one-time public key has a small solution set, then a cryptanalyst can
+	find the sender's private key m[] by solving the knapsack problem and trying all the solutions. (Note
+	that the multiplier r0 can be public because a cryptanalyst can find it anyway since one of the equa-
+	tions has to start with a[0] = 1 and r[0][] = 0; a[] has to start with 1 because a[] is a super-
+	increasing sequence and the knapsack density has to equal 1.)
 	
-	Even if a cryptanalyst knows how to solve the general or non-superincreasing knapsack problem it
-	won't break the one-time public key b = c[] m[] because the cipher was designed to resist this
-	attack. The ciphers use an irregular public and private key so that there is a large number of
-	solutions to the knapsack problem. The cryptanalyst wouldn't know which of these solutions is the
-	correct key because the search space or solution set is too large to try all the combinations, but
-	the recipient can always decrypt the sender's secret key m[] because the recipient knows the pri-
-	vate modulus n and the secret key s[].
+	Even if a cryptanalyst knows how to solve the subset sum or non-superincreasing knapsack problem it
+	won't break the one-time public key b = c[] m[] because the cipher was designed to resist this at-
+	tack. The ciphers use an irregular public and private key so that there is a large number of solu-
+	tions to the knapsack problem. The cryptanalyst wouldn't know which of these solutions is the correct
+	key because the search space or solution set is too large to try all the combinations, but the recip-
+	ient can always decrypt the sender's secret key m[] because the recipient knows the private modulus n
+	and the secret key s[].
+	
+	A cryptanalyst would have to be able to solve the vector equation c[] = r0 a[] + r[][] s[] (mod x)
+	for the secret key s[] to invert the function, but this is impossible without knowing the modulus
+	because there is only one solution to the equation; the cryptanalyst cannot choose a random modulus
+	n and solve for a different s'[] to get the same public key c[]. Even if the equation could be
+	solved for the modulus x and secret key s[] it wouldn't break the Merkle-Hellman cipher because the
+	public key includes small random errors that are added to c[] to increase the search space to re-
+	sist this attack. The cryptanalyst would have to try to solve the equation 2^80 or a septillion
+	times to find the solution or to break the public key.
 	
 	
 	************************************************/
@@ -27281,7 +27319,6 @@ class Programs
 					gbc = new Gbc();
 					
 					gbc.setPosition(0, 4);
-					//  top, left, bottom, right
 					gbc.setInsets(8, 0, 0, 0);
 					
 					panel.add(iconpanel, gbc);
@@ -52445,14 +52482,14 @@ class PublicKey
 	
 	//  Rabin / factorization / co-composite root extraction cipher
 	//
-	//  The Rabin cipher is commented or disabled in the public key class
-	//  because the cipher is susceptible to quantum computing. It wouldn't
-	//  weaken the security because a composite key is as strong as the strong-
-	//  est ciphers, but it would be anomalous to include this cipher in the
-	//  public key because the cipher is not quantum resistant, and it could
-	//  slow the key generation and decryption because prime number generation
-	//  is probabilistic and it may not be portable because it requires fast
-	//  algorithms that may not be available in other programming languages.
+	//  The Rabin cipher is commented or disabled in the public key class because
+	//  the cipher is susceptible to quantum computing. It wouldn't weaken the se-
+	//  curity because a composite key is as strong as the strongest ciphers, but
+	//  it would be anomalous to include this cipher in the public key because the
+	//  cipher is the only one that is not the same as all the others, and it could
+	//  slow the key generation and decryption because prime number generation is
+	//  probabilistic and it may not be portable because it requires fast algorithms
+	//  that may not be available in other programming languages.
 	
 	private static final int size4x128 = 4*128; // 512 digits
 	
@@ -52561,8 +52598,9 @@ class PublicKey
 	//  other ciphers require a hundred million operations.)
 	//
 	//  (The knapsack cipher is slow because it has to compute the
-	//  vector r[][] s[] or it has to try all the values of the
-	//  scalar m[] rand[] errors to solve the knapsack.)
+	//  vector r[][] s[] or r[][] m[] for key generation, and it has
+	//  to try all the values of the scalar m[] rand[] errors to
+	//  solve the knapsack for the secret key.)
 	
 	
 	
@@ -58183,13 +58221,13 @@ class PublicKey
 	//
 	//  c[] = (c[1], c[2], ..., c[k]) where
 	//
-	//  c[i] = r a[i] + r[i][j] s[j] (mod n)  or
+	//  c[i] = r a[i] + r[i][j] s[j] (mod x)  or
 	//
-	//  C[i] = R1 A[i] R2 + R[i][j] S[j] (mod n)
+	//  C[i] = R1 A[i] R2 + R[i][j] S[j] (mod x)
 	//
 	//  for the matrix version.
 	//
-	//  Choose a large random number t < n, create an array
+	//  Choose a large random number t < x, create an array
 	//  of numbers rand[i] = t i, permutate the array of
 	//  random numbers, and add the permuted array to c[].
 	//
@@ -58204,27 +58242,27 @@ class PublicKey
 	//
 	//  Choose a secret key m[] and then calculate the sum
 	//
-	//  b = c[] (m[] mod p) or
+	//  b = c[] (m[] mod x) or
 	//
-	//  B = C[] (m[] mod p)
+	//  B = C[] (m[] mod x)
 	//
-	//  where p is a modulus < a[i+1] / a[i]
+	//  where x is a modulus < a[i+1] / a[i]
 	//
 	//
 	//  Recovering the secret key m[]
 	//
 	//  Subtract s and multiply b by the inverse of r
-	//  modulo n to get the superincreasing subset sum
+	//  modulo x to get the superincreasing subset sum
 	//
-	//  b' = r^-1 (b - r[i][j] m[j] s[i]) == a[] (m'[] mod p) or
+	//  b' = r^-1 (b - r[i][j] m[j] s[i]) == a[] (m'[] mod x) or
 	//
-	//  B' = R1^-1 (B - R[i][j] m[j] S[i]) R2^-1 == A[] (m'[] mod p)
+	//  B' = R1^-1 (B - R[i][j] m[j] S[i]) R2^-1 == A[] (m'[] mod x)
 	//
 	//  and then solve for the permuted secret key m'[].
 	//
 	//  For a 2x2 matrix cipher, the recipient could use
 	//  any of the four equations to solve for m[] in
-	//  B'[][row][col] = A[][row][col] (m'[] mod p).
+	//  B'[][row][col] = A[][row][col] (m'[] mod x).
 	//
 	//  Permutate m'[] to recover m[].
 	
@@ -58247,10 +58285,13 @@ class PublicKey
 		nbits = pbits * (k + 1);
 		
 		
-		//  If the knapsack density is defined as k log2 p / log2 A where
-		//  k is the number of terms in the sequence a[], log2 p is the size
-		//  of each multiplier m[], and log2 A is the size of the largest
-		//  element in a[] then the density is 28 x 8 / (28 x 8) == 1.
+		//  The knapsack density can be defined as k log2 p / log2 A where k is
+		//  the number of terms in the sequence a[], log2 p is the size of each
+		//  multiplier m[], and log2 A is the size of the largest element in a[].
+		//
+		//  If k = 48, pbits = 4, and the elements are (log2 p) ^ i == 16 ^ 0,
+		//  16 ^ 1, 16 ^ 2, ... == 2 ^ (4 i), then log2 A[48] == log2 (2 ^ (4 x 48))
+		//  == 4 x 48, and the density is 48 x 4 / (48 x 4) == 1.
 		//
 		//  The private key size or number of combinations is k/2 log2 p +
 		//  nCr(32, 16) == k/2 log2 p + 32 C 16 == 16 * 4 + 32! / 16! / 16!
@@ -58266,7 +58307,7 @@ class PublicKey
 			//
 			//  c[] = (c[1], c[2], ..., c[k])
 			//
-			//  where c[i] = r a[i] + r[][] s[] (mod n)
+			//  where c[i] = r a[i] + r[][] s[] (mod x)
 			
 			
 			//  Define the multiplier modulus
@@ -58379,7 +58420,7 @@ class PublicKey
 			//
 			//  c[] = (c[1], c[2], ..., c[k]) where
 			//
-			//  c[i] = r a[i] + t[][] s[] (mod n)
+			//  c[i] = r a[i] + r[][] s[] (mod x)
 			
 			Number[] c = new Number[a.length];
 			
@@ -58390,7 +58431,7 @@ class PublicKey
 			for (int i1 = 0; i1 < k1;       i1++)
 			for (int i  = 0; i  < c.length; i ++)
 			
-			    c[i] = c[i] .add(s1[i1].multiply(r1[i1][i])) .mod(n);
+			    c[i] = c[i] .add(r1[i1][i].multiply(s1[i1])) .mod(n);
 			
 			
 			//  Create a list of small random errors 0 to k/2 -1
@@ -58527,7 +58568,7 @@ class PublicKey
 				
 				    if (addColumn(m, col) != k/4)
 				
-					m[i] .flipBit(col);
+					m[i].flipBit(col);
 			}
 			
 			
@@ -58576,29 +58617,6 @@ class PublicKey
 			
 			
 			
-			//  Initialize the public coefficients
-			
-			final int d = nbits / 4;
-			
-			Number[][] t1 = new Number[k1][k];
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			
-			    t1[i1][0] = new Number(0);
-			
-			Number temp = new Number(0);
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			for (int i  = 1; i  < k;  i ++)
-			{
-				temp = new Number(Cipher.hash(
-				
-				    temp.toByteArray(32)));
-				
-				t1[i1][i] = temp.mod(new Number(16).pow(d));
-			}
-			
-			
 			//  Initialize the vector cstr[] from
 			//  the recipient's static public key
 			
@@ -58639,7 +58657,7 @@ class PublicKey
 			
 			for (int i = 0; i < c.length; i++)
 			
-			    b = b .add(m[i].multiply(c[i]));
+			    b = b .add(c[i].multiply(m[i]));
 			
 			
 			//  Convert the subset sum to a public key string
@@ -58654,29 +58672,55 @@ class PublicKey
 			while (ystr.length() < ylen) ystr = "0" + ystr;
 			
 			
-			//  Compute the vector products t1[][] m[]
 			
-			Number[] t1_m = new Number[k1];
+			//  Initialize the public coefficients
+			
+			final int d = nbits / 4;
+			
+			Number[][] r1 = new Number[k1][k];
 			
 			for (int i1 = 0; i1 < k1; i1++)
 			
-			    t1_m[i1] = new Number(0);
+			    r1[i1][0] = new Number(0);
+			
+			Number temp = new Number(0);
+			
+			for (int i1 = 0; i1 < k1; i1++)
+			for (int i  = 1; i  < k;  i ++)
+			{
+				temp = new Number(Cipher.hash(
+				
+				    temp.toByteArray(32)));
+				
+				r1[i1][i] = temp.mod(new Number(16).pow(d));
+			}
+			
+			
+			//  Compute the vector products r[][] m[]
+			
+			Number[] r_m = new Number[k1];
+			
+			for (int i1 = 0; i1 < k1; i1++)
+			
+			    r_m[i1] = new Number(0);
 			
 			for (int i1 = 0; i1 < k1; i1++)
 			for (int i  = 0; i  < k;  i ++)
 			
-			    t1_m[i1] = t1_m[i1] .add(t1[i1][i].multiply(m[i]));
+			    r_m[i1] = r_m[i1] .add(
+			
+				r1[i1][i].multiply(m[i]));
 			
 			
-			//  Append the vector products t1[][] m[]
+			//  Append the vector products r[][] m[]
 			
-			String[] t1_m_str = new String[k1];
+			String[] r_m_str = new String[k1];
 			
 			for (int i1 = 0; i1 < k1; i1++)
 			
-			    t1_m_str[i1] = t1_m[i1] .toString(16);
+			    r_m_str[i1] = r_m[i1] .toString(16);
 			
-			for (String str : t1_m_str)
+			for (String str : r_m_str)
 			
 			    if (str.length() > ylen)
 			
@@ -58684,11 +58728,11 @@ class PublicKey
 			
 			for (int i1 = 0; i1 < k1; i1++)
 			{
-				while (t1_m_str[i1].length() < ylen)
+				while (r_m_str[i1].length() < ylen)
 				
-				    t1_m_str[i1] = "0" + t1_m_str[i1];
+				    r_m_str[i1] = "0" + r_m_str[i1];
 				
-				ystr = ystr + t1_m_str[i1];
+				ystr = ystr + r_m_str[i1];
 			}
 			
 			
@@ -58696,11 +58740,9 @@ class PublicKey
 			//  key size equal to the static public key size
 			//
 			//  While the random numbers can be probabilistic
-			//  they should be deterministic so that a matching
-			//  public key can be a static key or a one-time pub-
-			//  lic key by using a static or one-time private key,
-			//  and a program can test if a key is being reused
-			//  by hashing the key.
+			//  they should be deterministic so that a program
+			//  can test if a public key is being reused by
+			//  hashing the key and comparing the hashes.
 			
 			StringBuilder sb = new StringBuilder(ystr);
 			
@@ -60549,22 +60591,22 @@ class PublicKey
 			
 			if (type == 1)
 			{
-				//  Decrypt the message or compute x[] == ssss(b, p)
+				//  Decrypt the message or compute m[] == ssss(b, p)
 				//
 				//  (ssss = solve superincreasing subset sum problem)
 				
 				
 				//  use s and t to compute the secret subset sum
 				//
-				//  b1 = t^-1 ( b - s ) (mod n);
+				//  b1 = t^-1 ( b - s ) (mod x);
 				//
 				//  solve the superincreasing subset sum problem for
 				//
-				//  x[] = ssss(a[], b1, p) using the private key a;
+				//  m[] = ssss(a[], b1, p) using the private key a;
 				//
-				//  verify that a[i] x[i] == b1;
+				//  verify that a[i] m[i] == b1;
 				//
-				//  if the sum is correct, return x[].
+				//  if the sum is correct, return m[].
 				
 				
 				//  Define the multiplier modulus
@@ -60588,11 +60630,11 @@ class PublicKey
 				}
 				
 				
-				//  Initialize the secret modulus n
+				//  Initialize the private modulus x
 				
 				Number n = new Number(2).pow(nbits);
 				
-				n = n .add(x[0]).mod(n);
+				n = n .add(x[0]) .mod(n);
 				
 				n .setBit(nbits -1);
 				
@@ -60607,6 +60649,7 @@ class PublicKey
 				Number s0 = new Number(x[1]);
 				
 				//  a[0] r (mod n) == c0;
+				//
 				//  r == a[0]^-1 c0 (mod n);
 				
 				Number c0 = new Number(pi16.substring(0, c_digits - 20), 16);
@@ -60615,9 +60658,7 @@ class PublicKey
 				
 				t = t .mod(new Number(2).pow(64));
 				
-				while (!r.isCoprimeWith(n))
-				
-				    n = n.add(1);
+				while (!r.isCoprimeWith(n)) n = n.add(1);
 				
 				Number[] s1 = new Number[k1];
 				
@@ -60633,29 +60674,6 @@ class PublicKey
 				
 				
 				
-				//  Initialize the public coefficients
-				
-				final int d = nbits / 4;
-				
-				Number[][] r1 = new Number[k1][k];
-				
-				for (int i1 = 0; i1 < k1; i1++)
-				
-				    r1[i1][0] = new Number(0);
-				
-				Number temp = new Number(0);
-				
-				for (int i1 = 0; i1 < k1; i1++)
-				for (int i  = 1; i  < k;  i ++)
-				{
-					temp = new Number(Cipher.hash(
-					
-					    temp.toByteArray(32)));
-					
-					r1[i1][i] = temp.mod(new Number(16).pow(d));
-				}
-				
-				
 				//  Initialize b from z substring because z is padded to
 				//  make the one-time key size equal to the static key size
 				
@@ -60668,7 +60686,7 @@ class PublicKey
 				//  System.out.println("one-time public key == " + zstr1);
 				
 				
-				//  Initialize the vector product t1[] m[] from z substring
+				//  Initialize the vector product r[][] m[] from z substring
 				
 				int zlen2 = (nbits + pbits + Math.log2(k) + 3) / 4;
 				
@@ -60713,7 +60731,7 @@ class PublicKey
 				
 				for (int i1 = 0; i1 < k1; i1++)
 				
-				    s1[i1] = s1[i1] .multiply( r1_m[i1] ) .negate(n);
+				    s1[i1] = r1_m[i1] .multiply(s1[i1]) .negate(n);
 				
 				
 				//  Remove the r1[][] s1[] from the subset sum
@@ -60753,7 +60771,7 @@ class PublicKey
 				{
 					//  Compute the secret subset sum
 					//
-					//  b1 = r^-1 ( b - s_r1_m ) (mod n);
+					//  b1 = r^-1 ( b - s_r1_m ) (mod x);
 					
 					final Number b1 = b .subtract(product)
 					
@@ -60900,7 +60918,7 @@ class PublicKey
 					
 					    if (addColumn(m, col) != k/4)
 					
-						m[i] .flipBit(col);
+						m[i].flipBit(col);
 				}
 				
 				
@@ -60951,10 +60969,9 @@ class PublicKey
 				
 				//  Truncate the array but don't delete m[0]
 				
-				//  m[0] makes the key size irregular and the so-
-				//  lution ambiguous so that a cryptanalyst would
-				//  have to solve the knapsack 2^80 times to find
-				//  the correct key.
+				//  m[0] makes the key size irregular and the solution
+				//  ambiguous so a cryptanalyst would have to solve
+				//  the knapsack 2^80 times to find the correct key.
 				
 				final Number m0 = m[0];
 				
@@ -63031,6 +63048,7 @@ class Cipher
 	
 	
 	
+	
 	//  Private key cipher notes
 	//
 	//  The private key / cipher class uses a hash function for encryption. Only one hash function is
@@ -63052,14 +63070,14 @@ class Cipher
 	//  m = c - k are also equally probable, because adding a constant to a random number just rotates the
 	//  probabilities modulo the number of digits or values.
 	//
-	//  The random and non-random numbers have to have the same modulus or number or else the probabilities
-	//  would be unequal and the one-time pad would be insecure. For example, if the random number k were a
-	//  binary number and m were a decimal number, then adding the two numbers modulo 10 would generate a
-	//  non-random number c because adding a binary number modulo 10 is equivalent to adding a decimal num-
-	//  ber in which the first two values 0 and 1 each have a 1/2 probability and the next eight values 2
-	//  to 9 have a zero probability. This would mean that a random binary number is really a non-random
-	//  decimal number being added to a decimal number. Adding or multiplying two numbers that have differ-
-	//  ent moduli is also an illegal or undefined operation in math.
+	//  The random and non-random numbers have to have the same modulus or number of digits or else the
+	//  probabilities would be unequal and the one-time pad would be insecure. For example, if the random
+	//  number k were a binary number and m were a decimal number, then adding the two numbers modulo 10
+	//  would generate a non-random number c because adding a binary number modulo 10 is equivalent to
+	//  adding a decimal number in which the first two values 0 and 1 each have a 1/2 probability and the
+	//  next eight values 2 to 9 have a zero probability. This would mean that a random binary number is
+	//  really a non-random decimal number being added to a decimal number. Adding or multiplying two
+	//  numbers that have different moduli is also an illegal or undefined operation in math.
 	//
 	//  A one-time pad is also proved to be secure by matrix theory because any system of simultaneous
 	//  linear equations in which there are more variables than equations is indeterminate or has an in-
@@ -63091,13 +63109,14 @@ class Cipher
 	//  methods of cryptanalysis are secret. By using a hash cipher instead of an encryption cipher, the
 	//  private key / cipher class sidesteps the problem of cryptanalysis and makes the knowledge that
 	//  cryptanalysts have worthless because hash functions are non-invertible. Even a quantum computer
-	//  would be unable to break a hash cipher. Moreover, the hash function uses a large memory buffer
-	//  which not only reduces the amount of work required to compute n multiplications for each hash value
-	//  from O(n) to O(n^0) or O(1) but also makes cryptanalysis impossible because the internal state of
-	//  the hash machine is unknown, and each hash value uses the sum of the four matrix elements at the
-	//  current index of the circular array instead of using the element values by themselves so a crypt-
-	//  analyst has no information about the cipher except for the sum of four numbers that are added to
-	//  the plaintext.
+	//  would be unable to break a hash cipher.
+	//
+	//  Moreover, the hash function uses a large memory buffer which not only reduces the amount of work
+	//  required to compute n multiplications for each hash value from O(n) to O(n^0) or O(1) but also
+	//  makes cryptanalysis impossible because the internal state of the hash machine is unknown, and
+	//  each hash value uses the sum of the four matrix elements at the current index of the circular ar-
+	//  ray instead of using the element values by themselves so a cryptanalyst has no information about
+	//  the cipher except for the sum of four variables that are added to the plaintext.
 	//
 	//  A hash cipher requires a one-time secret key such as H(m) (+) k0 for file encryption or the shared
 	//  secret key for message encryption. For file encryption the secret encryption key has to be encrypt-
