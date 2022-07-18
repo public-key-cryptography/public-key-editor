@@ -29,7 +29,6 @@
 	
 	
 	The Java Editor program contains a text editor, email editor, table editor, and image viewer.
-	
 	The program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert
 	classes. These classes contain all the ciphers, algorithms, protocols, and software required to do
 	cryptography. The Mail, PopMail, and SendMail classes contain the software required to send and
@@ -70,14 +69,14 @@
 	pad for the message encryption.
 	
 	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X A X,  Y = A1^x1 A0 A2^x2
-	(mod p) and the Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod x) where A, A0, A1,
-	A2, a0, r and p are public parameters and s, x1, x2, x, and X are private keys. The equations use
-	polynomials, vectors, matrices, cubes, and tesseracts. The vector cross product cipher Y = A (x) X,
-	E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret key or key
-	agreement. The matrix product cipher  Y = |A1|X1|  uses multi-dimensional arithmetic which multiplies
-	from left to right and from top to bottom.|X2|   The matrix polynomial discrete log cipher uses Y =
-	A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected for public key cryptography be-
-	cause nonlinear, multivariate, multi-dimensional, modular and non-modular equations are unsolvable.
+	(mod p) where A, A0, A1, A2, and p are public parameters and x1, x2, x, and X are private keys. The
+	equations use polynomials, vectors, matrices, cubes, and tesseracts. The vector cross product cipher
+	Y = A (x) X, E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret
+	key or key agreement. The matrix product cipher  Y  = |A1|X1| uses 2-dimensional arithmetic which
+	multiplies from left to right and from top to bottom. |X2|    The matrix polynomial discrete log
+	cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected for public key
+	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
+	are unsolvable.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
@@ -90,8 +89,8 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
 	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as factor-
-	ization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-Hellman
-	ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
+	ization or discrete logarithms. The software includes 14 Diffie-Merkle-Hellman and 1 matrix digital
+	signature algorithm.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, the vector cross prod-
 	uct cipher Y = A (x) X uses vectors of integers and a single equation but it could also use multiple
@@ -242,8 +241,8 @@
 	You can create a java archive or java jar file
 	so the file doesn't have to be compiled each time.
 	
-	If the Editor.java file is in the Downloads folder, first compile
-	the .java source code to create the executable .class files using
+	If the Editor.java file is in the Downloads folder, first compile the
+	.java source code to create the executable .class files using the command
 	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java; then
 	load the class files and create the .jar file using the jar (create verbose file)
 	command /usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .; use cd;
@@ -262,7 +261,7 @@
 	If you delete the compiled classes directory using rm -r -f EditorClassFiles, the Editor
 	.jar file will still execute because the classes were loaded into the file. The class files
 	are only required to create a jar file, not to run the file (unless the jar file is created
-	to use the directory by specifying the class path in the mainfest but then the jar file
+	to use the directory by specifying the class path in the manifest but then the jar file
 	would only work on the computer on which the code was compiled).
 	
 	Note that the cd command can be omitted because it just changes the directory to the home
@@ -356,13 +355,13 @@
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but it
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
 	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size timestamp
-	state \n, etcetera.
+	state \n, et cetera.
 	
 	This would be backward compatible with the POP mail protocol because it would only display a num-
 	ber if a user changes the state of a message. Also the client could retrieve and delete messages
 	using the ordinal / cardinal numbers or the time stamps. If multiple users want to retrieve and
 	delete the same messages simultaneously they would have to use a newer POP mail program that re-
-	trieves and deletes messages using the timestamps or message hashes.
+	trieves and deletes messages using the time stamps or message hashes.
 	
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
@@ -424,8 +423,8 @@
 	invertibility of the function instead of the secrecy of the private key.
 	
 	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A sender
-	who wants to send an encrypted message computes the one-time public key Y = A K if the private vari-
-	ables are commutative or Y = K A if K and X are non-commutative. Then the sender and recipient com-
+	who wants to send an encrypted message computes the one-time public key Z = A K if the private vari-
+	ables are commutative or Z = K A if K and X are non-commutative. Then the sender and recipient com-
 	pute the same public key agreement or secret key E = A K X  or  E = K A X  using only multiplication
 	because each of them knows either K or X. A wiretapper would have to do an inversion to solve for K
 	or X, but this is a hard math problem because A is chosen to be non-invertible.
@@ -575,48 +574,38 @@
 	discrete logarithms are harder to solve because they are based on the nonlinear subset product prob-
 	lem or the problem of solving for m[] in y = g^(x[i](2^t)) mod p where each x[i] == 0 or 1.
 	
-	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array A[], a
+	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[], a
 	private key s, and a secret random error array e[] where the sum of the elements is smaller than q/2,
-	and then computes the static public key B[] = A[] s + e[] modulo q. (The random errors can be dis-
-	carded because they are not used for decryption.) To encrypt a message M[], for each bit in M the
-	sender chooses a subset of elements in A and B and then calculates u = the subset sum of the A ele-
-	ments mod q, and v = the subset sum of B[] + [q/2] M[i] (mod q) where q/2 M[i] is either 0 or q/2.
-	For each bit M[i] the one-time public key is the pair (u, v), and for M[] the one-time public key is
+	and then computes the static public key b[] = a[] s + e[] modulo q. (The random errors can be dis-
+	carded because they are not used for decryption.) To encrypt a message m[], for each bit in m the
+	sender chooses a subset of elements in a and b and then calculates u = the subset sum of the a ele-
+	ments mod q, and v = the subset sum of b[] + [q/2] m[i] (mod q) where q/2 m[i] is either 0 or q/2.
+	For each bit m[i] the one-time public key is the pair (u, v), and for m[] the one-time public key is
 	the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
 	
-	Since A[] s + e[] == B[], multiplying u (== a subset sum of A[]) by s approximately equals v (== a
-	subset sum of B[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
+	Since a[] s + e[] == B[], multiplying u (== a subset sum of a[]) by s approximately equals v (== a
+	subset sum of b[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
 	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference
 	v - s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the
 	quotient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the mes-
-	sage by inverting u to find the indexes of the samples and then using the indexes to find the sub-
-	set sum of B[] and solving for M[i] == (v - the subset of B[] (mod q)) / [q/2]. The cryptanalyst may
-	also be able to break the static public key because the equations are linear and the modulus is pub-
-	lic unlike the knapsack cipher which is also linear but uses a private modulus.
+	sage by inverting u to find the indices of the samples and then using the indices to find the sub-
+	set sum of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset
+	sum problem has a many-to-one mapping, any solution to the subset sum problem will break the cipher.
+	A cryptanalyst may also be able to break the static public key because the equations are linear and
+	the modulus is public unlike the knapsack cipher which is also linear but uses a private modulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod x), b = c[] m[] where c[] is the
-	recipient's static public key and b is the sender's one-time public key is included in the public key
-	class because the cipher is quantum resistant and the one-time public key is unbreakable, but the ci-
-	pher is not enabled by default in the passphrase dialog because the key size is large. The knapsack
-	key size is around 6 K to 8 K bits, 1 K byte, 2 K chars, or 30 to 40 lines per key. This could be a
-	problem for public keys that are printed on web pages because the keys occupy a lot of space, but it
-	doesn't matter for keys that are stored on email servers.
+	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + e[] + r[][] s[] (mod n), b1 = c[] m[], b2 =
+	r[][]^T m[] where c[] is the recipient's static public key and b1, b2 are the sender's one-time pub-
+	lic key is included in the public key class but it is not enabled because it has to be modified to
+	use matrices or hypercomplex numbers. Unlike the LWE cipher which uses a private muliplier and a pub-
+	lic modulus, the knapsack cipher uses a public multiplier and a private modulus. Both ciphers add
+	random errors to the public key.
 	
-	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only real asym-
-	metrical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
-	only public key cipher that uses a private modulus. (The Diffie-Hellman ciphers use commutative, sym-
-	metrical, and non-invertible one-way functions which means that the private variables x and k commute
-	with each other, or f(y = f(a, x), k) == f(z = f(a, k), x)) The knapsack cipher was also the world's
-	first quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but it has to be
-	implemented correctly or else it doesn't work.
-	
-	For example, if the public random table r[][] or the private / secret key s[] equals zero, then the
-	static public key can be broken unless the cipher includes small random errors that are added to the
-	static key. Moreover, if the one-time public key has a small solution set, then a cryptanalyst can
-	find the sender's private key m[] by solving the knapsack problem and trying all the solutions. (Note
-	that the multiplier r0 can be public because a cryptanalyst can find it anyway since one of the equa-
-	tions has to start with a[0] = 1 and r[0][] = 0; a[] has to start with 1 because a[] is a super-
-	increasing sequence and the knapsack density has to equal 1.)
+	The Merkle-Hellman / knapsack cipher may be the only asymmetrical public key cipher or invertible
+	one-way function other than the Rabin cipher, and it is the only public key cipher that uses a pri-
+	vate modulus. (The Diffie-Hellman ciphers use commutative, symmetrical, and non-invertible one-way
+	functions which means that the private variables x and k commute with each other and use the same
+	function for public key generation and key agreement or that f(y = f(a, x), k) == f(z = f(a, k), x)).
 	
 	Even if a cryptanalyst knows how to solve the subset sum or non-superincreasing knapsack problem it
 	won't break the one-time public key b = c[] m[] because the cipher was designed to resist this at-
@@ -626,14 +615,29 @@
 	ient can always decrypt the sender's secret key m[] because the recipient knows the private modulus n
 	and the secret key s[].
 	
-	A cryptanalyst would have to be able to solve the vector equation c[] = r0 a[] + r[][] s[] (mod x)
-	for the secret key s[] to invert the function, but this is impossible without knowing the modulus
-	because there is only one solution to the equation; the cryptanalyst cannot choose a random modulus
-	n and solve for a different s'[] to get the same public key c[]. Even if the equation could be
-	solved for the modulus x and secret key s[] it wouldn't break the Merkle-Hellman cipher because the
-	public key includes small random errors that are added to c[] to increase the search space to re-
-	sist this attack. The cryptanalyst would have to try to solve the equation 2^80 or a septillion
-	times to find the solution or to break the public key.
+	A cryptanalyst would have to be able to solve the vector equation c[] = r0 a[] + e[] + r[][] s[] for
+	the secret key s[] to invert the function, but this is impossible without knowing the modulus n be-
+	cause there is only one solution to the equation; the cryptanalyst cannot choose a random modulus n'
+	and solve for a different s'[] to get the same public key c[]. Even if the equation could be solved
+	for the modulus n and secret key s[] it wouldn't break the Merkle-Hellman cipher because the public
+	key includes small random errors that are added to c[] to increase the search space to resist this
+	attack. The cryptanalyst would have to try to solve the equation 2^80 or a septillion times to find
+	the solution or to break the public key.
+	
+	The problem with the integer knapsack cipher is that if the static key includes the term r[][] s[],
+	the sender has to include the term r[][]^T m[] in the one-time public key, and then the one-time pub-
+	lic key can be reduced to the subset sum problem using partial Gaussian elimination to remove the
+	large m[0] term or by multiplying and subtracting one of the r[][]^T m[] equations. Then the cipher
+	is no more difficult than the LWE cipher which is also based on the subset sum problem. The r[][] s[]
+	term can be set to zero, but then the static public key may not be unbreakable. The cipher may have
+	to be implemented using matrices or hypercomplex numbers like the other ciphers in the public key
+	class.
+	
+	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not be enabled in the
+	public key class because they increase the size of the key from 1500 bytes to 5000 bytes and they in-
+	crease the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman
+	ciphers in the public key class because they use different functions for key generation and key
+	agreement.
 	
 	
 	************************************************/
@@ -4915,6 +4919,12 @@ class Programs
 					font = textarea.getFont();
 				}
 				
+				if (textareapanellist.size() == 1)
+				{
+				        findlistener.setVisible(false);
+				    gotolinelistener.setVisible(false);
+				}
+				
 				textareapanellist.remove(textareapanel);
 				
 				tabbedpane.remove(tabbedpane.getSelectedIndex());
@@ -5439,9 +5449,9 @@ class Programs
 					
 					findreplacelabel.setText(__.Find);
 					
-					//  textfield1.setText("");
-					//  textfield2.setText("");
-					//  textarea3 .setText("");
+					textfield1.setText("");
+					textfield2.setText("");
+					textarea3 .setText("");
 					
 					panel.setVisible(bool);
 					
@@ -6473,16 +6483,33 @@ class Programs
 		private class ReplaceAllListener implements ActionListener
 		{
 		
-			//  Example  Replace all periods with commas
+			//  The replace all dialog box uses the String replaceAll method
+			//  which matches regular expressions while the find and replace
+			//  dialog uses JTextArea replaceRange which matches literal strings
+			
+			
+			//  Examples
+			//
+			//  Delete all newline (or tab) chars
+			//
+			//  Type \n (or \t) in the first text field and press replace all
+			//
+			//  Delete the sequence of two chars \n (or \t)
+			//
+			//  Type \\n (or \\t) in the first text field and press replace all
+			//
+			//  (A second slash is required to escape the first slash or else the
+			//  String replaceAll method will replace the newline chars instead of \n)
+			//
+			//  Replace all periods with commas
 			//
 			//  Type [.] in the first text field and , in the second field
-			
-			
-			//  Example  Replace the carriage return with the empty string.
+			//
+			//  Replace the carriage return with the empty string.
 			//
 			//  Type [\r] in the first text field
 			//
-			//  This removes carriage returns \r  but leaves newline chars \n
+			//  This removes carriage returns but leaves newline chars
 			
 			
 			private JTextField textfield1;
@@ -6490,18 +6517,14 @@ class Programs
 			
 			private JButton replaceallbutton;
 			
-			private String regex;
-			
-			private String replacement;
-			
 			private int maxfontsize = 24;
 			
 			
 			public void actionPerformed(ActionEvent e)
 			{
 			
-				textfield1 = new JTextField(10);
-				textfield2 = new JTextField(10);
+				textfield1 = new JTextField(12);
+				textfield2 = new JTextField(12);
 				
 				float fontsize = font.getSize();
 				
@@ -6523,9 +6546,9 @@ class Programs
 					{
 						String document = textareapanel.textarea.getText();
 						
-						regex = textfield1.getText();
+						String regex = textfield1.getText();
 						
-						replacement = textfield2.getText();
+						String replacement = textfield2.getText();
 						
 						document = document.replaceAll(regex, replacement);
 						
@@ -6554,12 +6577,19 @@ class Programs
 				
 				String title = __.replaceall;
 				
-				JOptionPane.showConfirmDialog(
+				//  Comp, Obj, String, int, int, Icon, Obj[], Obj
 				
-				    frame, vbox, title,
+				//  Use the empty array instead of null or else
+				//  the JOptionPane will display an OK button
 				
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.PLAIN_MESSAGE, null);
+				Object[] options = new Object[] {  };
+				
+				JOptionPane.showOptionDialog(frame, vbox, title,
+				
+				    JOptionPane.DEFAULT_OPTION,
+				    JOptionPane.PLAIN_MESSAGE,
+				
+					null, options, null);
 				
 				textfield1.setText("");
 				textfield2.setText("");
@@ -7574,7 +7604,7 @@ class Programs
 		}
 		
 		
-		//  End class GotoListener
+		//  End class GotoLineListener
 		
 		
 		
@@ -15376,6 +15406,7 @@ class Programs
 		
 		
 		
+		
 		private class FindAndReplace
 		{
 		
@@ -15767,7 +15798,6 @@ class Programs
 				}
 				
 				
-				
 				private void setColor()
 				{
 					if (tablepanel == null) return;
@@ -15785,7 +15815,6 @@ class Programs
 					textfield2.setBackground(background);
 					
 				}
-				
 				
 				
 				private void setFont(Font font)
@@ -16104,7 +16133,6 @@ class Programs
 				}
 				
 				
-				
 				private void setColor()
 				{
 					//  sets the color of the replace box
@@ -16125,7 +16153,6 @@ class Programs
 				}
 				
 				
-				
 				private void setFont(Font font)
 				{
 					//  sets the font of the replace box
@@ -16137,8 +16164,8 @@ class Programs
 					textfield1.setFont(font1);
 					textfield2.setFont(font1);
 					
-					prevbutton.setFont(font1);
-					findbutton.setFont(font1);
+					   prevbutton.setFont(font1);
+					   findbutton.setFont(font1);
 					replacebutton.setFont(font1);
 					
 					dialog.setSize(dialog
@@ -27372,12 +27399,35 @@ class Programs
 					
 					
 					
-					//  Add the panel to this
+					//   0  _______5___________________________________________ 100
+					//     |       |           ___________________________     |
+					//     |       |    email |___________________________|    |
+					//  10 |_______|___________________________________________|
+					//     |       |                                           |
+					//     |_______|                                           |
+					//     |       |                                           |
+					//     |_______|                                           |
+					//     |       |                                           |
+					//     |_______|                                           |
+					//     |       |                                           |
+					// 100 |_______|___________________________________________|
+					
+					
+					
+					//  Define the grid bag constraints for the retrieve mail frame
+					//
+					//  The positions, sizes, weights and fills have to be exactly
+					//  correct or else the scroll pane or buttons can sometimes
+					//  collapse and the buttons or scroll pane can expand to fill
+					//  the entire frame even if the frame usually displays correctly.
+					
+					
+					//  Add the icon panel to this
 					
 					gbc = new Gbc();
 					
 					gbc.setPosition(0, 0);
-					gbc.setSize(100, 1);
+					gbc.setSize(100, 10);
 					gbc.setFill(Gbc.both);
 					gbc.setWeight(100, 10);
 					
@@ -27389,7 +27439,7 @@ class Programs
 					gbc = new Gbc();
 					
 					gbc.setPosition(0, 10);
-					gbc.setSize(5, 10);
+					gbc.setSize(5, 90);
 					gbc.setFill(Gbc.both);
 					gbc.setWeight(5, 90);
 					
@@ -27404,7 +27454,7 @@ class Programs
 					gbc = new Gbc();
 					
 					gbc.setPosition(5, 10);
-					gbc.setSize(95, 10);
+					gbc.setSize(95, 90);
 					gbc.setFill(Gbc.both);
 					gbc.setWeight(95, 90);
 					
@@ -27415,6 +27465,7 @@ class Programs
 					scrollpane1.setVisible(true);
 					scrollpane2.setVisible(false);
 					scrollpane3.setVisible(false);
+					
 					
 					
 					
@@ -28239,7 +28290,7 @@ class Programs
 					//  | software to allow clients or users to store public keys    |
 					//  | on their servers.                                          |
 					//  |                                                            |
-					//  |            o zero  * quad  o oct  o max1  o max2           |
+					//  |                o zero  * quad  o oct  o max                |
 					//  |                            ____                            |
 					//  |                           |_OK_|                           |
 					//  |____________________________________________________________|
@@ -39267,7 +39318,7 @@ class Programs
 			//    |    with your messages. The recipient will    |
 			//    |    use this key to reply to your messages.   |
 			//    |                                              |
-			//    |    o zero  * quad  o oct  o max1  o max2     |
+			//    |          o zero  * quad  o oct  o max        |
 			//    |                                              |
 			//    |                    [ OK ]                    |
 			//    |______________________________________________|
@@ -39279,20 +39330,19 @@ class Programs
 			
 			JRadioButton zerobutton, singlebutton;
 			JRadioButton doublebutton, quadbutton;
-			JRadioButton octbutton, maxbutton1, maxbutton2;
+			JRadioButton octbutton, maxbutton;
 			
 			zerobutton   = new JRadioButton(__.zero);
 			singlebutton = new JRadioButton(__.single);
 			doublebutton = new JRadioButton(__.double1);
 			quadbutton   = new JRadioButton(__.quad);
 			octbutton    = new JRadioButton(__.oct);
-			maxbutton1   = new JRadioButton(__.max + "1");
-			maxbutton2   = new JRadioButton(__.max + "2");
+			maxbutton   = new JRadioButton(__.max);
 			
 			JRadioButton[] radiobuttons = new JRadioButton[]
 			{
 				zerobutton, singlebutton, doublebutton,
-				quadbutton, octbutton, maxbutton1, maxbutton2
+				quadbutton, octbutton, maxbutton
 			};
 			
 			for (JRadioButton button : radiobuttons)
@@ -39306,16 +39356,17 @@ class Programs
 			group.add(doublebutton);
 			group.add(quadbutton);
 			group.add(octbutton);
-			group.add(maxbutton1);
-			group.add(maxbutton2);
+			group.add(maxbutton);
 			
 			JCheckBox maxcheckbox = new JCheckBox();
 			
 			maxcheckbox.setSelected(false);
 			maxcheckbox.setEnabled(false);
 			maxcheckbox.setVisible(false);
+			maxcheckbox.setVisible(false);
 			
-			maxcheckbox.setToolTipText(__.includelargeciphers);
+			maxcheckbox.setToolTipText(
+			    __.includelargeciphers);
 			
 			
 			JPanel panel = new JPanel();
@@ -39325,10 +39376,7 @@ class Programs
 			panel.add(doublebutton);
 			panel.add(quadbutton);
 			panel.add(octbutton);
-			panel.add(maxbutton1);
-			panel.add(maxbutton2);
-			
-			maxbutton2.setToolTipText(__.includelargeciphers);
+			panel.add(maxbutton);
 			
 			
 			//  Count the number of ciphers
@@ -39357,7 +39405,7 @@ class Programs
 			
 			if (Math.isPowerOf2(n))
 			
-			    maxbutton1.setVisible(false);
+			    maxbutton.setVisible(false);
 			
 			JLabel cipherlabel = new JLabel(__.cipher);
 			
@@ -39400,8 +39448,7 @@ class Programs
 			else if (size == 2)    doublebutton .setSelected(true);
 			else if (size == 4)    quadbutton   .setSelected(true);
 			else if (size == 8)    octbutton    .setSelected(true);
-			else if (size == n-n1) maxbutton1   .setSelected(true);
-			else if (size == n)    maxbutton2   .setSelected(true);
+			else if (size == n-n1) maxbutton    .setSelected(true);
 			
 			
 			String title = "";
@@ -39419,8 +39466,7 @@ class Programs
 			else if (doublebutton .isSelected())  m = 2;
 			else if (quadbutton   .isSelected())  m = 4;
 			else if (octbutton    .isSelected())  m = 8;
-			else if (maxbutton1   .isSelected())  m = n-n1;
-			else if (maxbutton2   .isSelected())  m = n;
+			else if (maxbutton    .isSelected())  m = n-n1;
 			else                                  m = -1;
 			
 			return Math.min(m, n);
@@ -50198,11 +50244,12 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			maxcheckbox = new JCheckBox();
 			
+			maxcheckbox.setVisible(false);
+			
 			doublebutton.setToolTipText(__.numberofciphers);
 			quadbutton  .setToolTipText(__.numberofciphers);
 			octbutton   .setToolTipText(__.numberofciphers);
 			maxbutton   .setToolTipText(__.numberofciphers);
-			
 			maxcheckbox .setToolTipText(__.includelargeciphers);
 			
 			
@@ -52473,8 +52520,10 @@ class PublicKey
 	
 	//  Asymmetrical public keys or invertible one-way functions
 	
-	
 	//  The integer Merkle-Hellman / knapsack ciphers
+	
+	//  The Merkle-Hellman / knapsack cipher is commented or disabled in the pub-
+	//  lic key class because the cipher requires matrices instead of integers. 
 	
 	private static final int size56x29 = 56*29 - 20; // 28 terms x 8 bits
 	private static final int size48x49 = 48*49 - 20; // 48 terms x 4 bits
@@ -52522,7 +52571,7 @@ class PublicKey
 		
 		size120, //  Y = A (x) X  vector cross product / vcp
 		
-		size88,  //  rotate( A X1 ) X2  2 D multiplication
+		size88,  //  rotate( A X1 ) X2  2-D multiplication
 		
 		
 		size150, //  X1 A X2  polynomial matrix lsd
@@ -52551,13 +52600,12 @@ class PublicKey
 		
 		//  Large ciphers
 		
-		size56x29,  //  integer knapsack r0 a[] + r[][] s[] (mod n)
+		//  These ciphers are not enabled because the knapsack cipher
+		//  would have to be modified to use matrices or Latin squares
 		
-		size48x49,  //  integer knapsack + random errors
-		
-		//  size... //  quaternion knapsack
-		
-		//  size... //  matrix / Latin square knapsack
+		//  size56x29,  //  integer knapsack r0 a[] + e[] + r[][] s[] (mod n)
+		//  size48x49,  //  integer knapsack + random errors
+		//  size...     //  matrix / Latin square knapsack
 		
 		//  size4x128,  //  Rabin / fact cipher (not used)
 		
@@ -52583,10 +52631,10 @@ class PublicKey
 	
 	//  public key compute time (ms) ==
 	//
-	//  [37, 15, 4, 5, 5, 97, 22, 18, 66, 134, 52, 35, 100, 34, 66, 112]
-	//  [63, 18, 6, 6, 7, 85, 19, 31, 68, 171, 68, 49, 156, 35, 93, 140]
-	//  [86, 28, 7, 7, 8, 97, 89, 43, 87, 257, 90, 90, 247, 48, 67, 56]
-	//  [40, 22, 4, 4, 9, 92, 21, 16, 57, 136, 56, 37, 116, 41, 55, 59]
+	//  [37, 15, 4, 5, 5, 97, 22, 18, 66, 134, 52, 35, 100, 34]
+	//  [63, 18, 6, 6, 7, 85, 19, 31, 68, 171, 68, 49, 156, 35]
+	//  [86, 28, 7, 7, 8, 97, 89, 43, 87, 257, 90, 90, 247, 48]
+	//  [40, 22, 4, 4, 9, 92, 21, 16, 57, 136, 56, 37, 116, 41]
 	//
 	//  These numbers are not accurate because the threads are inter-
 	//  rupted, but they show that the integer vector cross product,
@@ -52596,11 +52644,6 @@ class PublicKey
 	//  (Smart cards or credit cards could use these ciphers because
 	//  they require only a few million processor operations. The
 	//  other ciphers require a hundred million operations.)
-	//
-	//  (The knapsack cipher is slow because it has to compute the
-	//  vector r[][] s[] or r[][] m[] for key generation, and it has
-	//  to try all the values of the scalar m[] rand[] errors to
-	//  solve the knapsack for the secret key.)
 	
 	
 	
@@ -53440,6 +53483,9 @@ class PublicKey
 		
 		     if (size1 == size) return true;
 		
+		if ((size == PublicKey.size48x49)
+		 || (size == PublicKey.size56x29)) return true;
+		
 		return false;
 	}
 	
@@ -53543,7 +53589,9 @@ class PublicKey
 		
 		if (publickey.isEmpty()) return null;
 		
-		if (email.isEmpty())  email = hashPublicKey(publickey).substring(0, 16);
+		if (email.isEmpty())  email =
+		
+		    hashPublicKey(publickey).substring(0, 16);
 		
 		return new String[] { email, publickey };
 	}
@@ -53713,7 +53761,7 @@ class PublicKey
 		byte[] plaindata = Cipher.decrypt(cipherdata, messagekey);
 		
 		
-		//  Verify that the message decrypted properly
+		//  Verify that the message decrypted correctly
 		
 		if (plaindata == null) return "";
 		
@@ -53801,8 +53849,7 @@ class PublicKey
 		else if (str.contains("\n\n")) tokens = str.split("\n\n");
 		
 		else if (str.contains(Convert.base16Separator))
-		
-		    tokens = str.split(Convert.base16Separator);
+		   tokens = str.split(Convert.base16Separator);
 		
 		else return null;
 		
@@ -54207,7 +54254,7 @@ class PublicKey
 		byte[] plaindata = Cipher.decrypt(cipherdata, messagekey);
 		
 		
-		//  Verify that the message decrypted properly
+		//  Verify that the message decrypted correctly
 		
 		if (plaindata == null)  return "";
 		
@@ -55039,11 +55086,11 @@ class PublicKey
 			
 			Matrix X1 = new Matrix( new Number[][]
 			
-			    { { x[0], x[1] }, { x[1], x[0] } } );
+			    { { x[0], x[1] }, { x[1], x[0] } } ) .mod(p);
 			
 			Matrix X2 = new Matrix( new Number[][]
 			
-			    { { x[2], x[3] }, { x[3], x[2] } } );
+			    { { x[2], x[3] }, { x[3], x[2] } } ) .mod(p);
 			
 			
 			//  Compute the static public key
@@ -56107,11 +56154,11 @@ class PublicKey
 			
 			    pidigits[i] = pi16.substring(i*s1, (i+1)*s1);
 			
-			Number a = new Number(pidigits[0],radix);
-			Number b = new Number(pidigits[1],radix);
-			Number c = new Number(pidigits[2],radix);
+			Number a1 = new Number(pidigits[0],radix);
+			Number a2 = new Number(pidigits[1],radix);
+			Number a3 = new Number(pidigits[2],radix);
 			
-			Vector A = new Vector( new Number[] { a, b, c } );
+			Vector A = new Vector( new Number[] { a1, a2, a3 } );
 			
 			
 			//  Define the private vector X
@@ -56167,10 +56214,10 @@ class PublicKey
 			//
 			//  where A and X ==
 			//
-			//  | a   b   c   d |  | x1  x2  x3  x4 |
-			//  | d   a   b   c |  | x2  x1  x4  x3 |
-			//  | c   d   a   b |  | x3  x4  x1  x2 |
-			//  | b   c   d   a |  | x4  x3  x2  x1 |
+			//  | a1  a2  a3  a4 |  | x1  x2  x3  x4 |
+			//  | a4  a1  a2  a3 |  | x2  x1  x4  x3 |
+			//  | a3  a4  a1  a2 |  | x3  x4  x1  x2 |
+			//  | a2  a3  a4  a1 |  | x4  x3  x2  x1 |
 			//
 			//  X is a boustrophedonic Latin square
 			//  (X is written boustrophedonically)
@@ -56188,12 +56235,12 @@ class PublicKey
 			
 			    pidigits[i] = pi16.substring(i*s, (i+1)*s);
 			
-			Number a = new Number(pidigits[0],radix);
-			Number b = new Number(pidigits[1],radix);
-			Number c = new Number(pidigits[2],radix);
-			Number d = new Number(pidigits[3],radix);
+			Number a1 = new Number(pidigits[0],radix);
+			Number a2 = new Number(pidigits[1],radix);
+			Number a3 = new Number(pidigits[2],radix);
+			Number a4 = new Number(pidigits[3],radix);
 			
-			Matrix A = new Matrix(new Number[] { a, b, c, d }, 1);
+			Matrix A = new Matrix(new Number[] { a1, a2, a3, a4 }, 1);
 			
 			Number n = new Number(radix) .pow(s);
 			
@@ -58193,7 +58240,7 @@ class PublicKey
 	//  == 1 == a^0 (mod p) for a != 0 (mod p) which implies that the inverse of
 	//  a is a^(p-2) == 1/a == a^-1 (mod p))
 	//
-	//  In the first century A.D. Nicomachus mentioned the problem of computing
+	//  In the first century A.D., Nicomachus mentioned the problem of computing
 	//  the composite residue from a set of reduced residues and moduli but he
 	//  did not provide a method for solving the problem. One of two treatises
 	//  by Nicomachus that has survived is called Introductio Arithmetica.
@@ -58221,9 +58268,11 @@ class PublicKey
 	//
 	//  c[] = (c[1], c[2], ..., c[k]) where
 	//
-	//  c[i] = r a[i] + r[i][j] s[j] (mod x)  or
+	//                         T
+	//  c[i] = r a[i] + r[i][j] s[j] (mod n)  or
 	//
-	//  C[i] = R1 A[i] R2 + R[i][j] S[j] (mod x)
+	//                             T
+	//  C[i] = R1 A[i] R2 + R[i][j] S[j] (mod n)
 	//
 	//  for the matrix version.
 	//
@@ -58252,11 +58301,11 @@ class PublicKey
 	//  Recovering the secret key m[]
 	//
 	//  Subtract s and multiply b by the inverse of r
-	//  modulo x to get the superincreasing subset sum
+	//  modulo n to get the superincreasing subset sum
 	//
-	//  b' = r^-1 (b - r[i][j] m[j] s[i]) == a[] m'[] (mod x) or
+	//  b' = r^-1 (b - r[i][j] m[j] s[i]) == a[] m'[] (mod n) or
 	//
-	//  B' = R1^-1 (B - R[i][j] m[j] S[i]) R2^-1 == A[] m'[] (mod x)
+	//  B' = R1^-1 (B - R[i][j] m[j] S[i]) R2^-1 == A[] m'[] (mod n)
 	//
 	//  and then solve for the permuted secret key m'[].
 	//
@@ -58306,7 +58355,7 @@ class PublicKey
 			//
 			//  c[] = (c[1], c[2], ..., c[k])
 			//
-			//  where c[i] = r a[i] + r[][] s[] (mod x)
+			//  where c[i] = r a[i] + r[][] s[] (mod n)
 			
 			
 			//  Define the multiplier modulus
@@ -58379,7 +58428,9 @@ class PublicKey
 			
 			Number[] s1 = new Number[k1];
 			
-			s1[0] = new Number(Cipher.hash(s0.toByteArray(32)));
+			s1[0] = new Number(Cipher.hash(
+			
+			    s0.toByteArray(32)));
 			
 			for (int i = 1; i < s1.length; i++)
 			
@@ -58415,11 +58466,11 @@ class PublicKey
 			}
 			
 			
-			//  Convert the vector a[] to a public vector
+			//  Convert the vector a[] to the public vector
 			//
 			//  c[] = (c[1], c[2], ..., c[k]) where
 			//
-			//  c[i] = r a[i] + r[][] s[] (mod x)
+			//  c[i] = r a[i] + r[][] s[] (mod n)
 			
 			Number[] c = new Number[a.length];
 			
@@ -58427,10 +58478,29 @@ class PublicKey
 			
 			    c[i] = a[i] .multiply(r) .mod(n);
 			
-			for (int i1 = 0; i1 < k1;       i1++)
-			for (int i  = 0; i  < c.length; i ++)
 			
-			    c[i] = c[i] .add(r1[i1][i].multiply(s1[i1])) .mod(n);
+			//  Compute t1 = r1[][]^T s[]
+			
+			Number[] t1 = new Number[k];
+			
+			for (int i = 0; i < k; i++)
+			
+			    t1[i] = new Number(0);
+			
+			for (int i  = 0; i  < k;  i ++)
+			for (int i1 = 0; i1 < k1; i1++)
+			
+			    t1[i] = t1[i] .add(r1[i1][i]
+			
+				.multiply(s1[i1]));
+			
+			
+			//  Add t1[] to c[]
+			
+			for (int i = 0; i < k; i++)
+			
+			    c[i] = c[i] .add(t1[i]) .mod(n);
+			
 			
 			
 			//  Create a list of small random errors 0 to k/2 -1
@@ -58614,6 +58684,7 @@ class PublicKey
 			
 			m[m.length-1] = new Number(1);
 			
+			//  System.out.println(Arrays.toString(m));
 			
 			
 			//  Initialize the vector cstr[] from
@@ -60433,7 +60504,7 @@ class PublicKey
 				
 				if (c.equals(0) || c.isDivisibleBy(p[0]))
 				
-				    return new Number(0); // fake public key = 0 or k n
+				    return new Number(0); // public key = 0 or k n
 				
 				
 				//  Solve for m == c ^ (1/2) (mod n)
@@ -60597,7 +60668,7 @@ class PublicKey
 				
 				//  use s and t to compute the secret subset sum
 				//
-				//  b1 = t^-1 ( b - s ) (mod x);
+				//  b1 = t^-1 ( b - s ) (mod n);
 				//
 				//  solve the superincreasing subset sum problem for
 				//
@@ -60629,7 +60700,7 @@ class PublicKey
 				}
 				
 				
-				//  Initialize the private modulus x
+				//  Initialize the private modulus n
 				
 				Number n = new Number(2).pow(nbits);
 				
@@ -60770,7 +60841,7 @@ class PublicKey
 				{
 					//  Compute the secret subset sum
 					//
-					//  b1 = r^-1 ( b - s_r1_m ) (mod x);
+					//  b1 = r^-1 ( b - s_r1_m ) (mod n);
 					
 					final Number b1 = b .subtract(product)
 					
@@ -60786,8 +60857,8 @@ class PublicKey
 					if ((m1 == null) && (m1_ == null)) continue;
 					
 					//  Show how many times the ssss() method returns
-					//  a solution until the correct solution is found
-					
+					//  a solution until the correct key is found
+					//
 					//  if (digits == size...)
 					//
 					//     System.out.print(" i == " + i);
@@ -61077,18 +61148,17 @@ class PublicKey
 		//  This method solves the superincreasing subset sum problem
 		//  for a superincreasing sequence a and a subset sum b.
 		//
-		//  The superincreasing subset sum problem is the problem of
-		//  solving for x[] in the sum b = a[] (x[] mod p). (If p = 2
-		//  then x[] is an array of binary digits or bits.)
+		//  The superincreasing subset sum problem is the problem of solv-
+		//  ing for x[] in the sum b = a[] (x[] mod p). (If p = 2 then x[]
+		//  is an array of binary digits or bits.)
 		//
-		//  A superincreasing sequence modulo p is a set of numbers
-		//  where each number is greater than the sum of its prede-
-		//  cessors multiplied by p-1. (For the binary subset sum
-		//  problem the modulus p = 2 and the multiplier p-1 == 1.)
+		//  A superincreasing sequence modulo p is a set of numbers where
+		//  each number is greater than the sum of its predecessors multi-
+		//  plied by p-1. (For the binary subset sum problem the modulus
+		//  p = 2 and the multiplier p-1 == 1.)
 		//
-		//  The superincreasing subset sum problem is used to decrypt
-		//  the message or secret key in the Merkle-Hellman / knapsack
-		//  cipher.
+		//  The superincreasing subset sum problem is used to decrypt the
+		//  message or secret key in the Merkle-Hellman / knapsack cipher.
 		
 		
 		//  Verify that a is a superincreasing sequence modulo p
@@ -61428,8 +61498,8 @@ class Signature
 	
 	//  The one-time private key k could be a function of the static private key x
 	//  and message m, or it could be a function of a random number and the message.
-	//  (k should always be a function of the message even if it uses a random
-	//  number generator.)
+	//  (k should always be a function of the message even if it uses a random number
+	//  generator.)
 	//
 	//  If k is a function of the static key and message (instead of a random number,
 	//  static key and message), then the signer cannot sign the same message, check,
@@ -61437,9 +61507,9 @@ class Signature
 	//  nature key r = f(a, k) and the same signature equation s = f(k, m, x, r).
 	//
 	//  The one-time private key k cannot be reused or else the signature equation
-	//  s = k m + x r could be solved for the static private key x because then
-	//  there would be two equations s1 = k m1 + x r1 and s2 = k m2 + x r2 (mod q)
-	//  for the variables k and x instead of one equation.
+	//  s = k m + x r could be solved for the static private key x because then there
+	//  would be two equations s1 = k m1 + x r1 and s2 = k m2 + x r2 (mod q) for the
+	//  variables k and x instead of one equation.
 	
 	
 	//  The signature { m, r, s, y } is appended to a document as a block of 4 x 40 or
@@ -63058,8 +63128,8 @@ class Cipher
 	//
 	//  A hash function doesn't encrypt messages because a hash function is non-invertible. A hash func-
 	//  tion is used to generate a sequence of random numbers or a one-time pad which is xor-ed with the
-	//  plaintext to generate the ciphertext. A hash cipher is provably unbreakable because it uses a
-	//  non-invertible sequence of random numbers or a one-time pad for encryption.
+	//  plaintext to generate the ciphertext c[i] = p[i] + H(k + i). A hash cipher is provably unbreakable
+	//  because it uses a non-invertible sequence of random numbers or a one-time pad for encryption.
 	//
 	//  A one-time pad is provably secure by the definition of randomness (all possible values are equally
 	//  probable) and the rotation of equal probabilities. To prove that a one-time pad is perfectly se-
@@ -63112,22 +63182,24 @@ class Cipher
 	//
 	//  Moreover, the hash function uses a large memory buffer which not only reduces the amount of work
 	//  required to compute n multiplications for each hash value from O(n) to O(n^0) or O(1) but also
-	//  makes cryptanalysis impossible because the internal state of the hash machine is unknown, and
-	//  each hash value uses the sum of the four matrix elements at the current index of the circular ar-
-	//  ray instead of using the element values by themselves so a cryptanalyst has no information about
-	//  the cipher except for the sum of four variables that are added to the plaintext.
+	//  makes cryptanalysis impossible because the internal state of the hash machine is unknown. Each
+	//  hash value uses the sum of the four matrix elements at the current index of the circular array
+	//  instead of using the element values by themselves so a cryptanalyst has no information about the
+	//  cipher except for the sum of four variables that are added to the plaintext.
 	//
-	//  A hash cipher requires a one-time secret key such as H(m) (+) k0 for file encryption or the shared
-	//  secret key for message encryption. For file encryption the secret encryption key has to be encrypt-
-	//  ed by xor-ing it with a static or shared secret key so the key can be attached (prepended or ap-
-	//  pended) to the encrypted file. (The encrypted encryption key could be stored with the file name if
-	//  the operating system or file system allows programs to set a file key for each file just as it al-
-	//  lows programs to set the modification time and other information about the file.)
+	//  A hash cipher requires a one-time secret key such as k + H(m) for file encryption or the public
+	//  key agreement for message encryption. For file encryption the secret encryption key has to be en-
+	//  crypted by xor-ing it with a static or shared secret key so the key can be attached (prepended or
+	//  appended) to the encrypted file. (The encrypted encryption key could be stored with the file name
+	//  if the operating system or file system allows programs to set a file key for each file just as it
+	//  allows programs to store metadata such as access permissions, content type, last-modification
+	//  time, and other information about the file.)
 	//
-	//  For email or asynchronous communication messages are converted to base 64 after encryption because
-	//  encrypted data or cipherdata contains random characters. If there are any missing data blocks the
-	//  ciphertext will not be decryptable even if CBC is used because the message will not decode from
-	//  base 64 unless it just happens to be missing a sequence of four consecutive base-64 chars.
+	//  For email or asynchronous communication messages are converted to base 64 after encryption be-
+	//  cause encrypted data or cipherdata contains random characters. If there are any missing data
+	//  blocks the ciphertext will not be decryptable even if CBC is used because the message will not
+	//  decode from base 64 unless it just happens to be missing a sequence of four consecutive base-64
+	//  chars.
 	//
 	//  The ciphers in the private key / cipher class are not compatible with other private key standards,
 	//  just as the ciphers in the public key class are not compatible with other public key standards;
@@ -63179,61 +63251,58 @@ class Cipher
 	
 	
 	
-	//  Padding is used to make an array or file a multiple of the cipher block size
-	//  such as a multiple of 32 bytes or 256 bits and to test if the cipherdata de-
-	//  crypted properly because encryption and decryption generate random bytes of data
-	//  unless the correct decryption key is used. The padding also has to have a pat-
-	//  tern that can be detected so that it can be removed without removing bytes from
-	//  the plaindata or plaintext. Of course any non-random pattern could be used to
-	//  pad the plaindata. (For example, the padding could append a 1 and then the Fibo-
-	//  nacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded method could
-	//  test if each byte is the sum of the two preceding bytes modulo 256 to remove the
-	//  padding.) But the simplest pattern is to repeat the last char or byte and then
-	//  use a repeating increment such as 1,2,3,4,5,6,7,8,... The padding could also ap-
-	//  pend the number of bytes which would require up to five bytes for files larger
-	//  than 4 G unless the size is reduced modulo 256 or 64 K. Appending the number of
-	//  bytes would verify the length of the message, but it wouldn't verify the integ-
-	//  rity of the message unless a hash value were appended to the padding.
+	//  Padding is used to make an array or file a multiple of the cipher block size such as a
+	//  multiple of 32 bytes or 256 bits and to test if the cipherdata decrypted correctly be-
+	//  cause encryption and decryption generate random bytes of data unless the correct decryp-
+	//  tion key is used. The padding also has to have a pattern that can be detected so that it
+	//  can be removed without removing bytes from the plaindata or plaintext. Of course any non-
+	//  random pattern could be used to pad the plaindata. (For example, the padding could append
+	//  a 1 and then the Fibonacci sequence 1,1,2,3,5,8,13,21,34,55,89,..., and the isPadded
+	//  method could test if each byte is the sum of the two preceding bytes modulo 256 to remove
+	//  the padding.) But the simplest pattern is to repeat the last char or byte and then use a
+	//  repeating increment such as 1,2,3,4,5,6,7,8,... The padding could also append the number
+	//  of bytes which would require up to five bytes for files larger than 4 G unless the size
+	//  is reduced modulo 256 or 64 K. Appending the number of bytes would verify the length of
+	//  the message, but it wouldn't verify the integrity of the message unless a hash value were
+	//  appended to the padding.
 	//
-	//  No padding scheme is perfect because if the user intentionally creates a docu-
-	//  ment that uses the padding scheme, then the test will return true even though
-	//  the padding is part of the document. A user would have to repeat the last char
-	//  and then append at least 32 + 1 consecutive chars from the ASCII set ... !"#$%&'
-	//  ()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuv
-	//  wxyz{|}~ ... to create a padded document which couldn't happen accidentally.
+	//  No padding scheme is perfect because if the user intentionally creates a document that
+	//  uses the padding scheme, then the test will return true even though the padding is part
+	//  of the document. A user would have to repeat the last char and then append at least
+	//  32 + 1 consecutive chars from the ASCII set ... !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFG
+	//  HIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ... to create a padded document
+	//  which couldn't happen accidentally.
 	//
-	//  For example, if the user types a document, appends an 'A' and then the Latin
-	//  alphabet A to Z followed by the seven chars [\]^_`a, or the user types 001234567
-	//  89:;<=>?@ABCDEFGHIJKLMNOP the isPadded method will return true. If the chars are
-	//  reversed it will also return true because the front of the array will be padded.
-	//  But it wouldn't matter because if the encrypt and decrypt methods pad and remove
-	//  from the same end of the array, then only the encrypt padding would get removed,
-	//  unless the encrypt method does an isPadded test (which it does so the plaindata
-	//  doesn't get padded twice by the PublicKey and the Private Key / Cipher encrypt
-	//  methods). And even if it does get removed it wouldn't matter if the user is pad-
-	//  ding the document intentionally, and if the padding is unintentional then the
-	//  recipient will only be missing an increasing sequence of bytes (or a sequence
-	//  of Fibonacci numbers modulo 256).
+	//  For example, if the user types a document, appends an 'A' and then the Latin alphabet
+	//  A to Z followed by the seven chars [\]^_`a, or the user types 00123456789:;<=>?@ABCDEFG
+	//  HIJKLMNOP the isPadded method will return true. If the chars are reversed it will also
+	//  return true because the front of the array will be padded. But it wouldn't matter be-
+	//  cause if the encrypt and decrypt methods pad and remove from the same end of the array,
+	//  then only the encrypt padding would get removed, unless the encrypt method does an is-
+	//  Padded test (which it does so the plaindata doesn't get padded twice by the PublicKey
+	//  and the Private Key / Cipher encrypt methods). And even if it does get removed it
+	//  wouldn't matter if the user is padding the document intentionally, and if the padding
+	//  is unintentional then the recipient will only be missing an increasing sequence of bytes
+	//  (or a sequence of Fibonacci numbers modulo 256).
 	//
-	//  For email encryption the front of the array should be padded so the recipient
-	//  can download the tops of the messages and decrypt the partial ciphertexts to
-	//  read the subject lines and from addresses. Otherwise the program would have to
-	//  do a randomness test to determine if the ciphertext decrypted correctly. Any
-	//  randomness test would work for plaintext because decryption generates perfectly
-	//  random numbers if the wrong decryption key is used. (Multiple random tests are
-	//  only required for chosen plaintext or plaindata. For example, the increasing
-	//  sequence of bytes 0,1,2,...,255 passes some randomness tests and the isRandom()
-	//  method may return true unless more tests are added.) Even a randomness test
-	//  wouldn't be a perfect solution to test for decryption because a sender could
-	//  choose a random sequence of bytes such as a secret key or one-time pad and then
-	//  the receiver or decryption method wouldn't know if the ciphertext decrypted cor-
-	//  rectly because the plaintext would be perfectly random.
+	//  For email encryption the front of the array should be padded so the recipient can down-
+	//  load the tops of the messages and decrypt the partial ciphertexts to read the subject
+	//  lines and from addresses. Otherwise the program would have to do a randomness test to
+	//  determine if the ciphertext decrypted correctly. Any randomness test would work for
+	//  plaintext because decryption generates perfectly random numbers if the wrong decryption
+	//  key is used. (Multiple random tests are only required for chosen plaintext or plaindata.
+	//  For example, the increasing sequence of bytes 0,1,2,...,255 passes some randomness tests
+	//  and the isRandom() method may return true unless more tests are added.) Even a randomness
+	//  test wouldn't be a perfect solution to test for decryption because a sender could choose
+	//  a random sequence of bytes such as a secret key or one-time pad and then the receiver or
+	//  decryption method wouldn't know if the ciphertext decrypted correctly because the plain-
+	//  text would be perfectly random.
 	//
-	//  This padding method could be replaced by another pattern in future versions of
-	//  the software if there is a reason to replace it and then the isPadded method
-	//  would have to test for different patterns. For example, if some file types use
-	//  a repeating char and an incrementing sequence, then the padding method would
-	//  have to be replaced by another pattern such as the Fibonacci sequence.
+	//  This padding method could be replaced by another pattern in future versions of the soft-
+	//  ware if there is a reason to replace it and then the isPadded method would have to test
+	//  for different patterns. For example, if some file types use a repeating char and an in-
+	//  crementing sequence, then the padding method would have to be replaced by another pattern
+	//  such as the Fibonacci sequence.
 	
 	
 	

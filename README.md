@@ -1,5 +1,5 @@
+
 	The Java Editor program contains a text editor, email editor, table editor, and image viewer.
-	
 	The program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert
 	classes. These classes contain all the ciphers, algorithms, protocols, and software required to do
 	cryptography. The Mail, PopMail, and SendMail classes contain the software required to send and
@@ -40,14 +40,14 @@
 	pad for the message encryption.
 	
 	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X A X,  Y = A1^x1 A0 A2^x2
-	(mod p) and the Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod x) where A, A0, A1,
-	A2, a0, r and p are public parameters and s, x1, x2, x, and X are private keys. The equations use
-	polynomials, vectors, matrices, cubes, and tesseracts. The vector cross product cipher Y = A (x) X,
-	E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret key or key
-	agreement. The matrix product cipher  Y = |A1|X1|  uses multi-dimensional arithmetic which multiplies
-	from left to right and from top to bottom.|X2|   The matrix polynomial discrete log cipher uses Y =
-	A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected for public key cryptography be-
-	cause nonlinear, multivariate, multi-dimensional, modular and non-modular equations are unsolvable.
+	(mod p) where A, A0, A1, A2, and p are public parameters and x1, x2, x, and X are private keys. The
+	equations use polynomials, vectors, matrices, cubes, and tesseracts. The vector cross product cipher
+	Y = A (x) X, E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret
+	key or key agreement. The matrix product cipher  Y  = |A1|X1| uses 2-dimensional arithmetic which
+	multiplies from left to right and from top to bottom. |X2|    The matrix polynomial discrete log
+	cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected for public key
+	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
+	are unsolvable.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
@@ -60,8 +60,8 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
 	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as factor-
-	ization or discrete logarithms. The software includes 16 public key ciphers (14 Diffie-Merkle-Hellman
-	ciphers and 2 Merkle-Hellman / knapsack ciphers) and 1 matrix digital signature algorithm.
+	ization or discrete logarithms. The software includes 14 Diffie-Merkle-Hellman and 1 matrix digital
+	signature algorithm.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, the vector cross prod-
 	uct cipher Y = A (x) X uses vectors of integers and a single equation but it could also use multiple
@@ -212,8 +212,8 @@
 	You can create a java archive or java jar file
 	so the file doesn't have to be compiled each time.
 	
-	If the Editor.java file is in the Downloads folder, first compile
-	the .java source code to create the executable .class files using
+	If the Editor.java file is in the Downloads folder, first compile the
+	.java source code to create the executable .class files using the command
 	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java; then
 	load the class files and create the .jar file using the jar (create verbose file)
 	command /usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .; use cd;
@@ -232,7 +232,7 @@
 	If you delete the compiled classes directory using rm -r -f EditorClassFiles, the Editor
 	.jar file will still execute because the classes were loaded into the file. The class files
 	are only required to create a jar file, not to run the file (unless the jar file is created
-	to use the directory by specifying the class path in the mainfest but then the jar file
+	to use the directory by specifying the class path in the manifest but then the jar file
 	would only work on the computer on which the code was compiled).
 	
 	Note that the cd command can be omitted because it just changes the directory to the home
@@ -326,13 +326,13 @@
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but it
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
 	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size timestamp
-	state \n, etcetera.
+	state \n, et cetera.
 	
 	This would be backward compatible with the POP mail protocol because it would only display a num-
 	ber if a user changes the state of a message. Also the client could retrieve and delete messages
 	using the ordinal / cardinal numbers or the time stamps. If multiple users want to retrieve and
 	delete the same messages simultaneously they would have to use a newer POP mail program that re-
-	trieves and deletes messages using the timestamps or message hashes.
+	trieves and deletes messages using the time stamps or message hashes.
 	
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
@@ -394,8 +394,8 @@
 	invertibility of the function instead of the secrecy of the private key.
 	
 	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A sender
-	who wants to send an encrypted message computes the one-time public key Y = A K if the private vari-
-	ables are commutative or Y = K A if K and X are non-commutative. Then the sender and recipient com-
+	who wants to send an encrypted message computes the one-time public key Z = A K if the private vari-
+	ables are commutative or Z = K A if K and X are non-commutative. Then the sender and recipient com-
 	pute the same public key agreement or secret key E = A K X  or  E = K A X  using only multiplication
 	because each of them knows either K or X. A wiretapper would have to do an inversion to solve for K
 	or X, but this is a hard math problem because A is chosen to be non-invertible.
@@ -545,48 +545,38 @@
 	discrete logarithms are harder to solve because they are based on the nonlinear subset product prob-
 	lem or the problem of solving for m[] in y = g^(x[i](2^t)) mod p where each x[i] == 0 or 1.
 	
-	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array A[], a
+	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[], a
 	private key s, and a secret random error array e[] where the sum of the elements is smaller than q/2,
-	and then computes the static public key B[] = A[] s + e[] modulo q. (The random errors can be dis-
-	carded because they are not used for decryption.) To encrypt a message M[], for each bit in M the
-	sender chooses a subset of elements in A and B and then calculates u = the subset sum of the A ele-
-	ments mod q, and v = the subset sum of B[] + [q/2] M[i] (mod q) where q/2 M[i] is either 0 or q/2.
-	For each bit M[i] the one-time public key is the pair (u, v), and for M[] the one-time public key is
+	and then computes the static public key b[] = a[] s + e[] modulo q. (The random errors can be dis-
+	carded because they are not used for decryption.) To encrypt a message m[], for each bit in m the
+	sender chooses a subset of elements in a and b and then calculates u = the subset sum of the a ele-
+	ments mod q, and v = the subset sum of b[] + [q/2] m[i] (mod q) where q/2 m[i] is either 0 or q/2.
+	For each bit m[i] the one-time public key is the pair (u, v), and for m[] the one-time public key is
 	the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
 	
-	Since A[] s + e[] == B[], multiplying u (== a subset sum of A[]) by s approximately equals v (== a
-	subset sum of B[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
+	Since a[] s + e[] == B[], multiplying u (== a subset sum of a[]) by s approximately equals v (== a
+	subset sum of b[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
 	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference
 	v - s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the
 	quotient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the mes-
-	sage by inverting u to find the indexes of the samples and then using the indexes to find the sub-
-	set sum of B[] and solving for M[i] == (v - the subset of B[] (mod q)) / [q/2]. The cryptanalyst may
-	also be able to break the static public key because the equations are linear and the modulus is pub-
-	lic unlike the knapsack cipher which is also linear but uses a private modulus.
+	sage by inverting u to find the indices of the samples and then using the indices to find the sub-
+	set sum of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset
+	sum problem has a many-to-one mapping, any solution to the subset sum problem will break the cipher.
+	A cryptanalyst may also be able to break the static public key because the equations are linear and
+	the modulus is public unlike the knapsack cipher which is also linear but uses a private modulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s[] (mod x), b = c[] m[] where c[] is the
-	recipient's static public key and b is the sender's one-time public key is included in the public key
-	class because the cipher is quantum resistant and the one-time public key is unbreakable, but the ci-
-	pher is not enabled by default in the passphrase dialog because the key size is large. The knapsack
-	key size is around 6 K to 8 K bits, 1 K byte, 2 K chars, or 30 to 40 lines per key. This could be a
-	problem for public keys that are printed on web pages because the keys occupy a lot of space, but it
-	doesn't matter for keys that are stored on email servers.
+	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + e[] + r[][] s[] (mod n), b1 = c[] m[], b2 =
+	r[][]^T m[] where c[] is the recipient's static public key and b1, b2 are the sender's one-time pub-
+	lic key is included in the public key class but it is not enabled because it has to be modified to
+	use matrices or hypercomplex numbers. Unlike the LWE cipher which uses a private muliplier and a pub-
+	lic modulus, the knapsack cipher uses a public multiplier and a private modulus. Both ciphers add
+	random errors to the public key.
 	
-	The Merkle-Hellman / knapsack cipher is important in cryptography because it is the only real asym-
-	metrical public key cipher or invertible one-way function other than the Rabin cipher, and it is the
-	only public key cipher that uses a private modulus. (The Diffie-Hellman ciphers use commutative, sym-
-	metrical, and non-invertible one-way functions which means that the private variables x and k commute
-	with each other, or f(y = f(a, x), k) == f(z = f(a, k), x)) The knapsack cipher was also the world's
-	first quantum-resistant public key cipher. The Merkle-Hellman cipher is unbreakable but it has to be
-	implemented correctly or else it doesn't work.
-	
-	For example, if the public random table r[][] or the private / secret key s[] equals zero, then the
-	static public key can be broken unless the cipher includes small random errors that are added to the
-	static key. Moreover, if the one-time public key has a small solution set, then a cryptanalyst can
-	find the sender's private key m[] by solving the knapsack problem and trying all the solutions. (Note
-	that the multiplier r0 can be public because a cryptanalyst can find it anyway since one of the equa-
-	tions has to start with a[0] = 1 and r[0][] = 0; a[] has to start with 1 because a[] is a super-
-	increasing sequence and the knapsack density has to equal 1.)
+	The Merkle-Hellman / knapsack cipher may be the only asymmetrical public key cipher or invertible
+	one-way function other than the Rabin cipher, and it is the only public key cipher that uses a pri-
+	vate modulus. (The Diffie-Hellman ciphers use commutative, symmetrical, and non-invertible one-way
+	functions which means that the private variables x and k commute with each other and use the same
+	function for public key generation and key agreement or that f(y = f(a, x), k) == f(z = f(a, k), x)).
 	
 	Even if a cryptanalyst knows how to solve the subset sum or non-superincreasing knapsack problem it
 	won't break the one-time public key b = c[] m[] because the cipher was designed to resist this at-
@@ -596,11 +586,26 @@
 	ient can always decrypt the sender's secret key m[] because the recipient knows the private modulus n
 	and the secret key s[].
 	
-	A cryptanalyst would have to be able to solve the vector equation c[] = r0 a[] + r[][] s[] (mod x)
-	for the secret key s[] to invert the function, but this is impossible without knowing the modulus
-	because there is only one solution to the equation; the cryptanalyst cannot choose a random modulus
-	n and solve for a different s'[] to get the same public key c[]. Even if the equation could be
-	solved for the modulus x and secret key s[] it wouldn't break the Merkle-Hellman cipher because the
-	public key includes small random errors that are added to c[] to increase the search space to re-
-	sist this attack. The cryptanalyst would have to try to solve the equation 2^80 or a septillion
-	times to find the solution or to break the public key.
+	A cryptanalyst would have to be able to solve the vector equation c[] = r0 a[] + e[] + r[][] s[] for
+	the secret key s[] to invert the function, but this is impossible without knowing the modulus n be-
+	cause there is only one solution to the equation; the cryptanalyst cannot choose a random modulus n'
+	and solve for a different s'[] to get the same public key c[]. Even if the equation could be solved
+	for the modulus n and secret key s[] it wouldn't break the Merkle-Hellman cipher because the public
+	key includes small random errors that are added to c[] to increase the search space to resist this
+	attack. The cryptanalyst would have to try to solve the equation 2^80 or a septillion times to find
+	the solution or to break the public key.
+	
+	The problem with the integer knapsack cipher is that if the static key includes the term r[][] s[],
+	the sender has to include the term r[][]^T m[] in the one-time public key, and then the one-time pub-
+	lic key can be reduced to the subset sum problem using partial Gaussian elimination to remove the
+	large m[0] term or by multiplying and subtracting one of the r[][]^T m[] equations. Then the cipher
+	is no more difficult than the LWE cipher which is also based on the subset sum problem. The r[][] s[]
+	term can be set to zero, but then the static public key may not be unbreakable. The cipher may have
+	to be implemented using matrices or hypercomplex numbers like the other ciphers in the public key
+	class.
+	
+	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not be enabled in the
+	public key class because they increase the size of the key from 1500 bytes to 5000 bytes and they in-
+	crease the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman
+	ciphers in the public key class because they use different functions for key generation and key
+	agreement.
