@@ -68,10 +68,10 @@
 	ciphers. The composite key is then used to initialize a hash function that generates another one-time
 	pad for the message encryption.
 	
-	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X A X,  Y = A1^x1 A0 A2^x2
-	(mod p) where A, A0, A1, A2, and p are public parameters and x1, x2, x, and X are private keys. The
+	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X A X,  Y = x A1^x1 A0 A2^x2
+	(mod p), where A, A0, A1, A2, and p are public parameters and x1, x2, and X are private keys. The
 	equations use polynomials, vectors, matrices, cubes, and tesseracts. The vector cross product cipher
-	Y = A (x) X, E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret
+	Y = A (x) X,  E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret
 	key or key agreement. The matrix product cipher  Y  = |A1|X1| uses 2-dimensional arithmetic which
 	multiplies from left to right and from top to bottom. |X2|    The matrix polynomial discrete log
 	cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected for public key
@@ -89,8 +89,8 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
 	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as factor-
-	ization or discrete logarithms. The software includes 14 Diffie-Merkle-Hellman and 1 matrix digital
-	signature algorithm.
+	ization or discrete logarithms. The software includes 15 Diffie-Merkle-Hellman ciphers and 1
+	matrix digital signature algorithm.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, the vector cross prod-
 	uct cipher Y = A (x) X uses vectors of integers and a single equation but it could also use multiple
@@ -285,8 +285,11 @@
 	
 	that can be copied and pasted into the terminal.
 	
-	This command creates the jar file by creating and then deleting a temporary directory for
-	the compiled code or class files, and by creating and deleting a temporary manifest file.
+	This command creates the jar file by compiling the program, creating a temporary directory
+	for the compiled code or class files, creating a jar file and loading the class files into
+	the jar file, creating a manifest file and saving the text "Main-Class: Editor", updating
+	the jar file to include the manifest file, and then deleting the temporary class files
+	directory and manifest file.
 	
 	The five command lines are printed using newline chars for readability (and to keep the
 	horizontal scroll bar from expanding), but you could delete the four newline chars and
@@ -354,7 +357,7 @@
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but it
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
-	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size timestamp
+	\n, 3 size 1 \n, ..., or  1 size time-stamp state \n, 2 size time-stamp state \n, 3 size time-stamp
 	state \n, et cetera.
 	
 	This would be backward compatible with the POP mail protocol because it would only display a num-
@@ -393,11 +396,11 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	           x1       x2          -x2   x1   x2          -1   x               x
-	Y  =  x  A1   A0  A2 ,   Y  =  A2   A1   A2 ,   Y  =  X   A   X ,   Y  =  A   X ,     Y  =  X  A  X
+	          -x2   x1   x2          -1   x              x 
+	Y  =  x  A2   A1   A2 ,   Y  =  X   A   X ,  Y  =  A   X ,     Y  =  A (x) X ,   Y  =  X  A  X
 	
-	           k1       k2          -k2   k1   k2          -1   k               k
-	E  =  k  A1   Y   A2 ,   E  =  A2   Y    A2 ,   E  =  K   Y   K ,   E  =  A   Y  K ,  E  =  K  Y  K
+	          -k2   k1   k2          -1   k              k
+	E  =  k  A2   Y    A2 ,   E  =  K   Y   K ,  E  =  A   Y  K ,  E  =  Y (*) K ,   E  =  K  Y  K
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
 	use matrices or hypercomplex numbers instead of integers and they use multiple variables instead of a
@@ -406,7 +409,7 @@
 	
 	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polynom-
 	ials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
-	hypercomplex numbers such as quaternions or octonions.
+	hypercomplex numbers such as quaternions or octonions and fractional numbers or non-integers.
 	
 	All numbers are dimensional objects. A real or complex number is a point on an axis or a plane, or a
 	0-dimensional object; an array or vector is a line or a 1-dimensional object; a matrix is a square or
@@ -422,12 +425,18 @@
 	encryption key A is public, the security of public key cryptography is based entirely on the non-
 	invertibility of the function instead of the secrecy of the private key.
 	
-	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A sender
-	who wants to send an encrypted message computes the one-time public key Z = A K if the private vari-
-	ables are commutative or Z = K A if K and X are non-commutative. Then the sender and recipient com-
-	pute the same public key agreement or secret key E = A K X  or  E = K A X  using only multiplication
-	because each of them knows either K or X. A wiretapper would have to do an inversion to solve for K
-	or X, but this is a hard math problem because A is chosen to be non-invertible.
+	A recipient who wants to receive encrypted messages computes the static public key Y = A X. This is
+	the same equation as A X == B but the equation is written using X and Y instead of A and B because
+	X is chosen and the equation is computed or evaluated as a function y = f(x) = a x. If A and B are
+	chosen then the equation has to be solved for X instead of evaluated for X and the equation would be
+	written as A X == B instead of Y = A X. By placing the X variable on the left or right side the read-
+	er knows whether the equation is being solved for X or evaluated for X.
+	
+	A sender who wants to send an encrypted message computes the one-time public key Z = A K if the pri-
+	vate variables are commutative or Z = K A if K and X are non-commutative. Then the sender and recipi-
+	ent compute the same public key agreement or secret key E = A K X  or  E = K A X  using only multi-
+	plication because each of them knows either K or X. A wiretapper would have to do an inversion to
+	solve for K or X, but this is a hard math problem because A is chosen to be non-invertible.
 	
 	The cipher Y = A X doesn't work for integers or matrices (1 x 1 or n x n dimensional objects) because
 	A can be inverted to solve for X = A^-1 Y; even if A is a singular matrix the equation can still be
@@ -439,7 +448,7 @@
 	invertible or non-singular matrix.)
 	
 	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of one-
-	dimensional multiplication. For example, for 2 D multiplication, matrices can be multiplied from left
+	dimensional multiplication. For example, for 2-D multiplication, matrices can be multiplied from left
 	to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional algebra
 	by using points on a plane a0 + a1 i instead of points on a line, points in a cube a0 + a1 i + a2 j,
 	points in a tesseract a0 + a1 i + a2 j + a3 k (which is a quaternion), or points in any-dimensional
@@ -473,7 +482,7 @@
 	as public key ciphers. The class will eventually have tens of public key ciphers or puzzles copied
 	from matrix and linear algebra books. It is unlikely that these ciphers could be broken unless the
 	Diffie-Hellman problem can be solved or the public key agreement can be computed without breaking the
-	public key, inverting the function, or solving the underlying math problem.
+	static public key, inverting the function, or solving the underlying math problem.
 	
 	The public key class uses a composite key that includes several ciphers because there is no proof
 	that any one-way function is non-invertible or that the implementation is correct and because the
@@ -495,7 +504,7 @@
 	computer can only attack the factorization problem by solving the discrete log problem. Even if the
 	solution is unambiguous, it doesn't mean that a quantum computer can solve it; there has to be an
 	algorithm or method for solving it, or the same private key X would have to be used more than once
-	with a different public parameter A such as Y1 = A1 X and Y2 = A2 X.
+	with a different public parameter A.
 	
 	Encryption ciphers are not used in the software because they have a one-to-one mapping (or function)
 	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-to-
@@ -628,14 +637,13 @@
 	the sender has to include the term r[][]^T m[] in the one-time public key, and then the one-time pub-
 	lic key can be reduced to the subset sum problem using partial Gaussian elimination to remove the
 	large m[0] term or by multiplying and subtracting one of the r[][]^T m[] equations. Then the cipher
-	is no more difficult than the LWE cipher which is also based on the subset sum problem. The r[][] s[]
-	term can be set to zero, but then the static public key may not be unbreakable. The cipher may have
-	to be implemented using matrices or hypercomplex numbers like the other ciphers in the public key
-	class.
+	is no more difficult than the LWE cipher which is also not subset sum resistant. The r[][] s[] term
+	can be set to zero, but then the static public key may not be unbreakable. The cipher may have to be
+	implemented using matrices or hypercomplex numbers like the other ciphers in the public key class.
 	
 	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not be enabled in the
-	public key class because they increase the size of the key from 1500 bytes to 5000 bytes and they in-
-	crease the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman
+	public key class because they increase the size of the key from 1500 bytes to 5000 bytes and they ex-
+	pand the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman
 	ciphers in the public key class because they use different functions for key generation and key
 	agreement.
 	
@@ -1022,9 +1030,6 @@ class __
 	texthtml = "Text / HTML",
 	
 	
-	options = "Options",
-	
-	
 	
 	
 	encrypt = "Encrypt",
@@ -1053,9 +1058,10 @@ class __
 	viewcipherdata = "cipherdata / ciphertext",
 	viewciphertext = "cipherdata / ciphertext",
 	
-	   publickey     = "Public Key",
+	   publickey = "Public Key",
+	
 	newpublickey = "Print Public Key",
-	// changed from new to print
+	// changed from New to Print
 	
 	publickeyhash = "Public key hash",
 	
@@ -1083,15 +1089,17 @@ class __
 	
 	autosum = "Auto Sum",
 	
-	Range = "Range",
+	Sum = "Sum", Range = "Range",
 	
-	Sum = "Sum", Average = "Average",
+	Average = "Average",
 	
-	Median = "Median", Min = "Min", Max = "Max",
+	Median = "Median",
+	
+	Min = "Min", Max = "Max",
 	
 	transpose = "Transpose",
 	
-	transposerowscols = "Transpose rows/cols",
+	transposerowscols = "Transpose rows / cols",
 	
 	showgrid = "Show Grid",
 	
@@ -1107,12 +1115,11 @@ class __
 	
 	//  character separated values (comma or tab)
 	
-	noncsvfile = "non character separated values / csv file",
+	noncsvfile = "non character separated values / .csv file",
 	
 	
-	help = "Help",
-	
-	about = "About",
+	   help = "Help",
+	  about = "About",
 	license = "License",
 	
 	howtousepopmail = "How To Use Pop Mail",
@@ -1272,8 +1279,6 @@ class __
 	fileisnotencrypted     = "File is not encrypted",
 	fileisnotwritable      = "File is not writable",
 	
-	filenamecontainsillegalchar = "File name contains an illegal char",
-	
 	selectanaddress = "Select the recipient's public key",
 	
 	Replace = "Replace",
@@ -1285,9 +1290,9 @@ class __
 	noselectedtext  = "No selected text",
 	noselectedcells = "No selected cells",
 	
-	usethearrowkeystoindent
+	usearrowkeystoindent
 	
-	  = "Use the arrow keys to indent",
+	  = "Use arrow keys to indent",
 	
 	titlename = "title name",
 	
@@ -1481,7 +1486,6 @@ class __
 	Sendplaintextmessage  = "Send plaintext message",
 	Sendciphertextmessage = "Send ciphertext message",
 	
-	
 	incomingmailserver = "Incoming mail server",
 	outgoingmailserver = "Outgoing mail server",
 	
@@ -1526,7 +1530,7 @@ class __
 	
 	compose_mail = "Compose email",
 	
-	Sendmail = "Send Mail",
+	sendmail = "Send Mail",
 	
 	
 	//  button labels
@@ -1802,8 +1806,8 @@ class __
 	//  accept two arguments so that the user could change the status of a message, and
 	//  the LIST or TOP command could return the message state number in the enumerated
 	//  list of messages. The LIST command could also include a message hash or a time
-	//  stamp in milliseconds such as 1 bytes timestamp state\n, 2 bytes timestamp state\n,
-	//  3 bytes timestamp state\n, ... so the client could retrieve and delete messages
+	//  stamp in milliseconds such as 1 bytes time_stamp state\n, 2 bytes time_stamp state\n,
+	//  3 bytes time_stamp state\n, ... so the client could retrieve and delete messages
 	//  using the time stamp or hash instead of the cardinal or ordinal numbers.
 	//
 	//  The command STAT m n could change the state of message m to state n, where m is
@@ -6078,8 +6082,8 @@ class Programs
 					};
 					
 					
-					textfield1 = new JTextField(12);
-					textfield2 = new JTextField(12);
+					textfield1 = new JTextField(14);
+					textfield2 = new JTextField(14);
 					textarea3  = new JTextArea(1, 6);
 					
 					textarea3.setEditable(false);
@@ -7676,7 +7680,7 @@ class Programs
 				{
 					String errormessage = __.noselectedtext
 					
-					  + "\n" + __.usethearrowkeystoindent;
+					  + "\n" + __.usearrowkeystoindent;
 					
 					JOptionPane.showMessageDialog(frame,
 					
@@ -9269,7 +9273,7 @@ class Programs
 		
 		//  Define the cipher to be used for signatures
 		
-		//  (Latin square discrete log cipher, 80 digits)
+		//  (Latin square discrete log cipher, 120 digits)
 		
 		private final String cipher = Signature.lsdl120;
 		
@@ -12590,7 +12594,7 @@ class Programs
 			
 			editmenu.addSeparator();
 			
-			transposemenuitem = new JMenuItem(__.transpose);
+			transposemenuitem = new JMenuItem(__.transposerowscols);
 			transposemenuitem.addActionListener(transposelistener);
 			transposemenuitem.setFont(menuitemfont);
 			editmenu.add(transposemenuitem);
@@ -18484,9 +18488,13 @@ class Programs
 		
 			private static final long serialVersionUID = 1L;
 			
-			private JScrollPane scrollpane; // the scrollpane to hold the label
+			// the scrollpane to hold the label
 			
-			private JLabel label; // the label to display the image
+			private JScrollPane scrollpane;
+			
+			// the label to display the image
+			
+			private JLabel label;
 			
 			private boolean filechanged;
 			
@@ -18518,6 +18526,13 @@ class Programs
 				scrollpane = new JScrollPane(label);
 				scrollpane.addMouseWheelListener(mousewheellistener1);
 				scrollpane.addKeyListener(keylistener1);
+				
+				JScrollBar scrollbar = scrollpane.getVerticalScrollBar();
+				
+				//  System.out.println(scrollbar.getUnitIncrement()); // 1
+				
+				scrollbar.setUnitIncrement(4);
+				
 				
 				
 				Gbc gbc = new Gbc();
@@ -25961,7 +25976,7 @@ class Programs
 				filemenu.setFont(menufont);
 				
 				ImageIcon sendicon = Icons.get(Icons.mail_send);
-				sendmailmenuitem = new JMenuItem(__.Sendmail, sendicon);
+				sendmailmenuitem = new JMenuItem(__.sendmail, sendicon);
 				sendmailmenuitem.addActionListener(sendmaillistener);
 				filemenu.add(sendmailmenuitem);
 				
@@ -32375,6 +32390,9 @@ class Programs
 						
 						    decryptedtext.trim());
 					
+					int numberofciphers = PublicKey.countNumberOfCiphers(message);
+					
+					emailpanel.list1.setNumberOfCiphers(msno, numberofciphers);
 					
 					//  If the message did not decrypt properly return
 					
@@ -32383,35 +32401,12 @@ class Programs
 						//  Decryption error: Wrong encryption key,
 						//  wrong decryption key, or defective ciphertext
 						
-						//  System.out.println("Error decrypting message no " + msno);
+						System.out.println("Error decrypting message " + msno);
+						
+						//  System.out.println("message == " + message);
 						
 						return;
 					}
-					
-					
-					//  Count the number of ciphers (or one-time public keys)
-					//  that the sender used to encrypt the message
-					//
-					//  xxxxxxxxxxxxxxxxxxxx (public key z1)
-					//
-					//  xxxxxxxxxxxxxxxxxxxx (public key z2)
-					//
-					//  xxxxxxxxxxxxxxxxxxxx (public key z3)
-					//
-					//  xxxxxxxxxxxxxxxxxxxx (public key z4)
-					//
-					//  ...   ...   ...   ...
-					//
-					//  xxxxxxxxxxxxxxxxxxxx (encryption key) (optional)
-					//
-					//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-					//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (ciphertext)
-					//  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-					
-					
-					int numberofciphers = PublicKey.countNumberOfCiphers(message);
-					
-					emailpanel.list1.setNumberOfCiphers(msno, numberofciphers);
 				}
 				
 				
@@ -32887,9 +32882,7 @@ class Programs
 					
 					    emailpanel.publickey_sp_email = PublicKey.generatePublicKey(
 					
-						Cipher.passphraseToKey(SP + emailaddr),
-						
-						    PublicKey.numberofciphers);
+						Cipher.passphraseToKey(SP + emailaddr), PublicKey.numberofciphers);
 				}
 				
 				else if (testmail)
@@ -32898,9 +32891,7 @@ class Programs
 					
 					    emailpanel.publickey_testmail = PublicKey.generatePublicKey(
 					
-						Cipher.passphraseToKey(testpassphrase),
-						
-						    PublicKey.numberofciphers);
+						Cipher.passphraseToKey(testpassphrase), PublicKey.numberofciphers);
 				}
 				
 				
@@ -39337,7 +39328,7 @@ class Programs
 			doublebutton = new JRadioButton(__.double1);
 			quadbutton   = new JRadioButton(__.quad);
 			octbutton    = new JRadioButton(__.oct);
-			maxbutton   = new JRadioButton(__.max);
+			maxbutton    = new JRadioButton(__.max);
 			
 			JRadioButton[] radiobuttons = new JRadioButton[]
 			{
@@ -50219,13 +50210,12 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			passphrasearea .setToolTipText(__.typedpassphrase);
 			hashfield      .setToolTipText(__.passphraseandemailhash);
 			
-			//  The number of chars on the last line is the
-			//  sum of the key sizes plus the number of hyphens
-			//  (which is n-1) modulo the line width. The number
-			//  of chars per line could change in future versions
-			//  of the program.
+			//  The number of chars on the last line is the sum of
+			//  the key sizes plus the number of hyphens (which is
+			//  n-1) modulo the line width. The number of chars per
+			//  line could change in future versions of the program.
 			
-			Integer[] linewidths = new Integer[] { 36, 48, 56, };
+			Integer[] linewidths = new Integer[] { 40, 48, 56, };
 			
 			linewidthbox = new JComboBox<Integer>(linewidths);
 			
@@ -50313,9 +50303,11 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			numberofciphers = Math.min(4, n);
 			
-			numberofcipherslabel1 .setText(
+			String numberstr = String.valueOf(numberofciphers);
 			
-			    String.valueOf(numberofciphers));
+			if (numberstr.length() == 1) numberstr = " " + numberstr;
+			
+			numberofcipherslabel1 .setText(numberstr);
 			
 			
 			passphrasearea.setLineWrap(true);
@@ -50505,9 +50497,11 @@ class PassphraseDialog extends JDialog implements AncestorListener
 					
 					linewidthbox.setSelectedIndex(index);
 					
-					numberofcipherslabel1 .setText(
+					String numberstr = String.valueOf(numberofciphers);
 					
-					    String.valueOf(numberofciphers));
+					if (numberstr.length() == 1) numberstr = " " + numberstr;
+					
+					numberofcipherslabel1 .setText(numberstr);
 					
 					Dimension newsize = dialog.getPreferredSize();
 					dialog.setSize(newsize.width, newsize.height);
@@ -50534,16 +50528,16 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 			//    _____________________________________________________
 			//   |                      _______________________________|
-			//   |                     |_______________________________|
-			//   |     passphrase      |                               |
+			//   |     passphrase      |_______________________________|
+			//   |                     |                               |
 			//   |                     |_______________________________|
 			//   |                      0123 4567 89ab cdef            |
 			//   |                                                     |
 			//   |                      _______________________________|
 			//   | Incoming mail server|_____________________________|_|
 			//   | Outgoing mail server|_____________________________|_|
-			//   | Mail directory      |_____________________________|_|
 			//   | Number of messages  |__________|_|________________|_|
+			//   | Mail directory      |_____________________________|_|
 			//   |                          ____                       |
 			//   |                         |_OK_|                      |
 			//   |_____________________________________________________|
@@ -51928,7 +51922,7 @@ class PublicKey
 	//
 	//  3. Compute the encrypted message
 	//
-	//     c = E(e, m) == H(e, i) (+) m[i].
+	//     c = E(e, m) == H(e + i) (+) m[i].
 	//
 	//  4. Send A the composite one-time public
 	//     key z[] and the ciphertext c = E(k, m).
@@ -51953,7 +51947,7 @@ class PublicKey
 	//
 	//  3. Compute the decrypted message
 	//
-	//     m = D(e, c) == H(e, i) (+) c[i].
+	//     m = D(e, c) == H(e + i) (+) c[i].
 	//
 	//
 	//
@@ -52188,13 +52182,13 @@ class PublicKey
 	
 	//  The public key ciphers are based on the matrix-theoretic problems
 	//
-	//       -1  x           -x1  x  x1         x
-	//  Y = X  A  X ,   Y = A   B   A ,   Y = A  X ,   Y = X1 A X2 ,
+	//       -1  x              -x2  x1  x2           x
+	//  Y = X  A  X ,   Y = x  A   B   A ,   Y = A  X ,   Y = X1 A X2 ,
 	//
-	//  Y1  ==  M1^x1 [ A ] M2^x1 + M1^x2 [ B ] M2^x2
-	//  Y2  ==  M1^x1 [ B ] M2^x1 + M1^x2 [ C ] M2^x2 , and
+	//  Y1  ==  x ( M1^x1 [ A ] M2^x1 + M1^x2 [ B ] M2^x2 )
+	//  Y2  ==  x ( M1^x1 [ B ] M2^x1 + M1^x2 [ C ] M2^x2 ) ,
 	//
-	//  the matrix- or polynomial- theoretic problem
+	//  and the matrix- or polynomial- theoretic problem
 	//
 	//           x1   x2   |            k1 x1   k1 x2
 	//  Y1  =  A    B      |   E1  =  A       B
@@ -52475,6 +52469,11 @@ class PublicKey
 	private static final int size112 = 2*2*2*14; // 112 digits
 	
 	
+	//  Real number matrix cipher
+	
+	private static final int size90 = 10*3*3; // 90 digits
+	
+	
 	//  Matrix polynomial discrete log (mpdl) cipher
 	
 	private static final int size60 = 4*15; // 60 digits
@@ -52523,7 +52522,9 @@ class PublicKey
 	//  The integer Merkle-Hellman / knapsack ciphers
 	
 	//  The Merkle-Hellman / knapsack cipher is commented or disabled in the pub-
-	//  lic key class because the cipher requires matrices instead of integers. 
+	//  lic key class because the cipher requires the use of matrices instead of
+	//  integers or else the one-time public key reduces to the subset sum problem.
+	//  The cipher also occupies a lot of space and doubles the size of the key.
 	
 	private static final int size56x29 = 56*29 - 20; // 28 terms x 8 bits
 	private static final int size48x49 = 48*49 - 20; // 48 terms x 4 bits
@@ -52536,7 +52537,7 @@ class PublicKey
 	//  curity because a composite key is as strong as the strongest ciphers, but
 	//  it would be anomalous to include this cipher in the public key because the
 	//  cipher is the only one that is not the same as all the others, and it could
-	//  slow the key generation and decryption because prime number generation is
+	//  slow the key generation and key agreement because prime number generation is
 	//  probabilistic and it may not be portable because it requires fast algorithms
 	//  that may not be available in other programming languages.
 	
@@ -52565,36 +52566,42 @@ class PublicKey
 	public static int[] size = new int[]
 	{
 	
-		size64,  //  x A1^x1 B A2^x2  mdl
-		
 		size144, //  X1 A X2 (64 x 64)  non-modular lsd
 		
 		size120, //  Y = A (x) X  vector cross product / vcp
 		
 		size88,  //  rotate( A X1 ) X2  2-D multiplication
 		
+		size72,  //  x A1^x1 B A2^x2  cube-dl / c-dl
+		
 		
 		size150, //  X1 A X2  polynomial matrix lsd
 		
-		size96,  //  x A1^x1 B A2^x2  tesseract-dl / tdl
+		size90,  //  X1 A X2  real / fractional number cipher
 		
-		size56,  //  A^x1 B^x2, B^x1 C^x2  polynomial mdl
+		size96,  //  x A1^x1 B A2^x2  tesseract-dl / t-dl
 		
 		size112, //  x (M1^x1 [ A ] M2^x1 + M1^x2 [ B ] M2^x2)
 		         //  x (M1^x1 [ B ] M2^x1 + M1^x2 [ C ] M2^x2)
 		
 		
-		size60,  //  A^x C B^x + ... + A^0 C B^0  mpdl
+		size64,  //  x A1^x1 B A2^x2  m-dl
 		
-		size72,  //  x A1^x1 B A2^x2  cube-dl / cdl
+		size56,  //  A^x1 B^x2, B^x1 C^x2  polynomial m-dl
+		
+		size60,  //  A^x C B^x + ... + A^0 C B^0  m-pdl
 		
 		size84,  //  X^-1 A^x X (4 x 4)  boustrophedonic lsdl
 		
-		size108, //  A^x X (3 x 3)  mdl latin square
+		size108, //  A^x X (3 x 3)  matrix latin square
 		
-		size80,  //  A^-x1 B^x A^x1  quaternion / qdl
+		size80,  //  A^-x1 B^x A^x1  quaternion / q-dl
 		
-		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  mdl
+		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  m-dl
+		
+		
+		//  The public key class will include a few more
+		//  real / fractional number / non-integer ciphers
 		
 		
 		
@@ -52602,12 +52609,11 @@ class PublicKey
 		
 		//  These ciphers are not enabled because the knapsack cipher
 		//  would have to be modified to use matrices or Latin squares
+		//  and they would double the size of the key
 		
-		//  size56x29,  //  integer knapsack r0 a[] + e[] + r[][] s[] (mod n)
-		//  size48x49,  //  integer knapsack + random errors
-		//  size...     //  matrix / Latin square knapsack
-		
-		//  size4x128,  //  Rabin / fact cipher (not used)
+		//  size56x29, //  integer knapsack r0 a[] + e[] + r[][] s[]
+		//  size48x49, //  integer knapsack + random errors
+		//  size4x128, //  Rabin / fact cipher (not quantum resistant)
 		
 		
 		
@@ -52631,19 +52637,17 @@ class PublicKey
 	
 	//  public key compute time (ms) ==
 	//
-	//  [37, 15, 4, 5, 5, 97, 22, 18, 66, 134, 52, 35, 100, 34]
-	//  [63, 18, 6, 6, 7, 85, 19, 31, 68, 171, 68, 49, 156, 35]
-	//  [86, 28, 7, 7, 8, 97, 89, 43, 87, 257, 90, 90, 247, 48]
-	//  [40, 22, 4, 4, 9, 92, 21, 16, 57, 136, 56, 37, 116, 41]
+	//  [11, 5, 5, 30, 7, 7, 77, 19, 21, 53, 112, 53, 28, 83, 36]
+	//  [12, 5, 4, 25, 4, 7, 73, 34, 25, 63, 123, 42, 22, 117, 20]
 	//
-	//  These numbers are not accurate because the threads are inter-
-	//  rupted, but they show that the integer vector cross product,
-	//  the 2-dimensional matrix multiplication, and the polynomial
-	//  matrix lsd are the fastest public key ciphers.
+	//  These numbers are not accurate because the threads are interrupted,
+	//  but they show that the integer vector cross product, the 2-dimen-
+	//  sional matrix product, the real / fractional number matrix product,
+	//  and the polynomial matrix lsd are the fastest public key ciphers.
 	//
-	//  (Smart cards or credit cards could use these ciphers because
-	//  they require only a few million processor operations. The
-	//  other ciphers require a hundred million operations.)
+	//  (Smart cards or credit cards could use these ciphers because they
+	//  require only a few million processor operations. The other ciphers
+	//  require tens of millions of operations.)
 	
 	
 	
@@ -52656,10 +52660,10 @@ class PublicKey
 	
 	//  No two public keys can have the same size
 	//
-	//  In future versions an identifier could be pre-
-	//  pended or appended to the public key strings
-	//  so that the public key class can distinguish
-	//  between different keys that have the same sizes
+	//  In future versions an identifier could be prepended
+	//  or appended to the public key strings so the public
+	//  key class could distinguish between different keys
+	//  that have the same sizes
 	
 	
 	//  The following code is inside a code block so it
@@ -52684,19 +52688,8 @@ class PublicKey
 			
 			    new IllegalArgumentException();
 		}
-		
-		//  [64, 144, 120, 88, 150, 96, 56, 112, 60, 72, 84, 108, 80, 76, 1604, 2332]
-		//
-		//  56 1, 60 1, 64 1, 72 1, 76 1, 80 1, 84 1, 88 1,
-		//
-		//  96 1, 108 1, 112 1, 120 1, 144 1, 150 1, 1604 1, 2332 1
 	}
 	
-	
-	//  No two public keys can have the same size (unless the
-	//  same method can distinguish between the same sizes or
-	//  the keys have an extra bit or bits prepended or appended
-	//  to identify the keys)
 	
 	
 	
@@ -52722,7 +52715,7 @@ class PublicKey
 	//
 	//  The digits of pi are used as random numbers because pi is an ir-
 	//  rational and transcendental number and the digits are perfectly
-	//  random or chaotic.
+	//  random, disordered or chaotic.
 	
 	
 	//  Number pi = Number.pi(5*1024);
@@ -52977,6 +52970,14 @@ class PublicKey
 		if (size == -1) {  }
 		
 		
+		else if (size == size90)
+		{
+			this.p = null;
+			
+			generate3x3Key(size, x);
+		}
+		
+		
 		else if (size == size64)
 		{
 			this.p = p16;
@@ -53165,10 +53166,6 @@ class PublicKey
 		//  Verify that the string is a valid pub-
 		//  lic key or a valid encrypted message
 		
-		if (!isValidKey(str) && !isEncrypted(str))
-		
-		    return 0;
-		
 		str = str .trim();
 		
 		String delimiter = "-";
@@ -53178,6 +53175,8 @@ class PublicKey
 		    delimiter = Convert.base16Separator;
 		
 		else if (str.contains("\n\n")) delimiter = "\n\n";
+		
+		if (!isValidKey(str) && !isEncrypted(str)) return 0;
 		
 		final String[] tokens = str.split(delimiter);
 		
@@ -53871,17 +53870,32 @@ class PublicKey
 		if (!Number.isBase64(ciphertext)) return null;
 		
 		
-		//  Read the encrypted message key
+		//  Read the last prepended key and test if the key
+		//  is an encrypted message key
+		//
+		//  The encrypted message key should have a pattern
+		//  such as repeating the first 16 digits at the end
+		//  of the encrypted message key so that if the size
+		//  of the last cipher has the same number of digits,
+		//  the method doesn't read the cipher as an encrypted
+		//  encryption key because then the message will not
+		//  decrypt correctly
 		
-		String encryptedmessagekey = tokens[tokens.length -2] .trim();
+		String encryptedmessagekey = null;
 		
-		if ( encryptedmessagekey.isEmpty()
-		 || (encryptedmessagekey.length() != 64)
+		String lastkey = tokens[tokens.length -2];
 		
-		 || !Number.isBase16(encryptedmessagekey))
-		
-			encryptedmessagekey = null;
-		
+		if ((lastkey.length() == 64 + 16) && Number.isBase16(lastkey))
+		{
+			String substr1 = lastkey.substring(0, 16);
+			String substr2 = lastkey.substring(80 - 16);
+			
+			if (substr1.equals(substr2))
+			
+			    encryptedmessagekey =
+			
+				lastkey.substring(0, 80-16);
+		}
 		
 		//  Verify the one-time public keys
 		
@@ -54025,7 +54039,7 @@ class PublicKey
 		
 		else if (str.contains(Convert.base16Separator))
 		
-		    tokens = str.split(Convert.base16Separator);
+		   tokens = str.split(Convert.base16Separator);
 		
 		else return null;
 		
@@ -54047,16 +54061,32 @@ class PublicKey
 		if (!Number.isBase64(ciphertext)) return null;
 		
 		
-		//  Read the encrypted message key
+		//  Read the last prepended key and test if the key
+		//  is an encrypted message key
+		//
+		//  The encrypted message key should have a pattern
+		//  such as repeating the first 16 digits at the end
+		//  of the encrypted message key so that if the size
+		//  of the last cipher has the same number of digits,
+		//  the method doesn't read the cipher as an encrypted
+		//  encryption key because then the message will not
+		//  decrypt correctly
 		
-		String encryptedmessagekey = tokens[tokens.length -2] .trim();
+		String encryptedmessagekey = null;
 		
-		if ( encryptedmessagekey.isEmpty()
-		 || (encryptedmessagekey.length() != 64)
+		String lastkey = tokens[tokens.length -2];
 		
-		 || !Number.isBase16(encryptedmessagekey))
-		
-			encryptedmessagekey = null;
+		if ((lastkey.length() == 64 + 16) && Number.isBase16(lastkey))
+		{
+			String substr1 = lastkey.substring(0, 16);
+			String substr2 = lastkey.substring(80 - 16);
+			
+			if (substr1.equals(substr2))
+			
+			    encryptedmessagekey =
+			
+				lastkey.substring(0, 80-16);
+		}
 		
 		
 		//  Verify the one-time public keys
@@ -54563,12 +54593,13 @@ class PublicKey
 		
 		    .xor(compositekey) .toString(64, 16);
 		
+		//  Append the first 16 digits to the end of the encrypted key
+		//  so the decrypt method can identify the key as an encrypted
+		//  message key instead of a prepended one-time public key
 		
-		//  At every 64 char position insert a newline character
-		//  (the keys are less than or equal to 64 characters)
-		//
-		//     onetimepublickey = Convert.partition(   onetimepublickey, "\n", 64);
-		//  encryptedmessagekey = Convert.partition(encryptedmessagekey, "\n", 64);
+		String substr1 = encryptedmessagekey.substring(0, 16);
+		
+		encryptedmessagekey += substr1;
 		
 		
 		//  Prepend the one-time public key and the encrypted message key
@@ -54976,8 +55007,8 @@ class PublicKey
 			//              k1      k2
 			//   Z  =  k  A1   B  A2
 			//
-			//                 k1+x1       k2+x2
-			//   E  =  k  x  A1      B   A2
+			//              x1      x2
+			//   E  =  x  A1   Z  A2
 			
 			
 			int matrices = 3, rows = 2, cols = rows;
@@ -55045,7 +55076,7 @@ class PublicKey
 		if (digits == size88)
 		{
 		
-			//  Matrix Diffie-Hellman cipher (2 D multiplication)
+			//  Matrix Diffie-Hellman cipher (2-D multiplication)
 			//
 			//          A---X1           A---K1           Y---K1     Z---X1
 			//   Y  =   |     ,   Z  =   |     ,   E  =   |      ==  |
@@ -55096,6 +55127,7 @@ class PublicKey
 			//  Compute the static public key
 			
 			Matrix AX1 = A.multiply(X1) .mod(p);
+			
 			Matrix AX2 = A.rotate(1).multiply(X2).rotate(-1) .mod(p);
 			
 			//  Matrix Y1 = AX1.rotate(1).multiply(X2) .mod(p);
@@ -55122,8 +55154,8 @@ class PublicKey
 			//              k1      k2
 			//   Z  =  k  A1   B  A2
 			//
-			//                k1+x1      k2+x2
-			//   E  =  k x  A1      B  A2
+			//              x1      x2
+			//   E  =  x  A1   Z  A2
 			
 			
 			int cubes = 3, r1, r2, r3;
@@ -55205,8 +55237,8 @@ class PublicKey
 			//              k1      k2
 			//   Z  =  k  A1   B  A2
 			//
-			//                k1+x1      k2+x2
-			//   E  =  k x  A1      B  A2
+			//              x1      x2
+			//   E  =  x  A1   Z  A2
 			
 			
 			int tesseracts = 3, r1, r2, r3, r4;
@@ -55281,14 +55313,14 @@ class PublicKey
 		if (digits == size76)
 		{
 		
-			//  Compute the public key matrix
+			//  Multivariate matrix discrete log cipher
 			//
 			//         -x' -1   x   1   x'
 			//  Y  =  A   C   B   C   A
 			//
-			//  where A, B, C are public matrices
+			//  A, B, C are public matrices and
 			//
-			//  and x and x' are private exponents
+			//  x and x' are private exponents
 			
 			
 			int rows = 2, cols = rows, matrices = 3;
@@ -55329,8 +55361,8 @@ class PublicKey
 			
 			//  Compute the public key
 			//
-			//          -x' -1   x   1   x'
-			//   Y  =  A   C   B   C   A
+			//         -x' -1   x   1   x'
+			//  Y  =  A   C   B   C   A
 			
 			Matrix Ax1 = A.modPow(x[1], p);
 			Matrix Bx0 = B.modPow(x[0], p);
@@ -55367,18 +55399,18 @@ class PublicKey
 		if (digits == size112)
 		{
 		
-			//  Compute the public key matrix array
+			//  Multi-equation multivariate discrete log cipher
 			//
 			//               x1    x2                 x1
 			//           | M1    M1   | | A   B | | M2   |
 			//  Y  ==  x |   x1    x2 | |       | |   x2 |
 			//           | M1    M1   | | B   C | | M2   |
 			//
-			//               x1         x1      x2         x2
-			//  Y1  ==  x  M1  [ A ]  M2   +  M1  [ B ]  M2
+			//                 x1         x1      x2         x2
+			//  Y1  ==  x0 ( M1  [ A ]  M2   +  M1  [ B ]  M2 )
 			//
-			//               x1         x1      x2         x2
-			//  Y2  ==  x  M1  [ B ]  M2   +  M1  [ C ]  M2
+			//                 x1         x1      x2         x2
+			//  Y2  ==  x0 ( M1  [ B ]  M2   +  M1  [ C ]  M2 )
 			
 			
 			int rows = 2, cols = rows, equations = 2, matrices = 5;
@@ -55390,7 +55422,7 @@ class PublicKey
 			
 			Number[][] a = new Number[matrices][rows*cols];
 			
-			for (int k = 0; k < matrices; k++)
+			for (int k = 0; k < matrices;  k++)
 			for (int i = 0; i < rows*cols; i++)
 			
 			    a[k][i] = new Number( pi16.substring(
@@ -55416,7 +55448,7 @@ class PublicKey
 			
 			
 			//  Compute the public key
-			
+			//
 			//  Y1 = M1^x1 A M2^x1 + M1^x2 B M2^x2
 			//  Y2 = M1^x1 B M2^x1 + M1^x2 C M2^x2
 			
@@ -55444,11 +55476,111 @@ class PublicKey
 	private void generate3x3Key(int digits, Number[] x)
 	{
 	
+		if (digits == size90)
+		{
+		
+			//  Real / fractional number / cipher
+			//
+			//  Y  =  X1  A  X2
+			
+			
+			int matrices = 1, rows = 3, cols = rows, p = 10;
+			
+			if ((digits % (rows*cols)) != 0)
+			
+			    System.out.println("Key size" +
+			
+			        " must be divisible by " + rows*cols);
+			
+			int radix = 16, s = digits / rows / cols / 1;
+			
+			//  for complex divide by 2 instead of 1
+			
+			Number d = new Number(16).pow(s) .multiply(2);
+			
+			
+			//  Define the matrix A
+			
+			Number[][][] elements = new Number[matrices][rows][cols];
+			
+			for (int k = 0; k < matrices; k++)
+			
+			for (int i = 0; i < rows; i++)
+			for (int j = 0; j < cols; j++)
+			
+			    elements[k][i][j] = new Number( pi16.substring(
+			
+				k*rows*cols*s + i*cols*s + (j+0)*s,
+				k*rows*cols*s + i*cols*s + (j+1)*s), radix);
+			
+			Matrix A = new Matrix(elements[0]);
+			
+			
+			//  Define the private matrices
+			
+			Number x0 = x[0], x1 = x[1];
+			Number x2 = x[2], x3 = x[3];
+			
+			Number[] array_x1 = new Number[cols];
+			Number[] array_x2 = new Number[cols];
+			
+			for (int i = 0; i < cols; i++)
+			{
+				array_x1[i] = x1.getDigits(i*s, (i+1)*s, 16);
+				array_x2[i] = x2.getDigits(i*s, (i+1)*s, 16);
+			}
+			
+			Matrix X1 = new Matrix(array_x1, 1);
+			Matrix X2 = new Matrix(array_x2, 1);
+			
+			//  System.out.println(X1.toMatrixString(16));
+			//  System.out.println(X2.toMatrixString(16));
+			
+			
+			//  Convert the integers to fractional numbers
+			
+			A  = A  .setPrecision(p) .divide(d);
+			X1 = X1 .setPrecision(p) .divide(d);
+			X2 = X2 .setPrecision(p) .divide(d);
+			
+			
+			//  Compute the public key
+			//
+			//  Y  =  X1  A  X2
+			
+			
+			Matrix Y = X1 .multiply(A) .multiply(X2);
+			
+			//  System.out.println("Y == \n\n" + Y.toMatrixString(16));
+			
+			
+			//  Remove the integer / fraction points
+			//  (or hexadecimal points)
+			
+			for (int i = 0; i < rows; i++)
+			for (int j = 0; j < cols; j++)
+			
+			    Y.set( new Number( Y.get(i, j).toString(16)
+			
+				.replace(".", ""), 16), i, j);
+			
+			
+			//  Convert the public key matrix to string
+			
+			String y = Y.toIntegerString(s, 16);
+			
+			//  System.out.println(y);
+			
+			this.publickey = y.trim();
+		}
+		
+		
+		
 		if (digits == size108)
 		{
 		
-			//  Matrix discrete log / Latin square cipher
-			
+			//  Matrix Latin square cipher
+			//
 			//            x
 			//   Y  =   A   X
 			//            k
@@ -55468,7 +55600,7 @@ class PublicKey
 			int s = digits / rows / cols, radix = 16;
 			
 			
-			//  Initialize the matrix A
+			//  Define the matrix A
 			
 			Number[][] elements = new Number[rows][cols];
 			
@@ -55512,17 +55644,14 @@ class PublicKey
 		if (digits == size144)
 		{
 		
-			//  Compute the public key Y = X1 A X2
+			//  Latin square discrete cipher
 			//
-			//  where A is a public Latin square and
-			//  X1 and X2 are private Latin squares.
+			//  Y = X1 A X2
 			//
-			//  This is a Latin square discrete cipher
+			//  A is a public Latin square and X1
+			//  and X2 are private Latin squares.
+			//
 			//  (non-exponential, non-linear, and non-modular)
-			
-			//  The private key bits are flipped until the key
-			//  contains an equal number of 0 and 1 bits so that
-			//  the size of the elements does not exceed 10 bits.
 			
 			
 			int rows = 64, cols = rows;
@@ -55532,7 +55661,7 @@ class PublicKey
 			String pidigits = pi2 .substring(0*rows, 1*rows);
 			
 			
-			//  Initialize the matrix A
+			//  Define the matrix A
 			
 			Number[] array0 = new Number(pidigits, 2) .toArray(1, 2);
 			
@@ -55549,6 +55678,10 @@ class PublicKey
 			for (int i = 0; i < t; i++) x1[i] = array1[i].intValue();
 			for (int i = 0; i < t; i++) x2[i] = array2[i].intValue();
 			
+			//  Flip the private key bits until the key contains
+			//  an equal number of 0 and 1 bits so the size of the
+			//  elements does not exceed 10 bits.
+			
 			for (int i = 0; i < t; i++) if (Math.countOneBits(x1) != t/2) x1[i] ^= 1; else break;
 			for (int i = 0; i < t; i++) if (Math.countOneBits(x2) != t/2) x2[i] ^= 1; else break;
 			
@@ -55557,7 +55690,7 @@ class PublicKey
 			
 			
 			//  Compute the public key
-			
+			//
 			//  Y  =  X1  A  X2
 			
 			//  Multiply the top row
@@ -55608,7 +55741,7 @@ class PublicKey
 	private void generateMPDLKey(int digits, Number[] x)
 	{
 	
-		//  The matrix polynomial discrete log cipher
+		//  Matrix polynomial discrete log cipher
 		
 		
 		if (digits == size60)
@@ -55702,7 +55835,7 @@ class PublicKey
 			}
 			
 			
-			//  Initialize the polynomials A, B, C
+			//  Define the polynomials A, B, C
 			
 			int[][] A1 = new int[t][2];
 			int[][] B1 = new int[t][2];
@@ -55816,8 +55949,8 @@ class PublicKey
 		if (digits == size150)
 		{
 		
-			//  The polynomial matrix X1 A X2 cipher
-			
+			//  Polynomial matrix X1 A X2 cipher
+			//
 			//  | x1[i] u^[i]  x2[i] u^[i] | | a1[i] u^[i]  a2[i] u^[i] | | x3[i] u^[i]  x4[i] u^[i] |
 			//  |                          | |                          | |                          |
 			//  | x2[i] u^[i]  x1[i] u^[i] | | a3[i] u^[i]  a4[i] u^[i] | | x4[i] u^[i]  x3[i] u^[i] |
@@ -55844,7 +55977,7 @@ class PublicKey
 			}
 			
 			
-			//  Initialize the matrix A
+			//  Define the matrix A
 			
 			int[][][][] A = new int[2][2][t][2];
 			
@@ -55879,7 +56012,7 @@ class PublicKey
 			}
 			
 			
-			//  Initialize the matrix X1
+			//  Define the matrix X1
 			
 			int[][][][] X1 = new int[2][2][t][2];
 			
@@ -55899,7 +56032,7 @@ class PublicKey
 			     X1[i][j][k][1] = k;
 			}
 			
-			//  Initialize the matrix X2
+			//  Define the matrix X2
 			
 			int[][][][] X2 = new int[2][2][t][2];
 			
@@ -55932,7 +56065,7 @@ class PublicKey
 			
 			
 			//  Compute the public key
-			
+			//
 			//  Y  =  X1  A  X2
 			
 			int[][][][] AX2 = multiply(A, X2, p, q);
@@ -56029,12 +56162,12 @@ class PublicKey
 		if (digits == size80)
 		{
 		
-			//  Compute the public key
+			//  Quaternion matrix discrete log cipher
 			//
 			//         -x1   x   x1
 			//  Y  =  A    B   A
 			//
-			//  where A, B are public quaternions
+			//  A and B are public quaternions
 			//  and x, x1 are private variables
 			
 			//  Define the public quaternions
@@ -56203,7 +56336,8 @@ class PublicKey
 		if (digits == size84)
 		{
 		
-			//  Compute the public key
+			//                                 x
+			//  Boustrophedonic Latin square X  cipher
 			//
 			//          -1   x
 			//  Y  =   X   A   X   (mod p)
@@ -56212,7 +56346,7 @@ class PublicKey
 			//    == ( X   A  X )  (mod p)
 			//
 			//
-			//  where A and X ==
+			//  A and X are defined as
 			//
 			//  | a1  a2  a3  a4 |  | x1  x2  x3  x4 |
 			//  | a4  a1  a2  a3 |  | x2  x1  x4  x3 |
@@ -56220,7 +56354,7 @@ class PublicKey
 			//  | a2  a3  a4  a1 |  | x4  x3  x2  x1 |
 			//
 			//  X is a boustrophedonic Latin square
-			//  (X is written boustrophedonically)
+			//  because X is written boustrophedonically
 			//
 			//  The X^x cipher is a re-dl (root extraction
 			//  discrete log) version of the lsdl cipher
@@ -56504,11 +56638,11 @@ class PublicKey
 		//
 		//  A cube is a 3-dimensional array (x, y, z)
 		//
-		//  A matrix is a 2 D or rectangular array (x, y)
+		//  A matrix is a 2-D or rectangular array (x, y)
 		//
-		//  A vector is a 1 D or linear array x
+		//  A vector is a 1-D or linear array x
 		//
-		//  A number is a 0 D, non-dimensional array or point
+		//  A number is a 0-D, non-dimensional array or point
 		
 		
 		/****************
@@ -56822,7 +56956,7 @@ class PublicKey
 		public String toIntegerString(int digits, int radix)
 		{
 		
-			//  converts the cube to an integer string by padding
+			//  converts a cube to an integer string by padding
 			//  and concatenating the elements
 			
 			//  This method is used for cryptography to convert a
@@ -56917,15 +57051,15 @@ class PublicKey
 	class Tesseract
 	{
 	
-		//  A tesseract is a 4 dimensional array
+		//  A tesseract is a 4-dimensional array
 		//
-		//  A cube is a 3 dimensional array
+		//  A cube is a 3-dimensional array
 		//
-		//  A matrix is a 2 D or rectangular array
+		//  A matrix is a 2-D or rectangular array
 		//
-		//  A vector is a 1 D or linear array
+		//  A vector is a 1-D or linear array
 		//
-		//  A number is a 0 D array or a point
+		//  A number is a 0-D array or a point
 		
 		
 		
@@ -57323,7 +57457,7 @@ class PublicKey
 		
 		public String toString()
 		{
-			//  converts the tesseract to string
+			//  converts a tesseract to string
 			
 			Number[][][][] t = this.tesseract;
 			
@@ -57700,7 +57834,7 @@ class PublicKey
 		
 		public Number[] toArray()
 		{
-			//  converts the quaternion to a number array
+			//  converts a quaternion to a number array
 			
 			Number[] a = new Number[this.array.length];
 			
@@ -57714,7 +57848,7 @@ class PublicKey
 		
 		public String toIntegerString(int digits, int radix)
 		{
-			//  converts the quaternion to an integer string
+			//  converts a quaternion to an integer string
 			
 			Number[] Y = this.array;
 			
@@ -57741,7 +57875,7 @@ class PublicKey
 		
 		public String toString()
 		{
-			//  converts the quaternion / vector to string
+			//  converts a quaternion / vector to string
 			
 			return Arrays.toString(array);
 		}
@@ -58743,7 +58877,7 @@ class PublicKey
 			
 			
 			
-			//  Initialize the public coefficients
+			//  Define the public coefficients
 			
 			final int d = nbits / 4;
 			
@@ -59170,11 +59304,119 @@ class PublicKey
 		if (z.trim().length() == -1)  return null;
 		
 		
+		else if ( z.trim().length() == size90 )
+		{
+		
+			//   Y  =  X1  A  X2
+			//
+			//   Z  =  K1  A  K2
+			//
+			//   E  =  X1  Z  X2
+			
+			
+			int digits = z.trim().length();
+			
+			int matrices = 1, rows = 3, cols = rows, p = 10;
+			
+			if ((digits % (rows*cols)) != 0)
+			
+			    System.out.println("Key size" +
+			
+			        " must be divisible by " + rows*cols);
+			
+			int radix = 16, s = digits / rows / cols / 1;
+			
+			//  for complex divide by 2 instead of 1
+			
+			Number d = new Number(16).pow(s) .multiply(2);
+			
+			
+			//  Initialize the matrix Z
+			
+			String str = z.trim();
+			
+			Number[] zn = new Number[rows*cols];
+			
+			for (int i = 0; i < zn.length; i++)
+			
+			    zn[i] = new Number(str.substring(
+			
+				i*s, (i+1)*s), radix);
+			
+			Matrix Z = new Matrix(zn, rows, cols);
+			
+			//  System.out.println("Z == \n" + Z.toMatrixString(16));
+			
+			
+			//  Define the private matrices
+			
+			Number x0 = x[0], x1 = x[1];
+			Number x2 = x[2], x3 = x[3];
+			
+			Number[] array_x1 = new Number[cols];
+			Number[] array_x2 = new Number[cols];
+			
+			for (int i = 0; i < cols; i++)
+			{
+				array_x1[i] = x1.getDigits(i*s, (i+1)*s, 16);
+				array_x2[i] = x2.getDigits(i*s, (i+1)*s, 16);
+			}
+			
+			Matrix X1 = new Matrix(array_x1, 1);
+			Matrix X2 = new Matrix(array_x2, 1);
+			
+			//  System.out.println(X1.toMatrixString(16));
+			//  System.out.println(X2.toMatrixString(16));
+			
+			
+			//  Convert the integers to fractional numbers
+			
+			Z  = Z  .setPrecision(p) .divide(d);
+			X1 = X1 .setPrecision(p) .divide(d);
+			X2 = X2 .setPrecision(p) .divide(d);
+			
+			
+			//  Compute the secret key
+			//
+			//  E  =  X1  Z  X2
+			
+			
+			Matrix E = X1 .multiply(Z) .multiply(X2);
+			
+			
+			//  Reduce the precision of the public
+			//  key agreement or shared secret key
+			
+			int p1 = 2;
+			
+			E = E .setPrecision(p - p1);
+			
+			
+			//  Remove the integer / fraction points
+			//  (or hexadecimal points)
+			
+			for (int i = 0; i < rows; i++)
+			for (int j = 0; j < cols; j++)
+			
+			    E.set( new Number( E.get(i, j).toString(16)
+			
+				.replace(".", ""), 16), i, j);
+			
+			//  System.out.println("E == \n\n" + E.toMatrixString(16));
+			
+			
+			//  Reduce E modulo F8 and return the secret key
+			
+			return new Number(E.toIntegerString(s - p1, radix), radix)
+			
+			    .mod(new Number(16).pow(64).add(1));
+		}
+		
+		
+		
 		else if ( z.trim().length() == size64 )
 		{
 		
-			//  Matrix Diffie-Hellman cipher
-			
 			//              x1      x2
 			//   Y  =  x  A1   B  A2
 			//
@@ -59215,7 +59457,7 @@ class PublicKey
 			
 			String str = z.trim();
 			
-			Number[] zn = new Number[4];
+			Number[] zn = new Number[rows*cols];
 			
 			for (int i = 0; i < zn.length; i++)
 			
@@ -59249,7 +59491,7 @@ class PublicKey
 			
 			//  Reduce E modulo F8 and return the secret key
 			
-			return new Number(E .toIntegerString(s, radix), radix)
+			return new Number(E.toIntegerString(s, radix), radix)
 			
 			    .mod(new Number(16).pow(64).add(1));
 		}
@@ -59259,8 +59501,6 @@ class PublicKey
 		else if ( z.trim().length() == size88 )
 		{
 		
-			//  Matrix Diffie-Hellman cipher (2 D multiplication)
-			//
 			//          A---X1           A---K1           Y---K1     Z---X1
 			//   Y  =   |     ,   Z  =   |     ,   E  =   |      ==  |
 			//          X2               K2               K2         X2
@@ -59275,7 +59515,7 @@ class PublicKey
 			
 			String str = z.trim();
 			
-			Number[] zn = new Number[4];
+			Number[] zn = new Number[rows*cols];
 			
 			for (int i = 0; i < zn.length; i++)
 			
@@ -59318,8 +59558,6 @@ class PublicKey
 		else if ( z.trim().length() == size72 )
 		{
 		
-			//  Cube Diffie-Hellman cipher
-			
 			//              x1      x2
 			//   Y  =  x  A1   B  A2
 			//
@@ -59408,9 +59646,7 @@ class PublicKey
 			
 			//  Reduce E modulo F8 and return the secret key
 			
-			return new Number(
-			
-			    E .toIntegerString(s, radix), radix )
+			return new Number(E.toIntegerString(s, radix), radix )
 			
 				.mod(new Number(16).pow(64).add(1));
 		}
@@ -59420,8 +59656,6 @@ class PublicKey
 		else if ( z.trim().length() == size96 )
 		{
 		
-			//  Tesseract Diffie-Hellman cipher
-			
 			//              x1      x2
 			//   Y  =  x  A1   B  A2
 			//
@@ -59512,9 +59746,7 @@ class PublicKey
 			
 			//  Reduce E modulo F8 and return the secret key
 			
-			return new Number(
-			
-			    E .toIntegerString(s, radix), radix )
+			return new Number(E.toIntegerString(s, radix), radix )
 			
 				.mod(new Number(16).pow(64).add(1));
 		}
@@ -59555,7 +59787,7 @@ class PublicKey
 			
 			String str = z.trim();
 			
-			Number[] zn = new Number[4];
+			Number[] zn = new Number[rows*cols];
 			
 			for (int i = 0; i < zn.length; i++)
 			
@@ -59587,9 +59819,7 @@ class PublicKey
 			
 			//  Reduce E modulo F8 and return the secret key
 			
-			return new Number(
-			
-			    E .toIntegerString(s, radix), radix )
+			return new Number(E.toIntegerString(s, radix), radix )
 			
 				.mod(new Number(16).pow(64).add(1));
 		}
@@ -59599,8 +59829,6 @@ class PublicKey
 		else if ( z.trim().length() == size120 )
 		{
 		
-			//  Asymmetric vector cross product cipher
-			
 			//  Y = A (x) X   Z = A (x) K   E = Y * K == - Z * X   or
 			//  Y = A (x) X   Z = K (x) A   E = Y * K ==   Z * X
 			
@@ -59745,8 +59973,6 @@ class PublicKey
 		else if ( z.trim().length() == size150 )
 		{
 		
-			//  The polynomial matrix X1 A X2 cipher
-			//
 			//  | x1[i] u^[i]  x2[i] u^[i] | | a1[i] u^[i]  a2[i] u^[i] | | x3[i] u^[i]  x4[i] u^[i] |
 			//  |                          | |                          | |                          |
 			//  | x2[i] u^[i]  x1[i] u^[i] | | a3[i] u^[i]  a4[i] u^[i] | | x4[i] u^[i]  x3[i] u^[i] |
@@ -59926,17 +60152,17 @@ class PublicKey
 		else if ( z.trim().length() == size60 )
 		{
 		
-			//  The matrix polynomial discrete log cipher
-			
 			//  A^x C B^x + ... + A^0 C B^0
+			
+			int rows = 2, cols = rows, matrices = 3;
 			
 			final int radix = 16;
 			
-			final int s = z.trim().length() / 4;
+			final int s = z.trim().length() / rows / cols;
 			
 			final String str = z.trim();
 			
-			final Number[] zn = new Number[4];
+			final Number[] zn = new Number[rows*cols];
 			
 			for (int i = 0; i < zn.length; i++)
 			
@@ -59949,8 +60175,6 @@ class PublicKey
 			Number x0 = new Number(x[0]).and(new Number(2)
 			
 			    .pow(128).subtract(1)); x0.setBit(127);
-			
-			int rows = 2, cols = rows, matrices = 3;
 			
 			Number[][][] elements = new Number[matrices][rows][cols];
 			
@@ -59974,9 +60198,7 @@ class PublicKey
 			
 			//  Reduce E modulo F8 and return the secret key
 			
-			return new Number(
-			
-			    E .toIntegerString(s, radix), radix )
+			return new Number(E.toIntegerString(s, radix), radix )
 			
 				.mod(new Number(16).pow(64).add(1));
 		}
@@ -59987,8 +60209,6 @@ class PublicKey
 		{
 		
 			//  E  =  X1 [ Z ] X2  ==  X1 [ K1 A K2 ] X2
-			//
-			//  Non-modular matrix multiplication
 			
 			
 			int rows = 64, cols = rows;
@@ -60080,8 +60300,6 @@ class PublicKey
 		else if ( z.trim().length() == size56 )
 		{
 		
-			//  Polynomial matrix discrete log cipher
-			//
 			//           x1   x2   |            k1 x1   k1 x2
 			//  Y1  =  A    B      |   E1  =  A       B
 			//                     |
@@ -60212,13 +60430,8 @@ class PublicKey
 		else if ( z.trim().length() == size80 )
 		{
 		
-			//  Compute the secret key
-			//
 			//         -x1   x   x1      -k1-x1   k x   k1+x1
 			//  E  =  A    Z   A    ==  A       B     A
-			//       
-			//  where Z is a public quaternion
-			//  and x, x1 are private variables
 			
 			
 			//  Initialize the public quaternion Z
@@ -60282,11 +60495,8 @@ class PublicKey
 		
 		else if ( z.trim().length() == size108 )
 		{
-		
-			//  Matrix discrete log / Latin square cipher
-			//
-			//          x              k + x
-			//  E  =  A   Z   X  ==  A       K   X
+			//          x              k+x
+			//  E  =  A   Z   X  ==  A     K  X
 			
 			
 			int rows = 3, cols = rows, radix = 16;
@@ -60333,9 +60543,7 @@ class PublicKey
 			
 			//  Reduce E modulo F8 and return the secret key
 			
-			return new Number(
-			
-			    E .toIntegerString(s, radix), radix )
+			return new Number(E.toIntegerString(s, radix), radix )
 			
 				.mod(new Number(16).pow(64).add(1));
 		}
@@ -60347,29 +60555,9 @@ class PublicKey
 		
 			//         -1   x              -1   k x
 			//  E  =  X   Z   X  == ( K X )   A    ( K X )
-			//
-			//  Boustrophedonic matrix exponentiation
-			//  and Latin square multiplication
 			
 			
 			int s = z.trim().length() / 6, radix = 16;
-			
-			
-			//  Define the private matrix X
-			
-			Number n = new Number(radix) .pow(s);
-			
-			for (int i = 0; i < x.length; i++) x[i] = x[i] .mod(n);
-			
-			Number x0 = new Number(Cipher.hash(x[0].toByteArray()));
-			
-			Matrix X = new Matrix( new Number[][]
-			{
-				{ x[0], x[1], x[2], x[3] },
-				{ x[1], x[0], x[3], x[2] },
-			        { x[2], x[3], x[0], x[1] },
-				{ x[3], x[2], x[1], x[0] },
-			} );
 			
 			
 			//  Convert the number string to matrix
@@ -60405,6 +60593,23 @@ class PublicKey
 			} );
 			
 			
+			//  Define the private matrix X
+			
+			Number n = new Number(radix) .pow(s);
+			
+			for (int i = 0; i < x.length; i++) x[i] = x[i] .mod(n);
+			
+			Number x0 = new Number(Cipher.hash(x[0].toByteArray()));
+			
+			Matrix X = new Matrix( new Number[][]
+			{
+				{ x[0], x[1], x[2], x[3] },
+				{ x[1], x[0], x[3], x[2] },
+			        { x[2], x[3], x[0], x[1] },
+				{ x[3], x[2], x[1], x[0] },
+			} );
+			
+			
 			//  Compute the secret matrix
 			
 			Matrix E = X.modInverse(p) .mod(p).add(p).mod(p)
@@ -60416,13 +60621,10 @@ class PublicKey
 			
 			//  Reduce E modulo F8 and return the secret key
 			
-			return new Number(
-			
-			    E .toIntegerString(s, radix), radix )
+			return new Number(E.toIntegerString(s, radix), radix )
 			
 				.mod(new Number(16).pow(64));
 		}
-		
 		
 		
 		
@@ -60624,7 +60826,6 @@ class PublicKey
 				return m2 .mod(new Number(16).pow(64).add(1));
 			}
 		}
-		
 		
 		
 		
@@ -61458,7 +61659,7 @@ class Signature
 	//
 	//  For a complex integer algorithm, y = x1 c ^ x (mod p)
 	//  where c = a + b i  or for multi-dimensional algebra
-	//  such as 3 D algebra y = u2 c3 ^ x where u2 = x1 + x2 i
+	//  such as 3-D algebra y = u2 c3 ^ x where u2 = x1 + x2 i
 	//  and c3 = a1 + a2 i + a3 j.
 	
 	
@@ -61490,7 +61691,7 @@ class Signature
 	//
 	//  The signature is the quadruple { m, r, s, y } where
 	//
-	//  { m = H(M), r == r11 || r12, s = s1 || s2, y = y11 || y12 }
+	//  m = H(M), r == r11 || r12, s = s1 || s2, y = y11 || y12
 	//
 	//  and || denotes the string concatenation operator.
 	
@@ -71194,20 +71395,22 @@ class Number implements Comparable<Number>
 	}
 	
 	
-	public Number getDigits(long upper, long lower, int radix)
+	public Number getDigits(long lower, long upper, int radix)
 	{
 		//  returns digits of a number in base radix
 		
 		//  This method could be used to read the 1 millionth digit
 		//  of pi without converting the entire number to string.
 		
-		if ((upper <= lower) || (lower < 0) || (radix < 2))
+		if ((upper <= lower) || (lower < 0) || (radix < 2)
 		
-		    throw new IllegalArgumentException();
+		    || (this.precision != 0)) throw new
+		
+			IllegalArgumentException();
 		
 		Number n = new Number(this);
 		
-		//  Compute the quotient and the remainder modulo
+		//  Compute the quotient and remainder modulo
 		//  the radix raised to the number of digits
 		
 		n = n .divide(new Number(radix).pow(lower));
@@ -77782,11 +77985,106 @@ class Matrix
 		for (int i = 0; i < this.matrix   .length; i++)
 		for (int j = 0; j < this.matrix[i].length; j++)
 		
-		    if (!this.matrix[i][j].equals(matrix.matrix[i][j]))
+		    if (!this.matrix[i][j].equals(
+		       matrix.matrix[i][j]))
 		
 			return false;
 		
 		return true;
+	}
+	
+	
+	
+	public static Matrix exp(Matrix X)
+	{
+	
+		//  Computes the matrix exponential
+		//
+		//    X
+		//  e   == I + X + X^2 / 2! + X^3 / 3! + ...
+		//
+		//  which is the same as the number formula
+		//
+		//    x
+		//  e   == 1 + x + x^2 / 2! + x^3 / 3! + ...
+		//
+		//        x       n
+		//  or  e   ==  x  / n!  where e == 1 / n!
+		//
+		//  is the base of the natural logarithm.
+		//
+		//
+		//  If x or X is imaginary, then the function
+		//
+		//   i X
+		//  e    == I + i X - X^2 / 2! - i X^3 / 3! + X^4 / 4! + ...
+		//
+		//       ==  X^0 / 0! - X^2 / 2! + X^4 / 4! + ...)
+		//
+		//     +  i (X^1 / 1! - X^3 / 3! + X^5 / 5! + ...)
+		//
+		//       ==  cos X + i sin X
+		//
+		//  is oscillatory because the imaginary number
+		//
+		//     0,1,2,3,..
+		//   i           == 1, i, -1, -i,  1, i, -1, -i,  ...
+		//
+		//  alternates the signs of the terms so that exp(i X)
+		//  becomes a rotating vector a + i b on a unit circle
+		//  in the complex number plane.
+		
+		
+		
+		//  This matrix exponential function will converge for any
+		//  x or X because the denominator n! grows faster than x^n
+		//  or X^n, but the value of X has to be close to 1 for the
+		//  function to converge at ~ 1 bit per iteration.
+		//
+		//  Both terms are exponential but the factorial term is more
+		//  than exponential because the multiplier grows (linearly)
+		//  while the X^n multiplier (or base) remains constant. This
+		//  is why the approximation for the factorial function is
+		//  (n / e) ^ n instead of e ^ n.
+		
+		
+		if (X.rowCount() != X.columnCount())
+		
+		    throw new IllegalArgumentException();
+		
+		//           0        1        2
+		//  Compute X / 0! + X / 1! + X / 2! + ...
+		
+		Matrix X_ = X.pow(0);
+		
+		if (X_.getPrecision() < 8)
+		
+		    X_ = X_.setPrecision(8);
+		
+		Matrix result = new Matrix(X_);
+		
+		Number fact = new Number(1);
+		
+		Matrix prev = result;
+		
+		for (int i = 1;  ; i++)
+		{
+			X_ = X_ .multiply(X);
+			
+			fact = fact.multiply(i);
+			
+			prev = result;
+			
+			result = result .add(X_.divide(fact));
+			
+			if (result.equals(prev)) break;
+			
+			//  System.out.println();
+			
+			//  System.out.println(result);
+		}
+		
+		return result;
 	}
 	
 	

@@ -1,4 +1,3 @@
-
 	The Java Editor program contains a text editor, email editor, table editor, and image viewer.
 	The program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert
 	classes. These classes contain all the ciphers, algorithms, protocols, and software required to do
@@ -39,10 +38,10 @@
 	ciphers. The composite key is then used to initialize a hash function that generates another one-time
 	pad for the message encryption.
 	
-	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X A X,  Y = A1^x1 A0 A2^x2
-	(mod p) where A, A0, A1, A2, and p are public parameters and x1, x2, x, and X are private keys. The
+	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X A X,  Y = x A1^x1 A0 A2^x2
+	(mod p), where A, A0, A1, A2, and p are public parameters and x1, x2, and X are private keys. The
 	equations use polynomials, vectors, matrices, cubes, and tesseracts. The vector cross product cipher
-	Y = A (x) X, E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret
+	Y = A (x) X,  E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared secret
 	key or key agreement. The matrix product cipher  Y  = |A1|X1| uses 2-dimensional arithmetic which
 	multiplies from left to right and from top to bottom. |X2|    The matrix polynomial discrete log
 	cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected for public key
@@ -60,8 +59,8 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
 	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as factor-
-	ization or discrete logarithms. The software includes 14 Diffie-Merkle-Hellman and 1 matrix digital
-	signature algorithm.
+	ization or discrete logarithms. The software includes 15 Diffie-Merkle-Hellman ciphers and 1
+	matrix digital signature algorithm.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, the vector cross prod-
 	uct cipher Y = A (x) X uses vectors of integers and a single equation but it could also use multiple
@@ -256,8 +255,11 @@
 	
 	that can be copied and pasted into the terminal.
 	
-	This command creates the jar file by creating and then deleting a temporary directory for
-	the compiled code or class files, and by creating and deleting a temporary manifest file.
+	This command creates the jar file by compiling the program, creating a temporary directory
+	for the compiled code or class files, creating a jar file and loading the class files into
+	the jar file, creating a manifest file and saving the text "Main-Class: Editor", updating
+	the jar file to include the manifest file, and then deleting the temporary class files
+	directory and manifest file.
 	
 	The five command lines are printed using newline chars for readability (and to keep the
 	horizontal scroll bar from expanding), but you could delete the four newline chars and
@@ -325,7 +327,7 @@
 	the messages on the server by using a POP mail command such as STAT m n where m is the message
 	number and n is a state from 0 to 9. The LIST command returns an enumerated list of sizes but it
 	could also return the message state number after each message size such as 1 size 0 \n, 2 size 2
-	\n, 3 size 1 \n, ..., or  1 size timestamp state \n, 2 size timestamp state \n, 3 size timestamp
+	\n, 3 size 1 \n, ..., or  1 size time-stamp state \n, 2 size time-stamp state \n, 3 size time-stamp
 	state \n, et cetera.
 	
 	This would be backward compatible with the POP mail protocol because it would only display a num-
@@ -364,11 +366,11 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	           x1       x2          -x2   x1   x2          -1   x               x
-	Y  =  x  A1   A0  A2 ,   Y  =  A2   A1   A2 ,   Y  =  X   A   X ,   Y  =  A   X ,     Y  =  X  A  X
+	          -x2   x1   x2          -1   x              x 
+	Y  =  x  A2   A1   A2 ,   Y  =  X   A   X ,  Y  =  A   X ,     Y  =  A (x) X ,   Y  =  X  A  X
 	
-	           k1       k2          -k2   k1   k2          -1   k               k
-	E  =  k  A1   Y   A2 ,   E  =  A2   Y    A2 ,   E  =  K   Y   K ,   E  =  A   Y  K ,  E  =  K  Y  K
+	          -k2   k1   k2          -1   k              k
+	E  =  k  A2   Y    A2 ,   E  =  K   Y   K ,  E  =  A   Y  K ,  E  =  Y (*) K ,   E  =  K  Y  K
 	
 	which are similar to the Diffie-Merkle-Hellman cipher y = a ^ x, e = y ^ k (mod p) except that they
 	use matrices or hypercomplex numbers instead of integers and they use multiple variables instead of a
@@ -377,7 +379,7 @@
 	
 	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polynom-
 	ials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
-	hypercomplex numbers such as quaternions or octonions.
+	hypercomplex numbers such as quaternions or octonions and fractional numbers or non-integers.
 	
 	All numbers are dimensional objects. A real or complex number is a point on an axis or a plane, or a
 	0-dimensional object; an array or vector is a line or a 1-dimensional object; a matrix is a square or
@@ -393,12 +395,18 @@
 	encryption key A is public, the security of public key cryptography is based entirely on the non-
 	invertibility of the function instead of the secrecy of the private key.
 	
-	A recipient who wants to receive encrypted messages computes the static public key Y = A X. A sender
-	who wants to send an encrypted message computes the one-time public key Z = A K if the private vari-
-	ables are commutative or Z = K A if K and X are non-commutative. Then the sender and recipient com-
-	pute the same public key agreement or secret key E = A K X  or  E = K A X  using only multiplication
-	because each of them knows either K or X. A wiretapper would have to do an inversion to solve for K
-	or X, but this is a hard math problem because A is chosen to be non-invertible.
+	A recipient who wants to receive encrypted messages computes the static public key Y = A X. This is
+	the same equation as A X == B but the equation is written using X and Y instead of A and B because
+	X is chosen and the equation is computed or evaluated as a function y = f(x) = a x. If A and B are
+	chosen then the equation has to be solved for X instead of evaluated for X and the equation would be
+	written as A X == B instead of Y = A X. By placing the X variable on the left or right side the read-
+	er knows whether the equation is being solved for X or evaluated for X.
+	
+	A sender who wants to send an encrypted message computes the one-time public key Z = A K if the pri-
+	vate variables are commutative or Z = K A if K and X are non-commutative. Then the sender and recipi-
+	ent compute the same public key agreement or secret key E = A K X  or  E = K A X  using only multi-
+	plication because each of them knows either K or X. A wiretapper would have to do an inversion to
+	solve for K or X, but this is a hard math problem because A is chosen to be non-invertible.
 	
 	The cipher Y = A X doesn't work for integers or matrices (1 x 1 or n x n dimensional objects) because
 	A can be inverted to solve for X = A^-1 Y; even if A is a singular matrix the equation can still be
@@ -410,7 +418,7 @@
 	invertible or non-singular matrix.)
 	
 	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of one-
-	dimensional multiplication. For example, for 2 D multiplication, matrices can be multiplied from left
+	dimensional multiplication. For example, for 2-D multiplication, matrices can be multiplied from left
 	to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional algebra
 	by using points on a plane a0 + a1 i instead of points on a line, points in a cube a0 + a1 i + a2 j,
 	points in a tesseract a0 + a1 i + a2 j + a3 k (which is a quaternion), or points in any-dimensional
@@ -444,7 +452,7 @@
 	as public key ciphers. The class will eventually have tens of public key ciphers or puzzles copied
 	from matrix and linear algebra books. It is unlikely that these ciphers could be broken unless the
 	Diffie-Hellman problem can be solved or the public key agreement can be computed without breaking the
-	public key, inverting the function, or solving the underlying math problem.
+	static public key, inverting the function, or solving the underlying math problem.
 	
 	The public key class uses a composite key that includes several ciphers because there is no proof
 	that any one-way function is non-invertible or that the implementation is correct and because the
@@ -466,7 +474,7 @@
 	computer can only attack the factorization problem by solving the discrete log problem. Even if the
 	solution is unambiguous, it doesn't mean that a quantum computer can solve it; there has to be an
 	algorithm or method for solving it, or the same private key X would have to be used more than once
-	with a different public parameter A such as Y1 = A1 X and Y2 = A2 X.
+	with a different public parameter A.
 	
 	Encryption ciphers are not used in the software because they have a one-to-one mapping (or function)
 	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-to-
@@ -599,13 +607,12 @@
 	the sender has to include the term r[][]^T m[] in the one-time public key, and then the one-time pub-
 	lic key can be reduced to the subset sum problem using partial Gaussian elimination to remove the
 	large m[0] term or by multiplying and subtracting one of the r[][]^T m[] equations. Then the cipher
-	is no more difficult than the LWE cipher which is also based on the subset sum problem. The r[][] s[]
-	term can be set to zero, but then the static public key may not be unbreakable. The cipher may have
-	to be implemented using matrices or hypercomplex numbers like the other ciphers in the public key
-	class.
+	is no more difficult than the LWE cipher which is also not subset sum resistant. The r[][] s[] term
+	can be set to zero, but then the static public key may not be unbreakable. The cipher may have to be
+	implemented using matrices or hypercomplex numbers like the other ciphers in the public key class.
 	
 	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not be enabled in the
-	public key class because they increase the size of the key from 1500 bytes to 5000 bytes and they in-
-	crease the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman
+	public key class because they increase the size of the key from 1500 bytes to 5000 bytes and they ex-
+	pand the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman
 	ciphers in the public key class because they use different functions for key generation and key
 	agreement.
