@@ -88,9 +88,8 @@
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
-	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as factor-
-	ization or discrete logarithms. The software includes 15 Diffie-Merkle-Hellman ciphers and 1 matrix
-	digital signature algorithm.
+	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
+	includes 15 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
@@ -132,7 +131,7 @@
 	Downloading the java development kit (JDK)
 	
 	To download the JDK, go to jdk.java.net
-	Click on the link that says  Ready for use: JDK 18.
+	Click on the link that says  Ready for use: JDK 20.
 	
 	Then click on a tar file link that says tar.gz.
 	Choose the correct file for your processor architecture
@@ -142,28 +141,28 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-18_linux-x64_bin.tar.gz
+	openjdk-20.0.1_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-18_linux-x64_bin.tar.gz  from the website jdk.java.net/18.
+	0.  Download the file openjdk-20.0.1_linux-x64_bin.tar.gz  from the website jdk.java.net/20.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -177,17 +176,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-18_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-20.0.1_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java
 	
 	or for the email client
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -201,20 +200,20 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-18 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-20.0.1 using the command
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
-	cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-18/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-20.0.1/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-18/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-18/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-20.0.1/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-20.0.1/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -226,9 +225,9 @@
 	that the file to be removed is a directory by specifying the recursive
 	option so users cannot inadvertently delete a directory instead of a file.
 	
-	The --force option tells the command not to prompt the user for a confirm-
-	ation before deleting each file and subdirectory, and it ignores nonexist-
-	ent files and arguments which means that it will not inform the user that
+	The --force option tells the command not to prompt the user for a confir-
+	mation before deleting each file and subdirectory, and it ignores nonexis-
+	tent files and arguments which means that it will not inform the user that
 	it cannot remove the file if there is no such file or directory.
 	
 	The sudo command is required because only the superuser can add or remove
@@ -239,54 +238,18 @@
 	
 	Creating a compiled / executable java .jar file
 	
-	
 	You can create a java archive or java jar file
 	so the file doesn't have to be compiled each time.
 	
-	If the Editor.java file is in the Downloads folder, first compile the
-	.java source code to create the executable .class files using the command
-	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java; then
-	load the class files and create the .jar file using the jar (create verbose file)
-	command /usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .; use cd;
-	echo "Main-Class: Editor" > manifest.txt; to create a manifest that contains the
-	main class, add the manifest file to the Editor.jar file using the command
-	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt;
-	and finally, delete the directory and file using rm -r -f EditorClassFiles;
-	rm manifest.txt; and then run the jar file using the command
-	/usr/jdk/jdk-18/bin/java -jar Editor.jar
+	If the Editor.java file is in the Downloads folder, use the commands
 	
-	
-	The Editor.jar file will save around 2 to 6 seconds each time the program is executed
-	depending on the speed of the processor or computer. Even on a laptop computer it only
-	takes about 3 seconds to start the program except for very slow processors that could
-	take up to 10 seconds.
-	
-	If you delete the compiled classes directory using rm -r -f EditorClassFiles, the Editor
-	.jar file will still execute because the classes were loaded into the file. The class files
-	are only required to create a jar file, not to run the file (unless the jar file is created
-	to use the directory by specifying the class path in the manifest but then the jar file
-	would only work on the computer on which the code was compiled).
-	
-	Note that the cd command can be omitted because it just changes the directory to the home
-	directory. This is useful if the next command contains a relative path name or path that
-	doesn't start with a slash /, but it is redundant to use cd if the next command has an
-	absolute path name because then it doesn't do anything.
-	
-	The path name /usr/jdk/jdk-18/bin/java can be replaced by the file name java if the
-	terminal knows where to find the java command. The path name is included because some
-	users may be running a live version of Linux.
-	
-	
-	
-	All of these commands can be concatenated into the single command
-	
-	/usr/jdk/jdk-18/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-20.0.1/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-20.0.1/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-18/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-20.0.1/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
-	that can be copied and pasted into the terminal.
+	by copying and pasting into the terminal.
 	
 	This command creates the jar file by compiling the program, creating a temporary directory
 	for the compiled code or class files, creating a jar file and loading the class files into
@@ -305,15 +268,40 @@
 	because it may include a time stamp.)
 	
 	
-	Then the jar file can be run using the command
 	
-	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar (text) for the text editor, or
+	The Editor.jar file will save around 2 to 6 seconds each time the program is executed
+	depending on the speed of the processor or computer. Even on a laptop computer it only
+	takes about 3 seconds to start the program except for very slow processors that could
+	take up to 10 seconds.
 	
-	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar image
+	If you delete the compiled classes directory using rm -r -f EditorClassFiles, the Editor
+	.jar file will still execute because the classes were loaded into the file. The class files
+	are only required to create a jar file, not to run the file (unless the jar file is created
+	to use the directory by specifying the class path in the manifest but then the jar file
+	would only work on the computer on which the code was compiled).
 	
-	for the email client, spreadsheet, or image viewer, and the file will be executed
+	Note that the cd command can be omitted because it just changes the directory to the home
+	directory. This is useful if the next command contains a relative path name or path that
+	doesn't start with a slash /, but it is redundant to use cd if the next command has an
+	absolute path name because then it doesn't do anything.
+	
+	The path name /usr/jdk/jdk-20.0.1/bin/java can be replaced by the file name java if the
+	terminal knows where to find the java command. The path name is included because some
+	users may be running a live version of Linux.
+	
+	
+	
+	Running the jar file
+	
+	The jar file can be run using the command
+	
+	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar (text) for the text editor, or
+	
+	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar image
+	
+	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
 	code instead of the source code. The java virtual machine will convert the byte code
 	to the user's binary machine code depending on the user's computer or processor
@@ -401,7 +389,7 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          -x2   x1   x2          -1   x              x 
+	          -x2   x1   x2          -1   x              x
 	Y  =  x  A2   A1   A2 ,   Y  =  X   A   X ,  Y  =  A   X ,     Y  =  A (x) X ,   Y  =  X1  A  X2
 	
 	          -k2   k1   k2          -1   k              k
@@ -412,8 +400,8 @@
 	single variable. These ciphers are a generalization of the Diffie-Hellman cipher because they reduce
 	to the integer cipher y = a ^ x (mod p) if x2 = 0 and A1 is a 1x1 matrix.
 	
-	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polynom-
-	ials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
+	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polyno-
+	mials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
 	hypercomplex numbers such as quaternions or octonions and fractional numbers or non-integers.
 	
 	All numbers are dimensional objects. A real or complex number is a point on an axis or a plane, or a
@@ -505,12 +493,12 @@
 	
 	The ciphers in the public key class that have a many-to-one mapping of the private key X to the pub-
 	lic key Y may be unbreakable by classical and quantum computing because the solution is ambiguous and
-	the private key X is only used once. Quantum computers are unable to solve math problems that have
-	ambiguous solutions because they wouldn't know which solution to solve for. This is why a quantum
-	computer can only attack the factorization problem by solving the discrete log problem. Even if the
-	solution is unambiguous, it doesn't mean that a quantum computer can solve it; there has to be an
-	algorithm or method for solving it, or the same private key X would have to be used more than once
-	with a different public parameter A.
+	the private key X is only used once. Quantum computers are unable to solve math problems that have am-
+	biguous solutions because they wouldn't know which solution to solve for. This is why a quantum com-
+	puter can only attack the factorization problem by solving the discrete log problem, not by solving
+	the difference of squares equation x^2 == 1 (mod n). Even if the solution is unambiguous, it doesn't
+	mean that a quantum computer can solve it; there has to be an algorithm or method for solving it, or
+	the same private key X would have to be used more than once with a different public parameter A.
 	
 	Encryption ciphers are not used in the software because they have a one-to-one mapping (or function)
 	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-to-
@@ -541,31 +529,17 @@
 	perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
 	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem are susceptible to quantum comput-
-	ing. The Rabin cipher was included in the public key class to test the software for asymmetrical pub-
-	lic key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers 
-	are symmetrical which means that they use the same methods for public key generation and public key
-	agreement.
+	class because the factorization and integer discrete log problem are susceptible to quantum computing.
+	The Rabin cipher can never be completely broken because factorization will always be harder than mul-
+	tiplication but the key size would have to be on the order on 10^12 bits. The Rabin cipher was includ-
+	ed in the public key class to test the software for asymmetrical public key ciphers before the Merkle-
+	Hellman ciphers were included because the Diffie-Hellman ciphers are symmetrical which means that they
+	use the same methods for public key generation and public key agreement.
 	
-	It doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
-	computing. The Rabin cipher can never be completely broken because factorization will always be hard-
-	er than multiplication, but the key size would have to be at least 1 megabit if the running time of
-	the algorithm is O(n^2) multi-precision multiplications or O(n^3.58) single-precision multiplications
-	or operations. The fastest classical algorithm is unlikely to be faster than prime number generation
-	which requires O(n^4) or O(n^3.58) operations, and if it requires a matrix then it would be O(n^3)
-	multi-precision multiplications or O(n^4.58) operations. A 1 M bit key would only require O(1) == O(
-	n^0) multi-precision multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multi-
-	plications for encryption using a sesquilinear or three-halves multiplier. (No key size is secure for
-	RSA because the coprime root extraction problem is completely broken. This means that the function
-	can be inverted as fast as it can be computed.)
-	
-	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
+	If an integer cipher is not based on the integer factorization or discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
 	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken without quantum computing because the cipher is based
-	on log multiplication instead of log extraction. The integer digital signature algorithm is based on
-	the discrete log problem or dlp because it uses one equation for the static signature key y = a ^ x
-	(mod p), another equation for the one-time signature key r = a ^ k (mod p), and a third equation for
-	the signature s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
+	on log multiplication instead of log extraction.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
@@ -575,19 +549,14 @@
 	of the curves to protect against all unknown attacks. Many people are suspicious or distrustful of
 	elliptic curve ciphers because the equations are complicated and they have a large attack surface.
 	
-	If the parameters are chosen correctly and a is congruent to zero modulo 3 then elliptic curve ci-
-	phers can be as secure as integer discrete log / factorization ciphers, but they don't have any ad-
-	vantage over integer ciphers since they are also susceptible to quantum computing. Elliptic curve ci-
-	phers that are based on isogenies are quantum resistant but they are almost certainly broken since
-	they are being approved for standardization and cryptanalysts have had over a decade to study them.
-	(Just because a cipher is quantum resistant doesn't mean that the cipher is also classical resistant
-	or resistant to classical computing.)
+	Elliptic curve ciphers that are based on isogenies are quantum resistant but they are almost certainly
+	broken since they are being approved for standardization and cryptanalysts have had over a decade to
+	study them. Just because a cipher is quantum resistant doesn't mean that the cipher is also classical
+	resistant or resistant to classical computing.
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included in
 	the public key class because they are not secure for any key size, and learning with errors ciphers
-	are not included because they are only based on the subset sum problem. Factorization and integer
-	discrete logarithms are harder to solve because they are based on the nonlinear subset product prob-
-	lem or the problem of solving for x[] in y = g^(x[i](2^t)) mod p where each x[i] == 0 or 1.
+	are not included because they are only based on the subset sum problem.
 	
 	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[], a
 	private key s, and a secret random error array e[] where the sum of the elements is smaller than q/2,
@@ -647,11 +616,16 @@
 	can be set to zero, but then the static public key may not be unbreakable. The cipher may have to be
 	implemented using matrices or hypercomplex numbers like the other ciphers in the public key class.
 	
-	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not be enabled in the
-	public key class because they increase the size of the key from 1500 bytes to 5000 bytes and they ex-
-	pand the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman
-	ciphers in the public key class because they use different functions for key generation and key
-	agreement.
+	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not enabled in the pub-
+	lic key class because they increase the size of the key from 1500 bytes to 5000 bytes and they expand
+	the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman ciphers
+	in the public key class because they use different functions for key generation and key agreement.
+	
+	The vector cross product cipher is also asymmetrical (but not invertible) because it uses different
+	methods for public key generation and key agreement (cross product Y = A (x) X and then dot product
+	E = Y * K), and either the key generation or key agreement method has to negate the sign of the paral-
+	lelogram or the parallelepiped or else the messages will be undecryptable. The vector cross product
+	cipher is still a Diffie-Hellman cipher because the cipher is non-invertible and is not solved for X.
 	
 	
 	************************************************/
@@ -3300,6 +3274,7 @@ class Programs
 						//  Restore the screen position
 						
 						int cp = textarea.getCaretPosition();
+						
 						int cp1 = cp > 0 ? cp - 1 : 0;
 						
 						textarea. setCaretPosition(cp);
@@ -8183,7 +8158,8 @@ class Programs
 						
 						if (Number.isDigitString(startstr, 10) && (startstr.length() < 6)
 						 && Number.isDigitString(  endstr, 10) && (  endstr.length() < 6))
-						{	//  Use line numbers instead of strings
+						{
+							//  Use line numbers instead of strings
 							
 							String[] tokens = text.split("\n");
 							
@@ -9278,10 +9254,15 @@ class Programs
 		///////////////////////////////////////////////
 		
 		//  Define the cipher to be used for signatures
+		//
+		//  (The sign document menu item should have an
+		//  option to select the signature algorithm)
+		
+	////	private final String cipher = Signature.lsd;
 		
 		//  (Latin square discrete log cipher, 120 digits)
 		
-		private final String cipher = Signature.lsdl120;
+		private final String cipher = Signature.lsdl;
 		
 		///////////////////////////////////////////////
 		
@@ -11632,7 +11613,7 @@ class Programs
 			//
 			//  home directory = /home/username
 			//  working directory = /home/username/EditorClassFiles
-			//  java home dir = /usr/jdk/jdk-16
+			//  java home dir = /usr/jdk/jdk-xx
 			//  classpath = .
 			//
 			//  running the program as superuser
@@ -12271,10 +12252,6 @@ class Programs
 		
 		
 		
-		//  the number of files on the file menu list
-		
-		int numberoffiles = 16;
-		
 		ArrayList<String> filelist;
 		
 		ArrayList<JTextField> textfieldlist;
@@ -12872,7 +12849,6 @@ class Programs
 		private class TablePanel extends JPanel
 		{
 		
-		
 			private static final long serialVersionUID = 1L;
 			
 			private JTextField textfield;
@@ -12925,7 +12901,20 @@ class Programs
 				
 				//  table.setDragEnabled(true);
 				
+				//  Disable auto resize so the column widths can be set
+				
 				table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+				
+				TableColumnModel cm = table.getColumnModel();
+				
+				int height = font.getSize() + 16;
+				
+				for (int i = 0; i < table.getColumnCount(); i++)
+				{
+					TableColumn col = cm.getColumn(i);
+					
+					col.setPreferredWidth(5 * height);
+				}
 				
 				table.setRowHeight(40);
 				table.setColumnSelectionAllowed(true);
@@ -12942,7 +12931,6 @@ class Programs
 				scrollpane = new JScrollPane();
 				
 				scrollpane.setViewportView(table);
-				
 				
 				TableModel rowheadermodel = new DefaultTableModel()
 				{
@@ -12999,7 +12987,6 @@ class Programs
 				this.add(scrollpane, gbc);
 			}
 		}
-		
 		
 		//  End class TablePanel
 		
@@ -14101,7 +14088,6 @@ class Programs
 				   .getSelectedIndex(), filename );
 				
 				
-				
 				if (tablepanel.encrypted)
 				{
 					//  Set the tab color to the encrypted color
@@ -14421,7 +14407,64 @@ class Programs
 				
 				    table.setValueAt(values[j], i, j);
 			}
+			
+			setColumnWidths(table);
 		}
+		
+		
+		
+		private void setColumnWidths(JTable table)
+		{
+			//  auto sizes the column widths to fit the average text length
+			
+			//  Determine the column widths from the text length
+			
+			int minlen = 7, maxlen = 32;
+			
+			int[] lengths = new int[table.getColumnCount()];
+			
+			for (int j = 0; j < table.getColumnCount(); j++)
+			for (int i = 0; i < table.   getRowCount(); i++)
+			{
+				int len = ((String) table.getValueAt(i, j)).length();
+				
+				lengths[j] += len;
+			}
+			
+			for (int i = 0; i < lengths.length; i++)
+			{
+				lengths[i] /= table.getRowCount();
+				
+				int len = lengths[i];
+				
+				if (len < minlen) len = minlen;
+				if (len > maxlen) len = maxlen;
+				
+				lengths[i] = len;
+			}
+			
+			//  Disable auto resize so the column widths can be set
+			
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			
+			//  Set the column widths
+			
+			int height = font.getSize() + 16;
+			
+			TableColumnModel cm = table.getColumnModel();
+			
+			for (int i = 0; i < table.getColumnCount(); i++)
+			{
+				TableColumn col = cm.getColumn(i);
+				
+				int len = lengths[i];
+				
+				int width = (int) (len * height / 2.4);
+				
+				col.setPreferredWidth(width);
+			}
+		}
+		
 		
 		
 		private void packTable()
@@ -14708,7 +14751,9 @@ class Programs
 				
 				int fontsize = font.getSize();
 				
-				int rowheadersize = Math.min(24, font.getSize()*3/4);
+				int rowheadersize = Math.min(
+				
+				    24, font.getSize()*3/4);
 				
 				table.setFont(font);
 				
@@ -14719,15 +14764,6 @@ class Programs
 				
 				table    .setRowHeight(height);
 				rowheader.setRowHeight(height);
-				
-				for (int i = 0; i < table.getColumnCount(); i++)
-				{
-					TableColumn column = table.getColumnModel().getColumn(i);
-					
-					int width = column.getPreferredWidth();
-					
-					column.setPreferredWidth(5 * height);
-				}
 			}
 			
 			
@@ -15104,6 +15140,7 @@ class Programs
 				String next = (String) text_cp_size[0];
 				
 				Integer[] cp = (Integer[]) text_cp_size[1];
+				
 				int row = cp[0], col = cp[1];
 				
 				Integer[] size = (Integer[]) text_cp_size[2];
@@ -16612,6 +16649,8 @@ class Programs
 					table.setRowSelectionInterval   (r1, r2);
 					table.setColumnSelectionInterval(c1, c2);
 				}
+				
+				setColumnWidths(table);
 			}
 		}
 		
@@ -17014,7 +17053,7 @@ class Programs
 					
 					if ((fontname != null) && !fontname.isEmpty())
 					
-					    font1 = new Font(fontname, style, (int) fontsize);
+					    font1 = new Font(fontname, style, fontsize);
 					
 					fontname  = font1.getName();
 					fontstyle = font1.getStyle();
@@ -18010,10 +18049,6 @@ class Programs
 		MouseListener mouselistener;
 		
 		
-		
-		//  the number of files on the file menu list
-		
-		int numberoffiles = 16;
 		
 		ArrayList<String> filenamelist;
 		
@@ -19827,10 +19862,6 @@ class Programs
 		Hyperactive hyperactive;
 		
 		
-		
-		//  the number of files on the file menu list
-		
-		int numberoffiles = 16;
 		
 		ArrayList<String> filenamelist;
 		
@@ -26357,9 +26388,7 @@ class Programs
 					table.setColumnSelectionAllowed(false);
 					table.setSelectionMode(1);
 					
-					table.setAutoResizeMode(
-					
-					    JTable.AUTO_RESIZE_OFF);
+					table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 					
 					table.setRowHeight(40);
 					
@@ -26504,9 +26533,11 @@ class Programs
 					table.setRowMargin(8);
 					rowheader.setRowMargin(8);
 					
+					TableColumnModel cm = table.getColumnModel();
+					
 					for (int i = 0; i < table.getColumnCount(); i++)
 					{
-						TableColumn column = table.getColumnModel().getColumn(i);
+						TableColumn col = cm.getColumn(i);
 						
 						int width = 0;
 						
@@ -26519,7 +26550,7 @@ class Programs
 						if (i == 6) width = 80;
 						if (i == 7) width = 80;
 						
-						column.setPreferredWidth(4 * width);
+						col.setPreferredWidth(4 * width);
 					}
 					
 					
@@ -27789,18 +27820,21 @@ class Programs
 						//  Exception in thread "AWT-EventQueue-0" java.util.ConcurrentModificationException
 						//  at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
 						//  at java.base/java.util.ArrayList$Itr.next(ArrayList.java:967)
-						//  at Programs$Mail$RetrieveMailFrame$ChangeListener1.stateChanged(Editor.java:...)
+						//
+						//  for (SendMailFrame sendmailframe : emailpanel1.sendmailframelist)
 						//
 						//  This line throws an exception every time two email addresses (tabs) are open and
 						//  the user clicks the right tab and opens a non-reply frame, clicks the left tab
 						//  and opens a non-reply frame, clicks the right tab and closes the non-reply frame,
 						//  clicks the left tab without closing the reply frame, and then clicks the right tab.
-						//
+						
+						
+						//  This second line for (int j = 0; j < ... j++) does the same thing as the
+						//  for-each loop for (SendMailFrame sendmailframe : emailpanel1.sendmailframelist)
+						//  but it doesn't throw a ConcurrentModificationException. This problem could also
+						//  be solved by using an empty try catch block.
+						
 						//  for (SendMailFrame sendmailframe : emailpanel1.sendmailframelist)
-						
-						
-						//  This line does the same thing but doesn't throw an exception which
-						//  means that the problem is in the java software, not the program
 						
 						for (int j = 0; j < emailpanel1.sendmailframelist.size(); j++)
 						{
@@ -27819,6 +27853,9 @@ class Programs
 								
 								if (sendmailframe.disposed)
 								{
+									//  Remove the sendmailframe from
+									//  the list and dispose the frame
+									
 									emailpanel.sendmailframelist
 									   .remove(sendmailframe);
 									
@@ -37499,7 +37536,7 @@ class Programs
 						if (bool == false) return;
 						
 						
-						delethread = new Thread(()->
+						delethread = new Thread(() ->
 						{
 						
 						try // no indent for the
@@ -38637,11 +38674,11 @@ class Programs
 		
 		private int[] fontSizeToFrameSize(float fontsize)
 		{
-			//  scales the frame size to the font size
+			//  scales the font size to the frame size
 			
-			// (this method returns a rectangular size for
-			// the retrieve mail frame, but the send mail
-			// class squares the frame by setting w = h)
+			//  (this method returns a rectangular size for
+			//  the retrieve mail frame, but the send mail
+			//  class can square the frame by setting w = h)
 			
 			//  Read the screen size
 			
@@ -38666,18 +38703,12 @@ class Programs
 		
 		
 		
-		private float frameSizeToFontSize(JFrame frame)
+		private float frameSizeToFontSize(int[] width_height)
 		{
-			//  scales the font size to the frame size
+			//  scales the frame size to the font size
 			
-			//  Read the screen size
-			
-			Toolkit tk = Toolkit.getDefaultToolkit();
-			
-			Dimension d = tk.getScreenSize();
-			
-			int x = frame.getSize().width;
-			int y = frame.getSize().height;
+			int x = width_height[0];
+			int y = width_height[1];
 			
 			int z = Math.min(x, y);
 			
@@ -38695,6 +38726,24 @@ class Programs
 			double fontsize = 1.3 * maxfontsize * sqrt;
 			
 			return (float) fontsize;
+		}
+		
+		
+		
+		private float frameSizeToFontSize(JFrame frame)
+		{
+			//  scales the frame size to the font size
+			
+			//  Read the screen size
+			
+			Toolkit tk = Toolkit.getDefaultToolkit();
+			
+			Dimension d = tk.getScreenSize();
+			
+			int x = frame.getSize().width;
+			int y = frame.getSize().height;
+			
+			return frameSizeToFontSize(new int[] { x, y });
 		}
 		
 		
@@ -39870,15 +39919,9 @@ class FileType
 		
 		if (values.length == 1) return false;
 		
-		//  Test for an indented text document
-		
-		if (rows[0].trim().split(delimiter)
-		
-		    .length == 1) return false;
-		
 		int prevcount = values.length;
 		
-		//  test if all rows have the
+		//  Test if all rows have the
 		//  same number of elements
 		
 		for (String row : rows)
@@ -39978,7 +40021,7 @@ class Colors
 		
 		//  greenish blues
 		
-		{ 0x006868, __.cyan },
+		{ 0x006060, __.cyan },
 		{ 0x004040, __.darkcyan },
 		
 		{ 0x003060, __.aqua },
@@ -39988,13 +40031,15 @@ class Colors
 		
 		{ 0x0000d0, __.brightblue },
 		{ 0x0000a0, __.blue },
-		{ 0x000070, __.mediumblue },
-		{ 0x000040, __.darkblue },
+		{ 0x000060, __.mediumblue },
+		{ 0x000030, __.darkblue },
 		
 		//  bluish reds
 		
-		{ 0xdf00a7, __.brightpink },
-		{ 0xcf009c, __.pink },
+		{ 0xe000a8, __.brightpink },
+		{ 0xc00090, __.pink },
+		
+		//  red + blue
 		
 		{ 0xa800a8, __.magenta },
 		{ 0x780078, __.darkmagenta },
@@ -40101,8 +40146,8 @@ class SaveFile
 		if (file == null) return -1;
 		
 		
-		//  Confirm if the user wants to replace an exist-
-		//  ing file, or create a new file if the file
+		//  Confirm if the user wants to replace an exis-
+		//  ting file, or create a new file if the file
 		//  does not exist, and write the data to file
 		
 		if (file.exists())
@@ -40137,9 +40182,13 @@ class SaveFile
 			{
 				System.out.println(ex);
 				
+				String title = "";
+				
+				int msgtype = JOptionPane.ERROR_MESSAGE;
+				
 				JOptionPane.showMessageDialog(
 				
-				    parent, ex);
+				    parent, ex, title, msgtype);
 				
 				return -1;
 			}
@@ -40153,9 +40202,13 @@ class SaveFile
 		{
 			System.out.println(ex);
 			
+			String title = "";
+			
+			int msgtype = JOptionPane.ERROR_MESSAGE;
+			
 			JOptionPane.showMessageDialog(
 			
-			    parent, ex);
+			    parent, ex, title, msgtype);
 			
 			return -1;
 		}
@@ -46176,6 +46229,7 @@ class Documents
 		textarea.setLineWrap(linewrap);
 		textarea.setWrapStyleWord(linewrap);
 		textarea.setEditable(false);
+		
 		textarea.setFont(font);
 		
 		textarea.setText(document);
@@ -46217,12 +46271,6 @@ class Documents
 		{
 			public void windowClosing(WindowEvent e)
 			{
-				//  Don't use the for-each loop  for (String str : list)
-				//  because Java will throw a concurrent modification exception
-				//  Exception in thread "AWT-EventQueue-0" java.util.ConcurrentModificationException
-				//  at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
-				//  at java.base/java.util.ArrayList$Itr.next(ArrayList.java:967)
-				
 				delete(document);
 			}
 		});
@@ -46237,6 +46285,7 @@ class Documents
 		dialog.add(scrollpane);
 		
 		dialog.setTitle(title);
+		
 		
 		
 		int xpos = 0, ypos = 0;
@@ -46255,10 +46304,14 @@ class Documents
 		
 		Dimension d = tk.getScreenSize();
 		
-		dialog.setSize((int) (d.width *40/100),
-		               (int) (d.height*40/100));
+		int scale = 45;
+		
+		dialog.setSize((d.width *scale/100),
+		               (d.height*scale/100));
 		
 		dialog.setVisible(true);
+		
+		dialog.setResizable(true);
 		
 		dialogs.add(dialog);
 		
@@ -48577,13 +48630,6 @@ class Icons
 		{
 			public void windowClosing(WindowEvent e)
 			{
-				//  Don't use the for-each iterator loop  for (byte[] array : list)
-				//
-				//  because Java will throw a concurrent modication exception
-				//  Exception in thread "AWT-EventQueue-0" java.util.ConcurrentModificationException
-				//  at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
-				//  at java.base/java.util.ArrayList$Itr.next(ArrayList.java:967)
-				
 				delete(imagedata);
 			}
 		});
@@ -48924,6 +48970,11 @@ class FileChannel1
 		//  the buffer starting at the given file position
 		
 		return fc.read(bytebuffer, position);
+	}
+	
+	public long size() throws IOException
+	{
+		return fc.size();
 	}
 	
 	public int write(ByteBuffer bytebuffer) throws IOException
@@ -52073,19 +52124,20 @@ class PublicKey
 	//
 	//  All the commutative one-way functions or symmetric public key ciphers used in the public key class
 	//  derive from the general matrix function X1 A^x X2 (or B^x1 A^x B^x2) including A^x, A^x X, A X,
-	//  X1 A X2, X^-1 A^x X (mod p) and the discrete log / factorization cipher a^x (mod n). (The cipher
-	//  a^x (mod n) is really X^-1 A^x X (mod n) where a and x are 1x1 matrices or Latin squares, but the
-	//  X matrices annihilate each other because integer multiplication is commutative.) The side matrices
-	//  X1 and X2 have to be private Latin squares, powers of a public matrix, or inverses of each other
-	//  or else there would be no constraint on the function or the function would be non-commutative.
+	//  X1 A X2, and X^-1 A^x X (mod p). (The cipher a^x (mod n) is really X^-1 A^x X (mod n) where a and x
+	//  are 1x1 matrices or Latin squares, but the X matrices annihilate each other because integer multipli-
+	//  cation is commutative.) The side matrices X1 and X2 have to be private Latin squares, cubes or tes-
+	//  seracts, powers of a public matrix, cube or tesseract, or inverses of each other or else there would
+	//  be no constraint on the function or the function would be non-commutative.
 	//
 	//  Matrix ciphers are more complicated than integer ciphers because matrix multiplication is non-commu-
 	//  tative unless the matrices are Latin squares. A Latin square is a matrix in which each row contains
 	//  the same elements except that the elements are permuted or arranged in a different order. If the row
-	//  elements are rotated, then the Latin square is also a circulant matrix. Latin square multiplication
-	//  is commutative if the elements are circulant in the right or positive direction so that the diagonal
-	//  elements are all equal. Integer multiplication is commutative because all numbers are 1x1 Latin
-	//  squares or circulant matrices and the diagonal elements are equal because there is only one element.
+	//  elements are rotated, then the Latin square is also a circulant matrix. Latin square, cube, or tes-
+	//  seract multiplication is commutative if the elements are circulant in the right or positive direc-
+	//  tion so that the diagonal elements are all equal. Integer multiplication is commutative because all
+	//  numbers are 1x1 Latin squares or circulant matrices and the diagonal elements are equal because
+	//  there is only one element.
 	//
 	//  Matrix public key generation uses block matrices whereas secret key generation uses block arrays.
 	//  Public key generation reduces an n x n block matrix to an n x 1 column vector or block array, and
@@ -52162,11 +52214,6 @@ class PublicKey
 	//  factor) because a common factor doesn't get removed by subtraction; only the coefficients get re-
 	//  duced by subtraction. (For example, for the numbers 187 and 77, 187 mod 77 == 33; 77 mod 33 == 11;
 	//  33 mod 11 == 0; therefore (187, 77) == 11)
-	//
-	//  If the factorization algorithm requires a matrix then there would also be large space requirements
-	//  unless the matrix is sparse because a 10^6 x 10^6 matrix that has a 10^6 modulus would occupy 10^18
-	//  bits or 10^17 bytes which is a hundred petabytes of memory. (A 512 K-bit number would reduce the
-	//  storage space to only ten petabytes or 10,000 terabytes of memory.)
 	
 	
 	
@@ -52328,8 +52375,10 @@ class PublicKey
 	//
 	//          x1      x2
 	//  Y  =  A    B  C
+	//
 	//          k1      k2
 	//  Z  =  A    B  C
+	//
 	//          x1      x2
 	//  E  =  A    Z  C
 	
@@ -52339,7 +52388,7 @@ class PublicKey
 	//  matrix discrete log cipher
 	//
 	//         -1
-	//  Y  =  X  A  X
+	//  Y  =  X   A  X
 	//
 	//              k
 	//  M  =  k1  A
@@ -52481,10 +52530,6 @@ class PublicKey
 	
 	//  Real / fractional number / non-integer matrix cipher
 	
-	//  Fractional number ciphers don't contain errors but they
-	//  are inexact because the fractional digits greater than
-	//  the number precision are discarded.
-	
 	private static final int size90 = 10*3*3; // 90 digits
 	
 	
@@ -52552,7 +52597,7 @@ class PublicKey
 	//  it would be anomalous to include this cipher in the public key because the
 	//  cipher is the only one that is not the same as all the others, and it could
 	//  slow the key generation and key agreement because prime number generation is
-	//  probabilistic and it may not be portable because it requires fast algorithms
+	//  probabilistic and it may not be portable since it requires fast algorithms
 	//  that may not be available in other programming languages.
 	
 	private static final int size4x128 = 4*128; // 512 digits
@@ -52563,7 +52608,8 @@ class PublicKey
 	//  Public keys can be static / receiver or one-time / sender keys
 	//
 	//  The type of key is only important for asymmetric public key ciphers
-	//  such as the Rabin / fact and Merkle-Hellman / knapsack ciphers.
+	//  such as the Rabin / fact, Merkle-Hellman / knapsack, and vector /
+	//  cross product ciphers.
 	//
 	//  Symmetric public keys or Diffie-Hellman ciphers ignore this variable
 	
@@ -52614,8 +52660,9 @@ class PublicKey
 		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  m-dl
 		
 		
-		//  The public key class will include a few more
-		//  real / fractional number / non-integer ciphers.
+		//  The public key class may include a few more
+		//  real / fractional number / non-integer /
+		//  non-discrete ciphers.
 		
 		
 		
@@ -52627,7 +52674,7 @@ class PublicKey
 		
 		//  size56x29, //  integer knapsack r0 a[] + e[] + r[][] s[]
 		//  size48x49, //  integer knapsack + random errors
-		//  size4x128, //  Rabin / fact cipher (not quantum resistant)
+		//  size4x128, //  Rabin / fact cipher (not quantum or classical resistant)
 		
 		
 		
@@ -55043,7 +55090,7 @@ class PublicKey
 			
 			        " must be divisible by " + rows*cols);
 			
-			int radix = 16, s = digits / rows / cols / 1;
+			int s = digits / rows / cols / 1, radix = 16;
 			
 			//  for complex divide by 2 instead of 1
 			
@@ -55115,7 +55162,7 @@ class PublicKey
 			
 			        " must be divisible by " + rows*cols);
 			
-			int radix = 16, s = digits / rows / cols / 1;
+			int s = digits / rows / cols / 1, radix = 16;
 			
 			//  for complex divide by 2 instead of 1
 			
@@ -55193,7 +55240,7 @@ class PublicKey
 			
 			        " must be divisible by " + r1*r2*r3);
 			
-			int radix = 16, s = digits / r1 / r2 / r3 / 1;
+			int s = digits / r1 / r2 / r3 / 1, radix = 16;
 			
 			//  for complex divide by 2 instead of 1
 			
@@ -55276,7 +55323,7 @@ class PublicKey
 			
 			      " must be divisible by " + r1*r2*r3*r4);
 			
-			int radix = 16, s = digits / r1 / r2 / r3 / r4 / 1;
+			int s = digits / r1 / r2 / r3 / r4 / 1, radix = 16;
 			
 			//  for complex divide by 2 instead of 1
 			
@@ -55504,10 +55551,14 @@ class PublicKey
 		if (digits == size90)
 		{
 		
-			//  Real / fractional number / cipher
+			//  Real / fractional number cipher
 			//
 			//  Y  =  X1  A  X2
 			
+			//  Fractional number ciphers don't use integer errors but
+			//  they are inexact because the fractional digits greater
+			//  than the number precision are discarded. This is the only
+			//  non-discrete / non-integer cipher in the public key class.
 			
 			int matrices = 1, rows = 3, cols = rows, p = 10;
 			
@@ -55517,7 +55568,7 @@ class PublicKey
 			
 			        " must be divisible by " + rows*cols);
 			
-			int radix = 16, s = digits / rows / cols / 1;
+			int s = digits / rows / cols / 1, radix = 16;
 			
 			//  for complex divide by 2 instead of 1
 			
@@ -56196,7 +56247,7 @@ class PublicKey
 			
 			//  Define the public quaternions
 			
-			final int radix = 16, t = 4, s = digits / t;
+			final int t = 4, s = digits / t, radix = 16;
 			
 			Number[] a = new Number[2*t];
 			
@@ -56335,6 +56386,7 @@ class PublicKey
 			
 			//  Either the sender or the receiver can negate
 			//  the value of the secret key, but not both
+			//
 			//  (This code is not used because the negation
 			//  is done in the secret key agreement method)
 			
@@ -56675,33 +56727,59 @@ class PublicKey
 		{
 			//  This method was used to test and debug the class
 			
-			int[][][] array1 = new int[][][]
+			int[][][] array1, array2, array3;
+			
+			Cube cube1, cube2, cube3, product1, product2;
+			
+			array1 = new int[][][]
 			
 			    { { { 1, 2 }, { 3, 4 } },
 			      { { 5, 6 }, { 7, 8 } } };
 			
-			int[][][] array2 = new int[][][]
+			array2 = new int[][][]
 			
 			    { { { 3, 1 }, { 4, 1 } },
 			      { { 5, 9 }, { 2, 6 } } };
 			
-			int[][][] array3 = new int[][][]
+			array3 = new int[][][]
 			
 			    { { { 5, 3 }, { 5, 8 } },
 			      { { 9, 7 }, { 9, 3 } } };
 			
-			Cube cube1 = new Cube(array1);
-			Cube cube2 = new Cube(array2);
-			Cube cube3 = new Cube(array3);
+			cube1 = new Cube(array1);
+			cube2 = new Cube(array2);
+			cube3 = new Cube(array3);
 			
-			//  Test the associative property for cube multiplication
+			//  Verify the associative property for cube multiplication
 			
-			Cube product1 = (cube1.multiply(cube2)).multiply(cube3);
-			Cube product2 = cube1.multiply((cube2.multiply(cube3)));
+			product1 = (cube1.multiply(cube2)).multiply(cube3);
+			product2 = cube1.multiply((cube2.multiply(cube3)));
 			
-			boolean bool = product1.equals(product2);
+			System.out.println(product1.equals(product2));
 			
-			System.out.println(bool);
+			
+			//  Verify the commutative property for Latin cube multiplication
+			//  where the cubes are circulant in the right or diagonal direction
+			
+			array1 = new int[][][]
+			
+			    { { { 1, 2, 3 }, { 3, 1, 2 }, { 2, 3, 1 } },
+			      { { 3, 1, 2 }, { 2, 3, 1 }, { 1, 2, 3 } },
+			      { { 2, 3, 1 }, { 1, 2, 3 }, { 3, 1, 2 } } };
+			
+			array2 = new int[][][]
+			
+			    { { { 4, 5, 6 }, { 6, 4, 5 }, { 5, 6, 4 } },
+			      { { 6, 4, 5 }, { 5, 6, 4 }, { 4, 5, 6 } },
+			      { { 5, 6, 4 }, { 4, 5, 6 }, { 6, 4, 5 } } };
+			
+			cube1 = new Cube(array1);
+			cube2 = new Cube(array2);
+			
+			System.out.println(
+			
+			    cube1.multiply(cube2).equals(
+			    cube2.multiply(cube1)));
 		}
 		
 		****************/
@@ -57112,7 +57190,7 @@ class PublicKey
 			Tesseract t2 = new Tesseract(array2);
 			Tesseract t3 = new Tesseract(array3);
 			
-			//  Test the associative property for tesseract multiplication
+			//  Verify the associative property for tesseract multiplication
 			
 			Tesseract product1 = (t1.multiply(t2)).multiply(t3);
 			Tesseract product2 = t1.multiply((t2.multiply(t3)));
@@ -59348,7 +59426,7 @@ class PublicKey
 			
 			        " must be divisible by " + rows*cols);
 			
-			int radix = 16, s = digits / rows / cols / 1;
+			int s = digits / rows / cols / 1, radix = 16;
 			
 			//  for complex divide by 2 instead of 1
 			
@@ -59593,7 +59671,7 @@ class PublicKey
 			
 			int cubes = 3, r1 = 2, r2 = r1, r3 = r2;
 			
-			int radix = 16, s = digits / r1 / r2 / r3 / 1;
+			int s = digits / r1 / r2 / r3 / 1, radix = 16;
 			
 			//  for complex divide by 2 instead of 1
 			
@@ -59691,7 +59769,7 @@ class PublicKey
 			
 			int tesseracts = 3, r1 = 2, r2 = r1, r3 = r2, r4 = r3;
 			
-			int radix = 16, s = digits / r1 / r2 / r3 / r4 / 1;
+			int s = digits / r1 / r2 / r3 / r4 / 1, radix = 16;
 			
 			//  for complex divide by 2 instead of 1
 			
@@ -59897,6 +59975,8 @@ class PublicKey
 			//  the value of the secret key, but not both
 			
 			if (type == send_encrypt) E = E .negate(p);
+			
+			//  else if (type == receive_decrypt) {  } // do nothing
 			
 			if ((type != send_encrypt) && (type != receive_decrypt))
 			
@@ -61686,8 +61766,8 @@ class Signature
 	
 	
 	
-	//  A Latin square / circulant matrix algorithm
-	//  for digital signatures
+	//  A Latin square discrete log / LSDL
+	//  digital signature algorithm
 	//
 	//  A1 = { { a1, b1 }, { b1, a1 } }
 	//  B1 = { { a2, b2 }, { b2, a2 } }
@@ -61734,20 +61814,20 @@ class Signature
 	//  variables k and x instead of one equation.
 	
 	
-	//  The signature { m, r, s, y } is appended to a document as a block of 4 x 40 or
-	//  9 x 40 chars. In future versions of the software the signature block could be
-	//  enclosed in two ------------- lines just like the public keys. The lines could
-	//  include or omit the words signature block. If more than one signature algorithm
-	//  uses the same the number of lines, then the software will verify the signature
-	//  starting with the fastest algorithm first and if the signature verifies then it
-	//  will display the signature algorithm that was used to sign the document.
+	//  The signature { m, r, s, y } is appended to a document as a block of 4 x 40,
+	//  6 x 40, or 9 x 40 chars. In future versions of the software the signature block
+	//  could be enclosed in two ------------- lines just like the public keys. The lines
+	//  could include or omit the words signature block. If more than one signature algo-
+	//  rithm uses the same the number of lines, then the software will verify the signa-
+	//  ture starting with the fastest algorithm first and if the signature verifies then
+	//  it will display the signature algorithm that was used to sign the document.
 	
 	
 	
 	
 	//  Discrete log blind signatures
 	//
-	//  Blind signatures are useful for money laundering
+	//  Blind signatures are useful for digital money laundering
 	//
 	//
 	//  The signer chooses a one-time private key k
@@ -61792,16 +61872,83 @@ class Signature
 	//  s1 = t1 r / r1 + b m == a k1 m + x1 r + b m == (a k1 + b) m + x1 r  (mod p-1)
 	//  s2 = t2 r / r1 + b m == a k2 m + x2 r + b m == (a k2 + b) m + x2 r  (mod p-1)
 	//
+	//
 	//  The signature is the quadruple
 	//
 	//  { m, R, s = s1 || s2, Y }
 	//
 	//  where || is the concatenation operator
 	//
-	//  and the verification equation is
+	//
+	//  The verification equation is
 	//
 	//    m   r       s1   s2
 	//  R   Y   ==  A1   A2    (mod p)
+	
+	
+	
+	
+	
+	
+	//  A Latin square discrete / LSD
+	//  digital signature algorithm
+	//
+	//  Public signature key Y
+	//
+	//  One-time signature keys R1, R2, R3
+	//
+	//  One-time signature key hash R
+	//
+	//  Signature equation S
+	//
+	//                     -1  -1      -1  -1
+	//  Y  =  X A X + X A X + X A X + X A X
+	//                     -1  -1      -1  -1
+	//  R1 =  K A K + K A K + K A K + K A K
+	//                     -1  -1      -1  -1
+	//  R2 =  K A X + K A X + K A X + K A X
+	//                     -1  -1      -1  -1
+	//  R3 =  X A K + X A K + X A K + X A K
+	//
+	//  R  =  H( R1, R2, R3 ) = ( R1 + R2 + R3 ) + R1 R2 R3
+	//                           -1    -1
+	//  S  =  ( K M + X R ) + ( K M + X R )
+	//
+	//
+	//  The signature is the quadruple
+	//
+	//  { M = f(m), R1 || R2 || R3, S, Y }
+	//
+	//  where || is the concatenation operator
+	//
+	//
+	//  Verification equation
+	//
+	//  S A S  ==  R Y R + M R1 M + M R2 R + R R3 M
+	//
+	//  ================================================================
+	//
+	//                           -1    -1                    -1    -1
+	//  S A S  ==  [ K M + X R + K M + X R ] A [ K M + X R + K M + X R ] ==
+	//
+	//
+	//  M ( K A K ) M + R ( X A X ) R + M ( K A X ) R + R ( X A K ) M +
+	//
+	//       -1  -1          -1  -1          -1  -1          -1  -1
+	//  M ( K A K ) M + R ( X A X ) R + M ( K A X ) R + R ( X A K ) M +
+	//
+	//       -1              -1              -1              -1
+	//  M ( K A K ) M + R ( X A X ) R + M ( K A X ) R + R ( X A K ) M +
+	//
+	//           -1              -1              -1              -1
+	//  M ( K A K ) M + R ( X A X ) R + M ( K A X ) R + R ( X A K ) M
+	//
+	//
+	//  ==  R Y R + M R1 M + M R2 R + R R3 M
+	//
+	//  ================================================================
+	
+	
 	
 	
 	
@@ -61859,21 +62006,35 @@ class Signature
 	//  Class members
 	
 	
+	
+	
+	//  Signature ciphers
+	
+	
+	//  The lsd algorithm is twice as fast for signing and
+	//  20 times faster for verification compared to the
+	//  lsdl algorithm but it doesn't do Schnorr signatures
+	//  or blind signatures
+	
+	
 	//  A Latin square / circulant matrix discrete log
 	//  digital signature algorithm
 	//
 	//             x1   x2
 	//  Y  =  x  A1   A2    (mod p)
 	
-	//  This cipher is used as an example and was used to test the
-	//  Signature class. The Latin square discrete log signature
-	//  algorithm could be replaced by another matrix algorithm.
+	final public static String lsdl = "lsdl";
 	
-	//  A 120-bit Latin square discrete log digital signature algorithm
 	
-	final public static String lsdl120 = "lsdl120";
 	
-	//  final public static String ...
+	//  A Latin square / circulant matrix discrete
+	//  digital signature algorithm
+	//
+	//                     -1  -1      -1  -1
+	//  Y  =  X A X + X A X + X A X + X A X
+	
+	final public static String lsd = "lsd";
+	
 	
 	
 	
@@ -61896,6 +62057,10 @@ class Signature
 	
 	private static Matrix A1;
 	private static Matrix A2;
+	
+	private static Matrix A;
+	private static Matrix X;
+	
 	
 	
 	
@@ -61959,7 +62124,16 @@ class Signature
 		
 		if (cipher.equalsIgnoreCase(""))  {  }
 		
-		else if (cipher.equalsIgnoreCase(lsdl120))
+		else if (cipher.equalsIgnoreCase(lsd))
+		{
+			this.p = new Number(16) .pow(5) .subtract(3);
+			
+			this.digits = 5;
+			
+			this.keysize = 40;
+		}
+		
+		else if (cipher.equalsIgnoreCase(lsdl))
 		{
 			this.q = new Number(
 			
@@ -61973,7 +62147,9 @@ class Signature
 			
 			    throw new IllegalArgumentException();
 			
-			this.digits = 40; this.keysize = 3*this.digits;
+			this.digits = 40;
+			
+			this.keysize = 3*this.digits;
 		}
 		
 		//  else if (cipher.equalsIgnoreCase(......))
@@ -62041,12 +62217,47 @@ class Signature
 		//  the same modulus.
 		
 		
-		//  Define the base modulus p and exponent modulus q
-		
 		if (cipher.equalsIgnoreCase(""))  {  }
 		
-		else if (cipher.equalsIgnoreCase(lsdl120))
+		if (cipher.equalsIgnoreCase(lsd))
 		{
+			//  Define the base A
+			
+			this.digits = 5; int s = 8;
+			
+			String[] piarray = new String[s];
+			
+			for (int i = 0; i < piarray.length; i++)
+			
+			    piarray[i] = pi16.substring(
+			
+				i * digits, (i+1) * digits);
+			
+			Number[] a = new Number[s];
+			
+			for (int i = 0; i < a.length; i++)
+			
+			    a[i] = new Number(piarray[i], radix);
+			
+			Matrix A = new Matrix(a, -1);
+			
+			Signature.A = A;
+			
+			//  Define the base modulus p
+			
+			this.p = new Number(16) .pow(5) .subtract(3);
+			
+			this.digits = 5;
+			
+			this.keysize = 40;
+		}
+		
+		else if (cipher.equalsIgnoreCase(lsdl))
+		{
+			//  Define the base modulus p and exponent modulus q
+			
+			this.digits = 40;
+			
 			this.q = new Number(
 			
 			    "1461501637330902918203684832716283019655932555573");
@@ -62059,25 +62270,17 @@ class Signature
 			
 			    throw new IllegalArgumentException();
 			
-			this.digits = 40; this.keysize = 3*digits;
+			this.keysize = 3*digits;
 			
 			//  System.out.println("modulus == " + this.p.toString(16));
 			//  System.out.println("exp mod == " + this.q.toString(16));
 			
 			// 10000000000000000000000000000000000003135 00000000000000000001
 			// 10000000000000000000000000000000000003135
-		}
-		
-		//  else if (cipher.equalsIgnoreCase(......))
-		
-		
-		
-		//  Define the base A1, A2
-		
-		if (cipher.equalsIgnoreCase("")) {  }
-		
-		else if (cipher.equalsIgnoreCase(lsdl120))
-		{
+			
+			
+			//  Define the base A1, A2
+			
 			//  Define the two matrices
 			
 			String[] elements = new String[4];
@@ -62088,10 +62291,10 @@ class Signature
 			
 				i * digits, (i+1) * digits);
 			
-			Number a1 = new Number(elements[0],radix);
-			Number a2 = new Number(elements[1],radix);
-			Number a3 = new Number(elements[2],radix);
-			Number a4 = new Number(elements[3],radix);
+			Number a1 = new Number(elements[0], radix);
+			Number a2 = new Number(elements[1], radix);
+			Number a3 = new Number(elements[2], radix);
+			Number a4 = new Number(elements[3], radix);
 			
 			Matrix A1 = new Matrix(new Number[] { a1, a2 }, 1);
 			Matrix A2 = new Matrix(new Number[] { a3, a4 }, 1);
@@ -62102,6 +62305,7 @@ class Signature
 			Signature.A1 = A1;
 			Signature.A2 = A2;
 		}
+		
 		
 		//  else if (cipher.equalsIgnoreCase(......))
 	}
@@ -62168,14 +62372,135 @@ class Signature
 	
 	
 	
+	private Matrix computePrivateMatrix(Number private_key, int s)
+	{
+	
+		byte[][] hash = new byte[s][];
+		
+		hash[0] = Cipher.hash(private_key.toByteArray());
+		
+		for (int i = 1; i < hash.length; i++)
+		
+		    hash[i] = Cipher.hash(hash[i-1]);
+		
+		Number[] x = new Number[s];
+		
+		for (int i = 0; i < x.length; i++)
+		
+		    x[i] = new Number(hash[i]) .mod(p);
+		
+		
+		Matrix X = new Matrix(x, 1);
+		
+		//  Make sure the matrix is invertible
+		
+		while (X .determinant(p) .equals(0))
+		
+		    X = X .add(Matrix.identityMatrix(s));
+		
+		return X;
+	}
+	
+	
+	
+	
+	private static Matrix computeMatrixR(Matrix R1, Matrix R2, Matrix R3, Number p, Number invp)
+	{
+	
+		//  This method computes a matrix R from one-time signature keys R1, R2, and R3
+		
+		//  The simplest hash function of two or more values is the sum plus the product
+		
+		//  Compute R = f (R1, R2, R3) == (R1 + R2 + R3) + R1 R2 R3
+		
+		Matrix Rsum = R1 .add(R2) .mod(p, invp) .add(R3) .mod(p, invp);
+		
+		Matrix Rproduct = R1 .multiplyLs(R2) .mod(p, invp) .multiplyLs(R3) .mod(p, invp);
+		
+		Matrix R = Rsum .add(Rproduct) .mod(p, invp);
+		
+		
+		//  Rotate matrix R
+		
+		for (int i = 0; i < R.rowCount(); i++)
+		{
+			Number[] rarray = R .getRow(i);
+			
+			rarray = Matrix.rotate(rarray,
+			
+			    (2*i) % R.columnCount());
+			
+			R .setRow(rarray, i);
+		}
+		
+		return R;
+	}
+	
+	
+	
+	
 	private void generateKey()
 	{
 	
 	
 		if (cipher.equalsIgnoreCase(""))  {  }
 		
+		else if (cipher.equalsIgnoreCase(lsd))
+		{
 		
-		else if (cipher.equalsIgnoreCase(lsdl120))
+			//	Compute the public signature key
+			//	
+			//	                 -1  -1      -1  -1
+			//	Y = X A X + X A X + X A X + X A X
+			//	
+			//	where A is a public latin square
+			//	
+			//	and X is a private latin square
+			
+			
+			//  Compute the private matrix X
+			
+			int s = 8;
+			
+			Matrix X, X1;
+			
+			do
+			{	//  There is a 1 in p chance that X will be non-invertible
+				//  or that the determinant will equal zero modulo p
+				
+				Number x = new Number(this.x);
+				
+				X = computePrivateMatrix(x, s);
+				
+				X1 = X .modInverse(p);
+				
+				if (X1 == null) this.x = Cipher.hash(this.x);
+			}
+			
+			while (X1 == null);
+			
+			Signature.X = X;
+			
+			//  if (X.commutesWith(A)) throw new ArithmeticException();
+			
+			
+			Matrix Y =
+			
+			      ( X .multiplyLs(A) .mod(p) .multiplyLs(X)  .mod(p) ) // .mod(p)
+			  .add( X .multiplyLs(A) .mod(p) .multiplyLs(X1) .mod(p) ) // .mod(p)
+			  .add( X1.multiplyLs(A) .mod(p) .multiplyLs(X)  .mod(p) ) // .mod(p)
+			  .add( X1.multiplyLs(A) .mod(p) .multiplyLs(X1) .mod(p) ) .mod(p);
+			
+			
+			//  Convert the public key matrix to a number string
+			
+			String str = LatinSquareToString(Y);
+			
+			this.key = str;
+		}
+		
+		
+		else if (cipher.equalsIgnoreCase(lsdl))
 		{
 		
 			//  Compute the static signature key
@@ -62184,7 +62509,7 @@ class Signature
 			//  Y  =  x  A1   A2    (mod p)
 			
 			
-			final byte[] hash0, hash1, hash2;
+			byte[] hash0, hash1, hash2;
 			
 			hash0 = Cipher.hash(this.x);
 			
@@ -62197,7 +62522,7 @@ class Signature
 			Number x1 = new Number(hash1);
 			Number x2 = new Number(hash2);
 			
-			final Number x = new Number(hash0) .mod(q);
+			Number x = new Number(hash0) .mod(q);
 			
 			//                x1   x2
 			//  Compute  x  A1   A2   (mod p)
@@ -62244,7 +62569,7 @@ class Signature
 		//  of R such as r = r11||r12 (mod q)
 		
 		
-		if (cipher.equalsIgnoreCase(lsdl120))
+		if (cipher.equalsIgnoreCase(lsdl))
 		{
 			String[] elements = new String[4];
 			
@@ -62396,11 +62721,13 @@ class Signature
 	{
 		//  converts a Latin square / circulant matrix to string
 		
-		final int d = this.keysize / R.rowCount(), r = radix;
+		int d = this.keysize / R.rowCount(), r = radix;
 		
 		String rstring = R .toIntegerString(d, r);
 		
-		return rstring .substring(0, rstring.length() / R.columnCount());
+		return rstring .substring(0,
+		
+		    rstring.length() / R.columnCount());
 	}
 	
 	
@@ -62432,18 +62759,21 @@ class Signature
 		//  two lines to compute the signature key hash
 		
 		
-		final String m, r, s, y;
+		String m, r, s, y;
 		
 		m = mrsy[0].trim();
 		r = mrsy[1].trim();
 		s = mrsy[2].trim();
 		y = mrsy[3].trim();
 		
-		final int digits = m.length();
+		
+		int digits = m.length();
 		
 		if (digits > 64) return null;
 		
-		if (r.length() == 3*digits)
+		if ((r.length() == 3*digits) &&
+		    (s.length() == 2*digits) &&
+		    (y.length() == 3*digits))
 		{
 			String[] array = new String[9];
 			
@@ -62461,7 +62791,22 @@ class Signature
 		}
 		
 		
-		//  some ciphers use r.length == m.length
+		if ((r.length() == 3*digits) &&
+		    (s.length() == 1*digits) &&
+		    (y.length() == 1*digits))
+		{
+			String[] array = new String[6];
+			
+			array[0] = m.substring(0*digits, 1*digits);
+			array[1] = r.substring(0*digits, 1*digits);
+			array[2] = r.substring(1*digits, 2*digits);
+			array[3] = r.substring(2*digits, 3*digits);
+			array[4] = s.substring(0*digits, 1*digits);
+			array[5] = y.substring(0*digits, 1*digits);
+			
+			return array;
+		}
+		
 		
 		if (r.length() == 1*digits)
 		{
@@ -62509,9 +62854,9 @@ class Signature
 		
 		//  Split the signature into tokens and convert to mrsy
 		
-		signature = signature .trim() .replaceAll("\t", "");
+		signature = signature .trim().replaceAll("\t", "");
 		
-		String[] tokens = signature .split("\n{1,}");
+		String[] tokens = signature.split("\n{1,}");
 		
 		String[] mrsy = new String[4];
 		
@@ -62524,6 +62869,16 @@ class Signature
 			mrsy[1] = tokens[1] + tokens[2] + tokens[3];
 			mrsy[2] = tokens[4] + tokens[5];
 			mrsy[3] = tokens[6] + tokens[7] + tokens[8];
+			
+			return mrsy;
+		}
+		
+		if (tokens.length == 6)
+		{
+			mrsy[0] = tokens[0];
+			mrsy[1] = tokens[1] + tokens[2] + tokens[3];
+			mrsy[2] = tokens[4];
+			mrsy[3] = tokens[5];
 			
 			return mrsy;
 		}
@@ -62567,7 +62922,7 @@ class Signature
 		
 		if (cipher.equalsIgnoreCase(""))  { return null; }
 		
-		else if (cipher.equalsIgnoreCase(lsdl120))
+		else if (cipher.equalsIgnoreCase(lsdl))
 		{
 			Number k = Number.random(digits, radix);
 			
@@ -62627,7 +62982,7 @@ class Signature
 		if (cipher.equalsIgnoreCase("")) {   }
 		
 		
-		else if (cipher.equalsIgnoreCase(lsdl120))
+		else if (cipher.equalsIgnoreCase(lsdl))
 		{
 		
 			//  Static signature key
@@ -62674,7 +63029,7 @@ class Signature
 			Number r1 = new Number( Rstring, radix ) .mod(q);
 			
 			
-			final byte[] hash0, hash1, hash2;
+			byte[] hash0, hash1, hash2;
 			
 			hash0 = Cipher.hash(this.x);
 			
@@ -62684,8 +63039,8 @@ class Signature
 			
 			//  Define the private exponents
 			
-			final Number x1 = new Number(hash1) .mod(q);
-			final Number x2 = new Number(hash2) .mod(q);
+			Number x1 = new Number(hash1) .mod(q);
+			Number x2 = new Number(hash2) .mod(q);
 			
 			
 			//  Compute the one-time signature equation
@@ -62694,13 +63049,13 @@ class Signature
 			//  s2 = k2 m1 + x2 r  (mod q)
 			
 			
-			final Number s1, s2;
+			Number s1, s2;
 			
-			s1 = k1 .multiply(new Number(mstring,radix)) .add(x1.multiply(r1)) .mod(q);
-			s2 = k2 .multiply(new Number(mstring,radix)) .add(x2.multiply(r1)) .mod(q);
+			s1 = k1 .multiply(new Number(mstring, radix)) .add(x1.multiply(r1)) .mod(q);
+			s2 = k2 .multiply(new Number(mstring, radix)) .add(x2.multiply(r1)) .mod(q);
 			
-			String str1 = s1 .toString(digits,radix);
-			String str2 = s2 .toString(digits,radix);
+			String str1 = s1 .toString(digits, radix);
+			String str2 = s2 .toString(digits, radix);
 			
 			while (str1.length() != digits) str1 = "0" + str1;
 			while (str2.length() != digits) str2 = "0" + str2;
@@ -62779,11 +63134,11 @@ class Signature
 		
 		message = message .trim();
 		
-		//  Test for empty string and for m == 0  (mod q)
+		//  Test for empty string and for m == 0 (mod q)
 		
 		if (message.isEmpty())  return null;
 		
-		if (Number.isBase16(message) && new Number(
+		if ((q != null) && Number.isBase16(message) && new Number(
 		
 		    message, 16) .mod(q) .equals(0))  return null;
 		
@@ -62807,7 +63162,7 @@ class Signature
 			
 			if (message.length() > 40)
 			
-			    mstring = message .substring(0, 40);
+			    mstring = message.substring(0, 40);
 			
 			if (new Number(mstring, 16).mod(q)
 			
@@ -62826,9 +63181,9 @@ class Signature
 		
 		Number m = new Number(mstring, 16);
 		
-		if ( Number.isDigitString(mstring, 1)
+		if (Number.isDigitString(mstring, 1))  return null;
 		
-		    || m.mod(q).equals(0) ) return null;
+		if ((q != null) && m.mod(q).equals(0)) return null;
 		
 		
 		
@@ -62854,20 +63209,20 @@ class Signature
 			byte[] array1 = Cipher.hash(array0);
 			byte[] array2 = Cipher.hash(array1);
 			
-			k0 = new Number(array0) .mod(q);
-			k1 = new Number(array1) .mod(q);
-			k2 = new Number(array2) .mod(q);
+			k0 = new Number(array0) .mod(p);
+			k1 = new Number(array1) .mod(p);
+			k2 = new Number(array2) .mod(p);
 		}
 		
 		else // if k is random
 		{
 			//  multiple (r, s) signatures per document m
 			
-			final int digits = 64;
+			int digits = 64;
 			
-			k0 = Number.random(digits,radix) .mod(q);
-			k1 = Number.random(digits,radix) .mod(q);
-			k2 = Number.random(digits,radix) .mod(q);
+			k0 = Number.random(digits, radix) .mod(p);
+			k1 = Number.random(digits, radix) .mod(p);
+			k2 = Number.random(digits, radix) .mod(p);
 		}
 		
 		
@@ -62876,7 +63231,218 @@ class Signature
 		if (cipher.equalsIgnoreCase("")) {  }
 		
 		
-		else if (cipher.equalsIgnoreCase(lsdl120))
+		else if (cipher.equalsIgnoreCase(lsd))
+		{
+		
+		
+			//  LSD signatures
+			//
+			//  Public signature key Y
+			//
+			//  One-time signature keys R1, R2, R3
+			//
+			//  One-time signature key hash R
+			//
+			//  Signature equation S
+			//
+			//                     -1  -1      -1  -1
+			//  Y  =  X A X + X A X + X A X + X A X
+			//                     -1  -1      -1  -1
+			//  R1 =  K A K + K A K + K A K + K A K
+			//                     -1  -1      -1  -1
+			//  R2 =  K A X + K A X + K A X + K A X
+			//                     -1  -1      -1  -1
+			//  R3 =  X A K + X A K + X A K + X A K
+			//
+			//  R  =  f (R1, R2, R3) = R1 + R2 + R3 + R1 R2 R3
+			//                           -1    -1
+			//  S  =  ( K M + X R ) + ( K M + X R )
+			//
+			//
+			//  Verification equation
+			//
+			//  S A S  ==  R Y R + M R1 M + M R2 R + R R3 M
+			
+			
+			//                           -1    -1                    -1    -1
+			//  S A S  ==  [ K M + X R + K M + X R ] A [ K M + X R + K M + X R ] ==
+			//
+			//
+			//  M ( K A K ) M + R ( X A X ) R + M ( K A X ) R + R ( X A K ) M +
+			//
+			//       -1  -1          -1  -1          -1  -1          -1  -1
+			//  M ( K A K ) M + R ( X A X ) R + M ( K A X ) R + R ( X A K ) M +
+			//
+			//       -1              -1              -1              -1
+			//  M ( K A K ) M + R ( X A X ) R + M ( K A X ) R + R ( X A K ) M +
+			//
+			//           -1              -1              -1              -1
+			//  M ( K A K ) M + R ( X A X ) R + M ( K A X ) R + R ( X A K ) M
+			
+			
+			
+			
+			//  Define the matrix M = f(m)
+			
+			int s = mstring.length() / digits;
+			
+			Matrix K = computePrivateMatrix(k0, s);
+			
+			Matrix M = stringToLatinSquare(mstring, s, +1);
+			
+			Matrix X = Signature.X;
+			
+			Matrix K1 = K .modInverse(p);
+			Matrix X1 = X .modInverse(p);
+			
+			
+			
+			//  Compute the one-time signature keys
+			//
+			//                     -1  -1      -1  -1
+			//  R1 == K A K + K A K + K A K + K A K
+			//                     -1  -1      -1  -1
+			//  R2 == K A X + K A X + K A X + K A X
+			//                     -1  -1      -1  -1
+			//  R3 == X A K + X A K + X A K + X A K
+			
+			
+			Matrix R1, R2, R3;
+			
+			//  multiplyLs should be faster than multiply for latin squares
+			//  because it only has to multiply one row by all of the columns
+			//  instead of multiplying all the rows by all the columns
+			
+			
+			
+			R1 =  ( K .multiplyLs(A) .mod(p) .multiplyLs(K)  )
+			  .add( K .multiplyLs(A) .mod(p) .multiplyLs(K1) )
+			  .add( K1.multiplyLs(A) .mod(p) .multiplyLs(K)  )
+			  .add( K1.multiplyLs(A) .mod(p) .multiplyLs(K1) ) .mod(p);
+			
+			R2 =  ( K .multiplyLs(A) .mod(p) .multiplyLs(X)  )
+			  .add( K .multiplyLs(A) .mod(p) .multiplyLs(X1) )
+			  .add( K1.multiplyLs(A) .mod(p) .multiplyLs(X)  )
+			  .add( K1.multiplyLs(A) .mod(p) .multiplyLs(X1) ) .mod(p);
+			
+			R3 =  ( X .multiplyLs(A) .mod(p) .multiplyLs(K)  )
+			  .add( X .multiplyLs(A) .mod(p) .multiplyLs(K1) )
+			  .add( X1.multiplyLs(A) .mod(p) .multiplyLs(K)  )
+			  .add( X1.multiplyLs(A) .mod(p) .multiplyLs(K1) ) .mod(p);
+			
+			
+			
+			//  Compute the one-time hash key
+			//
+			//  R = f(R1, R2, R3) = (R1 + R2 + R3) + R1 R2 R3
+			
+			int digits1 = (int) p.bitCount() / 4;
+			
+			Number invp = p .setPrecision(16 + digits1) .inverse();
+			
+			Matrix R = computeMatrixR(R1, R2, R3, p, invp);
+			
+			
+			//  System.out.println(K .commutesWith(M));
+			//  System.out.println(X .commutesWith(R));
+			//  System.out.println(K1.commutesWith(M));
+			//  System.out.println(X1.commutesWith(R));
+			//  
+			//  System.out.println(!K.multiplyLs(M) .commutesWith(A));
+			//  System.out.println(!X.multiplyLs(R) .commutesWith(A));
+			
+			
+			
+			//  Compute the signature equation
+			//
+			//  S = K M + X R + K1 M + X1 R
+			//
+			//  where R = f (R1, R2, R3)
+			
+			
+			Matrix S = (K .multiply(M)) .add(X .multiply(R))
+			       .add(K1.multiply(M)) .add(X1.multiply(R)) .mod(p);
+			
+			if (A.commutesWith(S)) throw new IllegalArgumentException();
+			
+			
+			//  Compute the static signature key
+			//
+			//                    -1  -1      -1  -1
+			//  Y == X A X + X A X + X A X + X A X
+			
+			Matrix Y =
+			
+			      ( X .multiply(A) .mod(p) .multiply(X)  )
+			  .add( X .multiply(A) .mod(p) .multiply(X1) )
+			  .add( X1.multiply(A) .mod(p) .multiply(X)  )
+			  .add( X1.multiply(A) .mod(p) .multiply(X1) ) .mod(p);
+			
+			
+			//  Verify that S A S == R Y R + M R1 M + M R2 R + R R3 M
+			//
+			//  to make sure that the message was signed correctly
+			
+			
+			//  Compute the signature value S A S
+			
+			Matrix SAS = S .multiply(A) .mod(p) .multiply(S) .mod(p);
+			
+			
+			//  Compute the signature value
+			//
+			//  R Y R + M R1 M + M R2 R + R R3 M
+			
+			Matrix RYRMR1MMR2RRR3M =
+			
+			      ( R .multiply(Y)  .mod(p) .multiply(R) )
+			  .add( M .multiply(R1) .mod(p) .multiply(M) )
+			  .add( M .multiply(R2) .mod(p) .multiply(R) )
+			  .add( R .multiply(R3) .mod(p) .multiply(M) ) .mod(p);
+			
+			if (!SAS .equals(RYRMR1MMR2RRR3M))
+			{
+				System.out.println("p == " + p.toString(16));
+				
+				System.out.println(SAS            .toMatrixString(16));
+				System.out.println(RYRMR1MMR2RRR3M.toMatrixString(16));
+				
+				throw new ArithmeticException();
+			}
+			
+			
+			//  Convert the matrices to integer strings
+			
+			String R1string = R1 .toIntegerString(digits, radix);
+			String R2string = R2 .toIntegerString(digits, radix);
+			String R3string = R3 .toIntegerString(digits, radix);
+			String  sstring =  S .toIntegerString(digits, radix);
+			
+			R1string = R1string .substring(0, R1string.length() / R1.rowCount());
+			R2string = R2string .substring(0, R2string.length() / R2.rowCount());
+			R3string = R3string .substring(0, R3string.length() / R3.rowCount());
+			 sstring =  sstring .substring(0,  sstring.length() /  S.rowCount());
+			
+			String Rstring = R1string + R2string + R3string;
+			
+			String Ystring = LatinSquareToString(Y);
+			
+			
+			//  return  m, r, s, y
+			
+			String[] mrsy = new String[4];
+			
+			mrsy[0] = mstring.trim();
+			mrsy[1] = Rstring.trim();
+			mrsy[2] = sstring.trim();
+			mrsy[3] = Ystring.trim();
+			
+			return mrsy;
+		}
+		
+		
+		
+		else if (cipher.equalsIgnoreCase(lsdl))
 		{
 		
 			//  Latin square discrete log signatures
@@ -62917,7 +63483,7 @@ class Signature
 			
 			//  Define the private exponents
 			
-			final byte[] hash0, hash1, hash2;
+			byte[] hash0, hash1, hash2;
 			
 			hash0 = Cipher.hash(this.x);
 			
@@ -62994,7 +63560,7 @@ class Signature
 		
 		   a[i] = new Number(str .substring(
 		
-		      i * digits, (i+1) * digits), 16);
+		      i*digits, (i+1)*digits), 16);
 		
 		return new Matrix(a, direction);
 	}
@@ -63011,6 +63577,7 @@ class Signature
 		tokens = signature.trim().split("\n{1}");
 		
 		if ( (tokens.length != 4)
+		  && (tokens.length != 6) 
 		  && (tokens.length != 9) )
 		
 		    return false;
@@ -63140,9 +63707,9 @@ class Signature
 		
 		Number m = new Number(mstring, 16);
 		
-		if ((m.equals(0)) || (m.length() > 64)
+		if ((m.equals(0)) || (m.length() > 64)) return false;
 		
-		    || m.mod(q) .equals(0)) return false;
+		if ((q != null) && m.mod(q).equals(0)) return false;
 		
 		
 		//  System.out.println("Verifying signature");
@@ -63155,7 +63722,98 @@ class Signature
 		if (cipher.equalsIgnoreCase("")) return false;
 		
 		
-		else if (cipher.equalsIgnoreCase(lsdl120))
+		else if (cipher.equalsIgnoreCase(lsd))
+		{
+			if ((mstring.length() != 1*40)
+			 || (rstring.length() != 3*40)
+			 || (sstring.length() != 1*40)
+			 || (ystring.length() != 1*40))
+			
+			    return false;
+			
+			long time3 = System.nanoTime();
+			
+			int s = mstring.length() / digits;
+			
+			Matrix M = sig.stringToLatinSquare(mstring, s, +1);
+			
+			int rlength = mrsy[1].trim().length();
+			
+			String R1string = mrsy[1].trim() .substring(0 * rlength/3, 1 * rlength/3);
+			String R2string = mrsy[1].trim() .substring(1 * rlength/3, 2 * rlength/3);
+			String R3string = mrsy[1].trim() .substring(2 * rlength/3, 3 * rlength/3);
+			
+			Matrix R1 = sig.stringToLatinSquare(R1string, s, -1);
+			Matrix R2 = sig.stringToLatinSquare(R2string, s, -1);
+			Matrix R3 = sig.stringToLatinSquare(R3string, s, -1);
+			
+			Matrix S = sig.stringToLatinSquare(mrsy[2].trim(), s, +1);
+			Matrix Y = sig.stringToLatinSquare(mrsy[3].trim(), s, -1);
+			
+			long time4 = System.nanoTime();
+			
+			
+			//  Verify that
+			//
+			//  S A S == R Y R + M R1 M + M R2 R + R R3 M
+			
+			
+			int digits1 = (int) p.bitCount() / 4;
+			
+			Number invp = p .setPrecision(16 + digits1) .inverse();
+			
+			
+			long time5 = System.nanoTime();
+			
+			
+			Matrix R = computeMatrixR(R1, R2, R3, p, invp);
+			
+			
+			long time6 = System.nanoTime();
+			
+			Matrix SAS = S .multiplyLs(A) .mod(p, invp) .multiplyLs(S) .mod(p, invp);
+			
+			long time7 = System.nanoTime();
+			
+			
+			Matrix RYRMR1MMR2RRR3M =
+			
+			      ( R .multiplyLs(Y)  .mod(p, invp) .multiplyLs(R) )
+			  .add( M .multiplyLs(R1) .mod(p, invp) .multiplyLs(M) )
+			  .add( M .multiplyLs(R2) .mod(p, invp) .multiplyLs(R) )
+			  .add( R .multiplyLs(R3) .mod(p, invp) .multiplyLs(M) ) .mod(p, invp);
+			
+			long time8 = System.nanoTime();
+			
+			
+			long totaltime = time8 - time1;
+			
+			double frac1 = 1.0D * (time2 - time1) / totaltime;
+			double frac2 = 1.0D * (time3 - time2) / totaltime;
+			double frac3 = 1.0D * (time4 - time3) / totaltime;
+			double frac4 = 1.0D * (time5 - time4) / totaltime;
+			double frac5 = 1.0D * (time6 - time5) / totaltime;
+			double frac6 = 1.0D * (time7 - time6) / totaltime;
+			double frac7 = 1.0D * (time8 - time7) / totaltime;
+			
+			//  System.out.println("frac12345678 == " + frac1 + "  " + frac2 + "  " +
+			//
+			//    frac3 + "  " + frac4 + "  " + frac5 + "  " + frac6 + "  " + frac7);
+			
+			
+			long computetime = System.nanoTime() - starttime;
+			
+			//  System.out.print("Verify signature time = ");
+			//  System.out.print(new Number(computetime)
+			//      .setPrecision(4) .divide(1L*1024*1024*1024));
+			//  System.out.println(" seconds");
+			
+			return SAS.equals(RYRMR1MMR2RRR3M) ? true : false;
+		}
+		
+		
+		
+		else if (cipher.equalsIgnoreCase(lsdl))
 		{
 		
 			//	-----------------------------------------
@@ -63417,11 +64075,10 @@ class Cipher
 	//  allows programs to store metadata such as access permissions, content type, last-modification
 	//  time, and other information about the file.)
 	//
-	//  For email or asynchronous communication messages are converted to base 64 after encryption be-
-	//  cause encrypted data or cipherdata contains random characters. If there are any missing data
-	//  blocks the ciphertext will not be decryptable even if CBC is used because the message will not
-	//  decode from base 64 unless it just happens to be missing a sequence of four consecutive base-64
-	//  chars.
+	//  For email or asynchronous communication messages are converted to base 64 after encryption because
+	//  encrypted data or cipherdata contains random characters. If there are any missing data blocks the
+	//  ciphertext will not be decryptable even if CBC is used because the message will not decode from
+	//  base 64 unless it just happens to be missing a sequence of four consecutive base-64 chars.
 	//
 	//  The ciphers in the private key / cipher class are not compatible with other private key standards,
 	//  just as the ciphers in the public key class are not compatible with other public key standards;
@@ -64166,7 +64823,9 @@ class Cipher
 		
 		tempfilepath = tempfile.getPath();
 		
-		FileChannelWriter writer = new FileChannelWriter(tempfilepath);
+		FileChannelWriter writer;
+		
+		writer = new FileChannelWriter(tempfilepath);
 		
 		
 		ByteBuffer bytebuffer;
@@ -65347,6 +66006,16 @@ class Cipher
 		
 		    .toString(64, radix).trim();
 		
+		//  toString(16) is the same as hexformat
+		
+		HexFormat hex = HexFormat.of();
+		
+		String str1 = hex.formatHex(hash);
+		
+		if ((radix == 16) && !str.endsWith(str1))
+		
+		    throw new ArithmeticException();
+		
 		//  The toString(digits, radix) method is not guaranteed
 		//  to pad the left side of a number with zeros except
 		//  for radix 16; it could pad the left side with spaces.
@@ -65374,6 +66043,16 @@ class Cipher
 		String str = new Number(hash)
 		
 		    .toString(64, radix).trim();
+		
+		//  toString(16) is the same as hexformat
+		
+		HexFormat hex = HexFormat.of();
+		
+		String str1 = hex.formatHex(hash);
+		
+		if ((radix == 16) && !str.endsWith(str1))
+		
+		    throw new ArithmeticException();
 		
 		//  The toString(digits, radix) method is not guaranteed
 		//  to pad the left side of a number with zeros except for
@@ -66159,7 +66838,6 @@ class Math
 		int m = n.intValue();
 		
 		double[] sin_table = sin_table(m);
-		
 		Number[] cos_table = new Number[m];
 		
 		int offset = m / 4;
@@ -66310,6 +66988,8 @@ class Math
 			if (n <= 1) break;
 		}
 		
+		if (n != 1) list.add((int) n);
+		
 		int[] primes = new int[list.size()];
 		
 		for (int i = 0; i < primes.length; i++)
@@ -66338,7 +67018,7 @@ class Math
 	
 	
 	
-	public static int[] factor(int n, int maxprime)
+	public static int[] factor(long n, int maxprime)
 	{
 		//  factors an int up to maxprime
 		
@@ -66359,6 +67039,8 @@ class Math
 				n /= primes[i--];
 			}
 		}
+		
+		if (n != 1) list.add((int) n);
 		
 		int[] array = new int[list.size()];
 		
@@ -67276,6 +67958,8 @@ class Math
 		
 		    throw new IllegalArgumentException();
 		
+		if (d == 1) return 0.0;
+		
 		if (d == 0) return Double.NEGATIVE_INFINITY;
 		
 		if (Double.isNaN(d) || (d < 0))
@@ -67308,7 +67992,7 @@ class Math
 		
 		double q = abs(exp(log) / d);
 		
-		if ((q > 1.00001D) || (q < 0.9999D))
+		if ((q < 0.9999D) || (q > 1.00001D))
 		{
 			System.out.println("d == " + d + " log(d) == " + log);
 			
@@ -70198,19 +70882,39 @@ class Number implements Comparable<Number>
 		//  floating point comparison
 		
 		
+		//  Use the smaller of the two precisions
+		//
+		//  except if one of the two precisions is precisely zero
+		
+		int p = Math.min(a.precision, b.precision);
+		
+		if (a.precision == 0) p = b.precision;
+		if (b.precision == 0) p = a.precision;
+		
+		if      (p >= 4) p -= 2;
+		else if (p >= 2) p -= 1;
+		
+		
+		//  Set the new precision
+		
+		a = a.setPrecision(p);
+		b = b.setPrecision(p);
+		
+		
 		//  Subtract the two numbers
 		
 		Number c = a.subtract(b);
 		
+		Number integer  = c.toInteger();
+		Number fraction = c.toFraction();
 		
-		//  Use the smaller of the two precisions
+		fraction = fraction .multiply(
 		
-		int p = Math.min(a.precision, b.precision);
+		    new Number(16).pow(p))
 		
-		//  except if one of the two precisions is precisely zero
+			.setPrecision(0);
 		
-		if (a.precision == 0) p = b.precision;
-		if (b.precision == 0) p = a.precision;
+		if (integer.equals(0) && fraction.equals(0)) return 0;
 		
 		
 		final int[] array = c.intarray;
@@ -70245,6 +70949,7 @@ class Number implements Comparable<Number>
 		
 		return  c.sign == '-' ? -1 : 1;
 	}
+	
 	
 	
 	public Number complement()
@@ -71105,6 +71810,10 @@ class Number implements Comparable<Number>
 	{
 		//  tests for equality
 		
+		if (this.isComplex() && !this.toImag()
+		
+		    .equals(0)) return false;
+		
 		Number a = this.trim();
 		
 		if (a.intarray.length > 1) return false;
@@ -71135,7 +71844,9 @@ class Number implements Comparable<Number>
 	{
 		//  tests for equality
 		
-		if (this.isComplex()) return false;
+		if (this.isComplex() && !this.toImag()
+		
+		    .equals(0)) return false;
 		
 		Number d = this.subtract(val);
 		
@@ -71980,7 +72691,7 @@ class Number implements Comparable<Number>
 			    s = s.substring(1, s.length());
 		}
 		
-		if (s.isEmpty() || s.replaceAll("[.]", "").isEmpty())
+		if (s.replaceAll("[.]", "").isEmpty())
 		
 		    return false;
 		
@@ -72222,13 +72933,21 @@ class Number implements Comparable<Number>
 	{
 		//  tests for quadratic residuosity
 		
-		if (!p.isPrime() && !p.isPower(2))
+		boolean issquare = p.isPower(2);
+		
+		if (!p.isPrime() && !issquare)
 		
 		    throw new IllegalArgumentException();
 		
 		Number a = this .mod(p).add(p).mod(p);
 		
-		return a.modPow(p.subtract(1).divide(2), p).equals(1);
+		Number phi;
+		
+		if (!issquare) phi = p.subtract(1);
+		
+		else phi = p.sqrt().subtract(1) .multiply(p.sqrt());
+		
+		return a.modPow(phi.divide(2), p).equals(1);
 	}
 	
 	
@@ -72358,12 +73077,22 @@ class Number implements Comparable<Number>
 		//  number of digits after the int point.
 		
 		
+		//  Set a minimum precision
+		
+		int p = Math.max(this.precision, 16);
+		
+		Number arg = new Number(this) .setPrecision(p);
+		
 		if (this.equals(0))
 		{
 			String message = "log(0) == - infinity";
 			
 			throw new IllegalArgumentException(message);
 		}
+		
+		if (this.equals(1)) return new
+		
+		    Number(0).setPrecision(p);
 		
 		if (this.signum() == -1)
 		{
@@ -72375,13 +73104,6 @@ class Number implements Comparable<Number>
 			
 			throw new IllegalArgumentException(message);
 		}
-		
-		
-		//  Set a minimum precision
-		
-		int p = Math.max(this.precision, 16);
-		
-		Number arg = new Number(this) .setPrecision(p);
 		
 		
 		//  Move the integer / fraction point so the argument is close to 1
@@ -72411,11 +73133,11 @@ class Number implements Comparable<Number>
 		
 		double e2logx = Math.pow(Math.e, log.doubleValue());
 		
-		if ((e2logx < 0.9) || (e2logx < 1.1))
+		if ((e2logx < 0.9) || (e2logx > 1.1))
 		
 		    throw new ArithmeticException();
 		
-		return log;
+		return log.setPrecision(p);
 	}
 	
 	
@@ -72528,6 +73250,10 @@ class Number implements Comparable<Number>
 		//
 		//  a0 b0 (mod p) + a1 b1 (mod p) + ... + ak bk (mod p)
 		
+		if (this.isComplex()) return new Number(
+		
+		    this.toReal().mod(val), this.toImag().mod(val));
+		
 		long residue = 0L;
 		
 		long twosr = 1L; // twos residue for (2^32)^i (mod val)
@@ -72561,10 +73287,23 @@ class Number implements Comparable<Number>
 		
 		Number result = this.remainder(n);
 		
+		if (!this.isComplex())
+		
 		return (result.signum() >= 0 ?
 		
 		    result : result.add(n));
+		
+		else
+		{	Number a = result.toReal();
+			Number b = result.toImag();
+			
+			return new Number(
+			
+			    a.signum() >= 0 ? a : a.add(n),
+			    b.signum() >= 0 ? b : b.add(n));
+		}
 	}
+	
 	
 	public Number remainder(Number n)
 	{
@@ -72659,11 +73398,9 @@ class Number implements Comparable<Number>
 			return new Number(real, imag);
 		}
 		
-		if (!n.isInteger()) return this.mod(n);
+		if (!this.isInteger() || !n.isInteger())
 		
-		if (!this.isInteger() || inv.isInteger())
-		
-		    throw new IllegalArgumentException();
+		    return this.mod(n);
 		
 		//  If the number is too large for the modulus
 		//  then use the mod(Number) method to avoid an
@@ -72700,6 +73437,11 @@ class Number implements Comparable<Number>
 		return r;
 	}
 	
+	
+	public Number modDivide(Number divisor, int n)
+	{
+		return modDivide(divisor, new Number(n));
+	}
 	
 	public Number modDivide(int divisor, Number n)
 	{
@@ -73854,14 +74596,36 @@ class Number implements Comparable<Number>
 	
 	public static Number multiplyKaratsuba(Number x, Number y)
 	{
+	
 		//  Karatsuba Multiplication (Karatsuba and Ofman, 1962)
+		//
+		//  Karatsuba multiplication uses only three multiplications instead of four.
+		//
+		//  Let N1 and N2 be two-digit numbers where N1 = a1 a0  and  N2 = b1 b0.
+		//
+		//  Instead of computing the product N1 * N2 as the sum of four single-digit products
+		//
+		//      a1 * b1 << 2  +  [ (a1 * b0 + a0 * b1) ] << 1  +  a0 * b0 << 0
+		//
+		//  compute the product N1 * N2 as the sum of three single-digit products
+		//
+		//      a1 * b1 << 2  +  [ ( (a0 + a1) * (b0 + b1) - a0 * b0 - a1 * b1 ) ] << 1  +  a0 * b0 << 0
+		//
+		//  Only one cross product (a0 + a1) * (b0 + b1) is computed instead of two cross products a1 * b0 and a0 * b1.
+		//
+		//
+		//  Example  1234 * 5678 = [12][34] * [56][78]  (the "digit" size for this example is 10^2 or 100)
+		//
+		//  == ( 34 * 78 ) * 100^0 + ( 12 * 56 ) * 100^2 + ( (12 + 34) * (56 + 78) - (34 * 78) - (12 * 56) ) * 100^1
+		//
+		//  == ( 34 * 78 ) << 0 + ( 12 * 56 ) << 2 + ( (12 + 34) * (56 + 78) - (34 * 78) - (56 * 12) ) << 1
+		
+		
+		//  Karatsuba multiplication has a running time of O(n ^ log2(3)) == O(n ^ 1.58).
+		//  Quadratic multiplication has a running time of o(n ^ log2(4)) == O(n ^ 2.00).
+		
 		
 		//  This method was excerpted / extracted from the Java BigInteger class.
-		//
-		//  This method has a running time of O(n^(log2(3))) == O(n^1.58).
-		//
-		//  This is faster than the running time of a quadratic multiplier
-		//  which is O(n^log2(4) == n^2), but the hidden constant is larger.
 		
 		int xlen = x.length();
 		int ylen = y.length();
@@ -74482,8 +75246,8 @@ class Number implements Comparable<Number>
 		
 		int precision = Math.max(this.precision, exp.precision);
 		
-		if (exp.equals(0))  return new Number(1);
-		if (exp.equals(1))  return new Number(this);
+		if (exp.equals(0)) return new Number(1);
+		if (exp.equals(1)) return new Number(this);
 		
 		
 		if (exp.isComplex())
@@ -74825,7 +75589,7 @@ class Number implements Comparable<Number>
 		
 		//  Correct for any small one-off errors
 		
-		while (dividend .subtract(quotient.multiply(divisor)) .isLessThan(0))
+		while (dividend .subtract(quotient.multiply(divisor)) .signum() == -1)
 		
 		    quotient = quotient .subtract(1);
 		
@@ -74838,7 +75602,7 @@ class Number implements Comparable<Number>
 		
 		Number remainder = this.subtract(quotient.multiply(divisor));
 		
-		if ( (remainder.isLessThan(0)) || ( ! remainder.isLessThan(divisor)) )
+		if ( (remainder.signum() == -1) || ( ! remainder.isLessThan(divisor)) )
 		{
 			System.out.println("dividend - quotient x divisor == " + remainder.toString(16));
 			
@@ -74881,12 +75645,14 @@ class Number implements Comparable<Number>
 			
 			randlong += System.nanoTime();
 			
-			Number n = new Number(bytes) .add(randlong);
+			Number n = new Number(bytes).add(randlong);
 			
-			rand = rand .add(n.shiftLeft(256*i, 256*i));
+			rand = rand.add(n.shiftLeft(256*i, 256*i));
 		}
 		
-		rand = rand.mod(new Number(radix).pow(digits));
+		Number n = new Number(radix).pow(digits);
+		
+		rand = rand.mod(n);
 		
 		if (radix == 2)  rand .setBit(digits*1 -1);
 		if (radix == 16) rand .setBit(digits*4 -1);
@@ -76651,11 +77417,11 @@ class Number implements Comparable<Number>
 		//  toString conversion time increases by O(n^2) but multiplication time only
 		//  increases by O(n^1.58) or O(n log n).
 		//
-		//  This method converts a large integer to a string by recursively bifurcat-
-		//  ing the number into smaller parts until the numbers are small enough for
-		//  the toString method, and then converting the numbers to string by the to-
-		//  String method and concatenating the string by the StringBuilder append
-		//  method. The recursion can also be done as an iteration for efficiency.
+		//  This method converts a large integer to string by recursively bifurcating
+		//  the number into smaller parts until the numbers are small enough for the
+		//  toString method, and then converting the numbers to string by the toString
+		//  method and concatenating the string by the StringBuilder append method.
+		//  The recursion can also be done as an iteration for efficiency.
 		//
 		//  Example  Print a 256 K bit number (in base 10)
 		//
@@ -78255,8 +79021,8 @@ class Matrix
 		//  M to echelon (triangular) form and then to row canonical
 		//  (diagonal) form.
 		//
-		//  This gives the reduced matrix M == [ I, A^-1 ]. The right
-		//  half of the reduced matrix M is the inverse of A.
+		//  This gives the reduced matrix M' == [ I, A^-1 ]. The right
+		//  half of the reduced matrix M' is the inverse of A.
 		
 		
 		Matrix matrix = new Matrix(this);
@@ -79529,7 +80295,7 @@ class Matrix
 	}
 	
 	
-	private static Number[] rotate(Number[] array, int j)
+	public static Number[] rotate(Number[] array, int j)
 	{
 		//  rotates the elements in an array
 		
@@ -79686,70 +80452,19 @@ class Matrix
 		
 		Matrix M = new Matrix(this);
 		
-		int rows = M.rowCount(), cols = M.columnCount();
+		int rows = M.rowCount();
+		int cols = M.columnCount();
 		
-		if ((cols != rows + 1) && (cols != 2*rows))
+		if (cols != rows + 1) // && (cols != 2*rows))
 		
 		    throw new IllegalArgumentException();
 		
-		//  start row,  start col,  rows, cols
-		
-		Matrix A, B;
-		
-		if (cols == rows + 1)
-		{
-			A = M .get(0,   0,    rows, cols-1);
-			B = M .get(0, cols-1, rows,   1);
-		}
-		
-		else // if (cols == 2*rows)
-		{
-			A = M .get(0,   0,    rows, cols/2);
-			B = M .get(0, cols/2, rows, cols/2);
-		}
-		
-		//  Solve A X == B by computing X == A^-1 B
-		
-		Matrix X = null;
-		
 		if ((n == null) || n.equals(0))
 		
-		     X = A    .inverse( ) .multiply(B);
-		else X = A .modInverse(n) .multiply(B).mod(n);
+		     M = M.toEchelonForm( ).toRowCanonicalForm( );
+		else M = M.toEchelonForm(n).toRowCanonicalForm(n);
 		
-		
-		//  Verify that A X == B
-		
-		Matrix A_X = A .multiply(X);
-		
-		if (n != null)
-		{
-			A_X = A_X .mod(n) .add(n) .mod(n);
-			B   = B   .mod(n) .add(n) .mod(n);
-		}
-		
-		int p = Math.min(A_X.getPrecision(), B.getPrecision())*3/4;
-		
-		A_X = A_X.setPrecision(p);
-		  B =   B.setPrecision(p);
-		
-		if (!A_X .equals(B))
-		{
-			System.out.println("A X == \n" + A_X.toMatrixString());
-			System.out.println("  B == \n" +   B.toMatrixString());
-			
-			throw new ArithmeticException();
-		}
-		
-		//  Convert the column matrix to an array
-		
-		Number[] x = X.getColumn(0);
-		
-		//  For non-modular systems round the solution to p
-		
-		if (n == null) for (int i = 0; i < x.length; i++)
-		
-		    x[i] = x[i] .round(p);
+		Number[] x = M.getColumn(M.columnCount()-1);
 		
 		return x;
 	}
@@ -81888,7 +82603,9 @@ class Fourier
 			y[i] /= t;
 		
 		if (array.length > 4*1024*1024)
+		
 		// call the garbage collector
+		
 		    System.gc();
 		
 		return y;
@@ -81977,6 +82694,7 @@ class Fourier
 	//  boolean bool = a1.equals(a);
 	//
 	//  System.out.println(bool);
+	
 	
 	
 	public static int[] multiply(int[] x, int[] y)
@@ -82961,7 +83679,7 @@ class Fourier
 		int2 = Math.add( Math.add( Math.shiftLeft(temp1[0], 32,  0), Math.shiftLeft(temp1[1], 32,  8) ),
 		                 Math.add( Math.shiftLeft(temp1[2], 32, 16), Math.shiftLeft(temp1[3], 32, 24) ) );
 		
-		return  Math.add(int1, int2);
+		return Math.add(int1, int2);
 	}
 	
 	

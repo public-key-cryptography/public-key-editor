@@ -58,9 +58,8 @@
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
-	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as factor-
-	ization or discrete logarithms. The software includes 15 Diffie-Merkle-Hellman ciphers and 1 matrix
-	digital signature algorithm.
+	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
+	includes 15 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
@@ -102,7 +101,7 @@
 	Downloading the java development kit (JDK)
 	
 	To download the JDK, go to jdk.java.net
-	Click on the link that says  Ready for use: JDK 18.
+	Click on the link that says  Ready for use: JDK 20.
 	
 	Then click on a tar file link that says tar.gz.
 	Choose the correct file for your processor architecture
@@ -112,28 +111,28 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-18_linux-x64_bin.tar.gz
+	openjdk-20.0.1_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-18_linux-x64_bin.tar.gz  from the website jdk.java.net/18.
+	0.  Download the file openjdk-20.0.1_linux-x64_bin.tar.gz  from the website jdk.java.net/20.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -147,17 +146,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-18_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-20.0.1_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java
 	
 	or for the email client
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-18/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -171,20 +170,20 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-18 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-20.0.1 using the command
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-18_linux-x64_bin.tar.gz /usr/jdk;
-	cd /usr/jdk; sudo tar zxvf openjdk-18_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-18/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-20.0.1/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-18/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-18/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-20.0.1/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-20.0.1/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -196,9 +195,9 @@
 	that the file to be removed is a directory by specifying the recursive
 	option so users cannot inadvertently delete a directory instead of a file.
 	
-	The --force option tells the command not to prompt the user for a confirm-
-	ation before deleting each file and subdirectory, and it ignores nonexist-
-	ent files and arguments which means that it will not inform the user that
+	The --force option tells the command not to prompt the user for a confir-
+	mation before deleting each file and subdirectory, and it ignores nonexis-
+	tent files and arguments which means that it will not inform the user that
 	it cannot remove the file if there is no such file or directory.
 	
 	The sudo command is required because only the superuser can add or remove
@@ -209,54 +208,18 @@
 	
 	Creating a compiled / executable java .jar file
 	
-	
 	You can create a java archive or java jar file
 	so the file doesn't have to be compiled each time.
 	
-	If the Editor.java file is in the Downloads folder, first compile the
-	.java source code to create the executable .class files using the command
-	/usr/jdk/jdk-18/bin/javac -d EditorClassFiles Downloads/Editor.java; then
-	load the class files and create the .jar file using the jar (create verbose file)
-	command /usr/jdk/jdk-18/bin/jar cvf Editor.jar -C EditorClassFiles .; use cd;
-	echo "Main-Class: Editor" > manifest.txt; to create a manifest that contains the
-	main class, add the manifest file to the Editor.jar file using the command
-	/usr/jdk/jdk-18/bin/jar --update --file Editor.jar --manifest manifest.txt;
-	and finally, delete the directory and file using rm -r -f EditorClassFiles;
-	rm manifest.txt; and then run the jar file using the command
-	/usr/jdk/jdk-18/bin/java -jar Editor.jar
+	If the Editor.java file is in the Downloads folder, use the commands
 	
-	
-	The Editor.jar file will save around 2 to 6 seconds each time the program is executed
-	depending on the speed of the processor or computer. Even on a laptop computer it only
-	takes about 3 seconds to start the program except for very slow processors that could
-	take up to 10 seconds.
-	
-	If you delete the compiled classes directory using rm -r -f EditorClassFiles, the Editor
-	.jar file will still execute because the classes were loaded into the file. The class files
-	are only required to create a jar file, not to run the file (unless the jar file is created
-	to use the directory by specifying the class path in the manifest but then the jar file
-	would only work on the computer on which the code was compiled).
-	
-	Note that the cd command can be omitted because it just changes the directory to the home
-	directory. This is useful if the next command contains a relative path name or path that
-	doesn't start with a slash /, but it is redundant to use cd if the next command has an
-	absolute path name because then it doesn't do anything.
-	
-	The path name /usr/jdk/jdk-18/bin/java can be replaced by the file name java if the
-	terminal knows where to find the java command. The path name is included because some
-	users may be running a live version of Linux.
-	
-	
-	
-	All of these commands can be concatenated into the single command
-	
-	/usr/jdk/jdk-18/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-18/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-20.0.1/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-20.0.1/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-18/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-20.0.1/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
-	that can be copied and pasted into the terminal.
+	by copying and pasting into the terminal.
 	
 	This command creates the jar file by compiling the program, creating a temporary directory
 	for the compiled code or class files, creating a jar file and loading the class files into
@@ -275,15 +238,40 @@
 	because it may include a time stamp.)
 	
 	
-	Then the jar file can be run using the command
 	
-	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar (text) for the text editor, or
+	The Editor.jar file will save around 2 to 6 seconds each time the program is executed
+	depending on the speed of the processor or computer. Even on a laptop computer it only
+	takes about 3 seconds to start the program except for very slow processors that could
+	take up to 10 seconds.
 	
-	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-18/bin/java -jar Editor.jar image
+	If you delete the compiled classes directory using rm -r -f EditorClassFiles, the Editor
+	.jar file will still execute because the classes were loaded into the file. The class files
+	are only required to create a jar file, not to run the file (unless the jar file is created
+	to use the directory by specifying the class path in the manifest but then the jar file
+	would only work on the computer on which the code was compiled).
 	
-	for the email client, spreadsheet, or image viewer, and the file will be executed
+	Note that the cd command can be omitted because it just changes the directory to the home
+	directory. This is useful if the next command contains a relative path name or path that
+	doesn't start with a slash /, but it is redundant to use cd if the next command has an
+	absolute path name because then it doesn't do anything.
+	
+	The path name /usr/jdk/jdk-20.0.1/bin/java can be replaced by the file name java if the
+	terminal knows where to find the java command. The path name is included because some
+	users may be running a live version of Linux.
+	
+	
+	
+	Running the jar file
+	
+	The jar file can be run using the command
+	
+	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar (text) for the text editor, or
+	
+	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar image
+	
+	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
 	code instead of the source code. The java virtual machine will convert the byte code
 	to the user's binary machine code depending on the user's computer or processor
@@ -371,7 +359,7 @@
 	
 	The matrix public key ciphers are variants of the equations or functions
 	
-	          -x2   x1   x2          -1   x              x 
+	          -x2   x1   x2          -1   x              x
 	Y  =  x  A2   A1   A2 ,   Y  =  X   A   X ,  Y  =  A   X ,     Y  =  A (x) X ,   Y  =  X1  A  X2
 	
 	          -k2   k1   k2          -1   k              k
@@ -382,8 +370,8 @@
 	single variable. These ciphers are a generalization of the Diffie-Hellman cipher because they reduce
 	to the integer cipher y = a ^ x (mod p) if x2 = 0 and A1 is a 1x1 matrix.
 	
-	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polynom-
-	ials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
+	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polyno-
+	mials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
 	hypercomplex numbers such as quaternions or octonions and fractional numbers or non-integers.
 	
 	All numbers are dimensional objects. A real or complex number is a point on an axis or a plane, or a
@@ -475,12 +463,12 @@
 	
 	The ciphers in the public key class that have a many-to-one mapping of the private key X to the pub-
 	lic key Y may be unbreakable by classical and quantum computing because the solution is ambiguous and
-	the private key X is only used once. Quantum computers are unable to solve math problems that have
-	ambiguous solutions because they wouldn't know which solution to solve for. This is why a quantum
-	computer can only attack the factorization problem by solving the discrete log problem. Even if the
-	solution is unambiguous, it doesn't mean that a quantum computer can solve it; there has to be an
-	algorithm or method for solving it, or the same private key X would have to be used more than once
-	with a different public parameter A.
+	the private key X is only used once. Quantum computers are unable to solve math problems that have am-
+	biguous solutions because they wouldn't know which solution to solve for. This is why a quantum com-
+	puter can only attack the factorization problem by solving the discrete log problem, not by solving
+	the difference of squares equation x^2 == 1 (mod n). Even if the solution is unambiguous, it doesn't
+	mean that a quantum computer can solve it; there has to be an algorithm or method for solving it, or
+	the same private key X would have to be used more than once with a different public parameter A.
 	
 	Encryption ciphers are not used in the software because they have a one-to-one mapping (or function)
 	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-to-
@@ -511,31 +499,17 @@
 	perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
 	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem are susceptible to quantum comput-
-	ing. The Rabin cipher was included in the public key class to test the software for asymmetrical pub-
-	lic key ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers 
-	are symmetrical which means that they use the same methods for public key generation and public key
-	agreement.
+	class because the factorization and integer discrete log problem are susceptible to quantum computing.
+	The Rabin cipher can never be completely broken because factorization will always be harder than mul-
+	tiplication but the key size would have to be on the order on 10^12 bits. The Rabin cipher was includ-
+	ed in the public key class to test the software for asymmetrical public key ciphers before the Merkle-
+	Hellman ciphers were included because the Diffie-Hellman ciphers are symmetrical which means that they
+	use the same methods for public key generation and public key agreement.
 	
-	It doesn't make sense to use the Rabin cipher because the factorization problem is broken by quantum
-	computing. The Rabin cipher can never be completely broken because factorization will always be hard-
-	er than multiplication, but the key size would have to be at least 1 megabit if the running time of
-	the algorithm is O(n^2) multi-precision multiplications or O(n^3.58) single-precision multiplications
-	or operations. The fastest classical algorithm is unlikely to be faster than prime number generation
-	which requires O(n^4) or O(n^3.58) operations, and if it requires a matrix then it would be O(n^3)
-	multi-precision multiplications or O(n^4.58) operations. A 1 M bit key would only require O(1) == O(
-	n^0) multi-precision multiplications or O(n^log2(3) == log(3)/log(2) == 1.58) single-precision multi-
-	plications for encryption using a sesquilinear or three-halves multiplier. (No key size is secure for
-	RSA because the coprime root extraction problem is completely broken. This means that the function
-	can be inverted as fast as it can be computed.)
-	
-	If an integer cipher is not based on the integer factorization / discrete log problem, then there is
+	If an integer cipher is not based on the integer factorization or discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
 	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken without quantum computing because the cipher is based
-	on log multiplication instead of log extraction. The integer digital signature algorithm is based on
-	the discrete log problem or dlp because it uses one equation for the static signature key y = a ^ x
-	(mod p), another equation for the one-time signature key r = a ^ k (mod p), and a third equation for
-	the signature s = k m + x r (mod p-1) where p is the base modulus and p-1 is the exponent modulus.
+	on log multiplication instead of log extraction.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
 	(mod p) are not included in the software because the elliptic curve discrete log function has a
@@ -545,19 +519,14 @@
 	of the curves to protect against all unknown attacks. Many people are suspicious or distrustful of
 	elliptic curve ciphers because the equations are complicated and they have a large attack surface.
 	
-	If the parameters are chosen correctly and a is congruent to zero modulo 3 then elliptic curve ci-
-	phers can be as secure as integer discrete log / factorization ciphers, but they don't have any ad-
-	vantage over integer ciphers since they are also susceptible to quantum computing. Elliptic curve ci-
-	phers that are based on isogenies are quantum resistant but they are almost certainly broken since
-	they are being approved for standardization and cryptanalysts have had over a decade to study them.
-	(Just because a cipher is quantum resistant doesn't mean that the cipher is also classical resistant
-	or resistant to classical computing.)
+	Elliptic curve ciphers that are based on isogenies are quantum resistant but they are almost certainly
+	broken since they are being approved for standardization and cryptanalysts have had over a decade to
+	study them. Just because a cipher is quantum resistant doesn't mean that the cipher is also classical
+	resistant or resistant to classical computing.
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included in
 	the public key class because they are not secure for any key size, and learning with errors ciphers
-	are not included because they are only based on the subset sum problem. Factorization and integer
-	discrete logarithms are harder to solve because they are based on the nonlinear subset product prob-
-	lem or the problem of solving for x[] in y = g^(x[i](2^t)) mod p where each x[i] == 0 or 1.
+	are not included because they are only based on the subset sum problem.
 	
 	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[], a
 	private key s, and a secret random error array e[] where the sum of the elements is smaller than q/2,
@@ -617,8 +586,13 @@
 	can be set to zero, but then the static public key may not be unbreakable. The cipher may have to be
 	implemented using matrices or hypercomplex numbers like the other ciphers in the public key class.
 	
-	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not be enabled in the
-	public key class because they increase the size of the key from 1500 bytes to 5000 bytes and they ex-
-	pand the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman
-	ciphers in the public key class because they use different functions for key generation and key
-	agreement.
+	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not enabled in the pub-
+	lic key class because they increase the size of the key from 1500 bytes to 5000 bytes and they expand
+	the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman ciphers
+	in the public key class because they use different functions for key generation and key agreement.
+	
+	The vector cross product cipher is also asymmetrical (but not invertible) because it uses different
+	methods for public key generation and key agreement (cross product Y = A (x) X and then dot product
+	E = Y * K), and either the key generation or key agreement method has to negate the sign of the paral-
+	lelogram or the parallelepiped or else the messages will be undecryptable. The vector cross product
+	cipher is still a Diffie-Hellman cipher because the cipher is non-invertible and is not solved for X.
