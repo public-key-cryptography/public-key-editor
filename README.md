@@ -499,12 +499,12 @@
 	perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
 	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem are susceptible to quantum computing.
-	The Rabin cipher can never be completely broken because factorization will always be harder than mul-
-	tiplication but the key size would have to be on the order on 10^12 bits. The Rabin cipher was includ-
-	ed in the public key class to test the software for asymmetrical public key ciphers before the Merkle-
-	Hellman ciphers were included because the Diffie-Hellman ciphers are symmetrical which means that they
-	use the same methods for public key generation and public key agreement.
+	class because the factorization and integer discrete log problem are susceptible to quantum and clas-
+	sical computing. The Rabin cipher can never be completely broken because factorization will always be
+	harder than multiplication but the key size would have to be on the order of 10^12 bits or 1 terabit.
+	The Rabin cipher was included in the public key class to test the software for asymmetrical public key
+	ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are symme-
+	trical which means that they use the same methods for public key generation and public key agreement.
 	
 	If an integer cipher is not based on the integer factorization or discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
@@ -526,7 +526,7 @@
 	
 	Ciphers based on polynomial factorization and error-correcting codes also are not used or included in
 	the public key class because they are not secure for any key size, and learning with errors ciphers
-	are not included because they are only based on the subset sum problem.
+	are not included because they are only based on the subset sum problem which is a linear problem.
 	
 	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[], a
 	private key s, and a secret random error array e[] where the sum of the elements is smaller than q/2,
@@ -588,8 +588,9 @@
 	
 	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not enabled in the pub-
 	lic key class because they increase the size of the key from 1500 bytes to 5000 bytes and they expand
-	the size of the encrypted messages. Also, these ciphers are not the same as the Diffie-Hellman ciphers
-	in the public key class because they use different functions for key generation and key agreement.
+	the size of the encrypted messages without increasing the security because factorization is not a hard
+	problem. Also, these ciphers are not the same as the Diffie-Hellman ciphers in the public key class
+	because they use different functions for key generation and key agreement.
 	
 	The vector cross product cipher is also asymmetrical (but not invertible) because it uses different
 	methods for public key generation and key agreement (cross product Y = A (x) X and then dot product
