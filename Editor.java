@@ -52157,8 +52157,8 @@ class PublicKey
 	//  which represents the volume of the parallelepiped formed by the product of the public vector Y and
 	//  the private vector K. (The implementation of the vector cross product cipher is asymmetrical because
 	//  it requires different public key generation and public key agreement methods, but unlike the Merkle-
-	//  Hellman or factorizaciphers it uses two commutative functions instead of a one-way / invertible func-
-	//  tion.)
+	//  Hellman or factorization ciphers it uses two commutative functions instead of a one-way / invertible
+	//  function.)
 	//
 	//  A secret matrix, vector, or hypercomplex number can be reduced to a secret key or number by concaten-
 	//  ating the elements or removing the commas or delimiters. For example, the array { 1, 2, 3, 4 } or the
