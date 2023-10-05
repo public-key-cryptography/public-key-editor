@@ -15,7 +15,7 @@
 	and encryption. The ciphers use hypercomplex and hyper-dimensional
 	numbers (including vectors, quaternions, matrices, cubes, and tes-
 	seracts), polynomials, multi-variable, multi-equation, and multi-
-	dimensional arithmetic, and Merkle-Hellman knapsacks.
+	dimensional arithmetic, and integer factorization.
 	
 	
 	github.com/public-key-cryptography
@@ -112,9 +112,9 @@
 	send and receive encrypted emails.
 	
 	The sender and receiver have to be using the same ciphers and protocols because the software is not
-	compatible with other encryption programs. Users also may have to keep upgrading their software,
-	changing their public keys, and re-encrypting their files or directories if the implementation of
-	the ciphers or encryption protocols changes.
+	compatible with other encryption programs. Users also may have to upgrade their software, change
+	their public keys, and re-encrypt their files or directories if the implementation of the ciphers or
+	encryption protocols changes.
 	
 	
 	
@@ -460,8 +460,8 @@
 	they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
 	quantity, number, or section of things dealt with as a unit, such as a block of plaintext or cipher-
 	text. (J.J. Sylvester used the term matrix in 1850 to refer to a rectangular block of numbers because
-	a determinant is formed from a matrix, and a matrix is something from which something else origin-
-	ates, develops, or takes form.)
+	a determinant is formed from a matrix, and a matrix is something from which something else originates,
+	develops, or takes form.)
 	
 	Nonlinear multivariate equations are difficult or impossible to solve. If solving an equation such as
 	Y = X A X were as simple as diagonalizing a matrix, doing a Fourier transform, or reducing a matrix
@@ -478,12 +478,12 @@
 	Diffie-Hellman problem can be solved or the public key agreement can be computed without breaking the
 	static public key, inverting the function, or solving the underlying math problem.
 	
-	The public key class uses a composite key that includes several ciphers because there is no proof
-	that any one-way function is non-invertible or that the implementation is correct and because the
-	methods of cryptanalysis are secret. If cryptanalysts weren't secretive, users would know which pub-
-	lic key ciphers are broken and would stop using them, and cryptographers would figure out how to
-	strengthen the ciphers to resist these attacks. The only way to deal with this problem is to use a
-	redundancy of ciphers based on different math problems.
+	The public key class uses a composite key that includes several ciphers because there is no proof that
+	any one-way function is non-invertible or that the implementation is correct and because the methods
+	of cryptanalysis are secret. If cryptanalysts weren't secretive, users would know which public key ci-
+	phers are broken and would stop using them, and cryptographers would figure out how to strengthen the
+	ciphers to resist these attacks. The only way to deal with this problem is to use a redundancy of ci-
+	phers based on different math problems.
 	
 	Composite keys are a game changer because a cryptanalyst would have to break every cipher, invert
 	every function, or solve every equation in the public key class to read the encrypted messages. The
@@ -491,14 +491,14 @@
 	tion to be unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst anything because
 	breaking a composite key is an all-or-nothing game.
 	
-	The ciphers in the public key class that have a many-to-one mapping of the private key X to the pub-
-	lic key Y may be unbreakable by classical and quantum computing because the solution is ambiguous and
-	the private key X is only used once. Quantum computers are unable to solve math problems that have am-
-	biguous solutions because they wouldn't know which solution to solve for. This is why a quantum com-
-	puter can only attack the factorization problem by solving the discrete log problem, not by solving
-	the difference of squares equation x^2 == 1 (mod n). Even if the solution is unambiguous, it doesn't
-	mean that a quantum computer can solve it; there has to be an algorithm or method for solving it, or
-	the same private key X would have to be used more than once with a different public parameter A.
+	The ciphers in the public key class that have a many-to-one mapping of the private key X to the public
+	key Y may be unbreakable by classical and quantum computing because the solution is ambiguous and the
+	private key X is only used once. Quantum computers are unable to solve math problems that have ambigu-
+	ous solutions because they wouldn't know which solution to solve for. This is why a quantum computer
+	can only attack the factorization problem by solving the discrete log problem, not by solving the dif-
+	ference of squares equation x^2 == 1 (mod n). Even if the solution is unambiguous, it doesn't mean
+	that a quantum computer can solve it; there has to be an algorithm or method for solving it, or the
+	same private key X would have to be used more than once with a different public parameter A.
 	
 	Encryption ciphers are not used in the software because they have a one-to-one mapping (or function)
 	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-to-
@@ -512,7 +512,8 @@
 	equivalent to integer factorization or based on any hard math problem. The problem with this cipher
 	is that there is a one-to-one correspondence of the private keys m to the public keys c which makes
 	the function invertible without factoring or unmultiplying the modulus n. This is why RSA was reject-
-	ed for digital signature standards and for encryption.
+	ed for digital signature standards and for encryption. (Note that RSA refers to the cipher while co-
+	prime root extraction refers to the underlying math problem on which the cipher is based.)
 	
 	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite) is equivalent
 	to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had thought of us-
@@ -528,13 +529,11 @@
 	can extract the message by inverting e modulo phi(n)/e instead of modulo phi because the message is a
 	perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
-	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem are susceptible to quantum and clas-
-	sical computing. The Rabin cipher can never be completely broken because factorization will always be
-	harder than multiplication but the key size would have to be on the order of 10^12 bits or 1 terabit.
-	The Rabin cipher was included in the public key class to test the software for asymmetrical public key
-	ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are symme-
-	trical which means that they use the same methods for public key generation and public key agreement.
+	The Rabin / factorization cipher and the integer discrete log cipher are not included in the public
+	key class because the factorization and integer discrete log problems are susceptible to quantum and
+	classical computing. The Rabin cipher can never be completely broken because factorization will always
+	be harder than multiplication, but the key size would have to be on the order of 10^5 bits because the
+	cipher is broken by quantum and classical computing.
 	
 	If an integer cipher is not based on the integer factorization or discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
@@ -542,91 +541,68 @@
 	on log multiplication instead of log extraction.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
-	(mod p) are not included in the software because the elliptic curve discrete log function has a
-	periodicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic
-	curves makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem
-	if the parameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters
-	of the curves to protect against all unknown attacks. Many people are suspicious or distrustful of
-	elliptic curve ciphers because the equations are complicated and they have a large attack surface.
+	(mod p) are not included in the software because the elliptic curve discrete log function has a perio-
+	dicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic curves
+	makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem if the pa-
+	rameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters of the
+	curves to protect against all unknown attacks. Many people are suspicious or distrustful of elliptic
+	curve ciphers because the equations are complicated and they have a large attack surface.
 	
-	Elliptic curve ciphers that are based on isogenies are quantum resistant but they are almost certainly
-	broken since they are being approved for standardization and cryptanalysts have had over a decade to
-	study them. Just because a cipher is quantum resistant doesn't mean that the cipher is also classical
-	resistant or resistant to classical computing.
+	In 2021 we wrote that elliptic curve ciphers that are based on isogenies are quantum resistant but are
+	almost certainly broken since they are being approved for standardization and cryptanalysts have had
+	over a decade to study them. Just because a cipher is quantum resistant doesn't mean that the cipher
+	is also classical resistant or resistant to classical computing.
 	
-	Ciphers based on polynomial factorization and error-correcting codes also are not used or included in
-	the public key class because they are not secure for any key size, and learning with errors ciphers
-	are not included because they are only based on the subset sum problem which is a linear problem.
+	In 2022, after we wrote that the cipher was almost certainly broken because it had been approved for
+	standardization and it was being promoted and backed by a few companies, a method was published for
+	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
+	this algorithm would have been standardized and implemented in software programs along with the other
+	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, and the
+	learning with errors or LWE cipher.
 	
-	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[], a
-	private key s, and a secret random error array e[] where the sum of the elements is smaller than q/2,
-	and then computes the static public key b[] = a[] s + e[] modulo q. (The random errors can be dis-
-	carded because they are not used for decryption.) To encrypt a message m[], for each bit in m the
-	sender chooses a subset of elements in a and b and then calculates u = the subset sum of the a ele-
-	ments mod q, and v = the subset sum of b[] + [q/2] m[i] (mod q) where q/2 m[i] is either 0 or q/2.
-	For each bit m[i] the one-time public key is the pair (u, v), and for m[] the one-time public key is
-	the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
+	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
+	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
+	and then standardize those broken ciphers. This mistake or embarrassment occurred because in approving
+	this cipher they underestimated the number of mathematicians who can comprehend the math that was used
+	to break the cipher. For the methods of cryptanalysis to remain secret, the number of mathematicians
+	who can break a cipher has to be in the single digits (such as for solving coprime root extraction,
+	factorization, and the integer Diffie-Hellman problem) and in this case the number was in the double
+	digits because there are tens of mathematicians who can understand the math for breaking supersingular
+	isogeny key exchange.
+	
+	Competitions are good for many things but public key cryptography is not one of them because it just
+	selects ciphers, functions, or equations that only a few people in the world know how to break, in-
+	vert, or solve, and it gives users a false sense of security and confidence in the ciphers. Some users
+	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
+	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
+	the ciphers which is a false or erroneous assumption.
+	
+	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
+	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
+	a private key s, and a secret random error array e[] where the sum of the elements is smaller than
+	q/2, and then computes the static public key b[] = a[] s + e[] modulo q. (The random errors can be
+	discarded because they are not used for decryption.) To encrypt a binary message m[], for each bit or
+	element in m the sender chooses a subset of elements in a and b and then calculates u = the subset sum
+	of the a elements mod q, and v = the subset sum of b[] + [q/2] m[i] (mod q) where q/2 m[i] is either 0
+	or q/2. For each bit m[i] the one-time public key is the pair (u, v), and for m[] the one-time public
+	key is the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
 	
 	Since a[] s + e[] == B[], multiplying u (== a subset sum of a[]) by s approximately equals v (== a
 	subset sum of b[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
-	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference
-	v - s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the
-	quotient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the mes-
-	sage by inverting u to find the indices of the samples and then using the indices to find the sub-
-	set sum of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset
-	sum problem has a many-to-one mapping, any solution to the subset sum problem will break the cipher.
-	A cryptanalyst may also be able to break the static public key because the equations are linear and
-	the modulus is public unlike the knapsack cipher which is also linear but uses a private modulus.
+	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference v -
+	s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the quo-
+	tient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the message
+	by inverting u to find the indices of the samples and then using the indices to find the subset sum
+	of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
+	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
+	lyst may also be able to break the static public key because the equations are linear and the modulus
+	is public unlike the knapsack cipher which is also linear but uses a private modulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + e[] + r[][] s[] (mod n), b1 = c[] m[], b2 =
-	r[][]^T m[] where c[] is the recipient's static public key and b1, b2 are the sender's one-time pub-
-	lic key is included in the public key class but it is not enabled because it has to be modified to
-	use matrices or hypercomplex numbers. Unlike the LWE cipher which uses a private muliplier and a pub-
-	lic modulus, the knapsack cipher uses a public multiplier and a private modulus. Both ciphers add
-	random errors to the public key.
-	
-	The Merkle-Hellman / knapsack cipher may be the only asymmetrical public key cipher or invertible
-	one-way function other than the Rabin cipher, and it is the only public key cipher that uses a pri-
-	vate modulus. (The Diffie-Hellman ciphers use commutative, symmetrical, and non-invertible one-way
-	functions which means that the private variables x and k commute with each other and use the same
-	function for public key generation and key agreement or that f(y = f(a, x), k) == f(z = f(a, k), x)).
-	
-	Even if a cryptanalyst knows how to solve the subset sum or non-superincreasing knapsack problem it
-	won't break the one-time public key b = c[] m[] because the cipher was designed to resist this at-
-	tack. The ciphers use an irregular public and private key so that there is a large number of solu-
-	tions to the knapsack problem. The cryptanalyst wouldn't know which of these solutions is the correct
-	key because the search space or solution set is too large to try all the combinations, but the recip-
-	ient can always decrypt the sender's secret key m[] because the recipient knows the private modulus n
-	and the secret key s[].
-	
-	A cryptanalyst would have to be able to solve the vector equation c[] = r0 a[] + e[] + r[][] s[] for
-	the secret key s[] to invert the function, but this is impossible without knowing the modulus n be-
-	cause there is only one solution to the equation; the cryptanalyst cannot choose a random modulus n'
-	and solve for a different s'[] to get the same public key c[]. Even if the equation could be solved
-	for the modulus n and secret key s[] it wouldn't break the Merkle-Hellman cipher because the public
-	key includes small random errors that are added to c[] to increase the search space to resist this
-	attack. The cryptanalyst would have to try to solve the equation 2^80 or a septillion times to find
-	the solution or to break the public key.
-	
-	The problem with the integer knapsack cipher is that if the static key includes the term r[][] s[],
-	the sender has to include the term r[][]^T m[] in the one-time public key, and then the one-time pub-
-	lic key can be reduced to the subset sum problem using partial Gaussian elimination to remove the
-	large m[0] term or by multiplying and subtracting one of the r[][]^T m[] equations. Then the cipher
-	is no more difficult than the LWE cipher which is also not subset sum resistant. The r[][] s[] term
-	can be set to zero, but then the static public key may not be unbreakable. The cipher may have to be
-	implemented using matrices or hypercomplex numbers like the other ciphers in the public key class.
-	
-	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not enabled in the pub-
-	lic key class because they increase the size of the key from 1500 bytes to 5000 bytes and they expand
-	the size of the encrypted messages without increasing the security because factorization is not a hard
-	problem. Also, these ciphers are not the same as the Diffie-Hellman ciphers in the public key class
-	because they use different functions for key generation and key agreement.
-	
-	The vector cross product cipher is also asymmetrical (but not invertible) because it uses different
-	methods for public key generation and key agreement (cross product Y = A (x) X and then dot product
-	E = Y * K), and either the key generation or key agreement method has to negate the sign of the paral-
-	lelogram or the parallelepiped or else the messages will be undecryptable. The vector cross product
-	cipher is still a Diffie-Hellman cipher because the cipher is non-invertible and is not solved for X.
+	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + e[] (mod n), b = c[] m[] + e, where c[] is the
+	recipient's static public key and b is the sender's one-time public key is unbreakable because the
+	modulus is secret and both the static key and the one-time public key include small random errors.
+	The only problem is that the key size has to be on the order of 10^5 just like the factorization ci-
+	pher or else the cipher can be broken.
 	
 	
 	************************************************/
@@ -660,6 +636,7 @@ import java.text.*;
 import java.math.BigInteger;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.regex.Pattern;
 import java.util.zip.*;
 
@@ -1311,7 +1288,7 @@ class __
 	numberofciphers = "number of ciphers",
 	usereplyaddresskey = "use reply address for reply key",
 	
-	includelargeciphers = "include large ciphers",
+	includelargeciphers = "include large (factorization) cipher",
 	
 	usemyaddresstogeneratereplykey =
 	
@@ -1703,6 +1680,8 @@ class __
 	
 	listfirst = "List first",
 	
+	nocheckedboxes = "No checked msgs",
+	
 	firstmessage = "first message",
 	 lastmessage =  "last message",
 	
@@ -2012,8 +1991,7 @@ class __
 		"inal and copies it to the clipboard so you can paste the address into a web browser. " +
 		"(In future versions it may open an html editor and connect to the address in the " +
 		"hyperlink if the user enables this feature.) Note that if you save the file the Html " +
-		"Viewer will not open files that do not end with the suffix .html or .htm just as the " +
-		"Table Editor will not open files that do not have the suffix .csv)\n\n" +
+		"Viewer will not open files that do not end with the suffix .html or .htm.\n\n" +
 		
 		"A few unencrypted and undecryptable messages are included to test the mail program " +
 		"because some messages may be sent unencrypted or may be encrypted to the wrong " +
@@ -2077,7 +2055,7 @@ class Programs
 	
 	//  the number of files in the file list
 	
-	private int numberoffiles = 12;
+	private int numberoffiles = 16;
 	
 	
 	//  the max and min icon sizes
@@ -21435,7 +21413,7 @@ class Programs
 		//  text is partitioned.
 		
 		private int linesize = 78;
-		private int minsize = 256;
+		private int  minsize = 256;
 		
 		
 		private Dimension d = Toolkit
@@ -25666,12 +25644,13 @@ class Programs
 			
 			//  the popup messages
 			
-			private String testmailpopupmsg = __.testmail;
-			private String  readallpopupmsg = __.listfirst;
-			private String   deletepopupmsg = __.deleteboxischecked;
-			private String    replypopupmsg = __.deleteboxischecked;
-			private String     prevpopupmsg = __.firstmessage;
-			private String     nextpopupmsg = __.lastmessage;
+			private String   testmailpopupmsg = __.testmail;
+			private String delebuttonpopupmsg = __.nocheckedboxes;
+			private String    readallpopupmsg = __.listfirst;
+			private String     deletepopupmsg = __.deleteboxischecked;
+			private String      replypopupmsg = __.deleteboxischecked;
+			private String       prevpopupmsg = __.firstmessage;
+			private String       nextpopupmsg = __.lastmessage;
 			
 			
 			
@@ -27362,12 +27341,14 @@ class Programs
 					
 					//  Add a mouse listener for the list button
 					
-					//  This is only required for the testmail popup message.
-					//  The list button can have its own mouse listener object
+					//  This is only required for the button popup messages.
+					//
+					//  Each button can have its own mouse listener object
 					//  because it doesn't have to share mouse member variables.
 					
 					listbutton.addMouseListener(new MouseListener1());
 					readbutton.addMouseListener(new MouseListener1());
+					delebutton.addMouseListener(new MouseListener1());
 					
 					
 					
@@ -31012,6 +30993,30 @@ class Programs
 							return;
 						}
 					}
+					
+					if (e.getSource() == emailpanel.delebutton)
+					{
+						boolean bool = false;
+						
+						if ((emailpanel == null) ||
+						    (emailpanel.list1 == null)) return;
+						
+						for (int i = 0; i < emailpanel.list1.size(); i++)
+						
+						    if (emailpanel.list1.getDeleteBox(i))
+						
+							{ bool = true; break; }
+						
+						if (bool == false)
+						{
+							//  Display a delete popup message
+							
+							showPopupMessage(e, delebuttonpopupmsg);
+						}
+						
+						return;
+					}
+					
 					
 					
 					
@@ -39370,7 +39375,7 @@ class Programs
 			//    |    with your messages. The recipient will    |
 			//    |    use this key to reply to your messages.   |
 			//    |                                              |
-			//    |          o zero  * quad  o oct  o max        |
+			//    |         o zero  * quad  o oct  o max         |
 			//    |                                              |
 			//    |                    [ OK ]                    |
 			//    |______________________________________________|
@@ -39437,8 +39442,6 @@ class Programs
 			
 			final int n = PublicKey.numberofciphers;
 			
-			int numberofciphers = n;
-			
 			int numberoflargekeys = 0;
 			
 			for (int i = 0; i < PublicKey.size.length; i++)
@@ -39454,10 +39457,6 @@ class Programs
 			if (n > 2) doublebutton.setVisible(false);
 			if (n < 4)   quadbutton.setVisible(false);
 			if (n < 8)    octbutton.setVisible(false);
-			
-			if (Math.isPowerOf2(n))
-			
-			    maxbutton.setVisible(false);
 			
 			JLabel cipherlabel = new JLabel(__.cipher);
 			
@@ -39495,12 +39494,12 @@ class Programs
 			vbox.add(panel);
 			
 			
-			if      (size == 0)    zerobutton   .setSelected(true);
-			else if (size == 1)    singlebutton .setSelected(true);
-			else if (size == 2)    doublebutton .setSelected(true);
-			else if (size == 4)    quadbutton   .setSelected(true);
-			else if (size == 8)    octbutton    .setSelected(true);
-			else if (size == n-n1) maxbutton    .setSelected(true);
+			if      (size == 0)     zerobutton .setSelected(true);
+			else if (size == 1)   singlebutton .setSelected(true);
+			else if (size == 2)   doublebutton .setSelected(true);
+			else if (size == 4)     quadbutton .setSelected(true);
+			else if (size == 8)      octbutton .setSelected(true);
+			else if (size >= n)      maxbutton .setSelected(true);
 			
 			
 			String title = "";
@@ -39518,11 +39517,12 @@ class Programs
 			else if (doublebutton .isSelected())  m = 2;
 			else if (quadbutton   .isSelected())  m = 4;
 			else if (octbutton    .isSelected())  m = 8;
-			else if (maxbutton    .isSelected())  m = n-n1;
+			else if (maxbutton    .isSelected())  m = n - n1;
 			else                                  m = -1;
 			
 			return Math.min(m, n);
 		}
+		
 		
 		
 		public static boolean showCheckBoxMessageDialog(
@@ -50296,7 +50296,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			maxcheckbox = new JCheckBox();
 			
-			maxcheckbox.setVisible(false);
+			maxcheckbox.setEnabled(false);
 			
 			doublebutton.setToolTipText(__.numberofciphers);
 			quadbutton  .setToolTipText(__.numberofciphers);
@@ -50318,6 +50318,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			    if (size > 1024)  numberoflargekeys++;
 			
 			final int n1 = numberoflargekeys;
+			
+			maxcheckbox.setEnabled(n1 > 0);
+			maxcheckbox.setVisible(n1 > 0);
 			
 			
 			singlebutton.setVisible(false);
@@ -50523,7 +50526,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 						else if (b ==    octbutton)  numberofciphers = 8;
 						else if (b ==    maxbutton)  numberofciphers = n - n1;
 						
-						maxcheckbox.setEnabled(b == maxbutton);
+						maxcheckbox.setEnabled((n1 > 0) && (b == maxbutton));
 						
 						if (!maxcheckbox.isEnabled())
 						     maxcheckbox.setSelected(false);
@@ -50566,6 +50569,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 					numberofcipherslabel1 .setText(numberstr);
 					
 					Dimension newsize = dialog.getPreferredSize();
+					
 					dialog.setSize(newsize.width, newsize.height);
 				}
 			}
@@ -50619,7 +50623,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			emailfield = new JTextField(textlength);
 			
 			randcheckbox = new JCheckBox();
-			randcheckbox .setVisible(true);
+			randcheckbox.setVisible(true);
 			randcheckbox.setToolTipText(__.rng);
 			
 			
@@ -52107,8 +52111,8 @@ class PublicKey
 	//
 	//  The vector ciphers and non-exponential matrix ciphers can be modular or non-modular, and the matrix,
 	//  vector, and quaternion ciphers can use one or multiple equations. Unlike integer ciphers such as the
-	//  Rabin / factorization cipher, there are no sub-exponential or quantum algorithms for solving matrix,
-	//  vector, or hypercomplex ciphers.
+	//  Rabin / factorization cipher, there are no sub-exponential, polynomial, or quantum algorithms for
+	//  solving matrix, vector, or hypercomplex ciphers.
 	//
 	//  The only difference between the public key ciphers and the ordinary matrix discrete log cipher Y =
 	//  A^x (mod p) or the linear matrix cipher Y = A X is that the ciphers are multiplied by X and X^-1 or
@@ -52126,10 +52130,10 @@ class PublicKey
 	//  All the commutative one-way functions or symmetric public key ciphers used in the public key class
 	//  derive from the general matrix function X1 A^x X2 (or B^x1 A^x B^x2) including A^x, A^x X, A X,
 	//  X1 A X2, and X^-1 A^x X (mod p). (The cipher a^x (mod n) is really X^-1 A^x X (mod n) where a and x
-	//  are 1x1 matrices or Latin squares, but the X matrices annihilate each other because integer multipli-
-	//  cation is commutative.) The side matrices X1 and X2 have to be private Latin squares, cubes or tes-
-	//  seracts, powers of a public matrix, cube or tesseract, or inverses of each other or else there would
-	//  be no constraint on the function or the function would be non-commutative.
+	//  are 1x1 matrices or Latin squares, but the X matrices annihilate each other because integer multi-
+	//  plication is commutative.) The side matrices X1 and X2 have to be private Latin squares, cubes or
+	//  tesseracts, powers of a public matrix, cube or tesseract, or inverses of each other or else there
+	//  would be no constraint on the function or the function would be non-commutative.
 	//
 	//  Matrix ciphers are more complicated than integer ciphers because matrix multiplication is non-commu-
 	//  tative unless the matrices are Latin squares. A Latin square is a matrix in which each row contains
@@ -52146,14 +52150,15 @@ class PublicKey
 	//  1x1 block matrix cipher, the 1x1 block matrix is reduced to a 1x1 column vector / block array, and
 	//  then the 1x1 block array is reduced to a 1x1 block or matrix.)
 	//
-	//  The vector cross product cipher uses arrays of integers, polynomials, commutative Latin squares, or
-	//  powers of a matrix, cube, or tesseract for public key generation Y = A (x) X where the public key vec-
-	//  tor Y represents the area of a parallelogram formed by the two sides A and X. Then it uses the dot
-	//  product instead of the cross product to compute the secret key number E = Y * K which represents the
-	//  volume of the parallelepiped formed by the product of the public vector Y and the private vector K.
-	//  (The implementation of the vector cross product cipher is asymmetrical because it requires different
-	//  public key generation and public key agreement methods, but unlike the Merkle-Hellman or factoriza-
-	//  ciphers it uses two commutative functions instead of a one-way / invertible function.)
+	//  The vector cross product cipher uses arrays of integers, polynomials, commutative Latin squares,
+	//  cubes or tesseracts, or powers of a matrix, cube, or tesseract for public key generation Y = A (x) X
+	//  where the public key vector Y represents the area of a parallelogram formed by the two sides A and X.
+	//  Then it uses the dot product instead of the cross product to compute the secret key number E = Y * K
+	//  which represents the volume of the parallelepiped formed by the product of the public vector Y and
+	//  the private vector K. (The implementation of the vector cross product cipher is asymmetrical because
+	//  it requires different public key generation and public key agreement methods, but unlike the Merkle-
+	//  Hellman or factorizaciphers it uses two commutative functions instead of a one-way / invertible func-
+	//  tion.)
 	//
 	//  A secret matrix, vector, or hypercomplex number can be reduced to a secret key or number by concaten-
 	//  ating the elements or removing the commas or delimiters. For example, the array { 1, 2, 3, 4 } or the
@@ -52179,42 +52184,87 @@ class PublicKey
 	//  least common remainder x = lcr(x mod q[], q[]) where x mod q[] is the set of solutions to the re-
 	//  duced discrete log problems.
 	//
-	//  The integer discrete log cipher (modulo a prime) requires a public key vector y1 = a1^x1 a2^x2 and
-	//  y2 = a2^x1 a3^x2 (mod p) instead of a public key number y = a^x (mod p) so that a cryptanalyst
-	//  would have to solve the discrete log problem to find the public key agreement e = a1^(k1 x1) a2^
-	//  (k1 x2 + k2 x1) a3^(k2 x2) instead of multiplying the logarithms to find e = a ^ (k x). This is a
-	//  matrix-like cipher because it uses the parameters { { a1, a2 }, { a2, a3 } } but it doesn't use
-	//  matrix arithmetic. This cipher can still be broken by quantum computing because the function has a
-	//  periodicity and the solution is unambiguous since the function has a one-to-one mapping.
-	//
-	//  Elliptic curve ciphers, 1x1 polynomial matrix discrete log ciphers, integer log ciphers, and the
-	//  Rabin / factorization cipher are not used in the public key class because these ciphers are sus-
-	//  ceptible to quantum computing.
+	//  Elliptic curve ciphers, 1x1 polynomial matrix discrete log ciphers, and integer log ciphers are not
+	//  used in the public key class because these ciphers are susceptible to quantum computing or polynom-
+	//  ial-time algorithms. The Rabin / factorization cipher is included but not enabled by default because
+	//  the key size is larger than the other ciphers which are less than 1 K bits.
 	//
 	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
 	//  tory problem to be a public key cipher. It only has to be harder to invert than to compute. Some
 	//  functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
 	//  nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
 	//
-	//  Even with quantum computing or a polynomial-time algorithm, the Rabin cipher is still unbreakable
-	//  if the key size is large enough. For example, if a classical algorithm for factoring numbers has
-	//  a running time of O(n^4) (or O(n^3.58)) which is the same time as prime number generation, then
-	//  for a 1 megabit number the algorithm would require (10^6)^4 or a septillion multiplications which
-	//  could require 10^27 to 10^30 (or 10^26 to 10^29) operations.
+	//  Even with quantum computing or a polynomial-time algorithm, the Rabin cipher can never be completely
+	//  broken and is still unbreakable if the key size is large enough. For example, if a classical algori-
+	//  thm for factoring numbers has a running time of O(n^4.58) operations, then for a 256 K bit number the
+	//  algorithm would require O(4.58*5) or ~ O(10^25.5) operations to break the cipher. If the Karatsuba
+	//  multiplier is used, then it would require an additional factor of 32 because the three-halves multi-
+	//  plier overtakes the quadratic multiplier at around 2 K bits, which means that ~ 10^27 or an octillion
+	//  operations would be required to factor the number.
 	//
-	//  A quantum computer could reduce the running time to O(n^2.58) or O(n^2 log n) for large numbers
-	//  which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the factors f1 =
-	//  (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-residue.
-	//  For example, if n = 77, a quantum computer would compute the order of a^x (mod n) or lambda(n) =
-	//  lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^
-	//  (lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7.
+	//  (Note that n in the running time represents the log of the modulus or the number of bits instead of
+	//  the value of the modulus so that linear log multiplication can be written as O(n log n) instead of
+	//  having to be written as O(log n log log n). Unfortunately the modulus uses the same letter for com-
+	//  posite numbers as the letter used for the running time, and m is unavailable because it is used for
+	//  the message.)
 	//
-	//  The gcd function only requires O(n) multi-precision subtractions or O(n^2) single-precision oper-
-	//  ations to compute a mod b == c, b mod c == d, c mod d == e, ... until the residue equals 0, and
-	//  then the previous residue equals the greatest common divisor (which could be 1 if 1 is the greatest
-	//  factor) because a common factor doesn't get removed by subtraction; only the coefficients get re-
-	//  duced by subtraction. (For example, for the numbers 187 and 77, 187 mod 77 == 33; 77 mod 33 == 11;
-	//  33 mod 11 == 0; therefore (187, 77) == 11)
+	//  Even at 256 K bits, the Rabin cipher can decrypt almost instantly. The encryption method could take
+	//  ~ 1 core-second using a Karatsuba / sesquilinear or three-halves multiplier on a 1 GHz processor. (If
+	//  biquadratic means quartic or a power of 2*2, then sesquilinear should mean 3/2*1 or a power of 3/2.)
+	//  The fft multiplier is not faster at 256 K bits than the Karatsuba multiplier because of the large
+	//  hidden constant in the running time; it only begins to overtake and outrun the three-halves multipli-
+	//  er at around ~ 512 K to 1 M bits.
+	//
+	//  The key generation could be made faster by choosing a large random number for the modulus n and then
+	//  multiplying n by a 512 or 768-bit prime. The encryption method was made faster by choosing a secret
+	//  key m ~ sqrt(n) + 512; then computing c = m^2 mod n only requires a multiplication. The modular re-
+	//  duction requires only O(512/32 * n) or ~ 32 M operations since the divide method calls the quadratic
+	//  divider instead of the inverter if the dividend is only slightly larger than the divisor. If the mes-
+	//  sage were chosen such that m ~ n, then the modulus and inverse would have to be stored in a static
+	//  class member to avoid doing inversions for each decryption.
+	//
+	//  A quantum computer could reduce the factorization running time to O(n) multi-precision multiplica-
+	//  tions for large numbers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve
+	//  for the factors f1 = (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a qua-
+	//  dratic non-residue. For example, if n = 77, a quantum computer would compute the order of a^x (mod n)
+	//  or lambda(n) = lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would com-
+	//  pute 2 ^ (lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The gcd function only
+	//  requires O(n) multi-precision subtractions or O(n^2) single-precision operations, similar to multi-
+	//  plication but without the log n factor.
+	//
+	//  The sub-exponential method for solving the integer discrete log problem (modulo a prime) is called
+	//  the index-calculus algorithm. The Handbook of Applied Cryptography says that "...the basic ideas be-
+	//  hind the index-calculus algorithm first appeared in the work of Kraitchik (circa 1922-1924) and of
+	//  Cunningham and was rediscovered by several authors ... Pomerance credits the idea of multiplying
+	//  congruences to produce a solution to x^2 == y^2 (mod n) for the purpose of factoring n to some old
+	//  work of Kraitchik circa 1926-1929."
+	//
+	//  Kraitchik's method can only solve the discrete log / factorization problem up to ~ 200 bits because
+	//  it has to find round numbers or numbers that contain only small factors. By using a linear sieve,
+	//  quadratic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds,
+	//  Kraitchik's method can solve the discrete log / factorization problem up to ~ 400 to ~ 600 bits
+	//  which is on the order of a thousand bits. Instead of doubling or tripling the number of bits, a
+	//  polynomial-time algorithm that has a running time of O(n^4.58) can increase the number of bits by
+	//  a factor of 64 from ~ 1 K bits to ~ 64 K bits.
+	//
+	//  A gigahertz processor that has a thousand cores can do terascale computing or O(10^12) operations
+	//  per second. A thousand processors can do petascale computing, and a millon processors can do exa-
+	//  scale computing or O(10^18) operations per second. Even an exascale computer would take a kilo sec-
+	//  ond to do a zetta op and a megasecond or ten days to do a yotta op or 10^24 operations. A special-
+	//  ized processor such as the ones used to do hashing for the mining of cryptocurrency could do zetta-
+	//  scale computing or 10^21 operations per second, but it would still take on the order of a million
+	//  seconds to do a thousand yotta ops or an octillion operations to factor 256 K bit number.
+	
+	
+	
+	//  Running times for primality testing, prime number generation, and integer factorization
+	//
+	//  primality testing        O(n^0) exponentiations == O(n^1) multiplications == O(n^2.58) operations
+	//  prime number generation  O(n^1) exponentiations == O(n^2) multiplications == O(n^3.58) operations
+	//  integer factorization    O(n^2) exponentiations == O(n^3) multiplications == O(n^4.58) operations
+	
+	
+	
 	
 	
 	
@@ -52573,35 +52623,13 @@ class PublicKey
 	
 	
 	
-	
-	
-	//  Large ciphers
-	
-	//  Asymmetrical public keys or invertible one-way functions
-	
-	//  The integer Merkle-Hellman / knapsack ciphers
-	
-	//  The Merkle-Hellman / knapsack cipher is commented or disabled in the public
-	//  key class because the cipher requires the use of matrices instead of integers
-	//  or else the one-time public key reduces to the subset sum problem. The cipher
-	//  also occupies a lot of space and doubles the size of the key.
-	
-	private static final int size56x29 = 56*29 - 20; // 28 terms x 8 bits
-	private static final int size48x49 = 48*49 - 20; // 48 terms x 4 bits
-	
-	
 	//  Rabin / factorization / co-composite root extraction cipher
-	//
-	//  The Rabin cipher is commented or disabled in the public key class because
-	//  the cipher is susceptible to quantum computing. It wouldn't weaken the se-
-	//  curity because a composite key is as strong as the strongest ciphers, but
-	//  it would be anomalous to include this cipher in the public key because the
-	//  cipher is the only one that is not the same as all the others, and it could
-	//  slow the key generation and key agreement because prime number generation is
-	//  probabilistic and it may not be portable since it requires fast algorithms
-	//  that may not be available in other programming languages.
 	
-	private static final int size4x128 = 4*128; // 512 digits
+	private static final int sizefact1 = 32*1024; // 32 K digits == 128 K bits
+	
+	//  A 128 K bit modulus requires 10^(4.58*5 + 1.5 == 24.5) operations or
+	//  ~ 10 yotta ops to factor but the message m = sqrt(c) mod n decrypts
+	//  in ~ 10^8 operations or 100 ms on a single core 1 GHz processor
 	
 	
 	
@@ -52609,8 +52637,7 @@ class PublicKey
 	//  Public keys can be static / receiver or one-time / sender keys
 	//
 	//  The type of key is only important for asymmetric public key ciphers
-	//  such as the Rabin / fact, Merkle-Hellman / knapsack, and vector /
-	//  cross product ciphers.
+	//  such as the Rabin / factorization and vector / cross product ciphers.
 	//
 	//  Symmetric public keys or Diffie-Hellman ciphers ignore this variable
 	
@@ -52661,22 +52688,7 @@ class PublicKey
 		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  m-dl
 		
 		
-		//  The public key class may include a few more
-		//  real / fractional number / non-integer /
-		//  non-discrete ciphers.
-		
-		
-		
-		//  Large ciphers
-		
-		//  These ciphers are not enabled because the knapsack cipher
-		//  would have to be modified to use matrices or Latin squares
-		//  and they would double the size of the key
-		
-		//  size56x29, //  integer knapsack r0 a[] + e[] + r[][] s[]
-		//  size48x49, //  integer knapsack + random errors
-		//  size4x128, //  Rabin / fact cipher (not quantum or classical resistant)
-		
+		sizefact1,  //  Rabin / fact cipher
 		
 		
 		
@@ -52694,6 +52706,11 @@ class PublicKey
 		//  vcp  = vector cross product cipher A (x) X
 		//
 		//  ....   ....
+		
+		
+		//  The public key class may include a few more real
+		//  / fractional number / non-integer / non-discrete
+		//  ciphers in future versions
 	};
 	
 	
@@ -53153,31 +53170,13 @@ class PublicKey
 		
 		
 		
-		
-		
-		else if (size == size4x128)
+		else if (size == sizefact1)
 		{
 			this.p = null;
 			
 			generateFactKey(publickey, size);
 		}
 		
-		
-		else if ((size == size56x29)
-		      || (size == size48x49))
-		{
-			this.p = null;
-			
-			generateMerkleHellmanKey(publickey, size);
-		}
-		
-		
-		else if (size == size4x128)
-		{
-			this.p = null;
-			
-			generateFactKey(publickey, size);
-		}
 		
 		
 		//  else if (size == size...)
@@ -53309,6 +53308,12 @@ class PublicKey
 		else lines = str.split("\n{2,}");
 		
 		
+		//  Remove any partitioning
+		
+		for (int i = 0; i < lines.length; i++)
+		
+		    lines[i] = lines[i] .replaceAll("\n", "");
+		
 		
 		if (lines.length < 2) return false;
 		
@@ -53318,9 +53323,11 @@ class PublicKey
 		
 			return false;
 		
+		
 		//  The last line must be in base 64 (not base 16)
 		
 		String lastline = lines[lines.length -1].trim();
+		
 		
 		//  The last line has to be a multiple of 4 6-bit chars or 24 bits
 		//
@@ -53547,9 +53554,7 @@ class PublicKey
 		//  test if the recipient has enabled or is using
 		//  one of the commented or deprecated ciphers
 		
-		if ((size == PublicKey.size48x49)
-		 || (size == PublicKey.size56x29)
-		 || (size == PublicKey.size4x128)) return true;
+		if (size == PublicKey.sizefact1) return true;
 		
 		return false;
 	}
@@ -53786,7 +53791,14 @@ class PublicKey
 		else return null;
 		
 		
-		//  Verify that the ciphertext is in base 64
+		//  Remove any partitioning
+		
+		for (int i = 0; i < tokens.length; i++)
+		
+		    tokens[i] = tokens[i].replaceAll("\n", "");
+		
+		
+		//  Read the ciphertext and verify that text is in base 64
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
 		
@@ -53919,11 +53931,18 @@ class PublicKey
 		else return null;
 		
 		
-		//  Verify that the ciphertext is in base 64
+		//  Remove any partitioning
+		
+		for (int i = 0; i < tokens.length; i++)
+		
+		    tokens[i] = tokens[i].replaceAll("\n", "");
+		
+		
+		//  Read the ciphertext and verify that text is in base 64
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
 		
-		if (ciphertext.isEmpty()) return null;
+		//  Verify that the ciphertext is in base 64
 		
 		if (!Number.isBase64(ciphertext))
 		
@@ -54113,11 +54132,16 @@ class PublicKey
 		else return null;
 		
 		
-		//  Verify that the ciphertext is in base 64
+		//  Remove any partitioning
+		
+		for (int i = 0; i < tokens.length; i++)
+		
+		    tokens[i] = tokens[i].replaceAll("\n", "");
+		
+		
+		//  Read the ciphertext and verify that text is in base 64
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
-		
-		if (ciphertext.isEmpty()) return null;
 		
 		if (!Number.isBase64(ciphertext))
 		
@@ -54312,11 +54336,14 @@ class PublicKey
 		else return null;
 		
 		
-		//  Verify that the ciphertext is in base 64
+		for (int i = 0; i < tokens.length; i++)
+		
+		    tokens[i] = tokens[i].replaceAll("\n", "");
+		
+		
+		//  Read the ciphertext and verify that text is in base 64
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
-		
-		if (ciphertext.isEmpty()) return null;
 		
 		if (!Number.isBase64(ciphertext))
 		
@@ -54650,6 +54677,23 @@ class PublicKey
 		String ciphertext = Convert.byteArrayToBase64(cipherdata);
 		
 		
+		//  Partition the ciphertext
+		
+		if (ciphertext.length() > 8*1024) 
+		
+		    ciphertext = Convert.partition(ciphertext, "\n", 80);
+		
+		
+		//  Partition one-time keys larger than 1024 digits
+		
+		for (int i = 0; i < z.length; i++)
+		
+		    if (z[i].length() > 1024)
+		
+			z[i] = Convert.partition(z[i], "\n", 80);
+		
+		
+		
 		//  Encrypt the message key k = H(m)
 		//
 		//  by xor-ing the composite key
@@ -54740,9 +54784,9 @@ class PublicKey
 		//  PublicKey constructor requires the corresponding static key.
 		//
 		//  Note that the static key variable is only required for asym-
-		//  metric public key ciphers such as the Merkle-Hellman / knap-
-		//  sack ciphers. The other public key ciphers ignore the static
-		//  key because the public keys are symmetrical.
+		//  metric public key ciphers such as the vector / cross product
+		//  cipher. The other public key ciphers ignore the static key
+		//  because the public keys are symmetrical.
 		
 		
 		
@@ -58443,6 +58487,7 @@ class PublicKey
 	
 	
 	
+	
 	//  The least common remainder or lcr is used to refer to the object or
 	//  value that is returned instead of the theorem or algorithm, just as
 	//  fact(n) is used instead of fta, uft(n), or quadratic sieve to refer
@@ -58487,582 +58532,6 @@ class PublicKey
 	
 	
 	
-	//  The Merkle-Hellman / knapsack cipher
-	//
-	//  Generating the recipient's static key
-	//
-	//  Choose a superincreasing vector
-	//
-	//  a[] = (a[1], a[2], ..., a[k]).
-	//
-	//  Choose a secret modulus n greater than the sum of the
-	//  array elements multiplied by the multiplier modulus p.
-	//
-	//  Choose a public table r and a random vector s.
-	//
-	//  Convert the private superincreasing vector
-	//  a[] to the nonincreasing public vector
-	//
-	//  c[] = (c[1], c[2], ..., c[k]) where
-	//
-	//                         T
-	//  c[i] = r a[i] + r[i][j] s[j] (mod n)  or
-	//
-	//                             T
-	//  C[i] = R1 A[i] R2 + R[i][j] S[j] (mod n)
-	//
-	//  for the matrix version.
-	//
-	//  Choose a large random number t < x, create an array
-	//  of numbers rand[i] = t i, permutate the array of
-	//  random numbers, and add the permuted array to c[].
-	//
-	//  Permutate the elements of c[] using a secret key.
-	//
-	//  The modulus n and vectors a[], s[] are the private key.
-	//
-	//  The vector c[] is the static public key.
-	//
-	//
-	//  Generating the sender's one-time public key
-	//
-	//  Choose a secret key m[] and then calculate the sum
-	//
-	//  b = c[] (m[] mod p) or
-	//
-	//  B = C[] (m[] mod p)
-	//
-	//  where p is a modulus < a[i+1] / a[i]
-	//
-	//
-	//  Recovering the secret key m[]
-	//
-	//  Subtract s and multiply b by the inverse of r
-	//  modulo n to get the superincreasing subset sum
-	//
-	//  b' = r^-1 (b - r[i][j] m[j] s[i]) == a[] m'[] (mod n) or
-	//
-	//  B' = R1^-1 (B - R[i][j] m[j] S[i]) R2^-1 == A[] m'[] (mod n)
-	//
-	//  and then solve for the permuted secret key m'[].
-	//
-	//  For a 2x2 matrix cipher, the recipient could use
-	//  any of the four equations to solve for m[].
-	//
-	//  Permutate m'[] to recover m[].
-	
-	
-	
-	
-	
-	private void generateMerkleHellmanKey(String publickey, int digits)
-	{
-		//  Computes the recipient's static public key if null
-		//  or else computes the sender's one-time public key
-		
-		int k = -1, k1, qbits, pbits = -1, nbits;
-		
-		if (digits == size56x29) { k = 28; pbits = 8; }
-		if (digits == size48x49) { k = 48; pbits = 4; }
-		
-		k1 = 2 * (int) Math.sqrt(k);
-		
-		nbits = pbits * (k + 1);
-		
-		
-		//  The knapsack density can be defined as k log2 p / log2 A where k is
-		//  the number of terms in the sequence a[], log2 p is the size of each
-		//  multiplier m[], and log2 A is the size of the largest element in a[].
-		//
-		//  If k = 48, pbits = 4, and the elements are (log2 p) ^ i == 16 ^ 0,
-		//  16 ^ 1, 16 ^ 2, ... == 2 ^ (4 i), then log2 A[48] == log2 (2 ^ (4 x 48))
-		//  == 4 x 48, and the density is 48 x 4 / (48 x 4) == 1.
-		//
-		//  The private key size or number of combinations is k/2 log2 p +
-		//  nCr(32, 16) == k/2 log2 p + 32 C 16 == 16 * 4 + 32! / 16! / 16!
-		//  == 16 * 4 + ~ 1 G == 64 + ~ 32 == 96 bits.
-		//
-		//  k1 can be set to any value < k such as 2*sqrt(k).
-		
-		
-		if ((publickey == null) || publickey.isEmpty())
-		{
-		
-			//  Compute the recipient's static public key
-			//
-			//  c[] = (c[1], c[2], ..., c[k])
-			//
-			//  where c[i] = r a[i] + r[][] s[] (mod n)
-			
-			
-			//  Define the multiplier modulus
-			
-			Number p = new Number(2).pow(pbits);
-			
-			
-			//  Define the superincreasing sequence
-			
-			Number[] a = new Number[k];
-			
-			for (int i = 0; i < a.length; i++)
-			
-			    a[i] = new Number(2).pow(pbits*i);
-			
-			if (!isSuperincreasingSequence(a, p))
-			{
-				System.out.println("a == " + Arrays.toString(a));
-				
-				throw new ArithmeticException();
-			}
-			
-			
-			//  Choose a secret modulus n greater than the sum of the
-			//  array elements multiplied by the multiplier modulus p
-			
-			Number n = new Number(2).pow(nbits);
-			
-			n = n .add(x[0]) .mod(n);
-			
-			n .setBit(nbits -1);
-			
-			n = n .nextPrime();
-			
-			if ((n.bitCount() % 4) != 0)
-			
-			    throw new ArithmeticException();
-			
-			int c_digits = (int) n.bitCount() / 4;
-			
-			
-			//  Choose a public number r and secret number s
-			
-			Number s0 = new Number(x[1]);
-			
-			//  a[0] r (mod n) == c0;
-			//
-			//  r == a[0]^-1 c0 (mod n);
-			
-			Number c0 = new Number(pi16.substring(0, c_digits - 20), 16);
-			
-			//  The number r is public because a cryptanalyst knows that a[0]
-			//  starts with 1 or a small value and can run an algorithm a[0] k
-			//  times to find the value of a[0] r. Also the number r doesn't have
-			//  to be secret because the modulus n and the array s[] are secret.
-			//
-			//  If a[0] were a large secret number such as 2^32, then the density
-			//  of the knapsack would be k log2 p / log2 A == (28 * 8) / (28 * 8
-			//  + 32) == 0.875 == 7/8 instead of (28 * 8) / (28 * 8 + 0) == 1.
-			
-			
-			//  Choose the array multiplier r
-			//  and random number multiplier t
-			
-			Number r = a[0] .modInverse(n) .multiply(c0) .mod(n);
-			
-			Number t = new Number(x[0]) .mod(new Number(2).pow(64));
-			
-			while (!r.isCoprimeWith(n)) n = n.add(1);
-			
-			Number[] s1 = new Number[k1];
-			
-			s1[0] = new Number(Cipher.hash(
-			
-			    s0.toByteArray(32)));
-			
-			for (int i = 1; i < s1.length; i++)
-			
-			    s1[i] = new Number(Cipher.hash(
-			
-				s1[i-1].toByteArray(32)));
-			
-			for (int i = 0; i < s1.length; i++)
-			
-			    s1[i] = s1[i] .mod(n);
-			
-			
-			//  Define the public table r1
-			
-			final int d = nbits / 4;
-			
-			Number[][] r1 = new Number[k1][k];
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			
-			    r1[i1][0] = new Number(0);
-			
-			Number temp = new Number(0);
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			for (int i  = 1; i  < k;  i ++)
-			{
-				temp = new Number(Cipher
-				
-				   .hash(temp.toByteArray(32)));
-				
-				r1[i1][i] = temp.mod(new Number(16).pow(d));
-			}
-			
-			
-			//  Convert the vector a[] to the public vector
-			//
-			//  c[] = (c[1], c[2], ..., c[k]) where
-			//
-			//  c[i] = r a[i] + r[][] s[] (mod n)
-			
-			Number[] c = new Number[a.length];
-			
-			for (int i = 0; i < c.length; i++)
-			
-			    c[i] = a[i] .multiply(r) .mod(n);
-			
-			
-			//  Compute t1 = r1[][]^T s[]
-			
-			Number[] t1 = new Number[k];
-			
-			for (int i = 0; i < k; i++)
-			
-			    t1[i] = new Number(0);
-			
-			for (int i  = 0; i  < k;  i ++)
-			for (int i1 = 0; i1 < k1; i1++)
-			
-			    t1[i] = t1[i] .add(r1[i1][i]
-			
-				.multiply(s1[i1]));
-			
-			
-			//  Add t1[] to c[]
-			
-			for (int i = 0; i < k; i++)
-			
-			    c[i] = c[i] .add(t1[i]) .mod(n);
-			
-			
-			
-			//  Create a list of small random errors 0 to k/2 -1
-			
-			Number[] rand = new Number[k];
-			
-			//  0, 0, 1, -1, 2, -2, 3, -3, ...
-			
-			for (int i = 0; i < k; i++)
-			
-			    rand[i] = ((i % 2) == 0) ?
-			
-				new Number(+i/4) :
-				new Number(-i/4);
-			
-			
-			//  Multiply the random errors by t modulo n
-			
-			for (int i = 0; i < k; i++)
-			
-			    rand[i] = rand[i] .multiply(t)
-			
-				.mod(n) .add(n) .mod(n);
-			
-			
-			//  Permutate the list of random errors
-			
-			//  Any value can be used to permutate the random errors
-			//  but a private key should be used so the recipient's
-			//  public key hash doesn't change every time the public
-			//  key is generated
-			
-			Number key = x[2] .add(t);
-			
-			permutate(rand, key);
-			
-			
-			//  Add the random errors t rand[i] to c[i]
-			
-			if (pbits <= 6) for (int i = 1; i < k; i++)
-			
-			    c[i] = c[i] .add(rand[i]) .mod(n);
-			
-			
-			//  Permutate the c elements
-			
-			key = x[3];
-			
-			permutate1(c, key);
-			
-			
-			//  Convert the vector c[] to string
-			
-			StringBuilder sb = new StringBuilder();
-			
-			for (int i = 0; i < c.length; i++)
-			{
-				String cstr = c[i] .toString(16);
-				
-				if (cstr.length() > c_digits)
-				
-				    throw new ArithmeticException();
-				
-				while (cstr.length() < ((i > 0) ?
-				
-				    c_digits : c_digits - 20))
-				
-					cstr = "0" + cstr;
-				
-				sb.append(cstr);
-			}
-			
-			String ystr = sb.toString();
-			
-			this.publickey = ystr;
-		}
-		
-		
-		
-		else // if (publickey != null)
-		{
-		
-			//  Generate the sender's one-time public key b = c[] m[]
-			//
-			//  (from the recipient's static public key c[])
-			
-			//  Choose a random secret key m, then generate
-			//  the one-time public key b = c[i] m[i] using
-			//  the recipient's static public key c[].
-			
-			//  Choose a random secret key m =
-			//
-			//  f(static public key y, one-time private key k)
-			
-			
-			//  Set the number of repeating m[i]
-			
-			final int r = (k - 4*20 / pbits) / 2;
-			
-			Number[] m = new Number[k];
-			
-			
-			//  Define the values for m[]
-			
-			m[0] = new Number( Cipher.hash( new Number(
-			
-			    publickey, 16) .add(x[0]) .toByteArray(32) ) );
-			
-			for (int i = 1; i < m.length; i++)
-			
-			    m[i] = new Number( Cipher.hash(
-			
-				m[i-1] .toByteArray(32) ) );
-			
-			
-			//  Reduce m[] modulo 2^pbits
-			
-			for (int i = 1; i < m.length; i++)
-			
-			    m[i] = m[i] .mod(new Number(2).pow(pbits));
-			
-			m[0] = m[0] .mod(new Number(2).pow(64));
-			
-			
-			if (pbits == 4)
-			{
-				//  For the random error cipher, set
-				//  the sum of the largest bits to k/4
-				//  to reduce the value of rand[i] m[i]
-				
-				int col = pbits - 1;
-				
-				for (int i = 0; i < k/2; i++)
-				
-				    if (addColumn(m, col) != k/4)
-				
-					m[i].flipBit(col);
-			}
-			
-			
-			//  Set r numbers randomly to 1 in
-			//  the range m[4*20 / pbits] to m[k]
-			
-			int range = k - 4*20 / pbits;
-			
-			Number[] ones = new Number[range];
-			
-			for (int i = 0; i < ones.length; i++)
-			
-			    ones[i] = new Number(0);
-			
-			for (int i = 0; i < r; i++)
-			
-			    ones[i] = new Number(1);
-			
-			
-			//  Permutate the ones
-			
-			Number key1 = x[2];
-			
-			permutate(ones, key1);
-			
-			
-			//  Permutate m[]
-			
-			Number key = x[3];
-			
-			permutate1(m, key);
-			
-			
-			//  Move the ones to m[]
-			
-			for (int i = 0; i < ones.length; i++)
-			
-			    if (ones[i].equals(1))
-			
-				m[4*20 / pbits + i] = new Number(1);
-			
-			
-			//  Set the last m[i] to 1
-			
-			m[m.length-1] = new Number(1);
-			
-			//  System.out.println(Arrays.toString(m));
-			
-			
-			//  Initialize the vector cstr[] from
-			//  the recipient's static public key
-			
-			String[] cstr = new String[k];
-			
-			if (((publickey.length() + 20) % k) != 0)
-			
-			    throw new IllegalArgumentException();
-			
-			
-			final int cdigits = (publickey.length() + 20) / k;
-			
-			cstr[0] = publickey .substring(0, cdigits - 20);
-			
-			publickey = publickey .substring(cdigits - 20);
-			
-			for (int i = 1; i < cstr.length; i++)
-			
-			    cstr[i] = publickey .substring(
-			
-				cdigits*(i-1), cdigits*i);
-			
-			
-			//  Convert cstr[] to a number vector c[]
-			
-			Number[] c = new Number[cstr.length];
-			
-			for (int i = 0; i < c.length; i++)
-			
-			    c[i] = new Number(cstr[i], 16);
-			
-			
-			//  Compute the subset sum b = c[] m[]
-			//
-			//  This will expand the size of c by pbits + log2(k)
-			
-			Number b = new Number(0);
-			
-			for (int i = 0; i < c.length; i++)
-			
-			    b = b .add(c[i].multiply(m[i]));
-			
-			
-			//  Convert the subset sum to a public key string
-			
-			String ystr = b .toString(16);
-			
-			int ylen = (nbits + pbits + Math.log2(k) + 3) / 4;
-			
-			
-			//  Prepend one or two zeros until the length equals ylen
-			
-			while (ystr.length() < ylen) ystr = "0" + ystr;
-			
-			
-			
-			//  Define the public coefficients
-			
-			final int d = nbits / 4;
-			
-			Number[][] r1 = new Number[k1][k];
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			
-			    r1[i1][0] = new Number(0);
-			
-			Number temp = new Number(0);
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			for (int i  = 1; i  < k;  i ++)
-			{
-				temp = new Number(Cipher.hash(
-				
-				    temp.toByteArray(32)));
-				
-				r1[i1][i] = temp.mod(new Number(16).pow(d));
-			}
-			
-			
-			//  Compute the vector products r[][] m[]
-			
-			Number[] r_m = new Number[k1];
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			
-			    r_m[i1] = new Number(0);
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			for (int i  = 0; i  < k;  i ++)
-			
-			    r_m[i1] = r_m[i1] .add(
-			
-				r1[i1][i].multiply(m[i]));
-			
-			
-			//  Append the vector products r[][] m[]
-			
-			String[] r_m_str = new String[k1];
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			
-			    r_m_str[i1] = r_m[i1] .toString(16);
-			
-			for (String str : r_m_str)
-			
-			    if (str.length() > ylen)
-			
-				throw new ArithmeticException();
-			
-			for (int i1 = 0; i1 < k1; i1++)
-			{
-				while (r_m_str[i1].length() < ylen)
-				
-				    r_m_str[i1] = "0" + r_m_str[i1];
-				
-				ystr = ystr + r_m_str[i1];
-			}
-			
-			
-			//  Append random digits to make the one-time public
-			//  key size equal to the static public key size
-			//
-			//  While the random numbers can be probabilistic
-			//  they should be deterministic so that a program
-			//  can test if a public key is being reused by
-			//  hashing the key and comparing the hashes.
-			
-			StringBuilder sb = new StringBuilder(ystr);
-			
-			for (int i = 0; sb.length() < digits; i++)
-			
-			     sb.append(pi16.charAt(i));
-			
-			this.publickey = sb.toString();
-		}
-	}
-	
-	
-	
 	
 	
 	private void generateFactKey(String publickey, int digits)
@@ -59071,6 +58540,7 @@ class PublicKey
 		//  Computes the recipient's static public key if null
 		//  or else computes the sender's one-time public key
 		
+		final int pbits = 512;
 		
 		if ((publickey == null) || publickey.isEmpty())
 		{
@@ -59089,51 +58559,124 @@ class PublicKey
 			//  5 bits  (31/32)^16  >  1/2,  16 primes
 			
 			
-			final int pbits = 512;
+			final int numberoffactors = digits * 4 / pbits;
 			
-			final int k = digits * 4 / pbits;
+			System.out.println("fact digits == " + digits);
 			
-			if (!Math.isPowerOf2(k)) throw
+			System.out.println("number of factors == " + numberoffactors);
 			
-			    new IllegalArgumentException();
+			if (!Math.isPowerOf2(numberoffactors))
 			
-			Number ones = new Number(2) .pow(pbits) .subtract(1);
+			    throw new IllegalArgumentException();
 			
-			Number[] p = new Number[k];
+			Number ones = new Number(2).pow(pbits).subtract(1);
 			
-			final int t = 1 + Math.log2(k);
+			Number[] p = new Number[numberoffactors];
 			
-			Number[] X = new Number[x.length];
+			final int s = 1 + Math.log2(numberoffactors);
 			
-			for (int i = 0; i < x.length; i++)
+			//  Create an array of random 512-bit numbers from k hashes
+			
+			Number[] X = new Number[numberoffactors];
+			
+			Number x1 = x[0], x2 = x[1];
+			
+			for (int i = 0; i < X.length; i++)
 			{
-				Number x1 = x[i];
+				x1 = new Number(Cipher.hash(x1.toByteArray()));
+				x2 = new Number(Cipher.hash(x2.toByteArray()));
 				
-				Number x2 = new Number(Cipher.hash(x1.toByteArray()));
+				X[i] = x1.multiply(new Number(2).pow(256)).add(x2).and(ones);
 				
-				X[i] = x1.multiply(new Number(2).pow(256)) .add(x2);
+				for (int j = pbits -1; j >= pbits -1 -s; j--) X[i].setBit(j);
 			}
 			
-			for (int i = 0; i < k; i++)
+			//  Create an array of 512-bit primes from the 512-bit numbers
+			
+		//	for (int i = 0; i < X.length; i++)
+		//	{
+		//		p[i] = X[i] .nextPrime();
+		//		
+		//		while (!p[i].mod(4).equals(3))
+		//		
+		//		    p[i] = p[i] .nextPrime();
+		//	}
+			
+			
+			///////////////////////////////////////////////
+			
+			//  Use multiple threads to generate the primes
+			
+			//  final int t = 4;
+			
+			final int t = sizefact1 / (4*1024);
+			
+			System.out.println("number of threads == " + t);
+			
+			final int size = numberoffactors / t;
+			
+			Thread[] tarray = new Thread[t];
+			
+			//  java.util.Vector<Number> vector; // not used
+			//
+			//  vector = new java.util.Vector<Number>();
+			
+			for (int i = 0; i < tarray.length; i++)
 			{
-				X[i] = X[i] .and(ones);
+				final int i1 = i;
 				
-				for (int j = pbits -1; j >= pbits -1 -t; j--)
-				
-				    X[i] .setBit(j);
-				
-				p[i] = X[i] .nextPrime();
-				
-				while (!p[i].mod(4).equals(3))
-				
-				    p[i] = p[i] .nextPrime();
+				tarray[i] = new Thread(() ->
+				{
+					for (int j = 0; j < size; j++)
+					{
+						final int k = size * i1 + j;
+						
+						Number prime = X[k] .nextPrime();
+						
+						while (!prime.mod(4).equals(3))
+						
+						    prime = prime .nextPrime();
+						
+						if (k == 0) while
+						
+						    (prime.subtract(1).isDivisibleBy(3)
+						  || prime.subtract(1).isDivisibleBy(5)
+						  || prime.subtract(1).isDivisibleBy(7)
+						  || prime.subtract(1).isDivisibleBy(11)
+						  || prime.subtract(1).isDivisibleBy(13)
+						  || prime.subtract(1).isDivisibleBy(43))
+						
+							prime = prime .nextPrime();
+						
+						//  vector.add(prime);
+						
+						p[k] = prime;
+					}
+				});
 			}
 			
-			//  Compute n = p1 p2 p3 p4
+			//  Start the threads
+			
+			for (Thread thread : tarray)
+			
+			     thread.start();
+			
+			
+			//  Wait for the threads to expire
+			
+			for (Thread thread : tarray)
+			
+			     while (thread.isAlive()) ;
+			
+			
+			///////////////////////////////////////////////
+			
+			
+			//  Compute n = p1 p2 p3 p4 ... pk
 			
 			Number n = new Number(1);
 			
-			for (int i = 0; i < k; i++)
+			for (int i = 0; i < numberoffactors; i++)
 			
 			    n = n .multiply(p[i]);
 			
@@ -59173,6 +58716,7 @@ class PublicKey
 			//
 			//  m = f(recipient's public key y, sender's private key k)
 			
+			
 			//  Choose a random 512-bit secret key
 			
 			Number n0 = new Number(publickey, 16) .add(x[0]);
@@ -59183,20 +58727,13 @@ class PublicKey
 			Number m256_2 = new Number(Cipher.hash(n1.toByteArray(32)));
 			Number m256_3 = new Number(Cipher.hash(n2.toByteArray(32)));
 			
-			Number m1 = m256_1 .multiply(m256_2) .add(m256_3);
+			Number ones = new Number(2).pow(pbits).subtract(1);
 			
-			m1.clearBit(511); m1.clearBit(510);
+			Number m0 = m256_1 .multiply(m256_2) .add(m256_3) .and(ones);
 			
-			m1.setBit(509); m1.setBit(0);
+			m0.clearBit(pbits-1); m0.clearBit(pbits-2);
 			
-			
-			//  Compute m1 = m1 ^ k
-			
-			final int bits = digits * 4;
-			
-			while (m1.square() .bitCount() < bits/2)
-			
-			    m1 = m1 .square();
+			m0.setBit(pbits-3); m0.setBit(0);
 			
 			
 			//  Initialize the modulus
@@ -59204,9 +58741,24 @@ class PublicKey
 			Number n = new Number(publickey, 16);
 			
 			
-			//  Compute m2 = m1 ^ 2
+			//  Compute m1 = m0 ^ k
+			
+			//  First increase m to half the size of n
+			
+			final int bits = digits * 4;
+			
+			Number m1 = new Number(m0);
+			
+			while (m1.bitCount() * 2 < bits / 2)
+			
+			    m1 = m1 .square();
+			
+			
+			//  Increase m to the size of m
 			
 			Number m2 = m1 .square();
+			
+			//  Verify that (m2 < n) and (m2 > (n - 256)) bits
 			
 			if (m2.bitCount() > n.bitCount())
 			
@@ -59217,13 +58769,26 @@ class PublicKey
 			    throw new ArithmeticException();
 			
 			
-			//  Compute c = m2 ^ 2 (mod n)
+			//  //  Compute c = m2 ^ 2 (mod n)
+			//
+			//  Number c = m2 .square() .mod(n);
 			
-			Number c = m2 .square() .mod(n);
+			
+			//  Compute c = m2 * m0 ^ 2 (mod n) so that
+			//
+			//  c = m0 ^ (2*k + 2) == m0 ^ (2 (k + 1)) mod n
+			
+			Number c = m2 .multiply(m0.square()) .mod(n);
+			
 			
 			this.publickey = c.toString(digits, 16);
 		}
 	}
+	
+	
+	
+	
+	
 	
 	
 	
@@ -59748,7 +59313,7 @@ class PublicKey
 			
 			return new Number(E.toIntegerString(s, radix), radix )
 			
-				.mod(new Number(16).pow(64).add(1));
+			    .mod(new Number(16).pow(64).add(1));
 		}
 		
 		
@@ -59848,7 +59413,7 @@ class PublicKey
 			
 			return new Number(E.toIntegerString(s, radix), radix )
 			
-				.mod(new Number(16).pow(64).add(1));
+			    .mod(new Number(16).pow(64).add(1));
 		}
 		
 		
@@ -59921,7 +59486,7 @@ class PublicKey
 			
 			return new Number(E.toIntegerString(s, radix), radix )
 			
-				.mod(new Number(16).pow(64).add(1));
+			    .mod(new Number(16).pow(64).add(1));
 		}
 		
 		
@@ -60302,7 +59867,7 @@ class PublicKey
 			
 			return new Number(E.toIntegerString(s, radix), radix )
 			
-				.mod(new Number(16).pow(64).add(1));
+			    .mod(new Number(16).pow(64).add(1));
 		}
 		
 		
@@ -60647,7 +60212,7 @@ class PublicKey
 			
 			return new Number(E.toIntegerString(s, radix), radix )
 			
-				.mod(new Number(16).pow(64).add(1));
+			    .mod(new Number(16).pow(64).add(1));
 		}
 		
 		
@@ -60725,13 +60290,14 @@ class PublicKey
 			
 			return new Number(E.toIntegerString(s, radix), radix )
 			
-				.mod(new Number(16).pow(64));
+			    .mod(new Number(16).pow(64));
 		}
 		
 		
 		
 		
-		else if ( z.trim().length() == size4x128 )
+		
+		else if ( z.trim().length() == sizefact1 )
 		{
 		
 			//  if (type == recipient / decryption) m is computed from z = c = m^2 (mod n)
@@ -60739,76 +60305,148 @@ class PublicKey
 			
 			final int digits = z.trim().length();
 			
+			final int pbits = 512;
+			
+			final long starttime = System.currentTimeMillis();
+			
 			if (type == 1)
 			{
 				//  Decrypt the message or compute
 				//
 				//  m == c ^ (1/2) (mod n)
 				
+				System.out.println("decrypting factorization cipher");
 				
-				final int pbits = 512;
+				final int numberoffactors = digits * 4 / pbits;
 				
-				final int k = digits * 4 / pbits;
+				//  System.out.println("fact digits == " + digits);
 				
-				if (!Math.isPowerOf2(k)) throw
+				//  System.out.println("number of factors == " + numberoffactors);
 				
-				    new IllegalArgumentException();
+				if (!Math.isPowerOf2(numberoffactors))
 				
+				    throw new IllegalArgumentException();
 				
-				//  Re-compute the primes p[]
+				Number ones = new Number(2).pow(pbits).subtract(1);
 				
-				Number ones = new Number(2) .pow(pbits) .subtract(1);
+				Number[] p = new Number[numberoffactors];
 				
-				Number[] p = new Number[k];
+				final int s = 1 + Math.log2(numberoffactors);
 				
-				final int t = 1 + Math.log2(k);
+				//  Create an array of random 512-bit numbers from k hashes
 				
-				Number[] X = new Number[x.length];
+				Number[] X = new Number[numberoffactors];
 				
-				for (int i = 0; i < x.length; i++)
+				Number x1 = x[0], x2 = x[1];
+				
+				for (int i = 0; i < X.length; i++)
 				{
-					Number x1 = x[i];
+					x1 = new Number(Cipher.hash(x1.toByteArray()));
+					x2 = new Number(Cipher.hash(x2.toByteArray()));
 					
-					Number x2 = new Number(
+					X[i] = x1.multiply(new Number(2).pow(256)).add(x2).and(ones);
 					
-					    Cipher.hash(x1.toByteArray()));
+					for (int j = pbits -1; j >= pbits -1 -s; j--) X[i].setBit(j);
+				}
+				
+				
+				//  Create an array of p-bit primes from the p-bit numbers
+				
+				
+				
+				//  Use a single thread to generate the primes
+				
+				for (int i = 0; i < 1; i++)
+				{
+					Number prime = X[i] .nextPrime();
 					
-					X[i] = x1 .multiply(new Number(2).pow(256)) .add(x2);
+					while (!prime.mod(4).equals(3))
+					
+					    prime = prime .nextPrime();
+					
+					//  if (i == 0)
+					
+					while
+					
+					    (prime.subtract(1).isDivisibleBy(3)
+					  || prime.subtract(1).isDivisibleBy(5)
+					  || prime.subtract(1).isDivisibleBy(7)
+					  || prime.subtract(1).isDivisibleBy(11)
+					  || prime.subtract(1).isDivisibleBy(13)
+					  || prime.subtract(1).isDivisibleBy(43))
+					
+						prime = prime .nextPrime();
+					
+					p[0] = prime;
 				}
 				
 				
 				/********************************
 				
+				//  Use multiple threads to generate the primes
 				
-				for (int i = 0; i < k; i++)
+				System.out.println("generating primes");
+				
+				int t = Math.numberofthreads;
+				
+				while (!Math.isPowerOf2(t)) t--;
+				
+				System.out.println("number of threads == " + t);
+				
+				final int size = numberoffactors / t;
+				
+				Thread[] tarray = new Thread[t];
+				
+				// java.util.Vector<Number> vector; // not used
+				//
+				// vector = new java.util.Vector<Number>();
+				
+				for (int i = 0; i < tarray.length; i++)
 				{
-					X[i] = X[i] .and(ones);
+					final int i1 = i;
 					
-					for (int j = pbits -1; j >= pbits -1 -t; j--)
-					
-					    X[i] .setBit(j);
-					
-					p[i] = X[i] .nextPrime();
-					
-					while (!p[i].mod(4).equals(3))
-					
-					    p[i] = p[i] .nextPrime();
+					tarray[i] = new Thread(() ->
+					{
+						for (int j = 0; j < size; j++)
+						{
+							final int k = size * i1 + j;
+							
+							Number prime = X[k] .nextPrime();
+							
+							while (!prime.mod(4).equals(3))
+							
+							    prime = prime .nextPrime();
+							
+							// vector.add(prime);
+							
+							p[k] = prime;
+						}
+					});
 				}
 				
-				Number n = new Number(1);
+				//  Start the threads
 				
-				for (int i = 0; i < k; i++)
+				for (Thread thread : tarray)
 				
-				    n = n .multiply(p[i]);
+				     thread.start();
+				
+				
+				//  Wait for the threads to expire
+				
+				for (Thread thread : tarray)
+				
+				     while (thread.isAlive()) ;
+				
+				
+				********************************/
 				
 				
 				//  Set c = one-time public key z
 				
 				Number c = new Number(z, 16);
 				
-				if (c.equals(0) || c.isDivisibleBy(p[0]))
 				
-				    return new Number(0); // public key = 0 or k n
+				/********************************
 				
 				
 				//  Solve for m == c ^ (1/2) (mod n)
@@ -60832,6 +60470,7 @@ class PublicKey
 				
 				    m[i] = c .modPow( p[i] .add(1) .divide(4), p[i]);
 				
+				
 				//  Compute the least common root, least com-
 				//  posite sqrt, or least composite residue
 				
@@ -60843,41 +60482,38 @@ class PublicKey
 				********************************/
 				
 				
-				for (int i = 0; i < 1; i++)
-				{
-					X[i] = X[i] .and(ones);
-					
-					for (int j = pbits -1; j >= pbits -1 -t; j--)
-					
-					    X[i] .setBit(j);
-					
-					p[i] = X[i] .nextPrime();
-					
-					while (!p[i].mod(4).equals(3))
-					
-					    p[i] = p[i] .nextPrime();
-				}
-				
-				//  Set c = one-time public key z
-				
-				Number c = new Number(z, 16);
-				
-				if (c.equals(0) || c.isDivisibleBy(p[0]))
-				
-				    return new Number(0); // fake public key = 0 or k n
+				//  Solve for m = c ^ (1/2) (mod n)
 				
 				//                   1 / (2 k)
 				//  Compute m1  =  c           mod p[0]
 				
+				///////////////////////////////////////////////
+				
+				//  Use the quadratic divider to reduce c mod p
+				
 				Number r0 = c .mod(p[0]);
 				
-				Number mod = p[0] .subtract(1) .divide(2);
+				///////////////////////////////////////////////
 				
-				Number exp = new Number(2*k) .modInverse(mod);
+				Number phi2 = p[0] .subtract(1) .divide(2);
 				
-				Number m1 = r0 .modPow(exp, p[0]);
+				int exp = (numberoffactors + 2)/2;
+				
+				System.out.println("exp == " + exp);
+				
+				Number invexp = new Number(exp) .modInverse(phi2);
+				
+				Number m1 = r0 .modPow(invexp, p[0]) .modSqrt(p[0]);
 				
 				if (!m1.testBit(0)) m1 = m1 .negate(p[0]);
+				
+				long endtime = System.currentTimeMillis();
+				
+				long computetime = endtime - starttime;
+				
+				System.out.println("fact decrypt time == "
+				
+				    + computetime + " ms");
 				
 				//  Reduce M modulo F8 and return the secret key
 				
@@ -60885,10 +60521,11 @@ class PublicKey
 			}
 			
 			
+			
 			else // if (type == 2)
 			{
 			
-				//  Choose a random 512-bit secret key
+				//  Choose a random p-bit secret key
 				
 				String publickey = z;
 				
@@ -60900,510 +60537,26 @@ class PublicKey
 				Number m256_2 = new Number(Cipher.hash(n1.toByteArray(32)));
 				Number m256_3 = new Number(Cipher.hash(n2.toByteArray(32)));
 				
-				Number m1 = m256_1 .multiply(m256_2) .add(m256_3);
+				Number ones = new Number(2).pow(pbits).subtract(1);
 				
-				m1 .clearBit(511); m1.clearBit(510);
+				Number m1 = m256_1 .multiply(m256_2) .add(m256_3) .and(ones);
 				
-				m1.setBit(509); m1 .setBit(0);
+				m1 .clearBit(pbits-1); m1.clearBit(pbits-2);
 				
+				m1.setBit(pbits-3); m1.setBit(0);
 				
-				if (true) return m1;
-				
-				
-				//  Compute m1 = m1 ^ k
-				
-				final int bits = digits * 4;
-				
-				while (m1.square() .bitCount() < bits/2)
-				
-				    m1 = m1 .square();
-				
-				
-				//  Compute m2 = m1 ^ 2  <  n
-				
-				Number m2 = m1 .square();
-				
-				//  Reduce M modulo F8 and return the secret key
-				
-				return m2 .mod(new Number(16).pow(64).add(1));
+				return m1;
 			}
 		}
 		
 		
-		
-		
-		
-		else if ((z.trim().length() == size56x29)
-		      || (z.trim().length() == size48x49))
-		{
-			//  Merkle-Hellman / knapsack ciphers
-			
-			//  if (type == recipient / decryption) m is computed from z = b = c[] m[]
-			//  if (type ==    sender / encryption) m is chosen and z is ignored
-			
-			final int digits = z.trim().length();
-			
-			int k = -1, k1, pbits = -1, nbits;
-			
-			if (digits == size56x29) { k = 28; pbits = 8; }
-			if (digits == size48x49) { k = 48; pbits = 4; }
-			
-			k1 = 2 * (int) Math.sqrt(k);
-			
-			nbits = pbits * (k + 1);
-			
-			Number[] m = null;
-			
-			//  Set the number of repeating m[i]
-			
-			final int rep = (k - 4*20 / pbits) / 2;
-			
-			
-			long starttime = System.nanoTime();
-			
-			
-			if (type == 1)
-			{
-				//  Decrypt the message or compute m[] == ssss(b, p)
-				//
-				//  (ssss = solve superincreasing subset sum problem)
-				
-				
-				//  use s and t to compute the secret subset sum
-				//
-				//  b1 = t^-1 ( b - s ) (mod n);
-				//
-				//  solve the superincreasing subset sum problem for
-				//
-				//  m[] = ssss(a[], b1, p) using the private key a;
-				//
-				//  verify that a[i] m[i] == b1;
-				//
-				//  if the sum is correct, return m[].
-				
-				
-				//  Define the multiplier modulus
-				
-				Number p = new Number(2).pow(pbits);
-				
-				
-				//  Define the superincreasing sequence
-				
-				Number[] a = new Number[k];
-				
-				for (int i = 0; i < a.length; i++)
-				
-				    a[i] = new Number(2).pow(pbits*i);
-				
-				if (!isSuperincreasingSequence(a, p))
-				{
-					System.out.println("a == " + Arrays.toString(a));
-					
-					throw new ArithmeticException();
-				}
-				
-				
-				//  Initialize the private modulus n
-				
-				Number n = new Number(2).pow(nbits);
-				
-				n = n .add(x[0]) .mod(n);
-				
-				n .setBit(nbits -1);
-				
-				n = n .nextPrime();
-				
-				int c_digits = (int) n.bitCount() / 4;
-				
-				
-				//  Initialize secret numbers r, s, and t != r
-				
-				Number t  = new Number(x[0]);
-				Number s0 = new Number(x[1]);
-				
-				//  a[0] r (mod n) == c0;
-				//
-				//  r == a[0]^-1 c0 (mod n);
-				
-				Number c0 = new Number(pi16.substring(0, c_digits - 20), 16);
-				
-				Number r = a[0].modInverse(n) .multiply(c0) .mod(n);
-				
-				t = t .mod(new Number(2).pow(64));
-				
-				while (!r.isCoprimeWith(n)) n = n.add(1);
-				
-				Number[] s1 = new Number[k1];
-				
-				s1[0] = new Number(Cipher.hash(s0.toByteArray(32)));
-				
-				for (int i = 1; i < s1.length; i++)
-				
-				    s1[i] = new Number(Cipher.hash(s1[i-1].toByteArray(32)));
-				
-				for (int i = 0; i < s1.length; i++)
-				
-				    s1[i] = s1[i] .mod(n);
-				
-				
-				
-				//  Initialize b from z substring because z is padded to
-				//  make the one-time key size equal to the static key size
-				
-				int zlen1 = (nbits + pbits + Math.log2(k) + 3) / 4;
-				
-				String zstr1 = z.substring(0, zlen1);
-				
-				Number b = new Number(zstr1, 16);
-				
-				//  System.out.println("one-time public key == " + zstr1);
-				
-				
-				//  Initialize the vector product r[][] m[] from z substring
-				
-				int zlen2 = (nbits + pbits + Math.log2(k) + 3) / 4;
-				
-				Number[] r1_m = new Number[k1];
-				
-				for (int i1 = 0; i1 < k1; i1++)
-				{
-					String zstr2 = z.substring(
-					
-					    zlen1, zlen1 + zlen2);
-					
-					r1_m[i1] = new Number(zstr2, 16);
-					
-					zlen1 += zlen2;
-				}
-				
-				
-				//  Read more numbers from the sender's key
-				//
-				//  zlen2 = (nbits + pbits + Math.log2(k) + 3) / 4;
-				//
-				//  String zstr2 = z.substring(zlen1, zlen1 + zlen2);
-				//
-				//  Number ... = new Number(zstr2, 16);
-				
-				
-				//  System.out.println("\n");
-				//
-				//  for (int i = 0; i < r1_m.length; i ++)
-				//
-				//      System.out.print(r1_m[i].toString(16) + "  ");
-				
-				
-				//  Solve the superincreasing subset sum problem for
-				//
-				//  x[] = ssss(a[], b1, p) using the private key a
-				
-				
-				//  Compute the product of r[][] s[]
-				
-				Number inv_r = r.modInverse(n);
-				
-				for (int i1 = 0; i1 < k1; i1++)
-				
-				    s1[i1] = r1_m[i1] .multiply(s1[i1]) .negate(n);
-				
-				
-				//  Remove the r1[][] s1[] from the subset sum
-				
-				b = b .multiply(inv_r);
-				
-				for (int i1 = 0; i1 < k1; i1++)
-				
-				    b = b .add( s1[i1].multiply(inv_r) );
-				
-				b = b .mod(n) .add(n) .mod(n);
-				
-				
-				//  Calculate the product t r^-1 (mod n)
-				
-				//  If t.add(0) is changed to t.add(1,2,3,...)
-				//  the method will find solutions for the subset
-				//  sum problem but it will never find the correct key
-				
-				Number t_inv_r = t .add(0) .multiply(inv_r);
-				
-				Number product = new Number(0);
-				
-				
-				
-				//  Try all the values of m[] rand[] errors
-				
-				//  This loop can use any range of i such as for (int i =
-				//  4*1024; i < 5*1024; i++) and it still finds the key;
-				//
-				//  but if the wrong value of t is used such as t.add(1)
-				//  then it still finds several solutions for every thou-
-				//  sand iterations but it never finds the correct key.
-				
-				
-				for (int i = 0; i < 2*1024; i++)
-				{
-					//  Compute the secret subset sum
-					//
-					//  b1 = r^-1 ( b - s_r1_m ) (mod n);
-					
-					final Number b1 = b .subtract(product)
-					
-					    .mod(n) .add(n) .mod(n);
-					
-					final Number b1_ = b .add(product) .mod(n);
-					
-					product = product .add(t_inv_r);
-					
-					Number[] m1  = ssss(a, b1,  1, p);
-					Number[] m1_ = ssss(a, b1_, 1, p);
-					
-					if ((m1 == null) && (m1_ == null)) continue;
-					
-					//  Show how many times the ssss() method returns
-					//  a solution until the correct key is found
-					//
-					//  if (digits == size...)
-					//
-					//     System.out.print(" i == " + i);
-					
-					
-					//  If m1 and m1_ are solutions to the subset
-					//  sum problem, then we have to test both
-					//  solutions to find the one that has several
-					//  repeating digits.
-					
-					
-					boolean bool = false;
-					
-					if (m1 != null)
-					{
-						m = m1; int[] mint = new int[m.length];
-						
-						for (int j = 0; j < mint.length; j++)
-						
-						    mint[j] = m[j].intValue();
-						
-						bool = false;
-						
-						int[][] array2 = Math.sortAndCollate(mint);
-						
-						for (int j = 0; j < array2.length; j++)
-						{
-							if (array2[j][1] >= rep)
-							
-							    { bool = true; break; }
-						}
-						
-						if (bool)
-						{
-							//  System.out.print(i + "  ");
-							
-							break;
-						}
-					}
-					
-					if (m1_!= null)
-					{
-						m = m1_; int[] mint = new int[m.length];
-						
-						for (int j = 0; j < mint.length; j++)
-						
-						    mint[j] = m[j].intValue();
-						
-						bool = false;
-						
-						int[][] array2 = Math.sortAndCollate(mint);
-						
-						for (int j = 0; j < array2.length; j++)
-						{
-							if (array2[j][1] >= rep)
-							
-							    { bool = true; break; }
-						}
-						
-						if (bool)
-						{
-							//  System.out.print(i + "  ");
-							
-							break;
-						}
-					}
-				}
-				
-				
-				if (m == null) return new Number(0);
-				
-				//  System.out.println("m == " + Arrays.toString(m));
-				
-				
-				//  Permutate the sender's decrypted key
-				
-				Number key = x[3];
-				
-				permutate1(m, key);
-			}
-			
-			
-			
-			else // if (type == 2)
-			{
-			
-				//  Choose the sender's random secret key
-				//
-				//  m[] = f(recipient's public key y, sender's private key k)
-				
-				String publickey = z;
-				
-				
-				m = new Number[k];
-				
-				//  Define the values for m[]
-				
-				m[0] = new Number( Cipher.hash( new Number(
-				
-				    publickey, 16) .add(x[0]) .toByteArray(32) ) );
-				
-				for (int i = 1; i < m.length; i++)
-				
-				    m[i] = new Number( Cipher.hash(
-				
-					m[i-1] .toByteArray(32) ) );
-				
-				
-				//  Reduce m[] modulo 2 ^ pbits
-				
-				for (int i = 1; i < m.length; i++)
-				
-				    m[i] = m[i] .mod(new Number(2).pow(pbits));
-				
-				m[0] = m[0] .mod(new Number(2).pow(64));
-				
-				
-				if (pbits == 4)
-				{
-					//  For the random error cipher
-					//  set the sum of the largest bits to k/4
-					//  to reduce the value of rand[i] m[i]
-					
-					int col = pbits - 1;
-					
-					for (int i = 0; i < k/2; i++)
-					
-					    if (addColumn(m, col) != k/4)
-					
-						m[i].flipBit(col);
-				}
-				
-				
-				//  Set r numbers randomly to 1 in
-				//  the range m[4*20 / pbits] to m[k]
-				
-				int range = k - 4*20 / pbits;
-				
-				Number[] ones = new Number[range];
-				
-				for (int i = 0; i < ones.length; i++)
-				
-				    ones[i] = new Number(0);
-				
-				for (int i = 0; i < rep; i++)
-				
-				    ones[i] = new Number(1);
-				
-				
-				//  Permutate the ones
-				
-				Number key1 = x[2];
-				
-				permutate(ones, key1);
-				
-				
-				//  Permutate m[]
-				
-				Number key = x[3];
-				
-				permutate1(m, key);
-				
-				
-				//  Move the ones to m[]
-				
-				for (int i = 0; i < ones.length; i++)
-				
-				    if (ones[i].equals(1))
-				
-					m[4*20 / pbits + i] = new Number(1);
-				
-				
-				//  Set the last m[i] to 1
-				
-				m[m.length-1] = new Number(1);
-				
-				
-				
-				//  Truncate the array but don't delete m[0]
-				
-				//  m[0] makes the key size irregular and the solution
-				//  ambiguous so a cryptanalyst would have to solve
-				//  the knapsack 2^80 times to find the correct key.
-				
-				final Number m0 = m[0];
-				
-				Number[] m1 = new Number[m.length - 4*20 / pbits];
-				
-				for (int i = 0; i < m1.length; i++)
-				
-				    m1[i] = m[4*20 / pbits + i];
-				
-				//  Re-assign the array and replace m[0]
-				
-				m = m1;  m[0] = m0;
-			}
-			
-			
-			long endtime = System.nanoTime();
-			
-			long decrypttime = endtime - starttime;
-			
-			//  System.out.println("type == " + type +
-			//
-			//      "  m[] == " + Arrays.toString(m));
-			
-			
-			//  Convert the vector m[] to a number
-			
-			Number M = new Number(0);
-			
-			for (int i = 4*20 / pbits; i < m.length; i++)
-			{
-				M = M .add(m[i]);
-				
-				if (i < m.length -1)
-				
-				    M = M .shiftLeft(pbits, pbits);
-			}
-			
-			//  Reduce M modulo F8 and return the secret key
-			
-			return  M .mod(new Number(16).pow(64).add(1));
-		}
-		
-		
-		else
-		{	System.out.println("z.length() == "
-			
-			    + z.trim().length());
-			
-			return null;
-		}
+		return null;
 	}
 	
 	
 	
 	
 	
-	
-	
-	//  Merkle-Hellman cipher methods
 	
 	
 	private static boolean isSuperincreasingSequence(Number[] a, Number p)
@@ -61431,18 +60584,6 @@ class PublicKey
 	
 	
 	
-	private static int addColumn(Number[] m, int col)
-	{
-		int sum = 0;
-		
-		for (int i = 0; i < m.length; i++)
-		
-		    sum += m[i] .getBit(col);
-		
-		return sum;
-	}
-	
-	
 	private static Number[] ssss(Number[] a, Number b, int m0, Number p)
 	{
 	
@@ -61459,9 +60600,6 @@ class PublicKey
 		//  each number is greater than the sum of its predecessors multi-
 		//  plied by p-1. (For the binary subset sum problem the modulus
 		//  p = 2 and the multiplier p-1 == 1.)
-		//
-		//  The superincreasing subset sum problem is used to decrypt the
-		//  message or secret key in the Merkle-Hellman / knapsack cipher.
 		
 		
 		//  Verify that a is a superincreasing sequence modulo p
@@ -61613,11 +60751,6 @@ class PublicKey
 	}
 	
 	
-	
-	
-	//  These methods are not used for the Merkle-Hellman cipher
-	//  because the recipient permutates the public key vector c[]
-	//  and then also permutates the sender's decrypted private key m[]
 	
 	
 	private static void unpermutate(Number[] A, Number key)
@@ -66978,7 +66111,7 @@ class Math
 		
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		
-		for (int i = 2; i < 2L*1024*1024*1024; i++)
+		for (int i = 2; i < 2L*1024*1024*1024 -1; i++)
 		{
 			if (Math.isDivisibleBy(n, i))
 			
@@ -67198,9 +66331,9 @@ class Math
 		
 		while (!testBit(array, bit)
 		
-		    && (bit < 32*array.length)) bit++;
+		    && (bit < 32L*array.length)) bit++;
 		
-		if (bit >= 32*array.length)
+		if (bit >= 32L*array.length)
 		
 		    throw new IllegalArgumentException();
 		
@@ -68314,7 +67447,7 @@ class Math
 		
 		//  Count the number of twos or zeros
 		
-		int twos1 = 0, twos2 = 0;
+		long twos1 = 0, twos2 = 0;
 		
 		int[] multiplier1, multiplicand1, product1;
 		
@@ -68338,18 +67471,19 @@ class Math
 		multiplier1   = trim(shiftRight(multiplier,   32*twos1));
 		multiplicand1 = trim(shiftRight(multiplicand, 32*twos2));
 		
+		
 		//  Compute the product using the quadratic multiplier
 		
-		final int fftlength = 16*1024; // 16 K ints == 512 K bits
-		
-		product1 = quadMultiply(multiplier1, multiplicand1); // quadratic
+		product1 = quadMultiply(multiplier1, multiplicand1);
 		
 		
 		//  Replace the twos or zeros in the product
 		
-		int twos = twos1 + twos2;
+		long twos = twos1 + twos2;
 		
-		int[] product = trim(shiftLeft(product1, 32*twos, 32*twos));
+		int[] product = trim(shiftLeft(
+		
+		    product1, 32*twos, 32*twos));
 		
 		return product;
 	}
@@ -69181,7 +68315,7 @@ class Math
 	{
 		//  shifts an array left without expanding
 		
-		if ((bits > 32*array.length) || (bits < 0))
+		if ((bits > 32L*array.length) || (bits < 0))
 		
 		    throw new IllegalArgumentException();
 		
@@ -69248,7 +68382,7 @@ class Math
 	{
 		//  shifts right without contracting
 		
-		if ((bits > 32*array.length) || (bits < 0))
+		if ((bits > 32L*array.length) || (bits < 0))
 		
 		    throw new IllegalArgumentException();
 		
@@ -71314,7 +70448,11 @@ class Number implements Comparable<Number>
 				method = "divide by int";
 			}
 			
-			else if ((a_bits < 4*1024) && (b_bits < 4*1024))
+			else if ( ((a_bits < 4*1024) && (b_bits < 4*1024))
+			
+			       || (((1.0*a_bits) / (1.0*b_bits)) < 128)
+			
+			       || ((a_bits - b_bits) < 4*1024) )
 			{
 				//  quadratic division (long division)
 				
@@ -71869,7 +71007,6 @@ class Number implements Comparable<Number>
 	}
 	
 	
-	
 	public boolean equals(Object obj)
 	{
 		//  This method is required for ArrayLists or else the Array
@@ -72263,6 +71400,7 @@ class Number implements Comparable<Number>
 		//  q = a / b == a * (1 / b) == a * inverse(b).
 		
 		
+		
 		if (this.isComplex())
 		{
 			//  Compute the inverse of a complex number a + i b
@@ -72279,6 +71417,7 @@ class Number implements Comparable<Number>
 			
 			return new Number(real, imag);
 		}
+		
 		
 		
 		//  Define the precision of zero
@@ -72386,7 +71525,9 @@ class Number implements Comparable<Number>
 		
 		while (true)
 		{
-			int p1 = Math.min( p = 2*p, inv_precision );
+			int p1 = (p = 2*p);
+			
+			if (p1 > inv_precision) p1 = inv_precision;
 			
 			Number v1u1 = v1.setPrecision(p1) .multiply(u1.setPrecision(p1));
 			
@@ -72406,7 +71547,7 @@ class Number implements Comparable<Number>
 			
 			u1 .intpoint += bits / 32;
 			
-			u = u1 .shiftRight(d).trim();
+			u = u1 .shiftRight(d) .trim();
 		}
 		
 		else    u = u1 .shiftLeft(-d + 32, -d);
@@ -72419,7 +71560,8 @@ class Number implements Comparable<Number>
 		//
 		//  Note that u v can converge from above or below 1
 		
-		Number uv = this .multiply(u) .setPrecision(inv_precision);
+		Number uv = this .setPrecision(u.precision)
+		    .multiply(u) .setPrecision(u.precision);
 		
 		String uvstr = uv .toString(16);
 		
@@ -72435,7 +71577,7 @@ class Number implements Comparable<Number>
 		
 		//  Count the number of 0's or f's
 		
-		int digits = 0, mindigits = inv_precision * 3/4;
+		int digits = 0, mindigits = inv_precision * 2/3;
 		
 		char fracchar = frac.charAt(0);
 		
@@ -72447,11 +71589,13 @@ class Number implements Comparable<Number>
 		
 		if (digits < mindigits)
 		{
-			System.out.println("number of zeros or ones == "
+			System.out.println("Number of zeros or ones in "
 			
-			    + digits + " < " + mindigits);
+			   + "u v == " + digits + " < " + mindigits);
 			
-			throw new ArithmeticException();
+			String message = "fft or multiplier is defective ";
+			
+			throw new ArithmeticException(message);
 		}
 		
 		//  Set the correct precision
@@ -73500,13 +72644,11 @@ class Number implements Comparable<Number>
 		//  The modular inverse of a number a is the solution to
 		//  the congruence or modular equation a x == 1 (mod n)
 		
-		if (!this.isInteger())
-		
-		    throw new IllegalArgumentException();
+		if (!this.isInteger()) throw new IllegalArgumentException();
 		
 		if (this.isComplex()) return this.complexInverse(n);
 		
-		if (this.equals(1))  return new Number(this);
+		if (this.equals(1)) return new Number(this);
 		
 		char sign = (this.sign == '+') ? '+' : '-';
 		
@@ -73530,7 +72672,7 @@ class Number implements Comparable<Number>
 		
 		//  Check the answer
 		
-		if (! inva.multiply(a) .mod(n) .equals(1) )
+		if (! inva.multiply(a).mod(n).equals(1) )
 		{
 			String message = "modular inversion or division error";
 			
@@ -73814,7 +72956,7 @@ class Number implements Comparable<Number>
 		Number y = new Number(1);
 		
 		
-		if (exp.signum() == -1) { a = a .modInverse(n); x = x .abs(); }
+		if (exp.signum() == -1) { a = a.modInverse(n); x = x.abs(); }
 		
 		if (n.isInteger() && !n.isEven() && !this.isComplex())
 		
@@ -74241,8 +73383,9 @@ class Number implements Comparable<Number>
 		//  Cipolla's algorithm is faster than Tonelli's algorithm
 		//  if the totient has a large number of twos; but it is
 		//  slower for random moduli because the algorithm has to
-		//  do a modular exponentiation which requires O(p^3) steps
-		//  or operations and it also uses complex multiplication
+		//  do a modular exponentiation which requires O(p) multi-
+		//  precision multiplications or O(p^3) single-precision
+		//  operations and it also uses complex multiplication
 		//  which makes it 4 times slower.
 		
 		
@@ -74489,16 +73632,93 @@ class Number implements Comparable<Number>
 	
 	public static Number multiply(int[] n)
 	{
-		//  returns the product of n[]
+		//  returns the product of n[] by multiplying
+		//  iteratively in pairs until the array size == 1
 		
-		Number product = new Number(1);
+		//  Copy and expand the array to a power of 2
+		
+		int size = n.length;
+		
+		while (!Math.isPowerOf2(++size)) ;
+		
+		Number[] n1 = new Number[size];
 		
 		for (int i = 0; i < n.length; i++)
 		
-		    product = product.multiply(n[i]);
+		    n1[i] = new Number(n[i]);
 		
-		return product;
+		for (int i = n.length; i < n1.length; i++)
+		
+		    n1[i] = new Number(1);
+		
+		
+		//  For each iteration multiply the elements
+		//  in pairs and halve the size of the array
+		
+		size = n1.length;
+		
+		for (int t = size/2; t >= 1; t/=2)
+		{
+			Number[] products = new Number[t];
+			
+			for (int i = 0; i < products.length; i++)
+			
+			    products[i] = n1[2*i].multiply(n1[2*i+1]);
+			
+			n1 = products;
+		}
+		
+		if (n1.length != 1) throw
+		
+		    new ArithmeticException();
+		
+		return n1[0];
 	}
+	
+	
+	public static Number multiply(Number[] n)
+	{
+		//  returns the product of n[] by multiplying
+		//  iteratively in pairs until the array size == 1
+		
+		//  Copy and expand the array to a power of 2
+		
+		int size = n.length;
+		
+		while (!Math.isPowerOf2(++size)) ;
+		
+		Number[] n1 = new Number[size];
+		
+		for (int i = 0; i < n.length; i++) n1[i] = n[i];
+		
+		for (int i = n.length; i < n1.length; i++)
+		
+		    n1[i] = new Number(1);
+		
+		
+		//  For each iteration multiply the elements
+		//  in pairs and halve the size of the array
+		
+		size = n1.length;
+		
+		for (int t = size/2; t >= 1; t/=2)
+		{
+			Number[] products = new Number[t];
+			
+			for (int i = 0; i < products.length; i++)
+			
+			    products[i] = n1[2*i].multiply(n1[2*i+1]);
+			
+			n1 = products;
+		}
+		
+		if (n1.length != 1) throw
+		
+		    new ArithmeticException();
+		
+		return n1[0];
+	}
+	
 	
 	
 	public Number multiply(int multiplier)
@@ -74547,14 +73767,22 @@ class Number implements Comparable<Number>
 			return new Number(real, imag);
 		}
 		
+		
 		//  below size1 the math multiplier will call the grade-school / quadratic multiplier
-		//  above size1 the Number multiplier will call the Karatsuba / sesquilinear (3/2) multiplier
+		//  above size1 the Number multiplier will call the Karatsuba / sesquilinear or 3/2 multiplier
 		//  above size2 the math multiplier will call the Fourier / linear log multiplier
 		
-		//  Set the min and max size for the Karatsuba multiplier
 		
-		final int karatsize1 = 64;      //  64 ints ~   2 K bits
-		final int karatsize2 = 8*1024; //  8 K ints ~ 256 K bits
+		//  Set the minimum threshold for the Karatsuba / three-halves multiplier
+		
+		final int karatthreshold = 64; //  64 ints ~ 2 K bits
+		
+		//  Set the minimum threshold for the fft / linear log multiplier
+		//
+		//  the fft threshold is set to infinity until the fft multiply method is debugged
+		
+		final int fftthreshold = 1024*1024*1024; ////  8*1024; // 8 K ints * 32 bits / int == 256 K bits
+		
 		
 		//  product == multiplicand x multiplier
 		
@@ -74562,11 +73790,11 @@ class Number implements Comparable<Number>
 		
 		Number product;
 		
-		if ((this.intarray.length < karatsize1) || (mult.intarray.length < karatsize1))
+		if ((this.intarray.length < karatthreshold) || (mult.intarray.length < karatthreshold))
 		
 		    product = new Number(Math.multiply(this.intarray, mult.intarray));
 		
-		else if ((this.intarray.length > karatsize2) && (mult.intarray.length > karatsize2))
+		else if ((this.intarray.length > fftthreshold) && (mult.intarray.length > fftthreshold))
 		
 		    product = new Number(Fourier.multiply(this.intarray, mult.intarray));
 		
@@ -74580,15 +73808,6 @@ class Number implements Comparable<Number>
 		
 		    && !product.equals(0)) ? '-' : '+';
 		
-		
-		//  double    this_dbl =    this.doubleValue();
-		//  double    mult_dbl =    mult.doubleValue();
-		//  double product_dbl = product.doubleValue();
-		//  
-		//  System.out.println("product this x multiplier == "
-		//      + product_dbl + "  " + (this_dbl * mult_dbl));
-		
-		
 		return product;
 	}
 	
@@ -74598,7 +73817,7 @@ class Number implements Comparable<Number>
 	public static Number multiplyKaratsuba(Number x, Number y)
 	{
 	
-		//  Karatsuba Multiplication (Karatsuba and Ofman, 1962)
+		//  Karatsuba Multiplication (Karatsuba and Ofman, Soviet Physics, 1962)
 		//
 		//  Karatsuba multiplication uses only three multiplications instead of four.
 		//
@@ -74622,8 +73841,8 @@ class Number implements Comparable<Number>
 		//  == ( 34 * 78 ) << 0 + ( 12 * 56 ) << 2 + ( (12 + 34) * (56 + 78) - (34 * 78) - (56 * 12) ) << 1
 		
 		
-		//  Karatsuba multiplication has a running time of O(n ^ log2(3)) == O(n ^ 1.58).
-		//  Quadratic multiplication has a running time of o(n ^ log2(4)) == O(n ^ 2.00).
+		//  Karatsuba multiplication has a running time of O(n ^ log2(3)) == O(n ^ 1.58)
+		//  Quadratic multiplication has a running time of o(n ^ log2(4)) == O(n ^ 2.00)
 		
 		
 		//  This method was excerpted / extracted from the Java BigInteger class.
@@ -74633,7 +73852,7 @@ class Number implements Comparable<Number>
 		
 		//  the number of ints in each half of the number
 		
-		int half = (Math.max(xlen, ylen) +1) / 2;
+		int half = (Math.max(xlen, ylen) + 1) / 2;
 		
 		//  Assign the upper and lower halves of x and y
 		
@@ -74654,7 +73873,7 @@ class Number implements Comparable<Number>
 		
 		Number p3 = xh.add(xl) .multiply(yh.add(yl));
 		
-		// result = p1 * 2^(32*2*half) + (p3 - p1 - p2) * 2^(32*1*half) + p2
+		//  result = p1 * 2^(32*2*half) + (p3 - p1 - p2) * 2^(32*1*half) + p2
 		
 		Number result = p1.shiftLeft(32*half, 32*half)
 		
@@ -74667,20 +73886,6 @@ class Number implements Comparable<Number>
 		     return result.negate();
 		
 		else return result;
-	}
-	
-	
-	public static Number multiply(Number[] n)
-	{
-		//  returns the product of n[]
-		
-		Number product = new Number(1);
-		
-		for (int i = 0; i < n.length; i++)
-		
-		    product = product .multiply(n[i]);
-		
-		return product;
 	}
 	
 	
@@ -74729,7 +73934,7 @@ class Number implements Comparable<Number>
 		if (n.isEven()) n = n.add(1);
 		else            n = n.add(2);
 		
-		while (!n.isPrime())  n = n.add(2);
+		while (!n.isPrime()) n = n.add(2);
 		
 		return n;
 	}
@@ -74782,11 +73987,11 @@ class Number implements Comparable<Number>
 	//   (L. Euler)  e     +  1 == 0
 	//
 	//    pi^2      __    1
-	//    ----  ==  \    ---   ==  1/1 + 1/4 + 1/9 + 1/16 + ...
+	//    ----  ==  \    ---  ==  1/1 + 1/4 + 1/9 + 1/16 + ...
 	//     6        /_   m^2
 	//              m=1
 	//    pi^2      __    1
-	//    ----  ==  \    ---   ==  1/1 + 1/16 + 1/81 + 1/256 + ...
+	//    ----  ==  \    ---  ==  1/1 + 1/16 + 1/81 + 1/256 + ...
 	//     90       /_   m^4
 	//              m=1
 	//                  __                        __
@@ -74814,10 +74019,10 @@ class Number implements Comparable<Number>
 	//    --  ==  /_  ---------------------- == -----------------------
 	//    pi      n=0     2 ^(12 n + 4)         (1 n)!^6  2 ^(12 n + 4)
 	//
-	//              _     __
-	//    1       \/8     \    (4 n)! (1103 + 26390 n)
-	//    --  ==  ----    /_   -----------------------
-	//    pi      9801    n=0  (1 n)!^4   396 ^(4 n)
+	//              _    __
+	//    1       \/8    \    (4 n)! (1103 + 26390 n)
+	//    --  ==  ----   /_   -----------------------
+	//    pi      9801   n=0  (1 n)!^4   396 ^(4 n)
 	//
 	//   (Each term of the series adds about 8 digits)
 	//
@@ -75853,8 +75058,7 @@ class Number implements Comparable<Number>
 	
 	public Number round()
 	{
-		//  rounds the number to precision 0
-		//  or the nearest integer
+		//  rounds the number to the nearest integer
 		
 		if (this.isComplex())
 		
@@ -75863,11 +75067,15 @@ class Number implements Comparable<Number>
 			this.toReal().round(),
 			this.toImag().round());
 		
+		if (this.precision == 0)
+		
+		    return new Number(this);
+		
 		Number number = this;
 		
 		if (number.signum() >= 0)
 		
-		    number = number.add(0.5);
+		      number = number.add(0.5);
 		
 		else  number = number.subtract(0.5);
 		
@@ -75971,7 +75179,7 @@ class Number implements Comparable<Number>
 		
 		if (intints < 0) intints = 0;
 		
-		if (intints <= 0)  //  int value == 0
+		if (intints <= 0) // int value == 0
 		{
 			//  Expand the left side of the array to equal 1 + intpoint
 			
@@ -77704,6 +76912,36 @@ class Matrix
 	
 	
 	
+	public Matrix(double[] array)
+	{
+		//  creates a horizontal / row matrix from an array
+		
+		//  Use new Matrix(array) .transpose()
+		//  to get a vertical / column matrix
+		
+		this.matrix = new Number[1][array.length];
+		
+		for (int j = 0; j < array.length; j++)
+		
+		    this.matrix[0][j] = new Number(array[j]);
+	}
+	
+	
+	public Matrix(int[] array)
+	{
+		//  creates a horizontal / row matrix from an array
+		
+		//  Use new Matrix(array) .transpose()
+		//  to get a vertical / column matrix
+		
+		this.matrix = new Number[1][array.length];
+		
+		for (int j = 0; j < array.length; j++)
+		
+		    this.matrix[0][j] = new Number(array[j]);
+	}
+	
+	
 	public Matrix(Number[] array)
 	{
 		//  creates a horizontal / row matrix from an array
@@ -79057,6 +78295,12 @@ class Matrix
 		
 		matrix = matrix.toEchelonForm();
 		
+		if (!matrix.isEchelonForm() || this.determinant().equals(0))
+		{
+			//  non-invertible matrix
+			
+			throw new NullPointerException();
+		}
 		
 		//  Back substitution
 		//
@@ -79429,22 +78673,6 @@ class Matrix
 		//  matrix A to echelon or upper triangular form U.
 		
 		
-		//  LU factorization is used to solve the matrix equation
-		//  A X == B for different values of B without repeatedly
-		//  reducing A to echelon form. This reduces the running time
-		//  from O(n^3) to O(n^2) multi-precision multiplications.
-		//
-		//  If  A X == B  and  A == L U (by definition), we can post-
-		//  multiply the second equation by X to get  A X == L U X, and
-		//  then (since A X == B  and  A X == L U X)    B == L U X.
-		//  Pre-multiplying by L^-1 gives  L^-1 B == U X or U X == L^-1 B.
-		//
-		//  Since U is pre-computed only once and is in echelon form, and
-		//  B is an array or column vector, solving this system for dif-
-		//  ferent values of B requires only O(n^2) multiplications.
-		
-		
-		
 		Number[][] m;
 		
 		Number n = modulus;
@@ -79694,7 +78922,7 @@ class Matrix
 		{
 			//  non-invertible matrix
 			
-			return null;
+			throw new NullPointerException();
 		}
 		
 		
@@ -80316,6 +79544,40 @@ class Matrix
 	}
 	
 	
+	public Matrix round()
+	{
+		//  rounds the elements to the nearest integers
+		
+		Matrix matrix = new Matrix(this);
+		
+		for (int i = 0; i < this.matrix   .length; i++)
+		for (int j = 0; j < this.matrix[i].length; j++)
+		
+		    matrix.matrix[i][j] =
+		    matrix.matrix[i][j]  .round();
+		
+		return matrix;
+	}
+	
+	
+	public Matrix round(int p)
+	{
+		//  rounds the elements to the specified precision
+		//
+		//  If p == 0 then this method is the same as round()
+		
+		Matrix matrix = new Matrix(this);
+		
+		for (int i = 0; i < this.matrix   .length; i++)
+		for (int j = 0; j < this.matrix[i].length; j++)
+		
+		    matrix.matrix[i][j] =
+		    matrix.matrix[i][j]  .round(p);
+		
+		return matrix;
+	}
+	
+	
 	public int rowCount()
 	{
 		//  counts the number of rows
@@ -80451,6 +79713,58 @@ class Matrix
 		//  solves the matrix equation A X == B for the
 		//  variable X == A^-1 B where B and X are vectors
 		
+		//  Note that A^-1 only has to be computed once to
+		//  solve an array of matrix equations A X[] == B[]
+		//  where X[] and B[] are column vectors. This reduces
+		//  the amount of work from O(n^3) to O(n^2) multipli-
+		//  cations to solve for each X[i] = A^-1 B[i].
+		//
+		//  Example Solve an array of matrix equations A X[] == B[]
+		//
+		//  Matrix A = new Matrix(new int[][]
+		//
+		//      { { 3, 1, 4 }, { 1, 5, 9 }, { 2, 6, 5 } });
+		//
+		//  System.out.println(A.toMatrixString());
+		//
+		//  final int t = 3;
+		//
+		//  Matrix[] B = new Matrix[t];
+		//  Matrix[] X = new Matrix[t];
+		//
+		//  B[0] = new Matrix(new int[] { 3, 5, 8 }).transpose();
+		//  B[1] = new Matrix(new int[] { 9, 7, 9 }).transpose();
+		//  B[2] = new Matrix(new int[] { 3, 2, 3 }).transpose();
+		//
+		//  if (!A.toEchelonForm().isEchelonForm())
+		//
+		//	throw new ArithmeticException("System is not solvable");
+		//
+		//  Matrix invA = A.inverse();
+		//
+		//  for (int i = 0; i < t; i++)
+		//
+		//      X[i] = invA .multiply(B[i]);
+		//
+		//  System.out.println("X[] == " +
+		//
+		//     Arrays.toString(X) + "\n");
+		//
+		//  //  Verify the solutions
+		//
+		//  for (int i = 0; i < t; i++)
+		//  {
+		//	Matrix A_X = A.multiply(X[i]);
+		//	
+		//	System.out.println(A_X + "  " + B[i]);
+		//	
+		//	boolean bool = A_X.equals(B[i]);
+		//	
+		//	System.out.println(bool);
+		//  }
+		
+		
+		
 		Matrix M = new Matrix(this);
 		
 		int rows = M.rowCount();
@@ -80515,6 +79829,20 @@ class Matrix
 		
 		return matrix1;
 	}
+	
+	
+	
+	
+	//  The toEchelonForm() methods do not test if the result is in echelon form.
+	//  The calling method has to test if the result is in echelon form using the
+	//  isEchelonForm() method. If some of the rows or equations are not linearly
+	//  independent or are just multiples of another row or equation, then rows of
+	//  zeros will appear at the bottom of the matrix which make the system unsolv-
+	//  able. For sparse matrices, even if the rows or equations are all independ-
+	//  ent, one or more diagonal elements could be missing from the reduced matrix
+	//  unless there are many more rows than there are variables. The isEchelonForm
+	//  method will verify that the reduced matrix is in upper triangular form and
+	//  that the diagonal elements are all non-zero.
 	
 	
 	
@@ -80669,10 +79997,9 @@ class Matrix
 			{
 				for (i = r; i < matrix.matrix.length; i++)
 				{
-					if ((matrix.matrix[i][j].length() == 1)
-					 && (matrix.matrix[i][j].toIntArray()[0] == 0))
+					if ( matrix.matrix[i][j].mod(n)
 					
-					    continue;
+					    .intValue() == 0) continue;
 					
 					if (!matrix.matrix[i][j].equals(0))
 					
@@ -80791,11 +80118,7 @@ class Matrix
 			{
 				for (i = r; i < matrix.matrix.length; i++)
 				{
-					if ((matrix.matrix[i][j].length() == 1)
-					 && (matrix.matrix[i][j].toIntArray()[0] == 0))
-					
-					    continue;
-					
+					if ( matrix.matrix[i][j].equals(0)) continue;
 					if (!matrix.matrix[i][j].equals(0))
 					
 					    { bool = true;  break; }
@@ -80913,11 +80236,7 @@ class Matrix
 			{
 				for (i = r; i < matrix.matrix.length; i++)
 				{
-					if ((matrix.matrix[i][j].length() == 1)
-					 && (matrix.matrix[i][j].toIntArray()[0] == 0))
-					
-					    continue;
-					
+					if ( matrix.matrix[i][j].equals(0)) continue;
 					if (!matrix.matrix[i][j].equals(0))
 					
 					    { bool = true;  break; }
@@ -81257,6 +80576,12 @@ class Matrix
 	}
 	
 	
+	public Matrix toRowCanonicalForm(int n)
+	{
+		return toRowCanonicalForm(new Number(n));
+	}
+	
+	
 	public Matrix toRowCanonicalForm(Number n)
 	{
 		//  reduces a matrix in echelon form to row canonical form
@@ -81540,7 +80865,7 @@ class Matrix
 			
 			try
 			{	if (n != null) inv = matrix.matrix[r][j] .modInverse(n);
-				 if (n == null) inv = matrix.matrix[r][j]    .inverse();
+				if (n == null) inv = matrix.matrix[r][j]    .inverse();
 			}
 			
 			catch (Exception ex)
@@ -82665,13 +81990,14 @@ class Fourier
 	
 	
 	//  This code tests the fft multiply method.
-	//  The fft multiply method works for 16 K ints
-	//  (== 512 K bits) but larger sizes cause the
-	//  inverter / divider to throw an arithmetic ex-
-	//  ception because the precision used in the
-	//  inverse method is not correct.
 	//
-	//
+	//  The divide method works for 16 K ints (== 512 K bits) but larger
+	//  sizes cause the inverter / divider to throw an arithmetic exception.
+	//  There may be a carry digit error in the complexDoubleArrayToIntArray
+	//  conversion method that is causing this problem.
+	
+	
+	
 	//  final int size = 16*1024;
 	//
 	//  int[] array1 = new int[size];
@@ -82769,7 +82095,7 @@ class Fourier
 		//  rected by expanding the memory size before running the program.
 		
 		
-		//  System.out.println("fft multiply");
+		System.out.println("fft multiply");
 		
 		//  Equalize the array lengths
 		
@@ -82853,11 +82179,9 @@ class Fourier
 		int[] array = complexDoubleArrayToIntArray(w);
 		
 		
-		//  The product is wrapped around to the left by one byte
+		//  The product is shifted left by one byte
 		
-		//  Rotate the product to the right by one byte
-		
-		int int0 = array[array.length -1];
+		//  Shift the product right by one byte
 		
 		array = Math.shiftRight(array, 8);
 		
@@ -83590,6 +82914,20 @@ class Fourier
 	}
 	
 	
+	private static double[] doubleArrayToComplexDoubleArray(double[] array)
+	{
+		double[] array1 = new double[array.length*2];
+		
+		for (int i = 0; i < array.length; i++)
+		{
+			array1[2*i+0] = array[i];
+			array1[2*i+1] = 0.0D;
+		}
+		
+		return array1;
+	}
+	
+	
 	private static double[] complexDoubleArrayToDoubleArray(double[] array)
 	{
 		double[] array1 = new double[array.length / 2];
@@ -83602,7 +82940,7 @@ class Fourier
 	}
 	
 	
-	private static int[] complexDoubleArrayToIntArray(double[] array)
+	private static int[] complexDoubleArrayToIntArray(final double[] array)
 	{
 		//  converts (52-bit) complex doubles to (8-bit) real integers
 		
@@ -83672,29 +83010,15 @@ class Fourier
 			}
 		}
 		
-		int[] int1, int2;
+		int[] array1, array2, array3;
 		
-		int1 = Math.add( Math.add( Math.shiftLeft(temp0[0], 32,  0), Math.shiftLeft(temp0[1], 32,  8) ),
-		                 Math.add( Math.shiftLeft(temp0[2], 32, 16), Math.shiftLeft(temp0[3], 32, 24) ) );
+		array1 = Math.add( Math.add( Math.shiftLeft(temp0[0], 32,  0), Math.shiftLeft(temp0[1], 32,  8) ),
+		                   Math.add( Math.shiftLeft(temp0[2], 32, 16), Math.shiftLeft(temp0[3], 32, 24) ) );
 		
-		int2 = Math.add( Math.add( Math.shiftLeft(temp1[0], 32,  0), Math.shiftLeft(temp1[1], 32,  8) ),
-		                 Math.add( Math.shiftLeft(temp1[2], 32, 16), Math.shiftLeft(temp1[3], 32, 24) ) );
+		array2 = Math.add( Math.add( Math.shiftLeft(temp1[0], 32,  0), Math.shiftLeft(temp1[1], 32,  8) ),
+		                   Math.add( Math.shiftLeft(temp1[2], 32, 16), Math.shiftLeft(temp1[3], 32, 24) ) );
 		
-		return Math.add(int1, int2);
-	}
-	
-	
-	private static double[] doubleArrayToComplexDoubleArray(double[] array)
-	{
-		double[] array1 = new double[array.length*2];
-		
-		for (int i = 0; i < array.length; i++)
-		{
-			array1[2*i+0] = array[i];
-			array1[2*i+1] = 0.0D;
-		}
-		
-		return array1;
+		return Math.add(array1, array2);
 	}
 	
 	
