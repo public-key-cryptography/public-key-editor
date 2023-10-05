@@ -82,9 +82,9 @@
 	send and receive encrypted emails.
 	
 	The sender and receiver have to be using the same ciphers and protocols because the software is not
-	compatible with other encryption programs. Users also may have to keep upgrading their software,
-	changing their public keys, and re-encrypting their files or directories if the implementation of
-	the ciphers or encryption protocols changes.
+	compatible with other encryption programs. Users also may have to upgrade their software, change
+	their public keys, and re-encrypt their files or directories if the implementation of the ciphers or
+	encryption protocols changes.
 	
 	
 	
@@ -430,8 +430,8 @@
 	they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
 	quantity, number, or section of things dealt with as a unit, such as a block of plaintext or cipher-
 	text. (J.J. Sylvester used the term matrix in 1850 to refer to a rectangular block of numbers because
-	a determinant is formed from a matrix, and a matrix is something from which something else origin-
-	ates, develops, or takes form.)
+	a determinant is formed from a matrix, and a matrix is something from which something else originates,
+	develops, or takes form.)
 	
 	Nonlinear multivariate equations are difficult or impossible to solve. If solving an equation such as
 	Y = X A X were as simple as diagonalizing a matrix, doing a Fourier transform, or reducing a matrix
@@ -448,12 +448,12 @@
 	Diffie-Hellman problem can be solved or the public key agreement can be computed without breaking the
 	static public key, inverting the function, or solving the underlying math problem.
 	
-	The public key class uses a composite key that includes several ciphers because there is no proof
-	that any one-way function is non-invertible or that the implementation is correct and because the
-	methods of cryptanalysis are secret. If cryptanalysts weren't secretive, users would know which pub-
-	lic key ciphers are broken and would stop using them, and cryptographers would figure out how to
-	strengthen the ciphers to resist these attacks. The only way to deal with this problem is to use a
-	redundancy of ciphers based on different math problems.
+	The public key class uses a composite key that includes several ciphers because there is no proof that
+	any one-way function is non-invertible or that the implementation is correct and because the methods
+	of cryptanalysis are secret. If cryptanalysts weren't secretive, users would know which public key ci-
+	phers are broken and would stop using them, and cryptographers would figure out how to strengthen the
+	ciphers to resist these attacks. The only way to deal with this problem is to use a redundancy of ci-
+	phers based on different math problems.
 	
 	Composite keys are a game changer because a cryptanalyst would have to break every cipher, invert
 	every function, or solve every equation in the public key class to read the encrypted messages. The
@@ -461,14 +461,14 @@
 	tion to be unbreakable. Breaking a few of the ciphers doesn't get a cryptanalyst anything because
 	breaking a composite key is an all-or-nothing game.
 	
-	The ciphers in the public key class that have a many-to-one mapping of the private key X to the pub-
-	lic key Y may be unbreakable by classical and quantum computing because the solution is ambiguous and
-	the private key X is only used once. Quantum computers are unable to solve math problems that have am-
-	biguous solutions because they wouldn't know which solution to solve for. This is why a quantum com-
-	puter can only attack the factorization problem by solving the discrete log problem, not by solving
-	the difference of squares equation x^2 == 1 (mod n). Even if the solution is unambiguous, it doesn't
-	mean that a quantum computer can solve it; there has to be an algorithm or method for solving it, or
-	the same private key X would have to be used more than once with a different public parameter A.
+	The ciphers in the public key class that have a many-to-one mapping of the private key X to the public
+	key Y may be unbreakable by classical and quantum computing because the solution is ambiguous and the
+	private key X is only used once. Quantum computers are unable to solve math problems that have ambigu-
+	ous solutions because they wouldn't know which solution to solve for. This is why a quantum computer
+	can only attack the factorization problem by solving the discrete log problem, not by solving the dif-
+	ference of squares equation x^2 == 1 (mod n). Even if the solution is unambiguous, it doesn't mean
+	that a quantum computer can solve it; there has to be an algorithm or method for solving it, or the
+	same private key X would have to be used more than once with a different public parameter A.
 	
 	Encryption ciphers are not used in the software because they have a one-to-one mapping (or function)
 	of the plaintext to ciphertext. It doesn't make sense to use an encryption cipher that has a one-to-
@@ -482,7 +482,8 @@
 	equivalent to integer factorization or based on any hard math problem. The problem with this cipher
 	is that there is a one-to-one correspondence of the private keys m to the public keys c which makes
 	the function invertible without factoring or unmultiplying the modulus n. This is why RSA was reject-
-	ed for digital signature standards and for encryption.
+	ed for digital signature standards and for encryption. (Note that RSA refers to the cipher while co-
+	prime root extraction refers to the underlying math problem on which the cipher is based.)
 	
 	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite) is equivalent
 	to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had thought of us-
@@ -498,13 +499,11 @@
 	can extract the message by inverting e modulo phi(n)/e instead of modulo phi because the message is a
 	perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
-	The Rabin / factorization cipher and the integer discrete log cipher are not used in the public key
-	class because the factorization and integer discrete log problem are susceptible to quantum and clas-
-	sical computing. The Rabin cipher can never be completely broken because factorization will always be
-	harder than multiplication but the key size would have to be on the order of 10^12 bits or 1 terabit.
-	The Rabin cipher was included in the public key class to test the software for asymmetrical public key
-	ciphers before the Merkle-Hellman ciphers were included because the Diffie-Hellman ciphers are symme-
-	trical which means that they use the same methods for public key generation and public key agreement.
+	The Rabin / factorization cipher and the integer discrete log cipher are not included in the public
+	key class because the factorization and integer discrete log problems are susceptible to quantum and
+	classical computing. The Rabin cipher can never be completely broken because factorization will always
+	be harder than multiplication, but the key size would have to be on the order of 10^5 bits because the
+	cipher is broken by quantum and classical computing.
 	
 	If an integer cipher is not based on the integer factorization or discrete log problem, then there is
 	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
@@ -512,88 +511,65 @@
 	on log multiplication instead of log extraction.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
-	(mod p) are not included in the software because the elliptic curve discrete log function has a
-	periodicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic
-	curves makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem
-	if the parameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters
-	of the curves to protect against all unknown attacks. Many people are suspicious or distrustful of
-	elliptic curve ciphers because the equations are complicated and they have a large attack surface.
+	(mod p) are not included in the software because the elliptic curve discrete log function has a perio-
+	dicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic curves
+	makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem if the pa-
+	rameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters of the
+	curves to protect against all unknown attacks. Many people are suspicious or distrustful of elliptic
+	curve ciphers because the equations are complicated and they have a large attack surface.
 	
-	Elliptic curve ciphers that are based on isogenies are quantum resistant but they are almost certainly
-	broken since they are being approved for standardization and cryptanalysts have had over a decade to
-	study them. Just because a cipher is quantum resistant doesn't mean that the cipher is also classical
-	resistant or resistant to classical computing.
+	In 2021 we wrote that elliptic curve ciphers that are based on isogenies are quantum resistant but are
+	almost certainly broken since they are being approved for standardization and cryptanalysts have had
+	over a decade to study them. Just because a cipher is quantum resistant doesn't mean that the cipher
+	is also classical resistant or resistant to classical computing.
 	
-	Ciphers based on polynomial factorization and error-correcting codes also are not used or included in
-	the public key class because they are not secure for any key size, and learning with errors ciphers
-	are not included because they are only based on the subset sum problem which is a linear problem.
+	In 2022, after we wrote that the cipher was almost certainly broken because it had been approved for
+	standardization and it was being promoted and backed by a few companies, a method was published for
+	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
+	this algorithm would have been standardized and implemented in software programs along with the other
+	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, and the
+	learning with errors or LWE cipher.
 	
-	In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[], a
-	private key s, and a secret random error array e[] where the sum of the elements is smaller than q/2,
-	and then computes the static public key b[] = a[] s + e[] modulo q. (The random errors can be dis-
-	carded because they are not used for decryption.) To encrypt a message m[], for each bit in m the
-	sender chooses a subset of elements in a and b and then calculates u = the subset sum of the a ele-
-	ments mod q, and v = the subset sum of b[] + [q/2] m[i] (mod q) where q/2 m[i] is either 0 or q/2.
-	For each bit m[i] the one-time public key is the pair (u, v), and for m[] the one-time public key is
-	the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
+	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
+	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
+	and then standardize those broken ciphers. This mistake or embarrassment occurred because in approving
+	this cipher they underestimated the number of mathematicians who can comprehend the math that was used
+	to break the cipher. For the methods of cryptanalysis to remain secret, the number of mathematicians
+	who can break a cipher has to be in the single digits (such as for solving coprime root extraction,
+	factorization, and the integer Diffie-Hellman problem) and in this case the number was in the double
+	digits because there are tens of mathematicians who can understand the math for breaking supersingular
+	isogeny key exchange.
+	
+	Competitions are good for many things but public key cryptography is not one of them because it just
+	selects ciphers, functions, or equations that only a few people in the world know how to break, in-
+	vert, or solve, and it gives users a false sense of security and confidence in the ciphers. Some users
+	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
+	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
+	the ciphers which is a false or erroneous assumption.
+	
+	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
+	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
+	a private key s, and a secret random error array e[] where the sum of the elements is smaller than
+	q/2, and then computes the static public key b[] = a[] s + e[] modulo q. (The random errors can be
+	discarded because they are not used for decryption.) To encrypt a binary message m[], for each bit or
+	element in m the sender chooses a subset of elements in a and b and then calculates u = the subset sum
+	of the a elements mod q, and v = the subset sum of b[] + [q/2] m[i] (mod q) where q/2 m[i] is either 0
+	or q/2. For each bit m[i] the one-time public key is the pair (u, v), and for m[] the one-time public
+	key is the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
 	
 	Since a[] s + e[] == B[], multiplying u (== a subset sum of a[]) by s approximately equals v (== a
 	subset sum of b[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
-	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference
-	v - s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the
-	quotient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the mes-
-	sage by inverting u to find the indices of the samples and then using the indices to find the sub-
-	set sum of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset
-	sum problem has a many-to-one mapping, any solution to the subset sum problem will break the cipher.
-	A cryptanalyst may also be able to break the static public key because the equations are linear and
-	the modulus is public unlike the knapsack cipher which is also linear but uses a private modulus.
+	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference v -
+	s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the quo-
+	tient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the message
+	by inverting u to find the indices of the samples and then using the indices to find the subset sum
+	of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
+	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
+	lyst may also be able to break the static public key because the equations are linear and the modulus
+	is public unlike the knapsack cipher which is also linear but uses a private modulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + e[] + r[][] s[] (mod n), b1 = c[] m[], b2 =
-	r[][]^T m[] where c[] is the recipient's static public key and b1, b2 are the sender's one-time pub-
-	lic key is included in the public key class but it is not enabled because it has to be modified to
-	use matrices or hypercomplex numbers. Unlike the LWE cipher which uses a private muliplier and a pub-
-	lic modulus, the knapsack cipher uses a public multiplier and a private modulus. Both ciphers add
-	random errors to the public key.
-	
-	The Merkle-Hellman / knapsack cipher may be the only asymmetrical public key cipher or invertible
-	one-way function other than the Rabin cipher, and it is the only public key cipher that uses a pri-
-	vate modulus. (The Diffie-Hellman ciphers use commutative, symmetrical, and non-invertible one-way
-	functions which means that the private variables x and k commute with each other and use the same
-	function for public key generation and key agreement or that f(y = f(a, x), k) == f(z = f(a, k), x)).
-	
-	Even if a cryptanalyst knows how to solve the subset sum or non-superincreasing knapsack problem it
-	won't break the one-time public key b = c[] m[] because the cipher was designed to resist this at-
-	tack. The ciphers use an irregular public and private key so that there is a large number of solu-
-	tions to the knapsack problem. The cryptanalyst wouldn't know which of these solutions is the correct
-	key because the search space or solution set is too large to try all the combinations, but the recip-
-	ient can always decrypt the sender's secret key m[] because the recipient knows the private modulus n
-	and the secret key s[].
-	
-	A cryptanalyst would have to be able to solve the vector equation c[] = r0 a[] + e[] + r[][] s[] for
-	the secret key s[] to invert the function, but this is impossible without knowing the modulus n be-
-	cause there is only one solution to the equation; the cryptanalyst cannot choose a random modulus n'
-	and solve for a different s'[] to get the same public key c[]. Even if the equation could be solved
-	for the modulus n and secret key s[] it wouldn't break the Merkle-Hellman cipher because the public
-	key includes small random errors that are added to c[] to increase the search space to resist this
-	attack. The cryptanalyst would have to try to solve the equation 2^80 or a septillion times to find
-	the solution or to break the public key.
-	
-	The problem with the integer knapsack cipher is that if the static key includes the term r[][] s[],
-	the sender has to include the term r[][]^T m[] in the one-time public key, and then the one-time pub-
-	lic key can be reduced to the subset sum problem using partial Gaussian elimination to remove the
-	large m[0] term or by multiplying and subtracting one of the r[][]^T m[] equations. Then the cipher
-	is no more difficult than the LWE cipher which is also not subset sum resistant. The r[][] s[] term
-	can be set to zero, but then the static public key may not be unbreakable. The cipher may have to be
-	implemented using matrices or hypercomplex numbers like the other ciphers in the public key class.
-	
-	The Merkle-Hellman / knapsack ciphers and the Rabin / factorization cipher are not enabled in the pub-
-	lic key class because they increase the size of the key from 1500 bytes to 5000 bytes and they expand
-	the size of the encrypted messages without increasing the security because factorization is not a hard
-	problem. Also, these ciphers are not the same as the Diffie-Hellman ciphers in the public key class
-	because they use different functions for key generation and key agreement.
-	
-	The vector cross product cipher is also asymmetrical (but not invertible) because it uses different
-	methods for public key generation and key agreement (cross product Y = A (x) X and then dot product
-	E = Y * K), and either the key generation or key agreement method has to negate the sign of the paral-
-	lelogram or the parallelepiped or else the messages will be undecryptable. The vector cross product
-	cipher is still a Diffie-Hellman cipher because the cipher is non-invertible and is not solved for X.
+	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + e[] (mod n), b = c[] m[] + e, where c[] is the
+	recipient's static public key and b is the sender's one-time public key is unbreakable because the
+	modulus is secret and both the static key and the one-time public key include small random errors.
+	The only problem is that the key size has to be on the order of 10^5 just like the factorization ci-
+	pher or else the cipher can be broken.
