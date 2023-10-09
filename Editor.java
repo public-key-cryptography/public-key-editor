@@ -150,28 +150,28 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-20.0.1_linux-x64_bin.tar.gz
+	openjdk-21_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-20.0.1_linux-x64_bin.tar.gz  from the website jdk.java.net/20.
+	0.  Download the file openjdk-21_linux-x64_bin.tar.gz  from the website jdk.java.net/20.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-21_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-21_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-21/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -185,17 +185,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-20.0.1_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-21_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-21_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-21_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-21/bin/java ./Downloads/Editor.java
 	
 	or for the email client
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-20.0.1/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-21_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-21_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-21/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -209,20 +209,20 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-20.0.1 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-21 using the command
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-20.0.1_linux-x64_bin.tar.gz /usr/jdk;
-	cd /usr/jdk; sudo tar zxvf openjdk-20.0.1_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-21_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-21_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-20.0.1/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-21/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-20.0.1/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-20.0.1/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-21/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-21/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -252,10 +252,10 @@
 	
 	If the Editor.java file is in the Downloads folder, use the commands
 	
-	/usr/jdk/jdk-20.0.1/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-20.0.1/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-21/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-21/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-20.0.1/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-21/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
 	by copying and pasting into the terminal.
@@ -294,7 +294,7 @@
 	doesn't start with a slash /, but it is redundant to use cd if the next command has an
 	absolute path name because then it doesn't do anything.
 	
-	The path name /usr/jdk/jdk-20.0.1/bin/java can be replaced by the file name java if the
+	The path name /usr/jdk/jdk-21/bin/java can be replaced by the file name java if the
 	terminal knows where to find the java command. The path name is included because some
 	users may be running a live version of Linux.
 	
@@ -304,11 +304,11 @@
 	
 	The jar file can be run using the command
 	
-	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar (text) for the text editor, or
+	cd; /usr/jdk/jdk-21/bin/java -jar Editor.jar (text) for the text editor, or
 	
-	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-20.0.1/bin/java -jar Editor.jar image
+	cd; /usr/jdk/jdk-21/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-21/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-21/bin/java -jar Editor.jar image
 	
 	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
@@ -32445,6 +32445,8 @@ class Programs
 					
 					int numberofciphers = PublicKey.countNumberOfCiphers(message);
 					
+					System.out.println("number of ciphers == " + numberofciphers);
+					
 					emailpanel.list1.setNumberOfCiphers(msno, numberofciphers);
 					
 					//  If the message did not decrypt properly return
@@ -52733,7 +52735,10 @@ class PublicKey
 		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  m-dl
 		
 		
-		sizefact1,  //  Rabin / fact cipher
+		//  this cipher is not enabled because the modSqrt method throws an exception
+		//  and the email messages don't decrypt if factorization is enabled
+		//
+		//  sizefact1,  //  Rabin / fact cipher
 		
 		
 		
@@ -53272,7 +53277,7 @@ class PublicKey
 		//  Verify that the string is a valid pub-
 		//  lic key or a valid encrypted message
 		
-		str = str .trim();
+		str = str.trim();
 		
 		String delimiter = "-";
 		
@@ -53971,6 +53976,7 @@ class PublicKey
 		else if (str.contains("\n\n")) tokens = str.split("\n\n");
 		
 		else if (str.contains(Convert.base16Separator))
+		
 		   tokens = str.split(Convert.base16Separator);
 		
 		else return null;
