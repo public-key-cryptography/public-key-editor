@@ -33,10 +33,10 @@
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate
-	the composite secret key, session key or encryption key. Each public key agreement or cipher func-
-	tions as a one-time pad to encrypt the other public key agreements which are also one-time pads or
-	ciphers. The composite key is then used to initialize a hash function that generates another one-time
-	pad for the message encryption.
+	the composite secret key, session key or encryption key. Each public key agreement or cipher functions
+	as a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers.
+	The composite key is then used to initialize a hash function that generates another one-time pad for
+	the message encryption.
 	
 	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
 	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters and x1, x2, and X are private keys.
@@ -48,13 +48,20 @@
 	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
 	are unsolvable.
 	
+	A 128 K bit factorization cipher is also included because factorization is unbreakable even by a poly-
+	nomial-time algorithm if the key size is large enough, and the cipher decrypts in only 10^8 operations
+	or < 100 ms. This is the maximum number of operations or time allowed for a cipher to be included in
+	the software because there are 16 ciphers that have to be decrypted and each message has to decrypt in
+	< 1 second even on a single-core processor. This cipher uses real factorization or the quadratic resi-
+	due c = m ^ 2 ^ k mod n, not coprime root extraction c = m ^ e mod n where (e, phi(n)) == 1.
+	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
-	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the ci-
-	pherdata or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad
-	to encrypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing
-	the encrypted random number using the shared secret key, hashing the random number to create the one-
-	time pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
+	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipher-
+	data or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad to en-
+	crypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing the en-
+	crypted random number using the shared secret key, hashing the random number to create the one-time
+	pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
@@ -64,27 +71,29 @@
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
 	uses matrices, polynomials, powers of a matrix (cube or tesseract), or fractional numbers instead of
-	integers. Similarly, if a cipher can be broken because a matrix is diagonalizable or real and sym-
-	metric, then it can be replaced by a non-diagonalizable, non-real or non-symmetric matrix.
+	integers. Similarly, if a cipher can be broken because a matrix is diagonalizable or real and symme-
+	tric, then it can be replaced by a non-diagonalizable, non-real, or non-symmetric matrix.
 	
-	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
-	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
-	remove special characters from the encryption method such as newlines, carriage returns, and end of
-	message or end of file chars. This expands the data to (4/3)^2 = 16/9 the size because base-64 en-
-	coding maps 6 bits of data to 8-bit chars and two encodings are used to package the data. (The public
-	key encryption method includes a base-64 encoding because it has to encode the cipherdata to attach
-	the one-time public keys.) Other protocols may use one encoding but this would only reduce the expan-
-	sion to 3/4 the size.
+	The email text, file attachments, and file descriptions are each encoded in base-64, and then the en-
+	coded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to remove
+	special characters from the encryption method such as newlines, carriage returns, and end of message
+	or end of file chars. This expands the data to (4/3)^2 = 16/9 the size because base-64 encoding maps
+	6 bits of data to 8-bit chars and two encodings are used to package the data. (The public key encryp-
+	tion method includes a base-64 encoding because it has to encode the cipherdata to attach the one-time
+	public keys.) Other protocols may use one encoding but this would only reduce the expansion to 3/4 the
+	size.
 	
 	The text editor and email program were written to test the public key software and to show developers
-	how to use and implement the public key ciphers in other programs, but anybody who knows how to	in-
-	stall Java and run a java program (a java source code file or a java jar file) can use the program to
-	send and receive encrypted emails.
+	how to use and implement the public key ciphers in other programs. The text editor was also used to
+	write, test, and debug all the software except for the first few hundred lines which had to be written
+	using a different text editor. Anybody who knows how to install Java and run a java program (either a
+	java source code file or a java jar file) can use the program to do text editing or to send and re-
+	ceive encrypted emails.
 	
 	The sender and receiver have to be using the same ciphers and protocols because the software is not
-	compatible with other encryption programs. Users also may have to upgrade their software, change
-	their public keys, and re-encrypt their files or directories if the implementation of the ciphers or
-	encryption protocols changes.
+	compatible with other encryption programs. Users also may have to upgrade their software, change their
+	public keys, and re-encrypt their files or directories if the implementation of the ciphers or encryp-
+	tion protocols changes.
 	
 	
 	
@@ -485,12 +494,12 @@
 	ed for digital signature standards and for encryption. (Note that RSA refers to the cipher while co-
 	prime root extraction refers to the underlying math problem on which the cipher is based.)
 	
-	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite) is equivalent
-	to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had thought of us-
-	ing coprime root extraction as a public key cipher but he knew that it wasn't equivalent to factor-
-	ization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the same
-	number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime with the
-	totient.
+	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e =
+	2^k) is equivalent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin
+	had thought of using coprime root extraction as a public key cipher but he knew that it wasn't equiv-
+	alent to factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that
+	has the same number in the totient whereas the RSA cipher can only use exponents e > 2 that are co-
+	prime with the totient.
 	
 	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squaring
 	and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the message can
@@ -499,24 +508,22 @@
 	can extract the message by inverting e modulo phi(n)/e instead of modulo phi because the message is a
 	perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
-	The Rabin / factorization cipher and the integer discrete log cipher are not included in the public
-	key class because the factorization and integer discrete log problems are susceptible to quantum and
-	classical computing. The Rabin cipher can never be completely broken because factorization will always
-	be harder than multiplication, but the key size would have to be on the order of 10^5 bits because the
-	cipher is broken by quantum and classical computing.
+	The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
+	sub-exponential, quantum, and polynomial-time algorithms for factoring integers. For the cipher to be
+	secure or unbreakable, the key size has to be on the order of 10^5 bits if the running time of the
+	factorization algorithm is on the order of O(n^2) exponentiations, O(n^3) multiplications, or O(n^
+	4.58) operations where n is the number of bits. The Rabin / factorization cipher is included in the
+	public key class but it is not enabled by default because the key size is large. (The integer discrete
+	log cipher y = a ^ x mod n is not included in the public key class because the cipher requires an ex-
+	ponentiation for encryption instead of a multiplication or squaring c = m^2 mod n for factorization.)
 	
-	If an integer cipher is not based on the integer factorization or discrete log problem, then there is
-	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
-	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken without quantum computing because the cipher is based
-	on log multiplication instead of log extraction.
-	
-	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
-	(mod p) are not included in the software because the elliptic curve discrete log function has a perio-
-	dicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic curves
-	makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem if the pa-
-	rameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters of the
-	curves to protect against all unknown attacks. Many people are suspicious or distrustful of elliptic
-	curve ciphers because the equations are complicated and they have a large attack surface.
+	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b mod p
+	are not included in the software because the elliptic curve discrete log function has a periodicity
+	which makes it susceptible to quantum computing. In addition, the complexity of elliptic curves makes
+	the ciphers vulnerable to attack without solving the ecdlp or underlying math problem if the parame-
+	ters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters of the curves
+	to protect against all unknown attacks. Many people are suspicious or distrustful of elliptic curve
+	ciphers because the equations are complicated and they have a large attack surface.
 	
 	In 2021 we wrote that elliptic curve ciphers that are based on isogenies are quantum resistant but are
 	almost certainly broken since they are being approved for standardization and cryptanalysts have had
@@ -545,7 +552,7 @@
 	vert, or solve, and it gives users a false sense of security and confidence in the ciphers. Some users
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
-	the ciphers which is a false or erroneous assumption.
+	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -572,4 +579,6 @@
 	recipient's static public key and b is the sender's one-time public key is unbreakable because the
 	modulus is secret and both the static key and the one-time public key include small random errors.
 	The only problem is that the key size has to be on the order of 10^5 just like the factorization ci-
-	pher or else the cipher can be broken.
+	pher or else the cipher is not secure because there are polynomial-time algorithms for solving these
+	problems.
+

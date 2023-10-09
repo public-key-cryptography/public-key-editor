@@ -63,10 +63,10 @@
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public
 	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate
-	the composite secret key, session key or encryption key. Each public key agreement or cipher func-
-	tions as a one-time pad to encrypt the other public key agreements which are also one-time pads or
-	ciphers. The composite key is then used to initialize a hash function that generates another one-time
-	pad for the message encryption.
+	the composite secret key, session key or encryption key. Each public key agreement or cipher functions
+	as a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers.
+	The composite key is then used to initialize a hash function that generates another one-time pad for
+	the message encryption.
 	
 	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
 	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters and x1, x2, and X are private keys.
@@ -78,13 +78,20 @@
 	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
 	are unsolvable.
 	
+	A 128 K bit factorization cipher is also included because factorization is unbreakable even by a poly-
+	nomial-time algorithm if the key size is large enough, and the cipher decrypts in only 10^8 operations
+	or < 100 ms. This is the maximum number of operations or time allowed for a cipher to be included in
+	the software because there are 16 ciphers that have to be decrypted and each message has to decrypt in
+	< 1 second even on a single-core processor. This cipher uses real factorization or the quadratic resi-
+	due c = m ^ 2 ^ k mod n, not coprime root extraction c = m ^ e mod n where (e, phi(n)) == 1.
+	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
-	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the ci-
-	pherdata or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad
-	to encrypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing
-	the encrypted random number using the shared secret key, hashing the random number to create the one-
-	time pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
+	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipher-
+	data or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad to en-
+	crypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing the en-
+	crypted random number using the shared secret key, hashing the random number to create the one-time
+	pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
@@ -94,27 +101,29 @@
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
 	uses matrices, polynomials, powers of a matrix (cube or tesseract), or fractional numbers instead of
-	integers. Similarly, if a cipher can be broken because a matrix is diagonalizable or real and sym-
-	metric, then it can be replaced by a non-diagonalizable, non-real or non-symmetric matrix.
+	integers. Similarly, if a cipher can be broken because a matrix is diagonalizable or real and symme-
+	tric, then it can be replaced by a non-diagonalizable, non-real, or non-symmetric matrix.
 	
-	The email text, file attachments, and file descriptions are each encoded in base-64, and then the
-	encoded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to
-	remove special characters from the encryption method such as newlines, carriage returns, and end of
-	message or end of file chars. This expands the data to (4/3)^2 = 16/9 the size because base-64 en-
-	coding maps 6 bits of data to 8-bit chars and two encodings are used to package the data. (The public
-	key encryption method includes a base-64 encoding because it has to encode the cipherdata to attach
-	the one-time public keys.) Other protocols may use one encoding but this would only reduce the expan-
-	sion to 3/4 the size.
+	The email text, file attachments, and file descriptions are each encoded in base-64, and then the en-
+	coded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to remove
+	special characters from the encryption method such as newlines, carriage returns, and end of message
+	or end of file chars. This expands the data to (4/3)^2 = 16/9 the size because base-64 encoding maps
+	6 bits of data to 8-bit chars and two encodings are used to package the data. (The public key encryp-
+	tion method includes a base-64 encoding because it has to encode the cipherdata to attach the one-time
+	public keys.) Other protocols may use one encoding but this would only reduce the expansion to 3/4 the
+	size.
 	
 	The text editor and email program were written to test the public key software and to show developers
-	how to use and implement the public key ciphers in other programs, but anybody who knows how to	in-
-	stall Java and run a java program (a java source code file or a java jar file) can use the program to
-	send and receive encrypted emails.
+	how to use and implement the public key ciphers in other programs. The text editor was also used to
+	write, test, and debug all the software except for the first few hundred lines which had to be written
+	using a different text editor. Anybody who knows how to install Java and run a java program (either a
+	java source code file or a java jar file) can use the program to do text editing or to send and re-
+	ceive encrypted emails.
 	
 	The sender and receiver have to be using the same ciphers and protocols because the software is not
-	compatible with other encryption programs. Users also may have to upgrade their software, change
-	their public keys, and re-encrypt their files or directories if the implementation of the ciphers or
-	encryption protocols changes.
+	compatible with other encryption programs. Users also may have to upgrade their software, change their
+	public keys, and re-encrypt their files or directories if the implementation of the ciphers or encryp-
+	tion protocols changes.
 	
 	
 	
@@ -515,12 +524,12 @@
 	ed for digital signature standards and for encryption. (Note that RSA refers to the cipher while co-
 	prime root extraction refers to the underlying math problem on which the cipher is based.)
 	
-	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite) is equivalent
-	to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had thought of us-
-	ing coprime root extraction as a public key cipher but he knew that it wasn't equivalent to factor-
-	ization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the same
-	number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime with the
-	totient.
+	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e =
+	2^k) is equivalent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin
+	had thought of using coprime root extraction as a public key cipher but he knew that it wasn't equiv-
+	alent to factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that
+	has the same number in the totient whereas the RSA cipher can only use exponents e > 2 that are co-
+	prime with the totient.
 	
 	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squaring
 	and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the message can
@@ -529,24 +538,22 @@
 	can extract the message by inverting e modulo phi(n)/e instead of modulo phi because the message is a
 	perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	
-	The Rabin / factorization cipher and the integer discrete log cipher are not included in the public
-	key class because the factorization and integer discrete log problems are susceptible to quantum and
-	classical computing. The Rabin cipher can never be completely broken because factorization will always
-	be harder than multiplication, but the key size would have to be on the order of 10^5 bits because the
-	cipher is broken by quantum and classical computing.
+	The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
+	sub-exponential, quantum, and polynomial-time algorithms for factoring integers. For the cipher to be
+	secure or unbreakable, the key size has to be on the order of 10^5 bits if the running time of the
+	factorization algorithm is on the order of O(n^2) exponentiations, O(n^3) multiplications, or O(n^
+	4.58) operations where n is the number of bits. The Rabin / factorization cipher is included in the
+	public key class but it is not enabled by default because the key size is large. (The integer discrete
+	log cipher y = a ^ x mod n is not included in the public key class because the cipher requires an ex-
+	ponentiation for encryption instead of a multiplication or squaring c = m^2 mod n for factorization.)
 	
-	If an integer cipher is not based on the integer factorization or discrete log problem, then there is
-	no need to factor the modulus or solve the discrete log problem. For example, the integer cipher y =
-	a ^ x, e = y ^ k == a ^ (k x) (mod p) is broken without quantum computing because the cipher is based
-	on log multiplication instead of log extraction.
-	
-	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b
-	(mod p) are not included in the software because the elliptic curve discrete log function has a perio-
-	dicity which makes it susceptible to quantum computing. In addition, the complexity of elliptic curves
-	makes the ciphers vulnerable to attack without solving the ecdlp or underlying math problem if the pa-
-	rameters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters of the
-	curves to protect against all unknown attacks. Many people are suspicious or distrustful of elliptic
-	curve ciphers because the equations are complicated and they have a large attack surface.
+	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b mod p
+	are not included in the software because the elliptic curve discrete log function has a periodicity
+	which makes it susceptible to quantum computing. In addition, the complexity of elliptic curves makes
+	the ciphers vulnerable to attack without solving the ecdlp or underlying math problem if the parame-
+	ters a, b, and p are not chosen correctly, and nobody knows how to choose the parameters of the curves
+	to protect against all unknown attacks. Many people are suspicious or distrustful of elliptic curve
+	ciphers because the equations are complicated and they have a large attack surface.
 	
 	In 2021 we wrote that elliptic curve ciphers that are based on isogenies are quantum resistant but are
 	almost certainly broken since they are being approved for standardization and cryptanalysts have had
@@ -575,7 +582,7 @@
 	vert, or solve, and it gives users a false sense of security and confidence in the ciphers. Some users
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
-	the ciphers which is a false or erroneous assumption.
+	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -602,7 +609,8 @@
 	recipient's static public key and b is the sender's one-time public key is unbreakable because the
 	modulus is secret and both the static key and the one-time public key include small random errors.
 	The only problem is that the key size has to be on the order of 10^5 just like the factorization ci-
-	pher or else the cipher can be broken.
+	pher or else the cipher is not secure because there are polynomial-time algorithms for solving these
+	problems.
 	
 	
 	************************************************/
@@ -28347,6 +28355,16 @@ class Programs
 					//  ferent email addresses could be correlated by the same public key.
 					
 					
+					if ( (emailpanel == null)
+					  || (emailpanel.username == null)
+					  ||  emailpanel.username.isEmpty())
+					{
+						JOptionPane.showMessageDialog(frame,
+						
+						    __.emailaddressisempty);
+						
+						return;
+					}
 					
 					//  Reply key settings dialog box
 					
@@ -39434,6 +39452,7 @@ class Programs
 			panel.add(quadbutton);
 			panel.add(octbutton);
 			panel.add(maxbutton);
+			panel.add(maxcheckbox);
 			
 			
 			//  Count the number of ciphers
@@ -39444,11 +39463,9 @@ class Programs
 			
 			int numberoflargekeys = 0;
 			
-			for (int i = 0; i < PublicKey.size.length; i++)
+			for (int size1 : PublicKey.size)
 			
-			    if (PublicKey.size[i] > 1024)
-			
-				numberoflargekeys++;
+			    if (size1 > 1024) numberoflargekeys++;
 			
 			final int n1 = numberoflargekeys;
 			
@@ -39502,6 +39519,29 @@ class Programs
 			else if (size >= n)      maxbutton .setSelected(true);
 			
 			
+			maxcheckbox.setVisible(n1 > 0);
+			maxcheckbox.setEnabled(maxbutton.isSelected());
+			
+			for (JRadioButton radiobutton : radiobuttons)
+			
+			    radiobutton.addActionListener(
+			
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						maxcheckbox.setEnabled((n1 > 0)
+						
+						    && maxbutton.isSelected());
+						
+						if (!maxcheckbox.isEnabled())
+						
+						     maxcheckbox.setSelected(false);
+					}
+				}
+			);
+			
+			
 			String title = "";
 			
 			int choice = JOptionPane.showConfirmDialog(parent,
@@ -39517,7 +39557,10 @@ class Programs
 			else if (doublebutton .isSelected())  m = 2;
 			else if (quadbutton   .isSelected())  m = 4;
 			else if (octbutton    .isSelected())  m = 8;
-			else if (maxbutton    .isSelected())  m = n - n1;
+			else if (maxbutton    .isSelected()
+			      && maxcheckbox  .isSelected())  m = n;
+			else if (maxbutton    .isSelected()
+			     && !maxcheckbox  .isSelected())  m = n - n1;
 			else                                  m = -1;
 			
 			return Math.min(m, n);
@@ -50315,7 +50358,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			for (int size : PublicKey.size)
 			
-			    if (size > 1024)  numberoflargekeys++;
+			    if (size > 1024) numberoflargekeys++;
 			
 			final int n1 = numberoflargekeys;
 			
@@ -52194,13 +52237,13 @@ class PublicKey
 	//  functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
 	//  nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
 	//
-	//  Even with quantum computing or a polynomial-time algorithm, the Rabin cipher can never be completely
-	//  broken and is still unbreakable if the key size is large enough. For example, if a classical algori-
-	//  thm for factoring numbers has a running time of O(n^4.58) operations, then for a 256 K bit number the
-	//  algorithm would require O(4.58*5) or ~ O(10^25.5) operations to break the cipher. If the Karatsuba
-	//  multiplier is used, then it would require an additional factor of 32 because the three-halves multi-
-	//  plier overtakes the quadratic multiplier at around 2 K bits, which means that ~ 10^27 or an octillion
-	//  operations would be required to factor the number.
+	//  Even with a polynomial-time algorithm, the Rabin cipher can never be completely broken and is still
+	//  unbreakable if the key size is large enough. For example, if a classical algorithm for factoring num-
+	//  bers has a running time of O(n^4.58) operations, then for a 256 K bit number the algorithm would re-
+	//  quire O(4.58*5) or ~ O(10^25.5) operations to break the cipher. If the Karatsuba multiplier is used,
+	//  then it would require an additional factor of 32 because the three-halves multiplier overtakes the
+	//  quadratic multiplier at around 2 K bits, which means that ~ 10^27 or an octillion operations would be
+	//  required to factor the number.
 	//
 	//  (Note that n in the running time represents the log of the modulus or the number of bits instead of
 	//  the value of the modulus so that linear log multiplication can be written as O(n log n) instead of
@@ -52216,12 +52259,13 @@ class PublicKey
 	//  er at around ~ 512 K to 1 M bits.
 	//
 	//  The key generation could be made faster by choosing a large random number for the modulus n and then
-	//  multiplying n by a 512 or 768-bit prime. The encryption method was made faster by choosing a secret
-	//  key m ~ sqrt(n) + 512; then computing c = m^2 mod n only requires a multiplication. The modular re-
-	//  duction requires only O(512/32 * n) or ~ 32 M operations since the divide method calls the quadratic
-	//  divider instead of the inverter if the dividend is only slightly larger than the divisor. If the mes-
-	//  sage were chosen such that m ~ n, then the modulus and inverse would have to be stored in a static
-	//  class member to avoid doing inversions for each decryption.
+	//  multiplying n by a 512-bit prime. The encryption method was made faster by choosing a secret key m ~
+	//  sqrt(n) and log2(n) = 2^k - 1024; then computing c = m^2 mod n only requires one large multiplication
+	//  but no large division. The modular reduction requires a small division because the divide method calls
+	//  the quadratic divider instead of the inverter if the dividend is only slightly larger than the divisor.
+	//  If the message were chosen such that m ~ n, then the modulus and inverse would have to be stored in a
+	//  static class member to avoid doing inversions for each decryption because division is ten to twenty
+	//  times more expensive than multiplication.
 	//
 	//  A quantum computer could reduce the factorization running time to O(n) multi-precision multiplica-
 	//  tions for large numbers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve
@@ -52251,9 +52295,10 @@ class PublicKey
 	//  per second. A thousand processors can do petascale computing, and a millon processors can do exa-
 	//  scale computing or O(10^18) operations per second. Even an exascale computer would take a kilo sec-
 	//  ond to do a zetta op and a megasecond or ten days to do a yotta op or 10^24 operations. A special-
-	//  ized processor such as the ones used to do hashing for the mining of cryptocurrency could do zetta-
-	//  scale computing or 10^21 operations per second, but it would still take on the order of a million
-	//  seconds to do a thousand yotta ops or an octillion operations to factor 256 K bit number.
+	//  ized processor such as the ones used to do hashing for the mining of cryptocurrency could be used
+	//  to do zettascale computing or 10^21 operations per second, but it would still take on the order of
+	//  a million seconds to do a thousand yotta ops or an octillion operations to factor 256 K bit number.
+	
 	
 	
 	
@@ -52625,7 +52670,7 @@ class PublicKey
 	
 	//  Rabin / factorization / co-composite root extraction cipher
 	
-	private static final int sizefact1 = 32*1024; // 32 K digits == 128 K bits
+	private static final int sizefact1 = 32*1024 - 1024; // 32 K digits == 128 K bits
 	
 	//  A 128 K bit modulus requires 10^(4.58*5 + 1.5 == 24.5) operations or
 	//  ~ 10 yotta ops to factor but the message m = sqrt(c) mod n decrypts
@@ -58542,6 +58587,15 @@ class PublicKey
 		
 		final int pbits = 512;
 		
+		if (!Math.isPowerOf2(digits + 1024))
+		{
+			String message = "Factor key size must be a power of 2 - 1024 so that"
+			
+			    + " c = m ^ a power of 2 is 1024 bits > n for fast modular reduction.";
+			
+			throw new IllegalArgumentException(message);
+		}
+		
 		if ((publickey == null) || publickey.isEmpty())
 		{
 		
@@ -58559,25 +58613,25 @@ class PublicKey
 			//  5 bits  (31/32)^16  >  1/2,  16 primes
 			
 			
-			final int numberoffactors = digits * 4 / pbits;
+			int numberoffactors = digits * 4 / pbits;
 			
 			System.out.println("fact digits == " + digits);
 			
 			System.out.println("number of factors == " + numberoffactors);
 			
-			if (!Math.isPowerOf2(numberoffactors))
+			int powerof2 = numberoffactors;
 			
-			    throw new IllegalArgumentException();
+			while (!Math.isPowerOf2(powerof2)) powerof2++;
 			
 			Number ones = new Number(2).pow(pbits).subtract(1);
 			
-			Number[] p = new Number[numberoffactors];
+			Number[] p = new Number[powerof2];
 			
-			final int s = 1 + Math.log2(numberoffactors);
+			final int s = 1 + Math.log2(powerof2);
 			
 			//  Create an array of random 512-bit numbers from k hashes
 			
-			Number[] X = new Number[numberoffactors];
+			Number[] X = new Number[powerof2];
 			
 			Number x1 = x[0], x2 = x[1];
 			
@@ -58607,13 +58661,11 @@ class PublicKey
 			
 			//  Use multiple threads to generate the primes
 			
-			//  final int t = 4;
-			
-			final int t = sizefact1 / (4*1024);
+			final int t = numberoffactors / 32;
 			
 			System.out.println("number of threads == " + t);
 			
-			final int size = numberoffactors / t;
+			final int size = powerof2 / t;
 			
 			Thread[] tarray = new Thread[t];
 			
@@ -58633,20 +58685,22 @@ class PublicKey
 						
 						Number prime = X[k] .nextPrime();
 						
-						while (!prime.mod(4).equals(3))
-						
-						    prime = prime .nextPrime();
-						
 						if (k == 0) while
 						
 						    (prime.subtract(1).isDivisibleBy(3)
+						  || prime.subtract(1).isDivisibleBy(4)
 						  || prime.subtract(1).isDivisibleBy(5)
 						  || prime.subtract(1).isDivisibleBy(7)
 						  || prime.subtract(1).isDivisibleBy(11)
 						  || prime.subtract(1).isDivisibleBy(13)
 						  || prime.subtract(1).isDivisibleBy(43))
 						
-							prime = prime .nextPrime();
+						     prime = prime .nextPrime();
+						
+						else while (!prime.mod(4).equals(3))
+						
+						     prime = prime .nextPrime();
+						
 						
 						//  vector.add(prime);
 						
@@ -58672,13 +58726,18 @@ class PublicKey
 			///////////////////////////////////////////////
 			
 			
+			int d = powerof2 - numberoffactors;
+			
+			for (int i = 0; i < d; i++)
+			
+			    p[p.length -1 - i] = new Number(1);
+			
+			//  System.out.println("p[0] == " + p[0]);
+			
+			
 			//  Compute n = p1 p2 p3 p4 ... pk
 			
-			Number n = new Number(1);
-			
-			for (int i = 0; i < numberoffactors; i++)
-			
-			    n = n .multiply(p[i]);
+			Number n = Number.multiply(p);
 			
 			
 			//  Convert the modulus to string
@@ -58731,9 +58790,9 @@ class PublicKey
 			
 			Number m0 = m256_1 .multiply(m256_2) .add(m256_3) .and(ones);
 			
-			m0.clearBit(pbits-1); m0.clearBit(pbits-2);
+			m0.setBit(pbits-1); m0.clearBit(pbits-2);
 			
-			m0.setBit(pbits-3); m0.setBit(0);
+			m0.clearBit(pbits-3); m0.setBit(0);
 			
 			
 			//  Initialize the modulus
@@ -58749,36 +58808,25 @@ class PublicKey
 			
 			Number m1 = new Number(m0);
 			
-			while (m1.bitCount() * 2 < bits / 2)
+			while (m1.bitCount() * 2 < bits)
 			
 			    m1 = m1 .square();
 			
-			
-			//  Increase m to the size of m
-			
 			Number m2 = m1 .square();
 			
-			//  Verify that (m2 < n) and (m2 > (n - 256)) bits
 			
-			if (m2.bitCount() > n.bitCount())
-			
-			    throw new ArithmeticException();
-			
-			if (m2.square().bitCount() < n.bitCount() + 256)
-			
-			    throw new ArithmeticException();
-			
-			
-			//  //  Compute c = m2 ^ 2 (mod n)
-			//
-			//  Number c = m2 .square() .mod(n);
+			if (m2.bitCount() < n.bitCount() + 512)
+			{
+				System.out.println("m2 bit count == " + m2.bitCount());
+				System.out.println(" n bit count == " +  n.bitCount());
+				
+				throw new ArithmeticException();
+			}
 			
 			
-			//  Compute c = m2 * m0 ^ 2 (mod n) so that
-			//
-			//  c = m0 ^ (2*k + 2) == m0 ^ (2 (k + 1)) mod n
+			//  Reduce m2 modulo n
 			
-			Number c = m2 .multiply(m0.square()) .mod(n);
+			Number c = m2 .mod(n);
 			
 			
 			this.publickey = c.toString(digits, 16);
@@ -60323,19 +60371,19 @@ class PublicKey
 				
 				//  System.out.println("number of factors == " + numberoffactors);
 				
-				if (!Math.isPowerOf2(numberoffactors))
+				int powerof2 = numberoffactors;
 				
-				    throw new IllegalArgumentException();
+				while (!Math.isPowerOf2(powerof2)) powerof2++;
 				
 				Number ones = new Number(2).pow(pbits).subtract(1);
 				
-				Number[] p = new Number[numberoffactors];
+				Number[] p = new Number[powerof2];
 				
-				final int s = 1 + Math.log2(numberoffactors);
+				final int s = 1 + Math.log2(powerof2);
 				
 				//  Create an array of random 512-bit numbers from k hashes
 				
-				Number[] X = new Number[numberoffactors];
+				Number[] X = new Number[powerof2];
 				
 				Number x1 = x[0], x2 = x[1];
 				
@@ -60350,95 +60398,26 @@ class PublicKey
 				}
 				
 				
-				//  Create an array of p-bit primes from the p-bit numbers
-				
-				
-				
 				//  Use a single thread to generate the primes
 				
 				for (int i = 0; i < 1; i++)
 				{
 					Number prime = X[i] .nextPrime();
 					
-					while (!prime.mod(4).equals(3))
-					
-					    prime = prime .nextPrime();
-					
-					//  if (i == 0)
-					
-					while
+					if (i == 0) while
 					
 					    (prime.subtract(1).isDivisibleBy(3)
+					  || prime.subtract(1).isDivisibleBy(4)
 					  || prime.subtract(1).isDivisibleBy(5)
 					  || prime.subtract(1).isDivisibleBy(7)
 					  || prime.subtract(1).isDivisibleBy(11)
 					  || prime.subtract(1).isDivisibleBy(13)
 					  || prime.subtract(1).isDivisibleBy(43))
 					
-						prime = prime .nextPrime();
+					     prime = prime .nextPrime();
 					
-					p[0] = prime;
+					p[i] = prime;
 				}
-				
-				
-				/********************************
-				
-				//  Use multiple threads to generate the primes
-				
-				System.out.println("generating primes");
-				
-				int t = Math.numberofthreads;
-				
-				while (!Math.isPowerOf2(t)) t--;
-				
-				System.out.println("number of threads == " + t);
-				
-				final int size = numberoffactors / t;
-				
-				Thread[] tarray = new Thread[t];
-				
-				// java.util.Vector<Number> vector; // not used
-				//
-				// vector = new java.util.Vector<Number>();
-				
-				for (int i = 0; i < tarray.length; i++)
-				{
-					final int i1 = i;
-					
-					tarray[i] = new Thread(() ->
-					{
-						for (int j = 0; j < size; j++)
-						{
-							final int k = size * i1 + j;
-							
-							Number prime = X[k] .nextPrime();
-							
-							while (!prime.mod(4).equals(3))
-							
-							    prime = prime .nextPrime();
-							
-							// vector.add(prime);
-							
-							p[k] = prime;
-						}
-					});
-				}
-				
-				//  Start the threads
-				
-				for (Thread thread : tarray)
-				
-				     thread.start();
-				
-				
-				//  Wait for the threads to expire
-				
-				for (Thread thread : tarray)
-				
-				     while (thread.isAlive()) ;
-				
-				
-				********************************/
 				
 				
 				//  Set c = one-time public key z
@@ -60446,62 +60425,35 @@ class PublicKey
 				Number c = new Number(z, 16);
 				
 				
-				/********************************
-				
-				
-				//  Solve for m == c ^ (1/2) (mod n)
-				//
-				//  == the composite residue of the reduced square roots
-				//
-				//  == lcr ( m[] == sqrt(c[]) mod p[],  p[] )
-				
-				
-				//  Compute the reduced square roots
-				//
-				//  m[i] == c ^ (1/2) (mod p[i])
-				
-				Number[] m = new Number[k];
-				
-				for (int i = 0; i < k; i++)
-				
-				    //  Compute the square root modulo p[i]
-				
-				    //  m[i] = c .mod(p[i]) .modSqrt(p[i])[0];
-				
-				    m[i] = c .modPow( p[i] .add(1) .divide(4), p[i]);
-				
-				
-				//  Compute the least common root, least com-
-				//  posite sqrt, or least composite residue
-				
-				Number M = Math .lcr( m, p ); // slow
-				
-				return M;
-				
-				
-				********************************/
-				
 				
 				//  Solve for m = c ^ (1/2) (mod n)
 				
 				//                   1 / (2 k)
 				//  Compute m1  =  c           mod p[0]
 				
-				///////////////////////////////////////////////
 				
 				//  Use the quadratic divider to reduce c mod p
 				
 				Number r0 = c .mod(p[0]);
 				
-				///////////////////////////////////////////////
+				//  Compute phi for any of the 512-bit primes
 				
-				Number phi2 = p[0] .subtract(1) .divide(2);
+				Number phi = p[0] .subtract(1);
 				
-				int exp = (numberoffactors + 2)/2;
+				//  Find the root of c = m ^ 2^k (mod p0)
 				
-				System.out.println("exp == " + exp);
+				int exp = powerof2 / 2;
 				
-				Number invexp = new Number(exp) .modInverse(phi2);
+				//  The exponent has to be a power of 2, not a multiple of 2
+				//  or else the message can be decrypted by solving the co-
+				//  prime root extraction problem using the multiplier of 2.
+				
+				if (!Math.isPowerOf2(exp)) throw new IllegalArgumentException();
+				
+				//  First compute c ^ 2 ^ (k-1) mod (p0/2)
+				//  then compute the final sqrt modulo p0
+				
+				Number invexp = new Number(exp) .modInverse(phi.divide(2));
 				
 				Number m1 = r0 .modPow(invexp, p[0]) .modSqrt(p[0]);
 				
@@ -60541,9 +60493,9 @@ class PublicKey
 				
 				Number m1 = m256_1 .multiply(m256_2) .add(m256_3) .and(ones);
 				
-				m1 .clearBit(pbits-1); m1.clearBit(pbits-2);
+				m1.setBit(pbits-1); m1.clearBit(pbits-2);
 				
-				m1.setBit(pbits-3); m1.setBit(0);
+				m1.clearBit(pbits-3); m1.setBit(0);
 				
 				return m1;
 			}
@@ -73678,8 +73630,18 @@ class Number implements Comparable<Number>
 	
 	public static Number multiply(Number[] n)
 	{
-		//  returns the product of n[] by multiplying
-		//  iteratively in pairs until the array size == 1
+		//  returns the product of the elements of n[]
+		
+		if (n.length < 1024)
+		{
+			Number product = new Number(1);
+			
+			for (int i = 0; i < n.length; i++)
+			
+			    product = product.multiply(n[i]);
+			
+			return product;
+		}
 		
 		//  Copy and expand the array to a power of 2
 		
@@ -75573,9 +75535,9 @@ class Number implements Comparable<Number>
 		//  The fractions
 		//
 		//  thousandth, millionth, billionth, trillionth, quadril-
-		//  lionth, and sextillionth correspond to the prefixes
+		//  lionth, quintillionth, and sextillionth correspond to the prefixes
 		//
-		//  milli -3, micro -6, nano -9, pico -12, femto -15 and zepto -21
+		//  milli -3, micro -6, nano -9, pico -12, femto -15, atto -18, and zepto -21
 		//
 		//  The large prefixes are used for bytes or operations
 		//  and the small prefixes are usually used for seconds
