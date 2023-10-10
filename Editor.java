@@ -96,7 +96,7 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
 	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
-	includes 15 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
+	includes 16 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
@@ -545,7 +545,8 @@
 	4.58) operations where n is the number of bits. The Rabin / factorization cipher is included in the
 	public key class but it is not enabled by default because the key size is large. (The integer discrete
 	log cipher y = a ^ x mod n is not included in the public key class because the cipher requires an ex-
-	ponentiation for encryption instead of a multiplication or squaring c = m^2 mod n for factorization.)
+	ponentiation to compute the public key y instead of a multiplication or squaring to compute the one-
+	time public key c = m^2 mod n for factorization.)
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b mod p
 	are not included in the software because the elliptic curve discrete log function has a periodicity
@@ -610,7 +611,7 @@
 	modulus is secret and both the static key and the one-time public key include small random errors.
 	The only problem is that the key size has to be on the order of 10^5 just like the factorization ci-
 	pher or else the cipher is not secure because there are polynomial-time algorithms for solving these
-	problems.
+	problems. The Merkle-Hellman / knapsack cipher may be included in future versions of the software.
 	
 	
 	************************************************/
@@ -10260,13 +10261,34 @@ class Programs
 		
 			public void actionPerformed(ActionEvent e)
 			{
-				//  Convert the ciphertext to plaintext
+				//  Read the text from the text area
 				
 				JTextArea textarea = textareapanel.textarea;
 				
-				String ciphertext = textarea.getText();
+				String text = textarea.getText().trim();
 				
-				String plaintext = decrypt(frame, ciphertext);
+				if (text.isEmpty() || !PublicKey.isEncrypted(text))
+				{
+					JOptionPane.showMessageDialog(frame,
+					
+					    __.nothingtodecrypt, "", JOptionPane.ERROR_MESSAGE);
+					
+					return;
+				}
+				
+				
+				//  Remove any partitioning from the trimmed text
+				
+				if (!text.trim().contains("\n\n"))
+				
+				    text = text.replaceAll("[\t\n]", "");
+				
+				
+				//  Convert the ciphertext to plaintext
+				
+				String ciphertext = text;
+				
+				String plaintext = decrypt(ciphertext);
 				
 				
 				//  Display the plaintext
@@ -10274,47 +10296,27 @@ class Programs
 				if (plaintext != null)
 				{
 					textarea.setText(plaintext);
+					
 					textarea.setCaretPosition(0);
 				}
 			}
 			
 			
 			
-			private String decrypt(Component parent, String message)
+			private String decrypt(String ciphertext)
 			{
 			
-				byte[] SK;  String decryptedmessage;
-				
-				JTextArea textarea = textareapanel.textarea;
-				
-				if ( textarea.getText().isEmpty()
-				
-				  || !PublicKey.isEncrypted(textarea.getText()) )
-				{
-					JOptionPane.showMessageDialog(frame,
-					
-					    __.nothingtodecrypt, "", JOptionPane.ERROR_MESSAGE);
-					
-					return null;
-				}
-				
+				String plaintext;
 				
 				if ((SP != null) && !SP.isEmpty())
 				{
-					SK = Cipher.passphraseToKey(SP);
+					byte[] SK = Cipher.passphraseToKey(SP);
 					
-					String ciphertext = textarea.getText();
+					plaintext = PublicKey.decrypt(ciphertext, SK);
 					
-					decryptedmessage = PublicKey.decrypt(ciphertext, SK);
+					if ((plaintext != null) && !plaintext.isEmpty())
 					
-					if ((decryptedmessage != null) &&
-					    !decryptedmessage.isEmpty())
-					{
-						textarea.setText(decryptedmessage);
-						textarea.setCaretPosition(0);
-						
-						return null;
-					}
+					    return plaintext;
 				}
 				
 				
@@ -10363,11 +10365,9 @@ class Programs
 					
 					SK = Cipher.passphraseToKey(passphrase + email);
 					
-					decryptedmessage = PublicKey.decrypt(
+					plaintext = PublicKey.decrypt(ciphertext, SK);
 					
-					    textareapanel.textarea.getText(), SK);
-					
-					if (decryptedmessage == null)
+					if (plaintext == null)
 					{
 						JOptionPane.showMessageDialog(frame,
 						
@@ -10378,9 +10378,8 @@ class Programs
 						return null;
 					}
 					
-					if (decryptedmessage.isEmpty())
+					if (plaintext.isEmpty())
 					{
-					
 						//  The user may have typed the email onto the public key
 						//  instead of using the email field on the passphrase dia-
 						//  log box to display the email address on the public key.
@@ -10389,12 +10388,10 @@ class Programs
 						
 						SK = Cipher.passphraseToKey(passphrase);
 						
-						decryptedmessage = PublicKey.decrypt(
-						
-						    textareapanel.textarea.getText(), SK);
+						plaintext = PublicKey.decrypt(ciphertext, SK);
 					}
 					
-					else if (!decryptedmessage.isEmpty())
+					else if (!plaintext.isEmpty())
 					{
 						SK = Cipher.passphraseToKey(passphrase);
 						
@@ -10402,7 +10399,7 @@ class Programs
 					}
 				}
 				
-				return decryptedmessage;
+				return plaintext;
 			}
 		}
 		
@@ -23124,6 +23121,7 @@ class Programs
 							    numberofciphers1[0] = maxnumber;
 							
 							
+							
 							JLabel filelabel = new JLabel(attachedfilemessage);
 							
 							filelabel .setBackground(new JPanel().getBackground());
@@ -23899,9 +23897,9 @@ class Programs
 							
 							//  Generate the user's static public key to send a copy to self
 							
-							int numberofciphers = PublicKey
+							int numberofciphers = PublicKey.countNumberOfCiphers(recipientskey);
 							
-							    .countNumberOfCiphers(recipientskey);
+							System.out.println("number of encryption ciphers == " + numberofciphers);
 							
 							String[] keys = PublicKey.generatePublicKey(
 							
@@ -23927,12 +23925,27 @@ class Programs
 							
 							if (testmail)
 							{
-								String[] testpublickey = PublicKey .generatePublicKey(
+								//  If the user pastes a public key in the to field,
+								//  use the real public key instead of a test key so a
+								//  user or software developer can copy the encrypted
+								//  text from the send mail frame and paste it into the
+								//  text editor to test the decryption using the Decrypt
+								//  Message menu item.
 								
-								    testpassphrase, "", numberofciphers1[0]);
+								String[] testpublickey = (recipientskey != null) ?
+								
+								    PublicKey.splitKeys(recipientskey) :
+								
+									PublicKey .generatePublicKey(
+								
+									    testpassphrase, "", numberofciphers);
 								
 								sendtext1 = PublicKey.encrypt(text1, testpublickey);
 								sendtext2 = PublicKey.encrypt(text1,   mypublickey);
+								
+								if (recipientskey != null) System.out.println(
+								
+								    "recipient's key == \n\n" + recipientskey);
 							}
 							
 							else if (!testmail)
@@ -39565,6 +39578,8 @@ class Programs
 			     && !maxcheckbox  .isSelected())  m = n - n1;
 			else                                  m = -1;
 			
+			System.out.println("number of ciphers == " + m);
+			
 			return Math.min(m, n);
 		}
 		
@@ -52735,10 +52750,7 @@ class PublicKey
 		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  m-dl
 		
 		
-		//  this cipher is not enabled because the modSqrt method throws an exception
-		//  and the email messages don't decrypt if factorization is enabled
-		//
-		//  sizefact1,  //  Rabin / fact cipher
+		sizefact1,  //  Rabin / fact cipher
 		
 		
 		
@@ -54726,22 +54738,6 @@ class PublicKey
 		//  Convert the cipherdata to ciphertext
 		
 		String ciphertext = Convert.byteArrayToBase64(cipherdata);
-		
-		
-		//  Partition the ciphertext
-		
-		if (ciphertext.length() > 8*1024) 
-		
-		    ciphertext = Convert.partition(ciphertext, "\n", 80);
-		
-		
-		//  Partition one-time keys larger than 1024 digits
-		
-		for (int i = 0; i < z.length; i++)
-		
-		    if (z[i].length() > 1024)
-		
-			z[i] = Convert.partition(z[i], "\n", 80);
 		
 		
 		
@@ -58691,22 +58687,12 @@ class PublicKey
 						
 						Number prime = X[k] .nextPrime();
 						
-						if (k == 0) while
+						//  The prime has to equal 3 mod 4 so that
+						//  the totient p-1 is not divisible by 4
 						
-						    (prime.subtract(1).isDivisibleBy(3)
-						  || prime.subtract(1).isDivisibleBy(4)
-						  || prime.subtract(1).isDivisibleBy(5)
-						  || prime.subtract(1).isDivisibleBy(7)
-						  || prime.subtract(1).isDivisibleBy(11)
-						  || prime.subtract(1).isDivisibleBy(13)
-						  || prime.subtract(1).isDivisibleBy(43))
+						while (!prime.mod(4).equals(3))
 						
-						     prime = prime .nextPrime();
-						
-						else while (!prime.mod(4).equals(3))
-						
-						     prime = prime .nextPrime();
-						
+						    prime = prime .nextPrime();
 						
 						//  vector.add(prime);
 						
@@ -58731,6 +58717,9 @@ class PublicKey
 			
 			///////////////////////////////////////////////
 			
+			
+			//  If the number of factors in the modulus is not a power
+			//  of 2, set the last elements in the prime array to 1
 			
 			int d = powerof2 - numberoffactors;
 			
@@ -58770,11 +58759,11 @@ class PublicKey
 			//
 			//  Compute the one-time secret key
 			//
-			//  m1  =  m0 ^ k  <  sqrt(n)
+			//  m  =  m0 ^ 2 ^ k  > sqrt n
 			//
 			//  and the one-time public key
 			//
-			//  c  =  m2 ^ 2 (mod n)
+			//  c  =  m ^ 2 (mod n)
 			
 			
 			//  Choose a random secret key
@@ -58820,6 +58809,8 @@ class PublicKey
 			
 			Number m2 = m1 .square();
 			
+			
+			//  Verify that m2 > log2 n + 512
 			
 			if (m2.bitCount() < n.bitCount() + 512)
 			{
@@ -60410,17 +60401,12 @@ class PublicKey
 				{
 					Number prime = X[i] .nextPrime();
 					
-					if (i == 0) while
+					//  The prime has to equal 3 mod 4 so that
+					//  the totient p-1 is not divisible by 4
 					
-					    (prime.subtract(1).isDivisibleBy(3)
-					  || prime.subtract(1).isDivisibleBy(4)
-					  || prime.subtract(1).isDivisibleBy(5)
-					  || prime.subtract(1).isDivisibleBy(7)
-					  || prime.subtract(1).isDivisibleBy(11)
-					  || prime.subtract(1).isDivisibleBy(13)
-					  || prime.subtract(1).isDivisibleBy(43))
+					while (!prime.mod(4).equals(3))
 					
-					     prime = prime .nextPrime();
+					    prime = prime .nextPrime();
 					
 					p[i] = prime;
 				}
@@ -60432,10 +60418,11 @@ class PublicKey
 				
 				
 				
-				//  Solve for m = c ^ (1/2) (mod n)
+				//                     1 / 2^k
+				//  Solve for  m  =  c          mod n
 				
-				//                   1 / (2 k)
-				//  Compute m1  =  c           mod p[0]
+				//                     1 / 2^k
+				//         or  m  =  c          mod p[0]
 				
 				
 				//  Use the quadratic divider to reduce c mod p
@@ -60461,7 +60448,22 @@ class PublicKey
 				
 				Number invexp = new Number(exp) .modInverse(phi.divide(2));
 				
-				Number m1 = r0 .modPow(invexp, p[0]) .modSqrt(p[0]);
+				//  The modSqrt(p) method has to be wrapped in a try / catch block
+				//
+				//  because the user or a sender could encrypt a message c = m^2 mod n
+				//  to one key n and then try to decrypt c = m^2 mod n' using a differ-
+				//  ent passphrase or modulus n'. The ciphertext c is only guaranteed to
+				//  be a quadratic residue modulo n, where n is the modulus used by the
+				//  encryptor. If the wrong passphrase or key is used by the decryptor,
+				//  then there is a 1/2 chance that c will be a quadratic non-residue
+				//  and the modSqrt method will complain by throwing an illegal argument
+				//  exception.
+				
+				Number m1;
+				
+				try { m1 = r0 .modPow(invexp, p[0]) .modSqrt(p[0]); }
+				
+				catch (IllegalArgumentException ex) { return new Number(0); }
 				
 				if (!m1.testBit(0)) m1 = m1 .negate(p[0]);
 				
@@ -73218,7 +73220,7 @@ class Number implements Comparable<Number>
 		//  If p is a prime power use Tonelli's algorithm because
 		//  only Tonelli's formula works for prime powers unless
 		//  Cipolla's algorithm can be modified to compute square
-		//  roots modulo prime powers
+		//  roots modulo prime powers.
 		
 		if (p.isPrimePower()) return modSqrt1(p);
 		
