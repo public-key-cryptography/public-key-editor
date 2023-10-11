@@ -32458,7 +32458,7 @@ class Programs
 					
 					int numberofciphers = PublicKey.countNumberOfCiphers(message);
 					
-					System.out.println("number of ciphers == " + numberofciphers);
+					//  System.out.println("number of ciphers == " + numberofciphers);
 					
 					emailpanel.list1.setNumberOfCiphers(msno, numberofciphers);
 					
@@ -36207,13 +36207,22 @@ class Programs
 									emailpanel.popmail.setTextArea(emailpanel.poptextarea);
 									
 									
-									//  Set the popmail testmail variable
+									//  Set the popmail testmail variables
+									//
+									//  the send test mail will use the recipient's encryption key
+									//  that is pasted into the to field in the send mail frame
+									//
+									//  the receive test mail will use the number of ciphers set
+									//  by the user in the reply key settings menu item
 									
 									if (testmail)
 									{
+										int numberofciphers = emailpanel.numberofciphers;
+										
 										emailpanel.popmail.setTestMail(testmail);
 										emailpanel.popmail.setTestPassphrase(testpassphrase);
 										emailpanel.popmail.setReplyPassphrase(replypassphrase);
+										emailpanel.popmail.setNumberOfCiphers(numberofciphers);
 									}
 									
 									
@@ -36416,7 +36425,17 @@ class Programs
 									
 									//  Set the no of top lines to read
 									
-									final int toplines = 128;
+									//  128 is not enough lines to read the encryption key if
+									//  the factorization cipher is enabled and then the user
+									//  would have to click on the message to read the subject.
+									//  512 is not enough lines if both the encryption and the
+									//  prepended reply key both contain factorization ciphers.
+									//  
+									//  In future versions the software could read the top 128
+									//  lines and then for those messages that do not have sub-
+									//  jects it could re-read the top 1024 lines.
+									
+									int toplines = 1024;
 									
 									for (int i = 0; i < t; i++)
 									{
@@ -36446,7 +36465,6 @@ class Programs
 										
 										String header = poptop.substring(0, pos);
 										String top    = poptop.substring(pos).trim();
-										
 										
 										//  Remove any partitioning
 										
@@ -39577,8 +39595,6 @@ class Programs
 			else if (maxbutton    .isSelected()
 			     && !maxcheckbox  .isSelected())  m = n - n1;
 			else                                  m = -1;
-			
-			System.out.println("number of ciphers == " + m);
 			
 			return Math.min(m, n);
 		}
@@ -43500,12 +43516,16 @@ class PopMail
 	private int bytesread;
 	
 	
-	//  used for test mail
+	
+	//  member variables used only for test mail
 	
 	private boolean testmail;
 	
 	private String  testpassphrase;
 	private String replypassphrase;
+	
+	private int numberofciphers = 6;
+	
 	
 	
 	
@@ -43590,10 +43610,6 @@ class PopMail
 		final int linewidth = 78; // the partition size
 		
 		testmaillist = new String[numberofmessages];
-		
-		//  Create a test public key
-		
-		final int numberofciphers = 6;
 		
 		
 		//  Create recipient's test public key strings to test the mail program
@@ -43851,6 +43867,11 @@ class PopMail
 	public void setReplyPassphrase(String replypassphrase)
 	{
 		this.replypassphrase = replypassphrase;
+	}
+	
+	public void setNumberOfCiphers(int numberofciphers)
+	{
+		this.numberofciphers = numberofciphers;
 	}
 	
 	
@@ -58605,21 +58626,13 @@ class PublicKey
 			
 			//  To choose a prime, set the first 1 + log2(k) bits to 1
 			//  where k is the number of primes in the modulus n so that
-			//  the size of the modulus equals the sum of the sizes of
-			//  the primes.
-			//
-			//  1 bit    (1/2) ^ 1  >  1/2,   1 prime
-			//  2 bits   (3/4) ^ 2  >  1/2,   2 primes
-			//  3 bits   (7/8) ^ 4  >  1/2,   4 primes
-			//  4 bits  (15/16)^ 8  >  1/2,   8 primes
-			//  5 bits  (31/32)^16  >  1/2,  16 primes
-			
+			//  the size of n equals the sum of the sizes of the primes
 			
 			int numberoffactors = digits * 4 / pbits;
 			
-			System.out.println("fact digits == " + digits);
+			//  System.out.println("fact digits == " + digits);
 			
-			System.out.println("number of factors == " + numberoffactors);
+			//  System.out.println("number of factors == " + numberoffactors);
 			
 			int powerof2 = numberoffactors;
 			
@@ -58629,13 +58642,27 @@ class PublicKey
 			
 			Number[] p = new Number[powerof2];
 			
-			final int s = 1 + Math.log2(powerof2);
 			
 			//  Create an array of random 512-bit numbers from k hashes
 			
 			Number[] X = new Number[powerof2];
 			
 			Number x1 = x[0], x2 = x[1];
+			
+			//  the first bit is set to 1 so that the number is > 1/2 or 0.1;
+			//  but even 0.1 ^ (2 ^ k) or 0.1 ^ 256 can still have up to 256
+			//  leading zeros; by setting the next log2(256) or next 8 bits
+			//  to 1, the number of zeros can be halved 8 times so that the
+			//  maximum number of leading zero bits is 1 if the next random
+			//  bit is also a zero.
+			//
+			//  Of course, the cipher would still work because the method would
+			//  pad the key with leading zeros, but the key would appear non-random
+			//  to other methods, and users who print the key would see a row of up
+			//  to 64 consecutive zeros and would assume that there is something
+			//  wrong with the key.
+			
+			final int s = 1 + Math.log2(powerof2);
 			
 			for (int i = 0; i < X.length; i++)
 			{
@@ -58644,10 +58671,15 @@ class PublicKey
 				
 				X[i] = x1.multiply(new Number(2).pow(256)).add(x2).and(ones);
 				
+				//  Set the first few bits to 1 so that the size of the modulus n
+				//  equals the sum of the bits in the primes array, and also so
+				//  that the message m is smaller than the primes or else the mes-
+				//  sage will not decrypt correctly.
+				
 				for (int j = pbits -1; j >= pbits -1 -s; j--) X[i].setBit(j);
 			}
 			
-			//  Create an array of 512-bit primes from the 512-bit numbers
+			//  Create an array of primes from the 512-bit numbers
 			
 		//	for (int i = 0; i < X.length; i++)
 		//	{
@@ -58659,13 +58691,11 @@ class PublicKey
 		//	}
 			
 			
-			///////////////////////////////////////////////
-			
 			//  Use multiple threads to generate the primes
 			
 			final int t = numberoffactors / 32;
 			
-			System.out.println("number of threads == " + t);
+			//  System.out.println("number of threads == " + t);
 			
 			final int size = powerof2 / t;
 			
@@ -58713,9 +58743,6 @@ class PublicKey
 			for (Thread thread : tarray)
 			
 			     while (thread.isAlive()) ;
-			
-			
-			///////////////////////////////////////////////
 			
 			
 			//  If the number of factors in the modulus is not a power
@@ -58771,28 +58798,14 @@ class PublicKey
 			//  m = f(recipient's public key y, sender's private key k)
 			
 			
-			//  Choose a random 512-bit secret key
-			
-			Number n0 = new Number(publickey, 16) .add(x[0]);
-			Number n1 = new Number(publickey, 16) .add(x[1]);
-			Number n2 = new Number(publickey, 16) .add(x[2]);
-			
-			Number m256_1 = new Number(Cipher.hash(n0.toByteArray(32)));
-			Number m256_2 = new Number(Cipher.hash(n1.toByteArray(32)));
-			Number m256_3 = new Number(Cipher.hash(n2.toByteArray(32)));
-			
-			Number ones = new Number(2).pow(pbits).subtract(1);
-			
-			Number m0 = m256_1 .multiply(m256_2) .add(m256_3) .and(ones);
-			
-			m0.setBit(pbits-1); m0.clearBit(pbits-2);
-			
-			m0.clearBit(pbits-3); m0.setBit(0);
-			
-			
 			//  Initialize the modulus
 			
 			Number n = new Number(publickey, 16);
+			
+			
+			//  Choose a random 512-bit secret key
+			
+			Number m0 = generateFactMessage(publickey);
 			
 			
 			//  Compute m1 = m0 ^ k
@@ -58810,7 +58823,8 @@ class PublicKey
 			Number m2 = m1 .square();
 			
 			
-			//  Verify that m2 > log2 n + 512
+			//  Verify that m2 > log2 n + 512 or else there
+			//  would be no modular reduction or encryption
 			
 			if (m2.bitCount() < n.bitCount() + 512)
 			{
@@ -58833,6 +58847,48 @@ class PublicKey
 	
 	
 	
+	
+	private Number generateFactMessage(String publickey)
+	{
+	
+		//  returns a random 512-bit secret key
+		
+		//  This method or algorithm can be changed by software developers
+		//  without breaking the users' static public keys or making emails
+		//  undecryptable because it only affects the one-time public key
+		//  which can be any random number. (If the exponent of c = m ^ 2
+		//  ^ k mod n were changed, then the previous email messages would
+		//  be undecryptable using the new software.)
+		
+		
+		final int pbits = 512;
+		
+		Number n0 = new Number(publickey, 16) .add(x[0]);
+		Number n1 = new Number(publickey, 16) .add(x[1]);
+		Number n2 = new Number(publickey, 16) .add(x[2]);
+		
+		Number m256_1 = new Number(Cipher.hash(n0.toByteArray(32)));
+		Number m256_2 = new Number(Cipher.hash(n1.toByteArray(32)));
+		Number m256_3 = new Number(Cipher.hash(n2.toByteArray(32)));
+		
+		Number ones = new Number(2).pow(pbits).subtract(1);
+		
+		Number m512 = m256_1 .multiply(m256_2) .add(m256_3) .and(ones);
+		
+		//  Set the first few bits to 1 because if only the first bit is set,
+		//  then 1/2 or 0.1 ^ k will have k-1 zeros in front of it. For example,
+		//  if k = 256 to make the size of c equal to 128 K bits, then 0.1 ^ k
+		//  == 0.1 ^ 256 which would make the power or product 256 bits smaller.
+		//  If the first three bits are set, then m ^ k can only be up to 64
+		//  bits smaller than the 128 K bit modulus.
+		
+		m512.setBit(pbits-1); m512.  setBit(pbits-2);
+		m512.setBit(pbits-3); m512.clearBit(pbits-4);
+		
+		m512.setBit(0);
+		
+		return m512;
+	}
 	
 	
 	
@@ -60360,7 +60416,7 @@ class PublicKey
 				//
 				//  m == c ^ (1/2) (mod n)
 				
-				System.out.println("decrypting factorization cipher");
+				//  System.out.println("decrypting factorization cipher");
 				
 				final int numberoffactors = digits * 4 / pbits;
 				
@@ -60376,13 +60432,13 @@ class PublicKey
 				
 				Number[] p = new Number[powerof2];
 				
-				final int s = 1 + Math.log2(powerof2);
-				
 				//  Create an array of random 512-bit numbers from k hashes
 				
 				Number[] X = new Number[powerof2];
 				
 				Number x1 = x[0], x2 = x[1];
+				
+				final int s = 1 + Math.log2(powerof2);
 				
 				for (int i = 0; i < X.length; i++)
 				{
@@ -60429,51 +60485,69 @@ class PublicKey
 				
 				Number r0 = c .mod(p[0]);
 				
+				
 				//  Compute phi for any of the 512-bit primes
 				
 				Number phi = p[0] .subtract(1);
 				
-				//  Find the root of c = m ^ 2^k (mod p0)
 				
-				int exp = powerof2 / 2;
+				//                           k
+				//                         2
+				//  Find the root of c = m    (mod p0)
 				
-				//  The exponent has to be a power of 2, not a multiple of 2
-				//  or else the message can be decrypted by solving the co-
-				//  prime root extraction problem using the multiplier of 2.
-				
-				if (!Math.isPowerOf2(exp)) throw new IllegalArgumentException();
-				
-				//  First compute c ^ 2 ^ (k-1) mod (p0/2)
+				//                         k-1
+				//                   1 / 2
+				//  First compute  c           mod (p0/2)
+				//
 				//  then compute the final sqrt modulo p0
 				
+				//  (The exponent has to be a power of 2, not a multiple of 2
+				//  or else the message can be decrypted by solving the co-
+				//  prime root extraction problem using the multiplier of 2)
+				
+				
+				//  Set the exponent = 2 ^ (k-1)
+				
+				final int exp = powerof2 / 2;
+				
+				if (!Math.isPowerOf2(exp)) throw
+				
+				    new IllegalArgumentException();
+				
+				
+				//  Compute the inverse of 2 ^ (k-1) modulo phi(p0)
+				 
 				Number invexp = new Number(exp) .modInverse(phi.divide(2));
 				
-				//  The modSqrt(p) method has to be wrapped in a try / catch block
-				//
-				//  because the user or a sender could encrypt a message c = m^2 mod n
-				//  to one key n and then try to decrypt c = m^2 mod n' using a differ-
-				//  ent passphrase or modulus n'. The ciphertext c is only guaranteed to
-				//  be a quadratic residue modulo n, where n is the modulus used by the
-				//  encryptor. If the wrong passphrase or key is used by the decryptor,
-				//  then there is a 1/2 chance that c will be a quadratic non-residue
-				//  and the modSqrt method will complain by throwing an illegal argument
-				//  exception.
 				
-				Number m1;
+				//  The modSqrt(p) method has to be wrapped in a try / catch block
+				//  because the user or a sender could encrypt a message c = m^2 mod n to one
+				//  key n and then try to decrypt c = m^2 mod n' using a different passphrase or
+				//  modulus n'. The ciphertext c is only guaranteed to be a quadratic residue
+				//  modulo n, where n is the modulus used by the encryptor. If the wrong pass-
+				//  phrase or key is used by the decryptor, then there is a 1/2 chance that c
+				//  will be a quadratic non-residue and the modSqrt method will throw an illegal
+				//  argument exception but it could also be modified to throw an arithmetic ex-
+				//  ception like the divide method does for divide by zero or to return null if
+				//  there is no modular square root. Using the Exception class and testing for
+				//  null allows the modSqrt method to be modified without breaking the code. 
+				
+				
+				Number m1 = new Number(0);
 				
 				try { m1 = r0 .modPow(invexp, p[0]) .modSqrt(p[0]); }
 				
-				catch (IllegalArgumentException ex) { return new Number(0); }
+				catch (Exception ex) { return m1; }
 				
-				if (!m1.testBit(0)) m1 = m1 .negate(p[0]);
+				if (m1 == null) return m1;
+				
+				if (!m1.testBit(0)) m1 = m1.negate(p[0]);
 				
 				long endtime = System.currentTimeMillis();
 				
 				long computetime = endtime - starttime;
 				
-				System.out.println("fact decrypt time == "
-				
-				    + computetime + " ms");
+				//  System.out.println("fact decrypt time == " + computetime + " ms");
 				
 				//  Reduce M modulo F8 and return the secret key
 				
@@ -60484,28 +60558,13 @@ class PublicKey
 			
 			else // if (type == 2)
 			{
-			
 				//  Choose a random p-bit secret key
 				
 				String publickey = z;
 				
-				Number n0 = new Number(publickey, 16) .add(x[0]);
-				Number n1 = new Number(publickey, 16) .add(x[1]);
-				Number n2 = new Number(publickey, 16) .add(x[2]);
+				Number m512 = generateFactMessage(publickey);
 				
-				Number m256_1 = new Number(Cipher.hash(n0.toByteArray(32)));
-				Number m256_2 = new Number(Cipher.hash(n1.toByteArray(32)));
-				Number m256_3 = new Number(Cipher.hash(n2.toByteArray(32)));
-				
-				Number ones = new Number(2).pow(pbits).subtract(1);
-				
-				Number m1 = m256_1 .multiply(m256_2) .add(m256_3) .and(ones);
-				
-				m1.setBit(pbits-1); m1.clearBit(pbits-2);
-				
-				m1.clearBit(pbits-3); m1.setBit(0);
-				
-				return m1;
+				return m512;
 			}
 		}
 		
