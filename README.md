@@ -48,13 +48,6 @@
 	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
 	are unsolvable.
 	
-	A 128 K bit factorization cipher is also included because factorization is unbreakable even by a poly-
-	nomial-time algorithm if the key size is large enough, and the cipher decrypts in only 10^8 operations
-	or < 100 ms. This is the maximum number of operations or time allowed for a cipher to be included in
-	the software because there are 16 ciphers that have to be decrypted and each message has to decrypt in
-	< 1 second even on a single-core processor. This cipher uses real factorization or the quadratic resi-
-	due c = m ^ 2 ^ k mod n, not coprime root extraction c = m ^ e mod n where (e, phi(n)) == 1.
-	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
 	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipher-
@@ -574,11 +567,9 @@
 	of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
 	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
 	lyst may also be able to break the static public key because the equations are linear and the modulus
-	is public unlike the knapsack cipher which is also linear but uses a private modulus.
+	is public.
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + e[] (mod n), b = c[] m[] + e, where c[] is the
-	recipient's static public key and b is the sender's one-time public key is unbreakable because the
-	modulus is secret and both the static key and the one-time public key include small random errors.
-	The only problem is that the key size has to be on the order of 10^5 just like the factorization ci-
-	pher or else the cipher is not secure because there are polynomial-time algorithms for solving these
-	problems. The Merkle-Hellman / knapsack cipher may be included in future versions of the software.
+	The knapsack cipher c[] = a[] s + e[] (mod n) is more secure than the LWE cipher because it it also
+	includes small errors but it uses a private modulus. The problem is that the cipher has to use matri-
+	ces or hypercomplex numbers instead of integers or else the one-time public key b = c[] m[] can be
+	broken.

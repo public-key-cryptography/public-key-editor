@@ -78,13 +78,6 @@
 	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
 	are unsolvable.
 	
-	A 128 K bit factorization cipher is also included because factorization is unbreakable even by a poly-
-	nomial-time algorithm if the key size is large enough, and the cipher decrypts in only 10^8 operations
-	or < 100 ms. This is the maximum number of operations or time allowed for a cipher to be included in
-	the software because there are 16 ciphers that have to be decrypted and each message has to decrypt in
-	< 1 second even on a single-core processor. This cipher uses real factorization or the quadratic resi-
-	due c = m ^ 2 ^ k mod n, not coprime root extraction c = m ^ e mod n where (e, phi(n)) == 1.
-	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
 	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipher-
@@ -604,14 +597,12 @@
 	of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
 	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
 	lyst may also be able to break the static public key because the equations are linear and the modulus
-	is public unlike the knapsack cipher which is also linear but uses a private modulus.
+	is public.
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + e[] (mod n), b = c[] m[] + e, where c[] is the
-	recipient's static public key and b is the sender's one-time public key is unbreakable because the
-	modulus is secret and both the static key and the one-time public key include small random errors.
-	The only problem is that the key size has to be on the order of 10^5 just like the factorization ci-
-	pher or else the cipher is not secure because there are polynomial-time algorithms for solving these
-	problems. The Merkle-Hellman / knapsack cipher may be included in future versions of the software.
+	The knapsack cipher c[] = a[] s + e[] (mod n) is more secure than the LWE cipher because it it also
+	includes small errors but it uses a private modulus. The problem is that the cipher has to use matri-
+	ces or hypercomplex numbers instead of integers or else the one-time public key b = c[] m[] can be
+	broken.
 	
 	
 	************************************************/
@@ -1297,7 +1288,7 @@ class __
 	numberofciphers = "number of ciphers",
 	usereplyaddresskey = "use reply address for reply key",
 	
-	includelargeciphers = "include large (factorization) cipher",
+	includelargeciphers = "include large ciphers",
 	
 	usemyaddresstogeneratereplykey =
 	
@@ -9913,7 +9904,7 @@ class Programs
 					
 					    if ((i != index1) && (i != index2))
 						
-						 sb.append(lines[i] + "\n");
+						sb.append(lines[i] + "\n");
 					
 					document = sb.toString();
 				}
@@ -15844,7 +15835,6 @@ class Programs
 					
 					textfield1.setBackground(background);
 					textfield2.setBackground(background);
-					
 				}
 				
 				
@@ -36425,17 +36415,21 @@ class Programs
 									
 									//  Set the no of top lines to read
 									
-									//  128 is not enough lines to read the encryption key if
-									//  the factorization cipher is enabled and then the user
-									//  would have to click on the message to read the subject.
-									//  512 is not enough lines if both the encryption and the
-									//  prepended reply key both contain factorization ciphers.
+									//  128 is not enough lines to read the encryption key if the
+									//  user's public key is on the order of 100 K bits. If the
+									//  encryption key is not fully read, then the subject will not
+									//  appear in the text area and the user would have to click on
+									//  the message to read the subject. 1024 is enough lines even if
+									//  the encryption and the prepended reply key both contain 128 K
+									//  bit public keys.
 									//  
-									//  In future versions the software could read the top 128
-									//  lines and then for those messages that do not have sub-
-									//  jects it could re-read the top 1024 lines.
+									//  In future versions the software could read the top 128 lines
+									//  and then for those messages that do not have subjects it
+									//  could re-read the top 1024 lines.
 									
-									int toplines = 1024;
+									int toplines = 128;
+									
+									int toplines1 = 1024;
 									
 									for (int i = 0; i < t; i++)
 									{
@@ -36444,14 +36438,9 @@ class Programs
 										//  Use the POP TOP command to read
 										//  the email headers and message tops
 										
-										String poptop;
+										String poptop, header, top;
 										
 										poptop = emailpanel.popmail.top(i, toplines);
-										
-										
-										emailpanel.poptextarea.repaint();
-										emailpanel.popscrollpane.repaint();
-										pop3window.repaint();
 										
 										
 										//  Separate the header and message top
@@ -36463,8 +36452,31 @@ class Programs
 										
 										//  Read the header and top
 										
-										String header = poptop.substring(0, pos);
-										String top    = poptop.substring(pos).trim();
+										header = poptop.substring(0, pos);
+										top    = poptop.substring(pos).trim();
+										
+										
+										//  Test if the top includes some ciphertext so the
+										//  the message can be partially decrypted to display
+										//  the subject and the first lines of the message.
+										//  If the public key is large, then the top will
+										//  contain only the one-time public keys and the
+										//  isEncrypted(str) method will return false.
+										
+										if (!PublicKey.isEncrypted(top))
+										{
+											//  Re-read the header using more lines
+											
+											poptop = emailpanel.popmail.top(i, toplines1);
+											
+											pos = poptop.indexOf("\n\n");
+											
+											if (pos == -1) continue; // error
+											
+											header = poptop.substring(0, pos);
+											top    = poptop.substring(pos).trim();
+										}
+										
 										
 										//  Remove any partitioning
 										
@@ -36494,6 +36506,11 @@ class Programs
 										
 										emailpanel.list1.setHeader(i, header);
 										emailpanel.list1.setTop(i, top);
+										
+										
+										emailpanel.poptextarea.repaint();
+										emailpanel.popscrollpane.repaint();
+										pop3window.repaint();
 									}
 									
 									
@@ -50474,7 +50491,10 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			
 			
-			int size1 = 8;
+			int fieldsize = 8;
+			
+			int sp_rows = passphrasearea.getRows();
+			
 			
 			gbc = new Gbc();
 			
@@ -50488,26 +50508,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc = new Gbc();
 			
-			gbc.setPosition(0, y += 4);
-			gbc.setSize(9, 1);
-			gbc.setFill(Gbc.both);
-			gbc.setWeight(100, 100);
-			
-			this.add(emaillabel, gbc);
-			
-			
-			gbc = new Gbc();
-			
-			gbc.setPosition(10, y = 0);
-			gbc.setSize(size1, 1);
-			gbc.setFill(Gbc.both);
-			gbc.setWeight(100, 100);
-			
-			this.add(passphrasefield, gbc);
-			
-			
-			gbc = new Gbc();
-			
 			gbc.setPosition(9, y);
 			gbc.setSize(1, 1);
 			gbc.setFill(Gbc.both);
@@ -50516,10 +50516,21 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			this.add(randcheckbox, gbc);
 			
 			
+			
+			gbc = new Gbc();
+			
+			gbc.setPosition(10, y = 0);
+			gbc.setSize(fieldsize, 1);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
+			
+			this.add(passphrasefield, gbc);
+			
+			
 			gbc = new Gbc();
 			
 			gbc.setPosition(10, ++y);
-			gbc.setSize(size1, 3);
+			gbc.setSize(fieldsize, sp_rows);
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
@@ -50528,18 +50539,40 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc = new Gbc();
 			
-			gbc.setPosition(10, y += 3);
-			gbc.setSize(size1, 1);
+			gbc.setPosition(0, y += sp_rows);
+			gbc.setSize(10, 1);
+			gbc.setFill(Gbc.both);
+			gbc.setWeight(100, 100);
+			
+			this.add(emaillabel, gbc);
+			
+			
+			gbc = new Gbc();
+			
+			gbc.setPosition(10, y);
+			gbc.setSize(fieldsize, 1);
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
 			this.add(emailfield, gbc);
 			
 			
-			gbc.setPosition(10, ++y);
-			gbc.setSize(size1, 1);
+			
+			gbc = new Gbc();
+			
+			gbc.setPosition(0, ++y);
+			gbc.setSize(10, 1);
 			gbc.setFill(Gbc.both);
-			gbc.setInsets(1, 0, 0, 0);
+			gbc.setWeight(100, 100);
+			
+			this.add(new JLabel(), gbc);
+			
+			
+			gbc = new Gbc();
+			
+			gbc.setPosition(10, y);
+			gbc.setSize(fieldsize, 1);
+			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
 			this.add(hashfield, gbc);
@@ -50552,26 +50585,28 @@ class PassphraseDialog extends JDialog implements AncestorListener
 				
 				gbc.setPosition(0, ++y);
 				gbc.setSize(10, 1);
-				gbc.setAnchor(Gbc.right);
 				gbc.setInsets(0, 0, 0, 5);
 				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
 				this.add(numberofcipherslabel, gbc);
 				
+				gbc = new Gbc();
+				
 				gbc.setPosition(10, y);
 				gbc.setSize(2, 1);
-				gbc.setAnchor(Gbc.right);
 				gbc.setInsets(0, 5, 0, 0);
 				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
 				this.add(numberofcipherslabel1, gbc);
 				
-				gbc.setPosition(12, y);
-				gbc.setSize(size1 - 2, 1);
-				gbc.setAnchor(Gbc.left);
+				gbc = new Gbc();
+				
+				gbc.setPosition(10 + 2, y);
+				gbc.setSize(fieldsize - 2, 1);
 				gbc.setInsets(0, 5, 0, 0);
+				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
 				this.add(buttonpanel, gbc);
@@ -50777,65 +50812,47 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			this.setLayout(new GridBagLayout());
 			
 			
-			final int size1 = 8;
+			final int fieldsize = 8;
+			
+			int sp_rows = passphrasearea.getRows();
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
-			gbc.setSize(size1, 1);
+			gbc.setSize(fieldsize, 1);
 			gbc.setWeight(100, 100);
 			
 			this.add(passphraselabel, gbc);
 			
-			gbc = new Gbc();
-			gbc.setPosition(0, y += 4);
-			gbc.setSize(size1, 1);
-			gbc.setWeight(100, 100);
-			
-			this.add(new JLabel(" "), gbc);
 			
 			gbc = new Gbc();
-			gbc.setPosition(0, ++y);
-			gbc.setSize(size1, 1);
-			gbc.setWeight(100, 100);
-			
-			this.add(new JLabel(" "), gbc);
-			
-			gbc = new Gbc();
-			gbc.setPosition(0, ++y);
-			gbc.setSize(size1, 1);
-			gbc.setWeight(100, 100);
-			
-			this.add(new JLabel(" "), gbc);
-			
-			gbc = new Gbc();
-			gbc.setPosition(0, ++y);
+			gbc.setPosition(0, y += 2 + sp_rows);
+			gbc.setSize(fieldsize, 1);
 			gbc.setFill(Gbc.horizontal);
-			gbc.setSize(size1, 1);
 			gbc.setWeight(100, 100);
 			
 			this.add(incomingmailserverlabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
+			gbc.setSize(fieldsize, 1);
 			gbc.setFill(Gbc.horizontal);
-			gbc.setSize(size1, 1);
 			gbc.setWeight(100, 100);
 			
 			this.add(outgoingmailserverlabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
+			gbc.setSize(fieldsize, 1);
 			gbc.setFill(Gbc.horizontal);
-			gbc.setSize(size1, 1);
 			gbc.setWeight(100, 100);
 			
 			this.add(numberofmessageslabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
-			gbc.setFill(Gbc.horizontal);
-			gbc.setSize(size1, 1);
+			gbc.setSize(fieldsize, 1);
 			gbc.setInsets(10,0,0,0);
+			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
 			this.add(maildirectorylabel, gbc);
@@ -50849,7 +50866,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
-			gbc.setSize(size1, 1);
+			gbc.setSize(fieldsize, 1);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
@@ -50866,38 +50883,26 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
+			gbc.setSize(fieldsize, sp_rows);
 			gbc.setFill(Gbc.horizontal);
-			gbc.setSize(size1, 1);
 			gbc.setWeight(100, 100);
 			
 			this.add(scrollpane1, gbc);
 			
-			gbc = new Gbc();
-			gbc.setPosition(pos1, y += 3);
-			gbc.setSize(size1, 1);
-			gbc.setWeight(100, 100);
-			
-			this.add(new JLabel(" "), gbc);
 			
 			gbc = new Gbc();
-			gbc.setPosition(pos1, ++y);
-			gbc.setSize(size1, 1);
-			gbc.setFill(Gbc.horizontal);
+			gbc.setPosition(pos1, y += sp_rows);
+			gbc.setSize(fieldsize, 1);
 			gbc.setInsets(1, 0, 0, 0);
+			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
 			this.add(hashfield, gbc);
 			
-			gbc = new Gbc();
-			gbc.setPosition(pos1, ++y);
-			gbc.setSize(size1, 1);
-			gbc.setWeight(100, 100);
-			
-			this.add(new JLabel(" "), gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
-			gbc.setSize(size1, 1);
+			gbc.setSize(fieldsize, 1);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
@@ -50905,7 +50910,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
-			gbc.setSize(size1, 1);
+			gbc.setSize(fieldsize, 1);
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
@@ -50931,9 +50936,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
-			gbc.setSize(size1, 1);
-			gbc.setFill(Gbc.horizontal);
+			gbc.setSize(fieldsize, 1);
 			gbc.setInsets(10,0,0,0);
+			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
 			this.add(maildirectoryfield, gbc);
@@ -52180,15 +52185,15 @@ class PublicKey
 	//  Public key cipher notes
 	
 	
-	//  All ciphers in the public key class are based on hypercomplex numbers. Hypercomplex numbers are
-	//  multi-dimensional arrays of numbers that include vectors, quaternions, matrices, cubes, and tes-
-	//  seracts.
+	//  All ciphers in the public key class except for factorization and subset sum ciphers are based on
+	//  hypercomplex numbers. Hypercomplex numbers are multi-dimensional arrays of numbers that include vec-
+	//  tors, quaternions, matrices, cubes, and tesseracts.
 	//
 	//  The matrix ciphers are based on the multivariate functions X1 A X2, X^-1 A^x X, A^-x B^x1 A^x, and
-	//  A^x1 B^x2. The vector ciphers are based on the knapsack problem, the vector cross product problem
-	//  Y = A (x) X, and the quaternion and polynomial discrete log problem X^-1 A^x X. (Matrix and linear
-	//  algebra books use different letters for these functions such as P^-1 D P and C = A (x) B or W =
-	//  U (x) V instead of X^-1 A X and Y = A (x) X.)
+	//  A^x1 B^x2. The vector ciphers are based on the the vector cross product problem Y = A (x) X, and the
+	//  quaternion and polynomial discrete log problem are based on the function X^-1 A^x X. (Matrix and
+	//  linear algebra books use different letters for these functions such as P^-1 D P and C = A (x) B or
+	//  W = U (x) V instead of X^-1 A X and Y = A (x) X.)
 	//
 	//  The vector ciphers and non-exponential matrix ciphers can be modular or non-modular, and the matrix,
 	//  vector, and quaternion ciphers can use one or multiple equations. Unlike integer ciphers such as the
@@ -52210,11 +52215,11 @@ class PublicKey
 	//
 	//  All the commutative one-way functions or symmetric public key ciphers used in the public key class
 	//  derive from the general matrix function X1 A^x X2 (or B^x1 A^x B^x2) including A^x, A^x X, A X,
-	//  X1 A X2, and X^-1 A^x X (mod p). (The cipher a^x (mod n) is really X^-1 A^x X (mod n) where a and x
-	//  are 1x1 matrices or Latin squares, but the X matrices annihilate each other because integer multi-
-	//  plication is commutative.) The side matrices X1 and X2 have to be private Latin squares, cubes or
-	//  tesseracts, powers of a public matrix, cube or tesseract, or inverses of each other or else there
-	//  would be no constraint on the function or the function would be non-commutative.
+	//  X1 A X2, and X^-1 A^x X (mod p). (The cipher a^x mod n is really X^-1 A^x X mod n where a and x are
+	//  1x1 matrices or Latin squares, but the X matrices annihilate each other because integer multiplica-
+	//  tion is commutative.) The side matrices X1 and X2 have to be private Latin squares, cubes or tesser-
+	//  acts, powers of a public matrix, cube or tesseract, or inverses of each other or else there would be
+	//  no constraint on the function or the function would be non-commutative.
 	//
 	//  Matrix ciphers are more complicated than integer ciphers because matrix multiplication is non-commu-
 	//  tative unless the matrices are Latin squares. A Latin square is a matrix in which each row contains
@@ -52225,6 +52230,14 @@ class PublicKey
 	//  numbers are 1x1 Latin squares or circulant matrices and the diagonal elements are equal because
 	//  there is only one element.
 	//
+	//  All circulant matrices are also Latin squares but all Latin squares are not circulant matrices be-
+	//  cause the row elements can be permutated instead of rotated. This means that there are O(n!) Latin
+	//  squares that can be formed from a row of n elements whereas there are only O(n) circulant matrices
+	//  that can be formed from the same elements. While many of the matrices used in the public key class
+	//  are both Latin squares and circulant matrices, some of them are only Latin squares because the rows
+	//  rotate alternately in different directions and the elements can also be written boustrophedonically
+	//  or from left to right and then right to left.
+	// 
 	//  Matrix public key generation uses block matrices whereas secret key generation uses block arrays.
 	//  Public key generation reduces an n x n block matrix to an n x 1 column vector or block array, and
 	//  then secret key generation reduces the n x 1 block array to a 1x1 block. (For a single-equation /
@@ -52278,10 +52291,7 @@ class PublicKey
 	//  Even with a polynomial-time algorithm, the Rabin cipher can never be completely broken and is still
 	//  unbreakable if the key size is large enough. For example, if a classical algorithm for factoring num-
 	//  bers has a running time of O(n^4.58) operations, then for a 256 K bit number the algorithm would re-
-	//  quire O(4.58*5) or ~ O(10^25.5) operations to break the cipher. If the Karatsuba multiplier is used,
-	//  then it would require an additional factor of 32 because the three-halves multiplier overtakes the
-	//  quadratic multiplier at around 2 K bits, which means that ~ 10^27 or an octillion operations would be
-	//  required to factor the number.
+	//  quire O(4.58*5) or ~ O(10^25.5) operations to break the cipher.
 	//
 	//  (Note that n in the running time represents the log of the modulus or the number of bits instead of
 	//  the value of the modulus so that linear log multiplication can be written as O(n log n) instead of
@@ -52292,9 +52302,18 @@ class PublicKey
 	//  Even at 256 K bits, the Rabin cipher can decrypt almost instantly. The encryption method could take
 	//  ~ 1 core-second using a Karatsuba / sesquilinear or three-halves multiplier on a 1 GHz processor. (If
 	//  biquadratic means quartic or a power of 2*2, then sesquilinear should mean 3/2*1 or a power of 3/2.)
-	//  The fft multiplier is not faster at 256 K bits than the Karatsuba multiplier because of the large
-	//  hidden constant in the running time; it only begins to overtake and outrun the three-halves multipli-
-	//  er at around ~ 512 K to 1 M bits.
+	//  The fft multiplier is not faster at 256 K bits than the Karatsuba multiplier because of the larger hid-
+	//  den constant in the running time; it only begins to overtake and outrun the three-halves multiplier at
+	//  around ~ 512 K to 1 M bits.
+	//
+	//  Note that the hidden constant in the software multiplier may be largely canceled or offset by the hard-
+	//  ware multiplier for a 64-bit processor because the running time is for bit size, not byte or word size.
+	//  Also, if a math processor can do 256-bit, 512-bit, or 1024-bit multiplications, and the multiplier
+	//  method can be modified to use a larger hardware multiplier, then the running time could be a thousand
+	//  times smaller although the number of cores per processor would also be smaller. This is why doing mul-
+	//  tiplication using 32-bit ints is faster than using bits, bytes, or words, or using shifts and adds
+	//  which is equivalent to using a 1-bit multiplier. A bigger hardware multiplier can reduce the running
+	//  time by a constant factor but it cannot change the order of the polynomial from O(n^4.58).
 	//
 	//  The key generation could be made faster by choosing a large random number for the modulus n and then
 	//  multiplying n by a 512-bit prime. The encryption method was made faster by choosing a secret key m ~
@@ -52305,37 +52324,37 @@ class PublicKey
 	//  static class member to avoid doing inversions for each decryption because division is ten to twenty
 	//  times more expensive than multiplication.
 	//
-	//  A quantum computer could reduce the factorization running time to O(n) multi-precision multiplica-
-	//  tions for large numbers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve
-	//  for the factors f1 = (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a qua-
-	//  dratic non-residue. For example, if n = 77, a quantum computer would compute the order of a^x (mod n)
-	//  or lambda(n) = lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would com-
-	//  pute 2 ^ (lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The gcd function only
-	//  requires O(n) multi-precision subtractions or O(n^2) single-precision operations, similar to multi-
-	//  plication but without the log n factor.
+	//  A quantum computer could reduce the factorization running time to O(n) multi-precision multiplications
+	//  for large numbers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the
+	//  factors f1 = (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-
+	//  residue. For example, if n = 77, a quantum computer would compute the order of a^x (mod n) or lambda(n)
+	//  = lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^ (lambda
+	//  /2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The exponentiation requires O(n) multi-
+	//  plications or O(n^2 log n) operations, and the gcd function only requires O(n) multi-precision subtrac-
+	//  tions or O(n^2) operations.
 	//
-	//  The sub-exponential method for solving the integer discrete log problem (modulo a prime) is called
-	//  the index-calculus algorithm. The Handbook of Applied Cryptography says that "...the basic ideas be-
-	//  hind the index-calculus algorithm first appeared in the work of Kraitchik (circa 1922-1924) and of
-	//  Cunningham and was rediscovered by several authors ... Pomerance credits the idea of multiplying
-	//  congruences to produce a solution to x^2 == y^2 (mod n) for the purpose of factoring n to some old
-	//  work of Kraitchik circa 1926-1929."
+	//  The sub-exponential method for solving the integer discrete log problem (modulo a prime) is called the
+	//  index-calculus algorithm. The Handbook of Applied Cryptography says that "...the basic ideas behind the
+	//  index-calculus algorithm first appeared in the work of Kraitchik (circa 1922-1924) and of Cunningham
+	//  and was rediscovered by several authors ... Pomerance credits the idea of multiplying congruences to
+	//  produce a solution to x^2 == y^2 (mod n) for the purpose of factoring n to some old work of Kraitchik
+	//  circa 1926-1929."
 	//
-	//  Kraitchik's method can only solve the discrete log / factorization problem up to ~ 200 bits because
-	//  it has to find round numbers or numbers that contain only small factors. By using a linear sieve,
-	//  quadratic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds,
-	//  Kraitchik's method can solve the discrete log / factorization problem up to ~ 400 to ~ 600 bits
-	//  which is on the order of a thousand bits. Instead of doubling or tripling the number of bits, a
-	//  polynomial-time algorithm that has a running time of O(n^4.58) can increase the number of bits by
-	//  a factor of 64 from ~ 1 K bits to ~ 64 K bits.
+	//  Kraitchik's method can only solve the discrete log / factorization problem up to ~ 200 bits because it
+	//  has to find round numbers or numbers that contain only small factors. By using a linear sieve, quadra-
+	//  tic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's
+	//  method can solve the discrete log / factorization problem up to ~ 400 to ~ 600 bits which is on the or-
+	//  der of a thousand bits. Instead of doubling or tripling the number of bits, a polynomial-time algorithm
+	//  that has a running time of O(n^4.58) can increase the number of bits by a factor of 64 from ~ 1 K bits
+	//  to ~ 64 K bits using a supercomputer.
 	//
-	//  A gigahertz processor that has a thousand cores can do terascale computing or O(10^12) operations
-	//  per second. A thousand processors can do petascale computing, and a millon processors can do exa-
-	//  scale computing or O(10^18) operations per second. Even an exascale computer would take a kilo sec-
-	//  ond to do a zetta op and a megasecond or ten days to do a yotta op or 10^24 operations. A special-
-	//  ized processor such as the ones used to do hashing for the mining of cryptocurrency could be used
-	//  to do zettascale computing or 10^21 operations per second, but it would still take on the order of
-	//  a million seconds to do a thousand yotta ops or an octillion operations to factor 256 K bit number.
+	//  A gigahertz processor that has a thousand cores can do terascale computing or O(10^12) operations per
+	//  second. A thousand processors can do petascale computing, and a millon processors can do exascale com-
+	//  puting or O(10^18) operations per second. Even an exascale computer would take a kilo second to do a
+	//  zetta op and a mega second or ten days to do a yotta op or 10^24 operations. A specialized processor
+	//  such as the ones used to do hashing for the mining of cryptocurrency could be used to do zettascale
+	//  computing or 10^21 operations per second, but it would still take on the order of a 100 K seconds to
+	//  do a hundred yotta ops to factor one 256 K bit number.
 	
 	
 	
@@ -52708,11 +52727,21 @@ class PublicKey
 	
 	//  Rabin / factorization / co-composite root extraction cipher
 	
-	private static final int sizefact1 = 32*1024 - 1024; // 32 K digits == 128 K bits
+	private static final int sizefact1 =  32*1024 - 1024; // (32 - 1) K digits ~ 128 K bits
 	
-	//  A 128 K bit modulus requires 10^(4.58*5 + 1.5 == 24.5) operations or
-	//  ~ 10 yotta ops to factor but the message m = sqrt(c) mod n decrypts
-	//  in ~ 10^8 operations or 100 ms on a single core 1 GHz processor
+	//  A 128 K bit modulus requires O(n ^ 4.58) or O(128 K ^ 4.58) ~ 1 yotta op (including a
+	//  small hidden constant for the multiplier) but the message m = sqrt c mod n decrypts in
+	//  ~ 10^8 operations or < 100 ms on a 1 GHz single-core processor.
+	//
+	//  A 128 K bit modulus requires O(n ^ 4.58) == O(128 K ^ 4.58) or ~   1 yotta op  to factor
+	//  A  64 K bit modulus requires O(n ^ 4.58) == O( 64 K ^ 4.58) or ~ 100 zetta ops to factor
+	//  A  32 K bit modulus requires O(n ^ 4.58) == O( 32 K ^ 4.58) == ~  10 zetta op  to factor
+	//  A  16 K bit modulus requires O(n ^ 4.58) == O( 16 K ^ 4.58) == ~ 200   exa ops to factor
+	//
+	//  Users could change the size to 256 K, 512 K, or 1 M bits as long as the key size is
+	//  1 K digits smaller so that the message is encrypted. If the other ciphers could be
+	//  shown to be breakable then it would make sense to use a larger factorization key.
+	
 	
 	
 	
@@ -52720,7 +52749,8 @@ class PublicKey
 	//  Public keys can be static / receiver or one-time / sender keys
 	//
 	//  The type of key is only important for asymmetric public key ciphers
-	//  such as the Rabin / factorization and vector / cross product ciphers.
+	//  such as the Rabin / factorization cipher, and the vector / cross
+	//  product ciphers.
 	//
 	//  Symmetric public keys or Diffie-Hellman ciphers ignore this variable
 	
@@ -53635,9 +53665,12 @@ class PublicKey
 		     if (size1 == size) return true;
 		
 		//  test if the recipient has enabled or is using
-		//  one of the commented or deprecated ciphers
+		//  a factorization cipher or one of the commented
+		//  or deprecated ciphers
 		
-		if (size == PublicKey.sizefact1) return true;
+		//  if (size1 == sizefact1) return true;
+		
+		if (Math.isPowerOf2(size + 1024)) return true;
 		
 		return false;
 	}
@@ -53881,13 +53914,28 @@ class PublicKey
 		    tokens[i] = tokens[i].replaceAll("\n", "");
 		
 		
-		//  Read the ciphertext and verify that text is in base 64
+		//  Read the ciphertext
 		
 		String ciphertext = tokens[tokens.length -1] .trim();
 		
-		if ((ciphertext == null) || ciphertext.isEmpty()
+		if ((ciphertext == null) || ciphertext.isEmpty()) return null;
 		
-		  || !Number.isBase64(ciphertext)) return null;
+		
+		//  Verify that the ciphertext is in base 64
+		//
+		//  If the ciphertext length is not a multiple of 4,
+		//  truncate the text to make it a multiple of 4 so
+		//  the message can be partially decrypted
+		
+		if (!Number.isBase64(ciphertext))
+		
+		    while ((ciphertext.length() % 4) != 0)
+		
+			ciphertext = ciphertext.substring(
+			
+			    0, ciphertext.length() - 1);
+		
+		if (!Number.isBase64(ciphertext)) return null;
 		
 		
 		//  Decrypt the auto / message key k = H(m)
@@ -54027,6 +54075,10 @@ class PublicKey
 		String ciphertext = tokens[tokens.length -1] .trim();
 		
 		//  Verify that the ciphertext is in base 64
+		
+		//  If the ciphertext length is not a multiple of 4,
+		//  truncate the text to make it a multiple of 4 so
+		//  the message can be partially decrypted
 		
 		if (!Number.isBase64(ciphertext))
 		
@@ -58693,7 +58745,9 @@ class PublicKey
 			
 			//  Use multiple threads to generate the primes
 			
-			final int t = numberoffactors / 32;
+			final int t = powerof2 / 32;
+			
+			//  System.out.println("number of factors == " + numberoffactors);
 			
 			//  System.out.println("number of threads == " + t);
 			
@@ -58752,7 +58806,7 @@ class PublicKey
 			
 			for (int i = 0; i < d; i++)
 			
-			    p[p.length -1 - i] = new Number(1);
+			    p[p.length -1 -i] = new Number(1);
 			
 			//  System.out.println("p[0] == " + p[0]);
 			
@@ -58816,7 +58870,7 @@ class PublicKey
 			
 			Number m1 = new Number(m0);
 			
-			while (m1.bitCount() * 2 < bits)
+			while (m1.bitCount() < bits / 2)
 			
 			    m1 = m1 .square();
 			
@@ -60398,7 +60452,9 @@ class PublicKey
 		
 		
 		
-		else if ( z.trim().length() == sizefact1 )
+		else if ( ( z.trim().length() == sizefact1 )
+		
+		       || Math.isPowerOf2(z.trim().length() + 1024) )
 		{
 		
 			//  if (type == recipient / decryption) m is computed from z = c = m^2 (mod n)
@@ -60578,155 +60634,6 @@ class PublicKey
 	
 	
 	
-	private static boolean isSuperincreasingSequence(Number[] a, Number p)
-	{
-		//  A superincreasing sequence is a set of numbers where
-		//  each number is greater than the sum of its predecessors
-		//  multiplied by p-1. (For the binary subset sum problem
-		//  the modulus p = 2 and the multiplier p-1 == 1.)
-		
-		Number p1 = p.subtract(1);
-		
-		Number a_sum = new Number(a[0]);
-		
-		for (int i = 1; i < a.length; i++)
-		{
-			if (!a[i].isGreaterThan(a_sum.multiply(p1)))
-			
-			    return false;
-			
-			a_sum = a_sum .add( a[i-1].multiply(p1) );
-		}
-		
-		return true;
-	}
-	
-	
-	
-	private static Number[] ssss(Number[] a, Number b, int m0, Number p)
-	{
-	
-		//  Solve superincreasing subset sum (ssss)
-		
-		//  This method solves the superincreasing subset sum problem
-		//  for a superincreasing sequence a and a subset sum b.
-		//
-		//  The superincreasing subset sum problem is the problem of solv-
-		//  ing for x[] in the sum b = a[] (x[] mod p). (If p = 2 then x[]
-		//  is an array of binary digits or bits.)
-		//
-		//  A superincreasing sequence modulo p is a set of numbers where
-		//  each number is greater than the sum of its predecessors multi-
-		//  plied by p-1. (For the binary subset sum problem the modulus
-		//  p = 2 and the multiplier p-1 == 1.)
-		
-		
-		//  Verify that a is a superincreasing sequence modulo p
-		
-		Number p1 = p.subtract(1);
-		
-		Number temp = new Number(0);
-		
-		if (!isSuperincreasingSequence(a, p))
-		{
-			String message =
-			
-			   "vector is not a superincreasing sequence mod p";
-			
-			throw new IllegalArgumentException(message);
-		}
-		
-		//  Solve the superincreasing subset sum problem
-		
-		Number[] x = new Number[a.length];
-		
-		int pbits = (int) p.subtract(1).bitCount();
-		
-		for (int i = 0; i < a.length - 4*20 / pbits; i++)
-		{
-			x[a.length -1 -i] = new Number(0);
-			
-			for (int j = 0, counter = 0; j < pbits -1; j++, counter = 0)
-			{
-				//  Number m = new Number(2) .pow(pbits -2 -j);
-				
-				Number m = new Number(1).shiftLeft(pbits -2 -j, pbits -2 -j);
-				
-				Number product = a[a.length -1 -i] .multiply(m);
-				
-				while (b.subtract(product).signum() != -1)
-				{
-					b = b .subtract(product);
-					
-					x[a.length-1 -i] = x[a.length -1 -i] .add(m);
-					
-					if (counter++ > pbits) break;
-				}
-			}
-			
-			if ((i == 0) && (m0 >= 0) &&
-			
-			    x[a.length-1 -i].intValue() != m0)
-			
-				return null;
-		}
-		
-		for (int i = a.length/2; i < a.length; i++)
-		
-		    if (x[i].bitCount() > pbits)
-		
-			throw new ArithmeticException();
-		
-		
-		//  Verify that x is the solution
-		
-		if (b.bitCount() <= 4*20)
-		{
-			Number[] x1 = new Number[x.length - 4*20 / pbits];
-			
-			for (int i = 0; i < x1.length; i++)
-			
-			    x1[i] = x[4*20 / pbits + i];
-			
-			return x1;
-		}
-		
-		else return null;
-	}
-	
-	
-	
-	
-	private static void permutate1(Number[] A, Number key)
-	{
-		Number a0 = A[0], am1 = A[A.length-1];
-		
-		Number[] A1 = new Number[A.length -2];
-		
-		for (int i = 1; i < A1.length; i++)
-		
-		    A1[i-1] = A[i];
-		
-		permutate(A1, key);
-		
-		A = new Number[A.length];
-		
-		A[0] = a0; A[A.length-1] = am1;
-		
-		for (int i = 1; i < A1.length; i++)
-		
-		    A[i] = A1[i-1];
-		
-		if (!A[A.length-1].equals(am1)
-		
-		 || !A[0].equals(a0)) throw new
-		
-		     ArithmeticException();
-	}
-	
-	
-	
-	
 	private static void permutate(Number[] A, Number key)
 	{
 		int elements = A.length;
@@ -60749,29 +60656,6 @@ class PublicKey
 	
 	
 	
-	private static void permutate(Matrix[] A, Number key)
-	{
-		int elements = A.length;
-		
-		int[] indexes = permutate(elements, key);
-		
-		for (int i = 0; i < A.length; i++)
-		{
-			int j = indexes[i];
-			
-			//  Swap elements i and j
-			
-			Matrix temp = A[i];
-			
-			A[i] = A[j];
-			
-			A[j] = temp;
-		}
-	}
-	
-	
-	
-	
 	private static void unpermutate(Number[] A, Number key)
 	{
 		int elements = A.length;
@@ -60791,28 +60675,6 @@ class PublicKey
 			A[i] = temp;
 		}
 	}
-	
-	
-	private static void unpermutate(Matrix[] A, Number key)
-	{
-		int elements = A.length;
-		
-		int[] indexes = permutate(elements, key);
-		
-		for (int i = A.length -1; i >= 0; i--)
-		{
-			int j = indexes[i];
-			
-			//  Swap elements i and j
-			
-			Matrix temp = A[j];
-			
-			A[j] = A[i];
-			
-			A[i] = temp;
-		}
-	}
-	
 	
 	
 	private static int[] permutate(int elements, Number rand)
@@ -69033,7 +68895,6 @@ class Number implements Comparable<Number>
 	private char sign;
 	
 	
-	
 	//  Imag members
 	
 	private int[] intarray1;
@@ -69044,6 +68905,18 @@ class Number implements Comparable<Number>
 	
 	private char sign1;
 	
+	
+	//  the intpoint is the integer / fraction point
+	//  where the digit size is an int or 32 bits;
+	//
+	//  if the digit modulus were 2 instead of 2^32, then the
+	//  integer / fraction point would also be called a binary
+	//  point; for a digit size or modulus 16, it would be
+	//  called a hexadecimal point; and for a digit modulus 10,
+	//  the integer / fraction point would be called a decimal
+	//  point. The toString(digits, radix) method can convert a
+	//  number and the integer point to binary, decimal, hexa-
+	//  decimal, or any base from 2 to 16.
 	
 	
 	
@@ -69522,7 +69395,7 @@ class Number implements Comparable<Number>
 			
 			number = number.setPrecision(precision);
 			
-			//  Set the integer fraction point
+			//  Set the integer / fraction point
 			
 			if (exp > 0) // divide by 16 ^ exp (w/o using a divider)
 			{
@@ -70469,7 +70342,7 @@ class Number implements Comparable<Number>
 			
 			else if ( ((a_bits < 4*1024) && (b_bits < 4*1024))
 			
-			       || (((1.0*a_bits) / (1.0*b_bits)) < 128)
+			       || (((1.0*a_bits) / (1.0*b_bits)) < 1.1)
 			
 			       || ((a_bits - b_bits) < 4*1024) )
 			{
@@ -71641,6 +71514,7 @@ class Number implements Comparable<Number>
 		//  fies that the length is a multiple of 4
 		
 		if (((str.length() % 4) != 0)
+		
 		   || str.isEmpty()) return false;
 		
 		boolean bool = true;
@@ -72288,14 +72162,19 @@ class Number implements Comparable<Number>
 		
 		Number mantissa = arg .log1();
 		
-		Number log_base = new Number(2) .divide(e(p)) .log1() .add(1);
+		Number log2 = new Number(2) .divide(e(p)) .log1() .add(1);
 		
-		Number log = mantissa .add( log_base.multiply(exp) );
+		//               k
+		//  log( arg * 2  ) == mantissa + k log 2
+		
+		Number log = mantissa .add( log2.multiply(exp) );
 		
 		
 		//  Verify that e ^ log(x) / x ~ 1
 		
-		double e2logx = Math.pow(Math.e, log.doubleValue());
+		double e2logx = Math.pow(Math.e,
+		
+		    log.doubleValue()) / this.doubleValue();
 		
 		if ((e2logx < 0.9) || (e2logx > 1.1))
 		
@@ -75601,15 +75480,14 @@ class Number implements Comparable<Number>
 		//
 		//  The fractions
 		//
-		//  thousandth, millionth, billionth, trillionth, quadril-
-		//  lionth, quintillionth, and sextillionth correspond to the prefixes
+		//  thousandth, millionth, billionth, trillionth, quadrillionth,
+		//  quintillionth, and sextillionth correspond to the prefixes
 		//
 		//  milli -3, micro -6, nano -9, pico -12, femto -15, atto -18, and zepto -21
 		//
-		//  The large prefixes are used for bytes or operations
-		//  and the small prefixes are usually used for seconds
-		//  such as a petabyte, a zetta op or yotta op, or a
-		//  picosecond or femtosecond.
+		//  The large prefixes are used for bytes or operations and the
+		//  small prefixes are usually used for seconds such as a peta-
+		//  byte, a zetta op or yotta op, or a picosecond or femtosecond.
 		
 		
 		
