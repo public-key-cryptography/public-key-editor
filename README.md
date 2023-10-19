@@ -567,9 +567,11 @@
 	of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
 	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
 	lyst may also be able to break the static public key because the equations are linear and the modulus
-	is public.
+	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
+	ulus.
 	
-	The knapsack cipher c[] = a[] s + e[] (mod n) is more secure than the LWE cipher because it it also
-	includes small errors but it uses a private modulus. The problem is that the cipher has to use matri-
-	ces or hypercomplex numbers instead of integers or else the one-time public key b = c[] m[] can be
-	broken.
+	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s (mod n), b = c[] m[] + e[] is included in
+	the public key class. Unlike the LWE cipher, this cipher is secure because it uses random errors in
+	the static public key c[] and the one-time public key b. Unless the static public key could be broken,
+	the one-time public key can never be broken because the solution is ambiguous and the search space or
+	solution set is too large.
