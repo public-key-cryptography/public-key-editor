@@ -48,6 +48,13 @@
 	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
 	are unsolvable.
 	
+	The public keys also include the Rabin / factorization cipher c = m ^ 2 (mod n) where n is the cipher
+	or static public key, m is the sender's secret key and c is the one-time public key; and the Merkle-
+	Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
+	the cipher or static public key, a is a permutated sequence of superincreasing integers, r is a public
+	random matrix, s is a secret vector, e is a vector of small random errors, and b is the subset sum or
+	the sender's one-time public key.
+	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
 	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipher-
@@ -89,6 +96,14 @@
 	tion protocols changes.
 	
 	
+	** Note that the new version of the software will not decrypt email messages encrypted by previous
+	versions of the software for keys that used more than 8 ciphers because an error was corrected in the
+	secret key agreement method to reduce the secret key modulo F8 = 2^256 + 1 == 16^64 + 1; but messages
+	saved on the user's computer will still be decryptable because file encryption uses private key cryp-
+	tography. Also, the format of the Merkle-Hellman / knapsack cipher was changed because the toString
+	method was padding the one-time public key array with five or more zeros instead of one or more zeros.
+	
+	
 	
 	
 	
@@ -103,7 +118,7 @@
 	Downloading the java development kit (JDK)
 	
 	To download the JDK, go to jdk.java.net
-	Click on the link that says  Ready for use: JDK 20.
+	Click on the link that says  Ready for use: JDK 21.
 	
 	Then click on a tar file link that says tar.gz.
 	Choose the correct file for your processor architecture
@@ -120,7 +135,7 @@
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-21_linux-x64_bin.tar.gz  from the website jdk.java.net/20.
+	0.  Download the file openjdk-21_linux-x64_bin.tar.gz  from the website jdk.java.net/21.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
@@ -349,11 +364,11 @@
 	
 	Public and private key ciphers used by the software
 	
-	The program uses hypercomplex and hyper-dimensional ciphers for public key agreement and a hash ci-
-	pher for private key encryption. The public key agreement or secret key is hashed to generate a se-
-	quence of random numbers which is used as a one-time pad. The ciphertext is computed by adding the
-	one-time pad to the plaintext, and then the plaintext is recovered by subtracting the one-time pad
-	from the ciphertext.
+	The program uses hypercomplex and hyper-dimensional ciphers for public key agreement and a hash cipher
+	for private key encryption. The public key agreement or secret key is hashed to generate a sequence of
+	random numbers which is used as a one-time pad. The ciphertext is computed by adding the one-time pad
+	to the plaintext, and then the plaintext is recovered by subtracting the one-time pad from the cipher-
+	text.
 	
 	The hash cipher is unbreakable because cryptographic hash functions are non-invertible. Even if the
 	hash function could be inverted it wouldn't break the cipher because there are 2^768 pre-images for
@@ -372,8 +387,8 @@
 	single variable. These ciphers are a generalization of the Diffie-Hellman cipher because they reduce
 	to the integer cipher y = a ^ x (mod p) if x2 = 0 and A1 is a 1x1 matrix.
 	
-	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polyno-
-	mials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
+	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polynomi-
+	ials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
 	hypercomplex numbers such as quaternions or octonions and fractional numbers or non-integers.
 	
 	All numbers are dimensional objects. A real or complex number is a point on an axis or a plane, or a
@@ -423,10 +438,10 @@
 	algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices such as the 2x2 block matrix
-	A[][] = { { A1, A2 }, { A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1
-	block matrix or public key vector Y[] = { A1^x1  A2^x2 , A2^x1  A3^x2 } where x1, x2 are the private
-	keys, and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1] ^ k1
-	Y2[2] ^ k2 == A1 ^ (k1 x1) A2 ^ (k1 x2 + k2 x1) A3 ^ (k2 x2).
+	A[][] = { { A1, A2 }, { A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1 block
+	matrix or public key vector Y[] = { A1^x1  A2^x2 , A2^x1  A3^x2 } where x1, x2 are the private keys,
+	and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1] ^ k1 Y2[2] ^
+	k2 == A1 ^ (k1 x1) A2 ^ (k1 x2 + k2 x1) A3 ^ (k2 x2).
 	
 	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Before
 	they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
@@ -558,20 +573,20 @@
 	or q/2. For each bit m[i] the one-time public key is the pair (u, v), and for m[] the one-time public
 	key is the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
 	
-	Since a[] s + e[] == B[], multiplying u (== a subset sum of a[]) by s approximately equals v (== a
+	Since a[] s + e[] == b[], multiplying u (== a subset sum of a[]) by s approximately equals v (== a
 	subset sum of b[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
 	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference v -
 	s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the quo-
 	tient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the message
-	by inverting u to find the indices of the samples and then using the indices to find the subset sum
-	of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
+	by inverting u to find the indices of the samples and then using the indices to find the subset sum of
+	b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
 	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
 	lyst may also be able to break the static public key because the equations are linear and the modulus
 	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
 	ulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s (mod n), b = c[] m[] + e[] is included in
-	the public key class. Unlike the LWE cipher, this cipher is secure because it uses random errors in
+	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) is included
+	in the public key class. Unlike the LWE cipher, this cipher is secure because it uses random errors in
 	the static public key c[] and the one-time public key b. Unless the static public key could be broken,
 	the one-time public key can never be broken because the solution is ambiguous and the search space or
 	solution set is too large.

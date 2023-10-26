@@ -79,6 +79,13 @@
 	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
 	are unsolvable.
 	
+	The public keys also include the Rabin / factorization cipher c = m ^ 2 (mod n) where n is the cipher
+	or static public key, m is the sender's secret key and c is the one-time public key; and the Merkle-
+	Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
+	the cipher or static public key, a is a permutated sequence of superincreasing integers, r is a public
+	random matrix, s is a secret vector, e is a vector of small random errors, and b is the subset sum or
+	the sender's one-time public key.
+	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
 	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipher-
@@ -120,6 +127,14 @@
 	tion protocols changes.
 	
 	
+	** Note that the new version of the software will not decrypt email messages encrypted by previous
+	versions of the software for keys that used more than 8 ciphers because an error was corrected in the
+	secret key agreement method to reduce the secret key modulo F8 = 2^256 + 1 == 16^64 + 1; but messages
+	saved on the user's computer will still be decryptable because file encryption uses private key cryp-
+	tography. Also, the format of the Merkle-Hellman / knapsack cipher was changed because the toString
+	method was padding the one-time public key array with five or more zeros instead of one or more zeros.
+	
+	
 	
 	
 	
@@ -134,7 +149,7 @@
 	Downloading the java development kit (JDK)
 	
 	To download the JDK, go to jdk.java.net
-	Click on the link that says  Ready for use: JDK 20.
+	Click on the link that says  Ready for use: JDK 21.
 	
 	Then click on a tar file link that says tar.gz.
 	Choose the correct file for your processor architecture
@@ -151,7 +166,7 @@
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-21_linux-x64_bin.tar.gz  from the website jdk.java.net/20.
+	0.  Download the file openjdk-21_linux-x64_bin.tar.gz  from the website jdk.java.net/21.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
@@ -380,11 +395,11 @@
 	
 	Public and private key ciphers used by the software
 	
-	The program uses hypercomplex and hyper-dimensional ciphers for public key agreement and a hash ci-
-	pher for private key encryption. The public key agreement or secret key is hashed to generate a se-
-	quence of random numbers which is used as a one-time pad. The ciphertext is computed by adding the
-	one-time pad to the plaintext, and then the plaintext is recovered by subtracting the one-time pad
-	from the ciphertext.
+	The program uses hypercomplex and hyper-dimensional ciphers for public key agreement and a hash cipher
+	for private key encryption. The public key agreement or secret key is hashed to generate a sequence of
+	random numbers which is used as a one-time pad. The ciphertext is computed by adding the one-time pad
+	to the plaintext, and then the plaintext is recovered by subtracting the one-time pad from the cipher-
+	text.
 	
 	The hash cipher is unbreakable because cryptographic hash functions are non-invertible. Even if the
 	hash function could be inverted it wouldn't break the cipher because there are 2^768 pre-images for
@@ -403,8 +418,8 @@
 	single variable. These ciphers are a generalization of the Diffie-Hellman cipher because they reduce
 	to the integer cipher y = a ^ x (mod p) if x2 = 0 and A1 is a 1x1 matrix.
 	
-	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polyno-
-	mials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
+	The integer Diffie-Hellman ciphers y = a x and y = a ^ x (mod p) can be generalized to use polynomi-
+	ials, vectors, matrices, cubes, tesseracts, or any n-dimensional object. Some of them can also use
 	hypercomplex numbers such as quaternions or octonions and fractional numbers or non-integers.
 	
 	All numbers are dimensional objects. A real or complex number is a point on an axis or a plane, or a
@@ -454,10 +469,10 @@
 	algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices such as the 2x2 block matrix
-	A[][] = { { A1, A2 }, { A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1
-	block matrix or public key vector Y[] = { A1^x1  A2^x2 , A2^x1  A3^x2 } where x1, x2 are the private
-	keys, and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1] ^ k1
-	Y2[2] ^ k2 == A1 ^ (k1 x1) A2 ^ (k1 x2 + k2 x1) A3 ^ (k2 x2).
+	A[][] = { { A1, A2 }, { A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1 block
+	matrix or public key vector Y[] = { A1^x1  A2^x2 , A2^x1  A3^x2 } where x1, x2 are the private keys,
+	and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1] ^ k1 Y2[2] ^
+	k2 == A1 ^ (k1 x1) A2 ^ (k1 x2 + k2 x1) A3 ^ (k2 x2).
 	
 	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Before
 	they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
@@ -589,20 +604,20 @@
 	or q/2. For each bit m[i] the one-time public key is the pair (u, v), and for m[] the one-time public
 	key is the array of pairs or doubles { { u0, v0 }, { u1, v1 }, { u2, v2 }, ... }.
 	
-	Since a[] s + e[] == B[], multiplying u (== a subset sum of a[]) by s approximately equals v (== a
+	Since a[] s + e[] == b[], multiplying u (== a subset sum of a[]) by s approximately equals v (== a
 	subset sum of b[] + 0 or q/2); therefore the recipient can use the private / secret key s to decrypt
 	or recover the message bit by calculating m == (v - s u modulo q) / [q/2] because the difference v -
 	s u (mod q) equals 0 or q/2 plus the sum of the errors which is not large enough to change the quo-
 	tient. But a cryptanalyst who knows how to solve the subset sum problem can also decrypt the message
-	by inverting u to find the indices of the samples and then using the indices to find the subset sum
-	of b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
+	by inverting u to find the indices of the samples and then using the indices to find the subset sum of
+	b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
 	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
 	lyst may also be able to break the static public key because the equations are linear and the modulus
 	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
 	ulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = r0 a[] + r[][] s (mod n), b = c[] m[] + e[] is included in
-	the public key class. Unlike the LWE cipher, this cipher is secure because it uses random errors in
+	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) is included
+	in the public key class. Unlike the LWE cipher, this cipher is secure because it uses random errors in
 	the static public key c[] and the one-time public key b. Unless the static public key could be broken,
 	the one-time public key can never be broken because the solution is ambiguous and the search space or
 	solution set is too large.
@@ -1291,7 +1306,7 @@ class __
 	numberofciphers = "number of ciphers",
 	usereplyaddresskey = "use reply address for reply key",
 	
-	includelargeciphers = "include large ciphers",
+	includelargeciphers = "include large (factorization) cipher",
 	
 	usemyaddresstogeneratereplykey =
 	
@@ -39509,13 +39524,15 @@ class Programs
 			//
 			//  >= 256 chars / 1 K bits
 			
+			final int largesize = (4+1)*1024;
+			
 			final int n = PublicKey.numberofciphers;
 			
 			int numberoflargekeys = 0;
 			
 			for (int size1 : PublicKey.size)
 			
-			    if (size1 > 1024) numberoflargekeys++;
+			    if (size1 > largesize) numberoflargekeys++;
 			
 			final int n1 = numberoflargekeys;
 			
@@ -46637,9 +46654,7 @@ class Documents
 			
 			textcomps.remove(i);
 			
-			JDialog dialog = dialogs.remove(i);
-			
-			dialog.dispose();
+			dialogs.remove(i).dispose();
 		}
 	}
 	
@@ -50407,13 +50422,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//  Count the number of ciphers
 			//  >= 256 chars / 1 K bits
 			
+			final int largesize = (4+1)*1024;
+			
 			final int n = PublicKey.numberofciphers;
 			
 			int numberoflargekeys = 0;
 			
 			for (int size : PublicKey.size)
 			
-			    if (size > 1024) numberoflargekeys++;
+			    if (size > largesize) numberoflargekeys++;
 			
 			final int n1 = numberoflargekeys;
 			
@@ -50431,8 +50448,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			maxcheckbox.setEnabled(false);
 			maxcheckbox.setSelected(false);
-			
-			quadbutton.setSelected(true);
 			
 			
 			ButtonGroup buttongroup = new ButtonGroup();
@@ -50464,7 +50479,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			//  Set the default button
 			
-			numberofciphers = Math.min(4, n);
+			numberofciphers = Math.min(8, n);
+			
+			octbutton.setSelected(true);
 			
 			String numberstr = String.valueOf(numberofciphers);
 			
@@ -52310,16 +52327,15 @@ class PublicKey
 	//
 	//  (Note that n in the running time represents the log of the modulus or the number of bits instead of
 	//  the value of the modulus so that linear log multiplication can be written as O(n log n) instead of
-	//  having to be written as O(log n log log n). Unfortunately the modulus uses the same letter for com-
-	//  posite numbers as the letter used for the running time, and m is unavailable because it is used for
-	//  the message.)
+	//  O(log n log log n). Unfortunately the modulus uses the same letter for composite numbers as the letter
+	//  used for the running time, and m is unavailable because it is used for the message.)
 	//
 	//  Even at 256 K bits, the Rabin cipher can decrypt almost instantly. The encryption method could take
 	//  ~ 1 core-second using a Karatsuba / sesquilinear or three-halves multiplier on a 1 GHz processor. (If
 	//  biquadratic means quartic or a power of 2*2, then sesquilinear should mean 3/2*1 or a power of 3/2.)
-	//  The fft multiplier is not faster at 256 K bits than the Karatsuba multiplier because of the larger hid-
-	//  den constant in the running time; it only begins to overtake and outrun the three-halves multiplier at
-	//  around ~ 512 K to 1 M bits.
+	//  The fft or linear log multiplier is not faster at 256 K bits than the Karatsuba multiplier because of
+	//  the larger hidden constant in the running time; it only begins to overtake and outrun the three-halves
+	//  multiplier at around ~ 512 K to 1 M bits.
 	//
 	//  Note that the hidden constant in the software multiplier may be largely canceled or offset by the hard-
 	//  ware multiplier for a 64-bit processor because the running time is for bit size, not byte or word size.
@@ -52333,7 +52349,7 @@ class PublicKey
 	//  The key generation could be made faster by choosing a large random number for the modulus n and then
 	//  multiplying n by a 512-bit prime. The encryption method was made faster by choosing a secret key m ~
 	//  sqrt(n) and log2(n) = 2^k - 1024; then computing c = m^2 mod n only requires one large multiplication
-	//  but no large division. The modular reduction requires a small division because the divide method calls
+	//  but no large division. The modular reduction is several times faster because the divide method calls
 	//  the quadratic divider instead of the inverter if the dividend is only slightly larger than the divisor.
 	//  If the message were chosen such that m ~ n, then the modulus and inverse would have to be stored in a
 	//  static class member to avoid doing inversions for each decryption because division is ten to twenty
@@ -52368,8 +52384,8 @@ class PublicKey
 	//  puting or O(10^18) operations per second. Even an exascale computer would take a kilo second to do a
 	//  zetta op and a mega second or ten days to do a yotta op or 10^24 operations. A specialized processor
 	//  such as the ones used to do hashing for the mining of cryptocurrency could be used to do zettascale
-	//  computing or 10^21 operations per second, but it would still take on the order of a 100 K seconds to
-	//  do a hundred yotta ops to factor one 256 K bit number.
+	//  computing or 10^21 operations per second, but it would still take on the order of 100 K seconds to do
+	//  a hundred yotta ops to factor one 256 K bit number.
 	
 	
 	
@@ -52747,13 +52763,13 @@ class PublicKey
 	
 	//  The integer Merkle-Hellman / knapsack ciphers
 	
-	private static final int sizeknapsack1 = 60*65; // 4k*(4k+5)
+	private static final int sizeknapsack1 = (4*16)*(4*16+1); // 4k*(4k+1)
 	
 	
 	
 	//  Rabin / factorization / co-composite root extraction cipher
 	
-	private static final int sizefact1 =  8*1024 - 1024; // (8 - 1) K digits ~ 28 K bits
+	private static final int sizefact1 = 32 * 1024 - 1024; // (32 - 1) K digits ~ 128 K bits
 	
 	//  A 128 K bit modulus requires O(n ^ 4.58) or O(128 K ^ 4.58) ~ 1 yotta op (including a
 	//  small hidden constant for the multiplier) but the message m = sqrt c mod n decrypts in
@@ -52761,12 +52777,11 @@ class PublicKey
 	//
 	//  A 128 K bit modulus requires O(n ^ 4.58) == O(128 K ^ 4.58) or ~   1 yotta op  to factor
 	//  A  64 K bit modulus requires O(n ^ 4.58) == O( 64 K ^ 4.58) or ~ 100 zetta ops to factor
-	//  A  32 K bit modulus requires O(n ^ 4.58) == O( 32 K ^ 4.58) == ~  10 zetta op  to factor
+	//  A  32 K bit modulus requires O(n ^ 4.58) == O( 32 K ^ 4.58) == ~  10 zetta ops to factor
 	//  A  16 K bit modulus requires O(n ^ 4.58) == O( 16 K ^ 4.58) == ~ 200   exa ops to factor
 	//
-	//  The key size is set to O(10^4) bits which is the same size as the Merkle-Hellman / knapsack
-	//  ciphers. Users could change the size to 32 K, 64 K, 128 K, 256 K, 512 K, or 1 M bits as
-	//  long as the key size is 1 K digits smaller so that the message is encrypted.
+	//  Users can change the size to 256 K, 512 K, or 1 M bits as long as the key size is
+	//  1 K digits smaller so that the message is encrypted.
 	
 	
 	
@@ -52775,8 +52790,8 @@ class PublicKey
 	//  Public keys can be static / receiver or one-time / sender keys
 	//
 	//  The type of key is only important for asymmetric public key ciphers
-	//  such as the Rabin / factorization cipher, and the vector / cross
-	//  product ciphers.
+	//  such as the Rabin / factorization cipher, the Merkle-Hellman / knap-
+	//  sack cipher, and the vector / cross product ciphers.
 	//
 	//  Symmetric public keys or Diffie-Hellman ciphers ignore this variable
 	
@@ -52827,9 +52842,9 @@ class PublicKey
 		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  m-dl
 		
 		
-		sizeknapsack1, //  integer knapsack r0 a[] + r[][] s[] + e[]
+		sizeknapsack1, //  integer knapsack s0 a[] + r[][] s[] + e[]
 		
-		sizefact1,  //  Rabin / fact cipher
+		sizefact1, //  Rabin / fact cipher
 		
 		
 		
@@ -52863,7 +52878,8 @@ class PublicKey
 	//  These numbers are not accurate because the threads are interrupted,
 	//  but they show that the integer vector cross product, the 2-dimen-
 	//  sional matrix product, the real / fractional number matrix product,
-	//  and the polynomial matrix lsd are the fastest public key ciphers.
+	//  the polynomial matrix lsd, and the Merkle-Hellman / knapsack ciphers
+	//  are the fastest public key ciphers.
 	//
 	//  (Smart cards or credit cards could use these ciphers because they
 	//  require only a few million processor operations. The other ciphers
@@ -53136,7 +53152,9 @@ class PublicKey
 		
 		for (int i = 1; i < x.length; i++)
 		
-		    x[i] = new Number(Cipher.hash(x[i-1].toByteArray(32)));
+		    x[i] = new Number(Cipher.hash(
+		
+			x[i-1].toByteArray(32)));
 		
 		
 		
@@ -53695,6 +53713,13 @@ class PublicKey
 	public static boolean isValidKeySize(int size)
 	{
 		//  verifies that a public key size is valid
+		//
+		//  (Note that if a deprecated or commented key size is
+		//  included in this method, the generateSecretKey method
+		//  will throw a null pointer exception if it tries to de-
+		//  crypt an older message that used the deprecated cipher
+		//  because the receiver's static public keys have to match
+		//  the sizes of the sender's one-time public keys.)
 		
 		for (int size1 : PublicKey.size)
 		
@@ -53803,9 +53828,9 @@ class PublicKey
 		
 		if (publickey.isEmpty()) return null;
 		
-		if (email.isEmpty())  email =
+		if (email.isEmpty())  email = hashPublicKey(
 		
-		    hashPublicKey(publickey).substring(0, 16);
+		    publickey).substring(0, 16);
 		
 		return new String[] { email, publickey };
 	}
@@ -53814,7 +53839,7 @@ class PublicKey
 	
 	public static String joinKeys(PublicKey[] publickey)
 	{
-		//  joins an array of keys into a string
+		//  joins an array of public keys
 		
 		String[] keys = new String[publickey.length];
 		
@@ -53828,7 +53853,7 @@ class PublicKey
 	
 	public static String joinKeys(String[] publickey)
 	{
-		//  joins an array of keys into a string
+		//  joins an array of key strings
 		
 		return joinKeys(publickey, Convert.base16Separator);
 	}
@@ -53836,7 +53861,7 @@ class PublicKey
 	
 	public static String joinKeys(String[] publickey, String delimiter)
 	{
-		//  joins an array of keys into a string
+		//  joins an array of key strings
 		
 		String str = new String();
 		
@@ -53866,7 +53891,9 @@ class PublicKey
 		
 		    .replaceAll("[-\n\t ]", ""), 16))
 		
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(
+			
+			    "public key == " + publickey);
 		
 		String[] publickeys;  String delimiter;
 		
@@ -54687,7 +54714,9 @@ class PublicKey
 			{
 				z[j] = publickey.toString();
 				
-				e[j] = publickey.generateSecretKey(y[j], type) .mod(n);
+				e[j] = publickey.generateSecretKey(
+				
+				    y[j], type) .mod(n);
 			});
 		}
 		
@@ -56914,11 +56943,10 @@ class PublicKey
 		//  A number is a 0-D, non-dimensional array or point
 		
 		
-		/****************
 		
-		public static void main(String[] args)
+		public /*static*/ void main(String[] args)
 		{
-			//  This method was used to test and debug the class
+			//  This method was used to test the Cube class
 			
 			int[][][] array1, array2, array3;
 			
@@ -56975,7 +57003,6 @@ class PublicKey
 			    cube2.multiply(cube1)));
 		}
 		
-		****************/
 		
 		
 		//  Instance member
@@ -57358,11 +57385,9 @@ class PublicKey
 		
 		
 		
-		/****************
-		
-		public static void main(String[] args)
+		public /*static*/ void main(String[] args)
 		{
-			//  This method was used to test and debug the class
+			//  This method was used to test the Tesseract class
 			
 			int[][][][] array1 = new int[][][][]
 			
@@ -57392,8 +57417,6 @@ class PublicKey
 			
 			System.out.println(bool);
 		}
-		
-		****************/
 		
 		
 		//  Instance member
@@ -58700,8 +58723,8 @@ class PublicKey
 	//
 	//  c[] = (c[1], c[2], ..., c[k]) where
 	//
-	//                         T
-	//  c[i] = r a[i] + r[i][j] s[j] (mod n)  or
+	//                          T
+	//  c[i] = r0 a[i] + r[i][j] s[j] (mod n)  or
 	//
 	//                             T
 	//  C[i] = R1 A[i] R2 + R[i][j] S[j] (mod n)
@@ -58747,13 +58770,29 @@ class PublicKey
 	//  any of the four equations to solve for m[].
 	//
 	//  Permutate m'[] to recover m[].
+	//
+	//
+	//  Note that the cipher could also include small random
+	//  errors added to the static public key but this would
+	//  increase the decryption time from O(10 ms) to O(1 s)
+	//  because the recipient would have to solve the super-
+	//  increasing subset sum problem hundreds of times to
+	//  find the correct key. Also the sender would have to
+	//  include a non-random pattern in the message such as
+	//  repeating digits so the decryptor would know which
+	//  solution is the correct key.
 	
 	
 	
 	
-	private byte[] hash2(byte[] array)
+	private byte[] hash2(byte[] array, int bits)
 	{
+		if (bits <= 256) return Cipher.hash(array);
+		
 		//  returns a 512-bit hash using a 256-bit algorithm
+		//  (a 256-bit hash will work if the number of terms
+		//  times the number of multiplier bits is < 256, or
+		//  if the number of terms is < 64 for a 4-bit cipher)
 		
 		byte[] hash0 = array;
 		
@@ -58777,15 +58816,17 @@ class PublicKey
 		//  computes the recipient's static public key if null
 		//  or else computes the sender's one-time public key
 		
-		int k = -1, pbits = -1, nbits = -1;
+		int pbits = -1, nbits = -1;
 		
-		int sqrt = new Number(digits).sqrt().round().intValue();
+		int k = new Number(digits).sqrt().round().intValue();
 		
-		while ((sqrt % 4) != 0) sqrt--;
+		while ((k % 4) != 0) k--;
 		
-		k = sqrt; pbits = 4; nbits = pbits * k + 20;
+		pbits = 4; nbits = pbits * k + 4*1;
 		
-		final int offset = 16, k1 = offset * 2;
+		final int offset = 16;
+		final int k1 = offset*2;
+		final int bits = k*pbits;
 		
 		
 		//  The knapsack density can be defined as k log2 p / log2 A where k is
@@ -58850,12 +58891,10 @@ class PublicKey
 			
 			    throw new ArithmeticException();
 			
-			int c_digits = k + 5;
+			int c_digits = k + 1;
 			
 			
 			//  Choose a public number r and secret number s
-			
-			Number s0 = new Number(x[1]);
 			
 			//  a[0] r (mod n) == c0;
 			//
@@ -58887,13 +58926,17 @@ class PublicKey
 			
 			Number[] s1 = new Number[k1];
 			
-			s1[0] = new Number(hash2(s0.toByteArray(32)));
+			Number s0 = new Number(x[1]);
+			
+			s1[0] = new Number( hash2(
+			
+			    s0.toByteArray(32), bits) );
 			
 			for (int i = 1; i < s1.length; i++)
 			
-			    s1[i] = new Number(hash2(
+			    s1[i] = new Number( hash2(s1[i-1]
 			
-				s1[i-1].toByteArray(32)));
+				.toByteArray(32), bits) );
 			
 			for (int i = 0; i < s1.length; i++)
 			
@@ -58915,9 +58958,9 @@ class PublicKey
 			for (int i1 = 0; i1 < k1; i1++)
 			for (int i  = 0; i  < k;  i ++)
 			{
-				temp = new Number(hash2(
+				temp = new Number( hash2(
 				
-				    temp.toByteArray(32)));
+				    temp.toByteArray(32), bits) );
 				
 				r1[i1][i] = temp .mod(
 				
@@ -59024,13 +59067,13 @@ class PublicKey
 			
 			m[0] = new Number( hash2( new Number(
 			
-			    publickey, 16) .add(x[0]) .toByteArray(32) ) );
+			    publickey, 16) .add(x[0]) .toByteArray(32), bits ) );
 			
 			for (int i = 1; i < m.length; i++)
 			
 			    m[i] = new Number( hash2(
 			
-				m[i-1] .toByteArray(32) ) );
+				m[i-1] .toByteArray(32), bits ) );
 			
 			
 			//  Reduce m[] modulo (2 ^ pbits)
@@ -59140,7 +59183,7 @@ class PublicKey
 			{
 				temp = new Number( hash2(
 				
-				    temp.toByteArray(32) ) );
+				    temp.toByteArray(32), bits ) );
 				
 				r1[i1][i] = temp.mod(new Number(16).pow(d));
 			}
@@ -59234,6 +59277,8 @@ class PublicKey
 			//  where k is the number of primes in the modulus n so that
 			//  the size of n equals the sum of the sizes of the primes
 			
+			if (digits <= 2048) throw new IllegalArgumentException();
+			
 			int numberoffactors = digits * 4 / pbits;
 			
 			//  System.out.println("fact digits == " + digits);
@@ -59299,13 +59344,13 @@ class PublicKey
 			
 			//  Use multiple threads to generate the primes
 			
-			final int t = powerof2 / 32;
+			final int size = 32;
+			
+			final int t = powerof2 / size;
 			
 			//  System.out.println("number of factors == " + numberoffactors);
 			
 			//  System.out.println("number of threads == " + t);
-			
-			final int size = powerof2 / t;
 			
 			Thread[] tarray = new Thread[t];
 			
@@ -59649,7 +59694,6 @@ class PublicKey
 		
 		return compositekey;
 	}
-	
 	
 	
 	
@@ -60999,7 +61043,7 @@ class PublicKey
 			
 			return new Number(E.toIntegerString(s, radix), radix )
 			
-			    .mod(new Number(16).pow(64));
+			    .mod(new Number(16).pow(64).add(1));
 		}
 		
 		
@@ -61174,7 +61218,7 @@ class PublicKey
 				
 				Number m512 = generateFactMessage(publickey);
 				
-				return m512;
+				return m512 .mod(new Number(16).pow(64).add(1));
 			}
 		}
 		
@@ -61191,15 +61235,17 @@ class PublicKey
 			
 			final int digits = z.trim().length();
 			
-			int k = -1, pbits = -1, nbits = -1;
+			int pbits = -1, nbits = -1;
 			
-			int sqrt = new Number(digits).sqrt().round().intValue();
+			int k = new Number(digits).sqrt().round().intValue();
 			
-			while ((sqrt % 4) != 0) sqrt--;
+			while ((k % 4) != 0) k--;
 			
-			k = sqrt; pbits = 4; nbits = pbits * k + 20;
+			pbits = 4; nbits = pbits * k + 4*1;
 			
-			final int offset = 16, k1 = offset * 2;
+			final int offset = 16;
+			final int k1 = offset*2;
+			final int bits = k*pbits;
 			
 			Number[] m = null;
 			
@@ -61286,11 +61332,15 @@ class PublicKey
 				
 				Number[] s1 = new Number[k1];
 				
-				s1[0] = new Number(hash2(s0.toByteArray(32)));
+				s1[0] = new Number(
+				
+				    hash2(s0.toByteArray(32), bits));
 				
 				for (int i = 1; i < s1.length; i++)
 				
-				    s1[i] = new Number(hash2(s1[i-1].toByteArray(32)));
+				    s1[i] = new Number( hash2(s1[i-1]
+				
+					.toByteArray(32), bits) );
 				
 				for (int i = 0; i < s1.length; i++)
 				
@@ -61428,13 +61478,15 @@ class PublicKey
 				
 				m[0] = new Number( hash2( new Number(
 				
-				    publickey, 16) .add(x[0]) .toByteArray(32) ) );
+				    publickey, 16) .add(x[0])
+				
+					.toByteArray(32), bits ) );
 				
 				for (int i = 1; i < m.length; i++)
 				
 				    m[i] = new Number( hash2(
 				
-					m[i-1] .toByteArray(32) ) );
+					m[i-1] .toByteArray(32), bits ) );
 				
 				
 				//  Reduce m[] modulo 2 ^ pbits
