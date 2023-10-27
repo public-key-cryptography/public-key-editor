@@ -31,12 +31,12 @@
 	computer because the messages get re-numbered every time one of the users deletes a message and signs
 	out, and the wrong messages will get deleted or retrieved.
 	
-	The email encryption program uses a composite key that has multiple public key ciphers. The public
-	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate
-	the composite secret key, session key or encryption key. Each public key agreement or cipher functions
-	as a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers.
-	The composite key is then used to initialize a hash function that generates another one-time pad for
-	the message encryption.
+	The email encryption program uses a composite key that has multiple public key ciphers. The public key
+	agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate the
+	composite secret key, session key or encryption key. Each public key agreement or cipher functions as
+	a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers. The
+	composite key is then used to initialize a hash function that generates another one-time pad for the
+	message encryption.
 	
 	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
 	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters and x1, x2, and X are private keys.
@@ -50,10 +50,10 @@
 	
 	The public keys also include the Rabin / factorization cipher c = m ^ 2 (mod n) where n is the cipher
 	or static public key, m is the sender's secret key and c is the one-time public key; and the Merkle-
-	Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
-	the cipher or static public key, a is a permutated sequence of superincreasing integers, r is a public
-	random matrix, s is a secret vector, e is a vector of small random errors, and b is the subset sum or
-	the sender's one-time public key.
+	Hellman / knapsack cipher c[] = a[] s0 + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
+	the cipher or static public key, a is a sequence of superincreasing integers, r is a public random ma-
+	trix, s0, s, and n are secret keys, e is a vector of small random errors, and b is the sender's one-
+	time public key.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
@@ -101,7 +101,9 @@
 	secret key agreement method to reduce the secret key modulo F8 = 2^256 + 1 == 16^64 + 1; but messages
 	saved on the user's computer will still be decryptable because file encryption uses private key cryp-
 	tography. Also, the format of the Merkle-Hellman / knapsack cipher was changed because the toString
-	method was padding the one-time public key array with five or more zeros instead of one or more zeros.
+	method was padding the one-time public key array with five or more zeros instead of one or more zeros,
+	one of the secret variables was redefined, and the cipher was modified so that the lower elements of
+	the static public key are permutated.
 	
 	
 	
@@ -585,7 +587,7 @@
 	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
 	ulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) is included
+	The Merkle-Hellman / knapsack cipher c[] = a[] s0 + r[][] s[] (mod n), b = c[] (m[] + e[]) is included
 	in the public key class. Unlike the LWE cipher, this cipher is secure because it uses random errors in
 	the static public key c[] and the one-time public key b. Unless the static public key could be broken,
 	the one-time public key can never be broken because the solution is ambiguous and the search space or

@@ -62,12 +62,12 @@
 	computer because the messages get re-numbered every time one of the users deletes a message and signs
 	out, and the wrong messages will get deleted or retrieved.
 	
-	The email encryption program uses a composite key that has multiple public key ciphers. The public
-	key agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate
-	the composite secret key, session key or encryption key. Each public key agreement or cipher functions
-	as a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers.
-	The composite key is then used to initialize a hash function that generates another one-time pad for
-	the message encryption.
+	The email encryption program uses a composite key that has multiple public key ciphers. The public key
+	agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate the
+	composite secret key, session key or encryption key. Each public key agreement or cipher functions as
+	a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers. The
+	composite key is then used to initialize a hash function that generates another one-time pad for the
+	message encryption.
 	
 	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
 	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters and x1, x2, and X are private keys.
@@ -81,10 +81,10 @@
 	
 	The public keys also include the Rabin / factorization cipher c = m ^ 2 (mod n) where n is the cipher
 	or static public key, m is the sender's secret key and c is the one-time public key; and the Merkle-
-	Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
-	the cipher or static public key, a is a permutated sequence of superincreasing integers, r is a public
-	random matrix, s is a secret vector, e is a vector of small random errors, and b is the subset sum or
-	the sender's one-time public key.
+	Hellman / knapsack cipher c[] = a[] s0 + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
+	the cipher or static public key, a is a sequence of superincreasing integers, r is a public random ma-
+	trix, s0, s, and n are secret keys, e is a vector of small random errors, and b is the sender's one-
+	time public key.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
@@ -132,7 +132,9 @@
 	secret key agreement method to reduce the secret key modulo F8 = 2^256 + 1 == 16^64 + 1; but messages
 	saved on the user's computer will still be decryptable because file encryption uses private key cryp-
 	tography. Also, the format of the Merkle-Hellman / knapsack cipher was changed because the toString
-	method was padding the one-time public key array with five or more zeros instead of one or more zeros.
+	method was padding the one-time public key array with five or more zeros instead of one or more zeros,
+	one of the secret variables was redefined, and the cipher was modified so that the lower elements of
+	the static public key are permutated.
 	
 	
 	
@@ -616,7 +618,7 @@
 	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
 	ulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) is included
+	The Merkle-Hellman / knapsack cipher c[] = a[] s0 + r[][] s[] (mod n), b = c[] (m[] + e[]) is included
 	in the public key class. Unlike the LWE cipher, this cipher is secure because it uses random errors in
 	the static public key c[] and the one-time public key b. Unless the static public key could be broken,
 	the one-time public key can never be broken because the solution is ambiguous and the search space or
@@ -52304,7 +52306,7 @@ class PublicKey
 	//  ial-time algorithms. The Rabin / factorization cipher is included but not enabled by default because
 	//  the key size is larger than the other ciphers which are less than 1 K bits.
 	//
-	//  The Merkle-Hellman / knapsack cipher c[] = a[] r0 + r[][] s[] (mod n), b = c[] m[] + e[] where c[] is
+	//  The Merkle-Hellman / knapsack cipher c[] = a[] s0 + r[][] s[] (mod n), b = c[] m[] + e[] where c[] is
 	//  the static public key and b is the one-time public key is included in the public key class. This ci-
 	//  pher is unbreakable because it uses a secret key s[] and private modulus n. The one-time public key
 	//  is also unbreakable because it includes small errors so that even if the subset sum problem is solved,
@@ -52842,7 +52844,7 @@ class PublicKey
 		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  m-dl
 		
 		
-		sizeknapsack1, //  integer knapsack s0 a[] + r[][] s[] + e[]
+		sizeknapsack1, //  integer knapsack a[] s0 + r[][] s[]
 		
 		sizefact1, //  Rabin / fact cipher
 		
@@ -54438,9 +54440,9 @@ class PublicKey
 				
 				Number secretkey = null;
 				
-				secretkey = publickey
+				secretkey = publickey.generateSecretKey(
 				
-				    .generateSecretKey(onetimepublickey, type);
+				    onetimepublickey, type);
 				
 				e[i1] = secretkey;
 			});
@@ -54693,8 +54695,6 @@ class PublicKey
 		//  Compute an array of one-time public keys
 		//  and a composite one-time secret key
 		
-		final Number n = new Number(16).pow(64).add(1);
-		
 		final String[] z = new String[y.length];
 		final Number[] e = new Number[y.length];
 		
@@ -54716,7 +54716,7 @@ class PublicKey
 				
 				e[j] = publickey.generateSecretKey(
 				
-				    y[j], type) .mod(n);
+					y[j], type);
 			});
 		}
 		
@@ -58731,9 +58731,6 @@ class PublicKey
 	//
 	//  for the matrix version.
 	//
-	//  // Choose a large random number t < x, create an array
-	//  // of numbers rand[i] = t i, permutate the array of
-	//  // random numbers, and add the permuted array to c[].
 	//
 	//  Permutate the elements of c[] using a secret key.
 	//
@@ -58769,7 +58766,7 @@ class PublicKey
 	//  For a 2x2 matrix cipher, the recipient could use
 	//  any of the four equations to solve for m[].
 	//
-	//  Permutate m'[] to recover m[].
+	//  Unpermutate m'[] to recover m[].
 	//
 	//
 	//  Note that the cipher could also include small random
@@ -58822,7 +58819,7 @@ class PublicKey
 		
 		while ((k % 4) != 0) k--;
 		
-		pbits = 4; nbits = pbits * k + 4*1;
+		pbits = 4; nbits = pbits*k + 4*1;
 		
 		final int offset = 16;
 		final int k1 = offset*2;
@@ -58851,7 +58848,7 @@ class PublicKey
 			//
 			//  c[] = (c[1], c[2], ..., c[k])
 			//
-			//  where c[i] = r a[i] + r[][] s[] (mod n)
+			//  where c[i] = a[i] s0 + r[][] s[] (mod n)
 			
 			
 			//  Define the multiplier modulus
@@ -58879,9 +58876,9 @@ class PublicKey
 			//  array elements multiplied by the multiplier modulus p
 			//  (n doesn't have to be prime but has to be coprime with r)
 			
-			Number n = new Number(2).pow(nbits);
+			Number n = x[0] .mod(
 			
-			n = n .add(x[0]) .mod(n);
+			    new Number(2).pow(nbits));
 			
 			n .setBit(nbits -1);
 			
@@ -58894,21 +58891,13 @@ class PublicKey
 			int c_digits = k + 1;
 			
 			
-			//  Choose a public number r and secret number s
+			//  Choose a public number r0 and secret number s[]
 			
-			//  a[0] r (mod n) == c0;
-			//
-			//  r == a[0]^-1 c0 (mod n);
-			
-			Number c0 = new Number(pi16
-			
-			    .substring(0, c_digits), 16);
-			
-			//  The number r would be public without r[][] s[] because a crypt-
+			//  The number r0 would be public without r[][] s[] because a crypt-
 			//  analyst knows that a[0] starts with 1 or a small value and can
-			//  run an algorithm a[0] k times to find the value of a[0] r. Also
-			//  although the number r is secret it doesn't have to be because
-			//  the array s[] is secret.
+			//  run an algorithm a[0] k times to find the value of a[0] r0. Also
+			//  although the number r0 is secret it doesn't have to be because
+			//  the array s[] and the modulus n are secret.
 			//
 			//  If a[0] were a large secret number such as 2^32, then the density
 			//  of the knapsack would be k log2 p / log2 A == (28 * 8) / (28 * 8
@@ -58916,17 +58905,16 @@ class PublicKey
 			
 			
 			//  Choose the array multiplier r
-			//  and random number multiplier t
 			
-			Number r = a[0] .modInverse(n) .multiply(c0) .mod(n);
+			Number r = new Number(x[1]) .mod(n);
 			
-			if (!r.isCoprimeWith(n)) throw new ArithmeticException();
+			if (!r.isCoprimeWith(n)) throw
 			
-			Number t = new Number(x[0]) .mod(n);
+			    new ArithmeticException();
 			
 			Number[] s1 = new Number[k1];
 			
-			Number s0 = new Number(x[1]);
+			Number s0 = new Number(x[2]);
 			
 			s1[0] = new Number( hash2(
 			
@@ -58972,7 +58960,7 @@ class PublicKey
 			//
 			//  c[] = (c[1], c[2], ..., c[k]) where
 			//
-			//  c[i] = r a[i] + r[][] s[] (mod n)
+			//  c[i] = a[i] s0 + r[][] s[] (mod n)
 			
 			Number[] c = new Number[a.length];
 			
@@ -58980,11 +58968,31 @@ class PublicKey
 			
 			    c[i] = a[i] .multiply(r) .mod(n);
 			
-			//  System.out.println("r == " + r.toString(16));
+			
+			//  the c[] elements below the offset value can be permutated without
+			//  unpermutating the solved m[] values because the lower values of
+			//  m[] are discarded; permutating the higher values of c[] might re-
+			//  quire permutating the rows or columns of the public matrix r[][],
+			//  but then for each public key r[][] would have to use a sequence
+			//  of random numbers instead of the digits of pi or else there would
+			//  no point to permutating the rows, and that would increase the size
+			//  of the public key.
+			
+
+			System.out.println();
+			
+			Number key = x[3];
 			
 			//  for (Number c1 : c) System.out
-			//
-			//      .println(c1.toString(16));
+			//    .print(c1.mod(256).toString(16));
+			
+			permutateLower(c, key, offset);
+			
+			System.out.println();
+			
+			//  for (Number c1 : c) System.out
+			//    .print(c1.mod(256).toString(16));
+			
 			
 			
 			//  Compute t1 = r1[][]^T s[]
@@ -59009,12 +59017,6 @@ class PublicKey
 			
 			    c[i] = c[i] .add(t1[i]) .mod(n);
 			
-			
-			//  Permutate the c elements
-			
-			Number key = x[3];
-			
-			permutate(c, key, offset);
 			
 			
 			//  for (Number c1 : c) System.out.print(
@@ -59966,7 +59968,7 @@ class PublicKey
 			
 			//  Reduce E modulo F8 and return the secret key
 			
-			return new Number(E2 .toIntegerString(s, radix), radix)
+			return new Number(E2.toIntegerString(s, radix), radix)
 			
 			    .mod(new Number(16).pow(64).add(1));
 		}
@@ -60562,6 +60564,7 @@ class PublicKey
 			
 			    E = E .shiftLeft(32, bits) .add(values[i]) .trim();
 			
+			
 			//  Reduce E modulo F8 and return the secret key
 			
 			return  E .mod(new Number(16).pow(64).add(1));
@@ -60615,6 +60618,7 @@ class PublicKey
 			//  Compute the secret matrix
 			
 			Matrix E = modPow(A0, B0, C0, Z, x0);
+			
 			
 			//  Reduce E modulo F8 and return the secret key
 			
@@ -60905,6 +60909,7 @@ class PublicKey
 			//  Convert the quaternion to an integer string
 			
 			Number E0 = new Number(E.toIntegerString(s, 16), 16);
+			
 			
 			//  Reduce E modulo F8 and return the secret key
 			
@@ -61203,6 +61208,7 @@ class PublicKey
 				
 				//  System.out.println("fact decrypt time == " + computetime + " ms");
 				
+				
 				//  Reduce M modulo F8 and return the secret key
 				
 				return m1 .mod(new Number(16).pow(64).add(1));
@@ -61241,7 +61247,7 @@ class PublicKey
 			
 			while ((k % 4) != 0) k--;
 			
-			pbits = 4; nbits = pbits * k + 4*1;
+			pbits = 4; nbits = pbits*k + 4*1;
 			
 			final int offset = 16;
 			final int k1 = offset*2;
@@ -61297,9 +61303,9 @@ class PublicKey
 				
 				//  Initialize the private modulus n
 				
-				Number n = new Number(2).pow(nbits);
+				Number n = x[0] .mod(
 				
-				n = n .add(x[0]) .mod(n);
+				    new Number(2).pow(nbits));
 				
 				n .setBit(nbits - 1);
 				
@@ -61309,22 +61315,11 @@ class PublicKey
 				
 				
 				
-				//  Initialize secret numbers r, s, and t != r
+				//  Initialize secret numbers r and s[]
 				
-				Number t  = new Number(x[0]);
-				Number s0 = new Number(x[1]);
+				Number r = new Number(x[1]) .mod(n);
 				
-				//  a[0] r (mod n) == c0;
-				//
-				//  r == a[0]^-1 c0 (mod n);
-				
-				Number c0 = new Number(pi16
-				
-				    .substring(0, c_digits), 16);
-				
-				Number r = a[0].modInverse(n) .multiply(c0) .mod(n);
-				
-				t = t .mod(n);
+				Number s0 = new Number(x[2]) .mod(n);
 				
 				if (!r.isCoprimeWith(n)) throw
 				
@@ -61420,10 +61415,6 @@ class PublicKey
 				b = b .mod(n) .add(n) .mod(n);
 				
 				
-				//  Calculate the product t r^-1 (mod n)
-				
-				Number t_inv_r = t.multiply(inv_r);
-				
 				Number product = new Number(0);
 				
 				
@@ -61437,18 +61428,11 @@ class PublicKey
 				
 				final Number b1_ = b .add(product) .mod(n);
 				
-				product = product .add(t_inv_r);
-				
 				m = ssss(a, b1, p);
 				
 				if (m == null) return new Number(0);
 				
-				
-				//  Permutate the sender's decrypted key
-				
-				Number key = x[3];
-				
-				permutate(m, key, offset);
+				//  System.out.println("m solved == " + Arrays.toString(m));
 				
 				
 				long endtime = System.nanoTime();
@@ -61501,6 +61485,9 @@ class PublicKey
 				m[m.length-1] = new Number(1);
 				
 				//  System.out.println(Arrays.toString(m));
+				
+				
+				//  System.out.println("m chosen == " + Arrays.toString(m));
 				
 				
 				//  Truncate the array
@@ -61617,6 +61604,8 @@ class PublicKey
 		
 		//  Verify that a is a superincreasing sequence modulo p
 		
+		final int d = 20;
+		
 		Number p1 = p.subtract(1);
 		
 		Number temp = new Number(0);
@@ -61636,7 +61625,7 @@ class PublicKey
 		
 		int pbits = (int) p.subtract(1).bitCount();
 		
-		for (int i = 0; i < a.length - 20; i++)
+		for (int i = 0; i < a.length - d; i++)
 		{
 			x[a.length -1 -i] = new Number(0);
 			
@@ -61667,24 +61656,23 @@ class PublicKey
 		
 		//  Verify that the number is smaller than 80 bits
 		
-		if (b.bitCount() > 4*20) return null;
+		if (b.bitCount() > 4*d) return null;
 		
 		
-		Number[] x1 = new Number[x.length - 20];
+		Number[] x1 = new Number[x.length - d];
 		
 		for (int i = 0; i < x1.length; i++)
 		
-		    x1[i] = x[20 + i];
+		    x1[i] = x[d + i];
 		
 		return x1;
 	}
 	
 	
 	
-	
-	private static void permutate(Number[] array, Number key, int offset)
+	private static void permutateLower(Number[] array, Number key, int n)
 	{
-		//  permutates the numbers from an offset to n-1
+		//  permutates the numbers from 1 to n
 		
 		if ((array.length % 2) != 0) throw
 		
@@ -61692,14 +61680,15 @@ class PublicKey
 		
 		final int size = array.length;
 		
-		Number[] A1_ = new Number[offset];
-		Number[] A2_ = new Number[size - offset];
+		Number[] A1_ = new Number[n];
+		Number[] A2_ = new Number[size - n];
 		
-		for (int i = 0; i < A1_.length; i++) A1_[i] = array[     0 + i];
-		for (int i = 0; i < A2_.length; i++) A2_[i] = array[offset + i];
+		for (int i = 0; i < A1_.length; i++) A1_[i] = array[0 + i];
+		for (int i = 0; i < A2_.length; i++) A2_[i] = array[n + i];
 		
 		
 		Number[] A;
+		
 		
 		A = A1_;
 		
@@ -61728,7 +61717,17 @@ class PublicKey
 			if (!A[0].equals(a0)) throw new
 			
 			     ArithmeticException();
+			
+			
+			//  Re-assign the elements of the array
+			
+			for (int i = 0; i < A.length; i++)
+			
+			    array[i] = A[i];
 		}
+		
+		
+		/****************
 		
 		
 		A = A2_;
@@ -61760,44 +61759,18 @@ class PublicKey
 			//  if !A[0].equals(a0)) throw new
 			
 			     ArithmeticException();
+			
+			
+			//  Re-assign the elements of the array
+			
+			for (int i = 0; i < A.length; i++)
+			
+			    array[n + i] = A[i];
 		}
+		
+		
+		****************/
 	}
-	
-	
-	
-	private static void permutate1(Number[] A, Number key)
-	{
-		//  permutates the elements from 1 to n-1
-		
-		Number a0 = A[0], am1 = A[A.length-1];
-		
-		Number[] A1 = new Number[A.length -2];
-		
-		for (int i = 0; i < A1.length; i++)
-		
-		    A1[i] = A[i+1];
-		
-		permutate(A1, key);
-		
-		A = new Number[A.length];
-		
-		A[0] = a0; A[A.length-1] = am1;
-		
-		for (int i = 0; i < A1.length; i++)
-		
-		    A[i+1] = A1[i];
-		
-		if (!A[A.length-1].equals(am1)
-		
-		 || !A[0].equals(a0)) throw new
-		
-		     ArithmeticException();
-		
-		System.out.println();
-		
-		System.out.println(Arrays.toString(A));
-	}
-	
 	
 	
 	
@@ -61820,78 +61793,6 @@ class PublicKey
 			A[j] = temp;
 		}
 	}
-	
-	
-	
-	private static void permutate(Matrix[] A, Number key)
-	{
-		int elements = A.length;
-		
-		int[] indexes = permutate(elements, key);
-		
-		for (int i = 0; i < A.length; i++)
-		{
-			int j = indexes[i];
-			
-			//  Swap elements i and j
-			
-			Matrix temp = A[i];
-			
-			A[i] = A[j];
-			
-			A[j] = temp;
-		}
-	}
-	
-	
-	
-	
-	//  These methods are not used for the Merkle-Hellman cipher
-	//  because the recipient permutates the public key vector c[]
-	//  and then also permutates the sender's decrypted private key m[]
-	
-	
-	private static void unpermutate(Number[] A, Number key)
-	{
-		int elements = A.length;
-		
-		int[] indexes = permutate(elements, key);
-		
-		for (int i = A.length -1; i >= 0; i--)
-		{
-			int j = indexes[i];
-			
-			//  Swap elements i and j
-			
-			Number temp = A[j];
-			
-			A[j] = A[i];
-			
-			A[i] = temp;
-		}
-	}
-	
-	
-	private static void unpermutate(Matrix[] A, Number key)
-	{
-		int elements = A.length;
-		
-		int[] indexes = permutate(elements, key);
-		
-		for (int i = A.length -1; i >= 0; i--)
-		{
-			int j = indexes[i];
-			
-			//  Swap elements i and j
-			
-			Matrix temp = A[j];
-			
-			A[j] = A[i];
-			
-			A[i] = temp;
-		}
-	}
-	
 	
 	
 	private static int[] permutate(int elements, Number rand)
