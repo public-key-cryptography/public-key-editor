@@ -36444,7 +36444,7 @@ class Programs
 									//  the encryption and the prepended reply key both contain 128 K
 									//  bit public keys.
 									
-									final int toplines  =  128;
+									final int toplines  =  256;
 									final int toplines1 = 1024;
 									
 									for (int i = 0; i < t; i++)
@@ -52846,7 +52846,7 @@ class PublicKey
 		
 		sizeknapsack1, //  integer knapsack a[] s0 + r[][] s[]
 		
-		sizefact1, //  Rabin / fact cipher
+		////  sizefact1, //  Rabin / fact cipher
 		
 		
 		
