@@ -1,3 +1,4 @@
+
 	The Java Editor program contains a text editor, email editor, table editor, and image viewer. The
 	program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert classes.
 	These classes contain all the ciphers, algorithms, protocols, and software required to do cryptog-
@@ -50,9 +51,9 @@
 	
 	The public keys also include the Rabin / factorization cipher c = m ^ 2 (mod n) where n is the cipher
 	or static public key, m is the sender's secret key and c is the one-time public key; and the Merkle-
-	Hellman / knapsack cipher c[] = a[] s0 + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
-	the cipher or static public key, a is a sequence of superincreasing integers, r is a public random ma-
-	trix, s0, s, and n are secret keys, e is a vector of small random errors, and b is the sender's one-
+	Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
+	the cipher or static public key, a is a superincreasing sequence of integers, r is a public random ma-
+	trix, s0, s[], and n are secret keys, e is a vector of small random errors, and b is the sender's one-
 	time public key.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
@@ -96,27 +97,9 @@
 	tion protocols changes.
 	
 	
-	** Note that the new version of the software will not decrypt email messages encrypted by previous
-	versions of the software for keys that used more than 8 ciphers because an error was corrected in the
-	secret key agreement method to reduce the secret key modulo F8 = 2^256 + 1 == 16^64 + 1; but messages
-	saved on the user's computer will still be decryptable because file encryption uses private key cryp-
-	tography; the format of the Merkle-Hellman / knapsack cipher was changed because the toString method
-	was padding the one-time public key array with five or more zeros instead of one or more zeros,	one
-	of the secret variables was redefined, the cipher was modified so that the lower elements of the
-	static public key are permutated, the highest bit of the multiplier of the superincreasing sequence
-	a[] was set to ensure that the product a[] s0 is reduced modulo n for all values of a[i] = 2^i; the
-	isValidKey method in the public key class was redefined to only require a minimum of four valid ci-
-	phers because some users may receive foreign keys from other users who have enabled large ciphers such
-	as the factorization cipher or who may have a newer or different version of the software that contains
-	additional ciphers; this allows users to send encrypted messages using a subset of the ciphers in the
-	recipient's public key; and some encoding that was used to make the key digits look random was removed
-	from three of the public keys because the methods had been modified to pack (and unpack) the 5-bit co-
-	efficients into a number using adds and left shifts (and right shifts and subtracts) in the polynomial
-	ciphers and the Number(Number[], int radix) constructor in the binary X A X public key (and the con-
-	structor inverse toArray(int radix) in the secret key method) made the encoding unnessary because
-	there are no non-random bits; in the original version of the public key class the elements were con-
-	verted to string and concatenated using StringBuilder instead of shifting and adding them to a number
-	and then converting the number to string.
+	Note that the new version of the software will not decrypt email messages encrypted by previous ver-
+	sions of the software because a few errors were corrected in the public key class but messages saved
+	users' computers will still be decryptable because file encryption uses private key cryptography.
 	
 	
 	
@@ -558,8 +541,8 @@
 	standardization and it was being promoted and backed by a few companies, a method was published for
 	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
 	this algorithm would have been standardized and implemented in software programs along with the other
-	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, and the
-	learning with errors or LWE cipher.
+	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, the
+	learning with errors cipher, and other lattice ciphers.
 	
 	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
 	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
@@ -600,8 +583,9 @@
 	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
 	ulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) is included
-	in the public key class because it is the only cipher that uses a private modulus. Unlike the LWE ci-
-	pher, this cipher is secure because it uses random errors in the static public key c[] and the one-
-	time public key b. Unless the static public key could be broken, the one-time public key can never be
-	broken because the solution is ambiguous and the search space or solution set is too large.
+	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]), b1 =
+	r[][] ^ T (m[] + e[]) is included in the public key class because it is the only cipher that uses a
+	private modulus. Unlike lattice ciphers, this cipher is secure because it uses random errors in the
+	static public key c[] and the one-time public key b. Unless the static public key could be broken, the
+	one-time public key can never be broken because the solution is ambiguous and the search space or so-
+	lution set is too large to try all the possible keys or combinations.

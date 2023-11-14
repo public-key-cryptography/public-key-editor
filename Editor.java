@@ -81,9 +81,9 @@
 	
 	The public keys also include the Rabin / factorization cipher c = m ^ 2 (mod n) where n is the cipher
 	or static public key, m is the sender's secret key and c is the one-time public key; and the Merkle-
-	Hellman / knapsack cipher c[] = a[] s0 + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
-	the cipher or static public key, a is a sequence of superincreasing integers, r is a public random ma-
-	trix, s0, s, and n are secret keys, e is a vector of small random errors, and b is the sender's one-
+	Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
+	the cipher or static public key, a is a superincreasing sequence of integers, r is a public random ma-
+	trix, s0, s[], and n are secret keys, e is a vector of small random errors, and b is the sender's one-
 	time public key.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
@@ -127,27 +127,9 @@
 	tion protocols changes.
 	
 	
-	** Note that the new version of the software will not decrypt email messages encrypted by previous
-	versions of the software for keys that used more than 8 ciphers because an error was corrected in the
-	secret key agreement method to reduce the secret key modulo F8 = 2^256 + 1 == 16^64 + 1; but messages
-	saved on the user's computer will still be decryptable because file encryption uses private key cryp-
-	tography; the format of the Merkle-Hellman / knapsack cipher was changed because the toString method
-	was padding the one-time public key array with five or more zeros instead of one or more zeros,	one
-	of the secret variables was redefined, the cipher was modified so that the lower elements of the
-	static public key are permutated, the highest bit of the multiplier of the superincreasing sequence
-	a[] was set to ensure that the product a[] s0 is reduced modulo n for all values of a[i] = 2^i; the
-	isValidKey method in the public key class was redefined to only require a minimum of four valid ci-
-	phers because some users may receive foreign keys from other users who have enabled large ciphers such
-	as the factorization cipher or who may have a newer or different version of the software that contains
-	additional ciphers; this allows users to send encrypted messages using a subset of the ciphers in the
-	recipient's public key; and some encoding that was used to make the key digits look random was removed
-	from three of the public keys because the methods had been modified to pack (and unpack) the 5-bit co-
-	efficients into a number using adds and left shifts (and right shifts and subtracts) in the polynomial
-	ciphers and the Number(Number[], int radix) constructor in the binary X A X public key (and the con-
-	structor inverse toArray(int radix) in the secret key method) made the encoding unnessary because
-	there are no non-random bits; in the original version of the public key class the elements were con-
-	verted to string and concatenated using StringBuilder instead of shifting and adding them to a number
-	and then converting the number to string.
+	Note that the new version of the software will not decrypt email messages encrypted by previous ver-
+	sions of the software because a few errors were corrected in the public key class but messages saved
+	users' computers will still be decryptable because file encryption uses private key cryptography.
 	
 	
 	
@@ -589,8 +571,8 @@
 	standardization and it was being promoted and backed by a few companies, a method was published for
 	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
 	this algorithm would have been standardized and implemented in software programs along with the other
-	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, and the
-	learning with errors or LWE cipher.
+	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, the
+	learning with errors cipher, and other lattice ciphers.
 	
 	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
 	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
@@ -631,11 +613,12 @@
 	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
 	ulus.
 	
-	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) is included
-	in the public key class because it is the only cipher that uses a private modulus. Unlike the LWE ci-
-	pher, this cipher is secure because it uses random errors in the static public key c[] and the one-
-	time public key b. Unless the static public key could be broken, the one-time public key can never be
-	broken because the solution is ambiguous and the search space or solution set is too large.
+	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]), b1 =
+	r[][] ^ T (m[] + e[]) is included in the public key class because it is the only cipher that uses a
+	private modulus. Unlike lattice ciphers, this cipher is secure because it uses random errors in the
+	static public key c[] and the one-time public key b. Unless the static public key could be broken, the
+	one-time public key can never be broken because the solution is ambiguous and the search space or so-
+	lution set is too large to try all the possible keys or combinations.
 	
 	
 	************************************************/
@@ -4709,12 +4692,10 @@ class Programs
 				    data = Cipher.encrypt(data, filekey);
 				
 				
-				//  If the old file is already encrypted ask if
-				//  the user wants to encrypt the new file
+				//  If the existing file is already encrypted
+				//  ask if the user wants to encrypt the new file
 				
-				boolean encrypted = Cipher.isEncrypted(file);
-				
-				if (encrypted && !Cipher.isEncrypted(data))
+				if (Cipher.isEncrypted(file))
 				{
 					String message = __.encryptfile + "?";
 					
@@ -32215,7 +32196,10 @@ class Programs
 			private String[] splitBase64Encoding(String str)
 			{
 				//  This method iteratively / recursively removes
-				//  multiple levels of base-64 encoding
+				//  multiple levels of base-64 encoding; multiple
+				//  encoding is not used because the code would look
+				//  non-random. Base-64 is only used for perfectly
+				//  random data such as cipherdata.
 				
 				
 				//  Example of a multiply-encoded base-64 string
@@ -40041,28 +40025,29 @@ class FileType
 		
 		//  Count the number of elements in the first row
 		
-		String[] values = rows[0].split(delimiter);
+		String[] cols = rows[0].split(delimiter);
 		
-		if (values.length == 1) return false;
+		if (cols.length == 1) return false;
 		
-		int prevcount = values.length;
+		int prevcount = cols.length;
 		
 		//  Test if all rows have the
 		//  same number of elements
 		
 		for (String row : rows)
 		{
-			values = row.split(delimiter);
+			cols = row.split(delimiter);
 			
-			if (values.length != prevcount)
+			if (cols.length != prevcount)
 			
 			    return false;
 			
-			prevcount = values.length;
+			prevcount = cols.length;
 		}
 		
 		return true;
 	}
+	
 	
 	
 	public static boolean isHTML(String str)
@@ -40278,9 +40263,9 @@ class SaveFile
 		
 		if (file.exists())
 		{
-			String message = __.Replace
+			String message = __.Replace + " "
 			
-			    + " " + file.getName() + " ?";
+			    + file.getName() + " ?";
 			
 			if (file == null)  return -1;
 			
@@ -42242,7 +42227,9 @@ class FileEncryptor
 			
 			passphrasehash = Convert.partition(passphrasehash, " ", 4);
 			
-			title += "  " + passphrasehash;
+			//  Encrypt file   0123 4567 89ab cdef
+			
+			title += "      " + passphrasehash;
 		}
 		
 		fc.setDialogTitle(title);
@@ -43679,18 +43666,18 @@ class PopMail
 		//
 		//  Usually the sender just uses the PublicKey.encrypt(message, recipient's key) method and
 		//  the encrypt method implicitly generates a matching one-time public key. Here we use the
-		//  PublicKey[] generateMatchingPublicKey(byte[] privatekey, String[] receivedkey) method.
+		//  PublicKey[] generateMatchingPublicKeys(byte[] privatekey, String[] receivedkey) method.
 		
 		PublicKey[] testpublickey1, wrongpublickey1;
 		
 		byte[]  testprivatekey1 = Cipher.passphraseToKey( testpassphrase);
 		byte[] wrongprivatekey1 = Cipher.passphraseToKey(wrongpassphrase);
 		
-		 testpublickey1 = PublicKey.generateMatchingPublicKey( testprivatekey1,  testpublickey);
-		wrongpublickey1 = PublicKey.generateMatchingPublicKey(wrongprivatekey1, wrongpublickey);
+		 testpublickey1 = PublicKey.generateMatchingPublicKeys( testprivatekey1,  testpublickey);
+		wrongpublickey1 = PublicKey.generateMatchingPublicKeys(wrongprivatekey1, wrongpublickey);
 		
 		
-		//  Concatenate the reply public key[] into a composite public key
+		//  Concatenate the reply public keys into a composite public key
 		//  using the base 16 separator to join the ciphers
 		
 		String replykeystring = PublicKey.joinKeys(replypublickey);
@@ -49047,6 +49034,7 @@ class DataStream
 
 
 
+
 class FileChannel1
 {
 
@@ -49079,23 +49067,49 @@ class FileChannel1
 		fc = FileChannel.open(path, openoption1, openoption2);
 	}
 	
-	public long position() throws IOException { return fc.position(); }
 	
-	public void position(long p) throws IOException { fc.position(p); }
+	public void close() throws IOException
+	{
+		//  closes the file channel
+		
+		fc.close();
+	}
+	
+	public void force(boolean metadata) throws IOException
+	{
+		//  forces any updates to this channel's file to be
+		//  written to the storage device that contains it
+		
+		fc.force(metadata);
+	}
+	
+	public long position() throws IOException
+	{
+		//  returns this channel's file position
+		
+		return fc.position();
+	}
+	
+	public void position(long p) throws IOException
+	{
+		//  sets this channel's file position
+		
+		fc.position(p);
+	}
 	
 	
 	public int read(ByteBuffer bytebuffer) throws IOException
 	{
-		//  Reads a sequence of bytes into the given buffer starting at
-		//  the channel's current file position and then the file position
-		//  is updated with the number of bytes actually read
+		//  reads a sequence of bytes into the given buffer starting at
+		//  the channel's current file position and then updates the
+		//  file position with the number of bytes actually read
 		
 		return fc.read(bytebuffer);
 	}
 	
 	public int read(ByteBuffer bytebuffer, long position) throws IOException
 	{
-		//  Reads a sequence of bytes from this channel into
+		//  reads a sequence of bytes from this channel into
 		//  the buffer starting at the given file position
 		
 		return fc.read(bytebuffer, position);
@@ -49103,13 +49117,28 @@ class FileChannel1
 	
 	public long size() throws IOException
 	{
+		//  returns the current size of this channel's file
+		
 		return fc.size();
+	}
+	
+	public FileChannel truncate(long size) throws IOException
+	{
+		//  truncates this channel's file to the given size.
+		//
+		//  If the given size is less than the file's current size then the file
+		//  is truncated, discarding any bytes beyond the new end of the file.
+		//  If the given size is greater than or equal to the file's current size
+		//  then the file is not modified. In either case, if this channel's file
+		//  position is greater than the given size then it is set to that size.
+		
+		return fc.truncate(size);
 	}
 	
 	public int write(ByteBuffer bytebuffer) throws IOException
 	{
-		//  Writes a sequence of bytes starting at the current
-		//  channel position and then the file position is updated
+		//  writes a sequence of bytes starting at the current
+		//  channel position and then updates the file position
 		//  with the number of bytes actually written
 		
 		return fc.write(bytebuffer);
@@ -49117,20 +49146,16 @@ class FileChannel1
 	
 	public int write(ByteBuffer bytebuffer, long position) throws IOException
 	{
-		//  Writes a sequence of bytes to this channel from
+		//  writes a sequence of bytes to this channel from
 		//  the buffer starting at the given file position
 		
 		return fc.write(bytebuffer, position);
-	}
-	
-	public void close() throws IOException
-	{
-		fc.close();
 	}
 }
 
 
 //  End class FileChannel1
+
 
 
 
@@ -49141,6 +49166,18 @@ class FileChannelReader extends FileChannel1
 	{
 		super(filepath, StandardOpenOption.READ);
 	}
+	
+	//  public void close()
+	
+	//  public void position()
+	
+	//  public void position(long p)
+	
+	//  public int read(ByteBuffer bytebuffer)
+	
+	//  public int read(ByteBuffer bytebuffer, long position)
+	
+	//  public long size()
 }
 
 
@@ -49151,18 +49188,28 @@ class FileChannelWriter extends FileChannel1
 		super(filepath, StandardOpenOption.WRITE);
 	}
 	
-	public void force(boolean metadata) throws IOException
+	public FileChannelWriter(String filepath,
+	
+		StandardOpenOption option) throws IOException
 	{
-		//  Forces any updates to this channel's file to be
-		//  written to the storage device that contains it
-		
-		this.force(metadata);
+		super(filepath, option);
 	}
 	
-	public FileChannelWriter truncate(long size)
-	{
-		return this.truncate(size);
-	}
+	//  public void close()
+	
+	//  public void force(boolean metadata)
+	
+	//  public void position()
+	
+	//  public void position(long p)
+	
+	//  public long size()
+	
+	//  public FileChannel truncate(long size)
+	
+	//  public int write(ByteBuffer bytebuffer)
+	
+	//  public int write(ByteBuffer bytebuffer, long position)
 }
 
 
@@ -50405,7 +50452,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//  n-1) modulo the line width. The number of chars per
 			//  line could change in future versions of the program.
 			
-			Integer[] linewidths = new Integer[] { 40, 48, 56, };
+			Integer[] linewidths = new Integer[] { 40, 48, 56, 64 };
 			
 			linewidthbox = new JComboBox<Integer>(linewidths);
 			
@@ -50492,17 +50539,32 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			buttonpanel.add(linewidthbox);
 			
 			
-			//  Set the default button
+			//  Set the default number of ciphers
 			
 			numberofciphers = Math.min(8, n);
 			
 			octbutton.setSelected(true);
+			
+			
+			//  Show the selected number as a digit string
 			
 			String numberstr = String.valueOf(numberofciphers);
 			
 			if (numberstr.length() == 1) numberstr = " " + numberstr;
 			
 			numberofcipherslabel1 .setText(numberstr);
+			
+			
+			//  Set the line width box
+			
+			int index = 0;
+			
+			if (numberofciphers <= 4) index = 0;
+			if (numberofciphers >  4) index = 1;
+			if (numberofciphers >  8) index = 2;
+			if (numberofciphers > 16) index = 3;
+			
+			linewidthbox.setSelectedIndex(index);
 			
 			
 			passphrasearea.setLineWrap(true);
@@ -50690,6 +50752,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 						if (numberofciphers <= 4) index = 0;
 						if (numberofciphers >  4) index = 1;
 						if (numberofciphers >  8) index = 2;
+						if (numberofciphers > 16) index = 3;
 					}
 					
 					if (obj instanceof JCheckBox)
@@ -50709,7 +50772,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 					}
 					
 					if (index >= linewidths.length)
-					
 					    index =  linewidths.length - 1;
 					
 					linewidthbox.setSelectedIndex(index);
@@ -52234,13 +52296,13 @@ class PublicKey
 	//  The vector ciphers and non-exponential matrix ciphers can be modular or non-modular, and the matrix,
 	//  vector, and quaternion ciphers can use one or multiple equations. Unlike integer ciphers such as the
 	//  Rabin / factorization cipher, there are no sub-exponential, polynomial, or quantum algorithms for
-	//  solving matrix, vector, or hypercomplex ciphers.
+	//  solving non-linear matrix, vector, or hypercomplex equations or for breaking these ciphers.
 	//
 	//  The only difference between the public key ciphers and the ordinary matrix discrete log cipher Y =
 	//  A^x (mod p) or the linear matrix cipher Y = A X is that the ciphers are multiplied by X and X^-1 or
 	//  A^x1 and A^-x1. The vector cipher Y = A (x) X is the same form as the linear Diffie-Hellman cipher
 	//  y = a x or Y = A X, but the matrix cipher Y = X A X is different because it has two X's or private
-	//  variables instead of one to make the cipher non-linear and to reduce the size of the cipher.
+	//  variables instead of one to make the cipher non-linear.
 	//
 	//  Matrix ciphers are a generalization of integer ciphers because all numbers are 1x1 matrices. The in-
 	//  teger cipher y = a^x (mod p) is a special case of the matrix discrete log cipher Y = A^x (mod p) in
@@ -52263,8 +52325,8 @@ class PublicKey
 	//  elements are rotated, then the Latin square is also a circulant matrix. Latin square, cube, or tes-
 	//  seract multiplication is commutative if the elements are circulant in the right or positive direc-
 	//  tion so that the diagonal elements are all equal. Integer multiplication is commutative because all
-	//  numbers are 1x1 Latin squares or circulant matrices and the diagonal elements are equal because
-	//  there is only one element.
+	//  numbers are 1x1 Latin squares or circulant matrices and the diagonal elements are equal because there
+	//  is only one element.
 	//
 	//  All circulant matrices are also Latin squares but all Latin squares are not circulant matrices be-
 	//  cause the row elements can be permutated instead of rotated. This means that there are O(n!) Latin
@@ -52272,7 +52334,7 @@ class PublicKey
 	//  that can be formed from the same elements. While many of the matrices used in the public key class
 	//  are both Latin squares and circulant matrices, some of them are only Latin squares because the rows
 	//  rotate alternately in different directions and the elements can also be written boustrophedonically
-	//  or from left to right and then right to left.
+	//  or by alternating the rows from left to right and right to left.
 	// 
 	//  Matrix public key generation uses block matrices whereas secret key generation uses block arrays.
 	//  Public key generation reduces an n x n block matrix to an n x 1 column vector or block array, and
@@ -52314,22 +52376,46 @@ class PublicKey
 	//  least common remainder x = lcr(x mod q[], q[]) where x mod q[] is the set of solutions to the re-
 	//  duced discrete log problems.
 	//
-	//  Elliptic curve ciphers, 1x1 polynomial matrix discrete log ciphers, and integer log ciphers are not
-	//  used in the public key class because these ciphers are susceptible to quantum computing or polynom-
-	//  ial-time algorithms. The Rabin / factorization cipher is included but not enabled by default because
-	//  the key size is larger than the other ciphers which are less than 1 K bits.
-	//
-	//  The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][]^T s[] (mod n), b = c[] (m[] + e[]), b1 =
-	//  r[][] (m[] + e[]), where c[] is the static public key and b is the one-time public key is included
-	//  in the public key class. This cipher is unbreakable because it uses a secret key s[] and private
-	//  modulus n. The one-time public key is also unbreakable because it includes small errors so that even
-	//  if the subset sum problem is solved, the solution will not be the correct key because the solution
-	//  is ambiguous, but the recipient can always solve for the correct key by using the knowledge of the
-	//  secret keys s, s[], and private modulus n.
+	//  Elliptic curves and lattices are not used in the public key class because these ciphers are suscep-
+	//  tible to classical, quantum computing, or polynomial-time algorithms.
 	//
 	//
 	//
-	//  Integer factorization
+	//  The Merkle-Hellman / knapsack cipher
+	//
+	//  The Merkle-Hellman cipher c[] = s0 a[] + r[][]^T s[] (mod n), b = c[] (m[] + e[]), b1 = r[][] (m[]
+	//  + e[]), where c[] is the static public key and b is the one-time public key is included in the public
+	//  key class. The static key is unbreakable because it uses secret keys s0, s[] and a private modulus n.
+	//  Moreover, the one-time public key is also unbreakable because it includes small errors so that even
+	//  if the subset sum problem is solved, the solution will not be the correct key because the solution is
+	//  ambiguous and the solution set is too large to try all the combinations. But the recipient can always
+	//  solve for the correct key by using the knowledge of the secret keys s, s[], and private modulus n to
+	//  reduce the general subset sum problem to the superincreasing subset sum problem to find the correct
+	//  solution or secret key m[]. The solution to the superincreasing subset sum problem is unambiguous be-
+	//  cause the errors are added to the smaller elements of the superincreasing sequence.
+	//
+	//  The Merkle-Hellman cipher was the world's first public key cryptosystem and also the first quantum-
+	//  resistant cipher. The cipher was never broken but it has to be implemented correctly or else it
+	//  doesn't work. For example, if r[][] equals zero or no errors are added to the static key, then the
+	//  vector c[] = s0 a[] (mod n) can be solved for the multiplier s0 and modulus n because a[] is a super-
+	//  increasing sequence. If r[][] == 0, a cryptanalyst could find the value of s0 because for one of the
+	//  elements c[0], a[0] == a^0 == 1; then the value of n can be solved from c[1] = a^1 s0 - k n which
+	//  only contains two variables k and n, and k can only be small value such as 0, 1, or 2 if a[i] = 2.
+	//  Since the elements of c[] are permutated, it would require O(n^2) tries where n is the number of ele-
+	//  ments to find the the indexes of a[0] and a[1].
+	//
+	//  If matrix, cube, and tesseract ciphers could be shown to be breakable by classical or quantum comput-
+	//  ing just like elliptic curve and lattice ciphers, then the Merkle-Hellman / knapsack cipher would be
+	//  the only public key cryptosystem for encryption. The matrix ciphers were designed to be nonlinear and
+	//  non-commutative, and some of the variables were chosen to make the solutions ambiguous to resist clas-
+	//  sical and quantum computing attacks. There is no quantum algorithm for directly solving the modular
+	//  square root or factorization problem without using discrete logs because the solution is ambiguous,
+	//  but there is a classical algorithm for finding congruences of the form x^2 == y^2 (mod n) in sub-expo-
+	//  nential time.
+	//
+	//
+	//
+	//  The Rabin / factorization / quadratic residue / co-composite or square root extraction cipher
 	//
 	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
 	//  tory problem to be a public key cipher. It only has to be harder to invert than to compute. Some
@@ -52392,8 +52478,8 @@ class PublicKey
 	//  tic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's
 	//  method can solve the discrete log / factorization problem up to ~ 400 to ~ 600 bits which is on the or-
 	//  der of a thousand bits. Instead of doubling or tripling the number of bits, a polynomial-time algorithm
-	//  that has a running time of O(n^4.58) can increase the number of bits by a factor of 64 from ~ 1 K bits
-	//  to ~ 64 K bits using a supercomputer.
+	//  that has a running time of O(n^4.58) can increase the number of bits a hundredfold from ~ 1 K bits to
+	//   ~ 100 K bits using a supercomputer.
 	//
 	//  A gigahertz processor that has a thousand cores can do terascale computing or O(10^12) operations per
 	//  second. A thousand processors can do petascale computing, and a millon processors can do exascale com-
@@ -52401,11 +52487,10 @@ class PublicKey
 	//  zetta op and a mega second or ten days to do a yotta op or 10^24 operations. A specialized processor
 	//  such as the ones used to do hashing for the mining of cryptocurrency could be used to do zettascale
 	//  computing or 10^21 operations per second, but it would still take on the order of 100 K seconds to do
-	//  a hundred yotta ops to factor one 256 K bit number.
-	
-	
-	
-	
+	//  a hundred yotta ops to factor one 256 K bit number. A 1 M bit number would require ~ 10^28 or 10 octil-
+	//  lion operations to factor.
+	//
+	//
 	//  Running times for primality testing, prime number generation, and integer factorization
 	//
 	//  primality testing        O(n^0) exponentiations == O(n^1) multiplications == O(n^2.58) operations
@@ -52860,7 +52945,10 @@ class PublicKey
 		
 		sizeknapsack1, //  knapsack cipher
 		
-		               // c[] = a[] s0 + r[][] s[] mod n
+		//  c[] = s0 a[] + r[][] s[] (mod n),
+		//
+		//  b = c[] (m[] + e[]), b1 = r[][]^T (m[] + e[])
+		
 		
 		//  The factorization cipher is the only cipher that is not enabled
 		//  by default because the key size is an order of magnitude larger
@@ -52870,7 +52958,7 @@ class PublicKey
 		//  and then the decryption thread will not display the subject lines
 		//  or the first few lines of the messages.
 		
-		////  sizefact1, //  Rabin / fact cipher
+		//  sizefact1, //  Rabin / fact cipher
 		
 		
 		
@@ -52929,7 +53017,9 @@ class PublicKey
 	
 	
 	//  The following code is inside a code block so it
-	//  can be executed outside of a function or method
+	//  can be executed outside of a function or method.
+	//  The code block is declared static since it only
+	//  has to be executed once for all instances.
 	
 	static
 	{
@@ -53123,6 +53213,24 @@ class PublicKey
 	
 	
 	
+	//  A public key is valid if it contains at least a few valid or enabled ci-
+	//  phers in the public key class. Some sender's or recipient's keys may con-
+	//  tain newer or additional ciphers that are not recognized by the user's
+	//  program.
+	//
+	//  If a cipher or key size is unknown, the generateMatchingPublicKeys method
+	//  will return a PublicKey array that includes an empty public key object so
+	//  that the number of ciphers in the user's one-time public key matches the
+	//  recipient's static public key.
+	//
+	//  If the user's key is a one-time public key for encrypting to a recipient's
+	//  static public key z, and the one-time public key includes one or more empty
+	//  strings, then for each empty public key the generateSecretKey(z, type) method
+	//  will return a value of zero to be xor-ed with the composite key agreement be-
+	//  cause if the one-time public key contains an empty string, then the corre-
+	//  sponding static public key contains an unknown cipher, key size or z.length().
+	
+	
 	
 	//  The private static and one-time public key constructor
 	
@@ -53229,6 +53337,9 @@ class PublicKey
 		Number p32 = new Number(16).pow(32) .subtract(15449);
 		Number p40 = new Number(16).pow(40) .subtract(13709);
 		
+		
+		
+		this.publickey = "";
 		
 		
 		if (size == -1) {  }
@@ -53414,8 +53525,17 @@ class PublicKey
 		//  counts the number of ciphers in
 		//  a public key or encrypted message
 		//
-		//  duplicate keys and keys that are pad-
-		//  ded with space chars are not counted
+		//  duplicate keys and keys that are empty
+		//  or invalid are not counted
+		//
+		//  Note that this method returns the number of valid
+		//  or enabled ciphers, but the number of keys used
+		//  to generate the secret key agreement could be
+		//  higher because the encrypt methods will try to
+		//  generate a matching public key even for ciphers
+		//  that are commented or disabled such as the fac-
+		//  torization cipher.
+		
 		
 		//  Verify that the string is a valid pub-
 		//  lic key or a valid encrypted message
@@ -53552,17 +53672,43 @@ class PublicKey
 	
 	
 	
-	public static String hashPublicKey(PublicKey[] publickey)
+	public static String hashPublicKey(PublicKey[] publickeys)
 	{
 		//  computes the hash of each public key and xors the hashes
 		
-		String[] keys = new String[publickey.length];
+		//  Convert the PublicKey array to a String array
+		
+		String[] keys = new String[publickeys.length];
 		
 		for (int i = 0; i < keys.length; i++)
 		
-		    keys[i] = publickey[i].toString();
+		    keys[i] = publickeys[i].toString();
 		
 		return hashPublicKey(keys);
+	}
+	
+	
+	
+	public static String hashPublicKey(String[] keys)
+	{
+		//  computes the hash of each public key and xors the hashes
+		
+		byte[] hash = new byte[32];
+		
+		for (String key : keys)
+		{
+			byte[] bytes = key.trim().getBytes();
+			
+			byte[] hash1 = Cipher.hash(bytes);
+			
+			hash = Math.xor(hash, hash1);
+		}
+		
+		return new String(Convert
+		
+		    .byte256ArrayToByte16Array(hash))
+		
+			.substring(0, 40);
 	}
 	
 	
@@ -53624,28 +53770,6 @@ class PublicKey
 		keylist.toArray(keys);
 		
 		return hashPublicKey(keys);
-	}
-	
-	
-	
-	public static String hashPublicKey(String[] keys)
-	{
-		//  computes the hash of each public key and xors the hashes
-		
-		byte[] hash = new byte[32];
-		
-		for (String key : keys)
-		{
-			byte[] hash1 = Cipher.hash(key.trim().getBytes());
-			
-			hash = Math.xor(hash, hash1);
-		}
-		
-		return new String(Convert
-		
-		    .byte256ArrayToByte16Array(hash))
-		
-			.substring(0, 40);
 	}
 	
 	
@@ -53745,13 +53869,6 @@ class PublicKey
 	public static boolean isValidKeySize(int size)
 	{
 		//  verifies that a public key size is valid
-		//
-		//  (Note that if a deprecated or commented key size is
-		//  included in this method, the generateSecretKey method
-		//  will throw a null pointer exception if it tries to de-
-		//  crypt an older message that used the deprecated cipher
-		//  because the receiver's static public keys have to match
-		//  the sizes of the sender's one-time public keys.)
 		
 		for (int size1 : PublicKey.size)
 		
@@ -53869,39 +53986,39 @@ class PublicKey
 	
 	
 	
-	public static String joinKeys(PublicKey[] publickey)
+	public static String joinKeys(PublicKey[] publickeys)
 	{
 		//  joins an array of public keys
 		
-		String[] keys = new String[publickey.length];
+		String[] keys = new String[publickeys.length];
 		
 		for (int i = 0; i < keys.length; i++)
 		
-		    keys[i] = publickey[i].toString();
+		    keys[i] = publickeys[i].toString();
 		
 		return joinKeys(keys);
 	}
 	
 	
-	public static String joinKeys(String[] publickey)
+	public static String joinKeys(String[] publickeys)
 	{
 		//  joins an array of key strings
 		
-		return joinKeys(publickey, Convert.base16Separator);
+		return joinKeys(publickeys, Convert.base16Separator);
 	}
 	
 	
-	public static String joinKeys(String[] publickey, String delimiter)
+	public static String joinKeys(String[] publickeys, String delimiter)
 	{
 		//  joins an array of key strings
 		
-		String str = new String();
+		String str = "";
 		
-		for (int i = 0; i < publickey.length; i++)
+		for (int i = 0; i < publickeys.length; i++)
 		{
-			str += publickey[i].toString();
+			str += publickeys[i].toString();
 			
-			if (i < publickey.length -1)
+			if (i < publickeys.length -1)
 			
 			    str += delimiter;
 		}
@@ -54468,11 +54585,9 @@ class PublicKey
 				
 					publickey = publickey1;
 				
-				Number secretkey = null;
+				Number secretkey = publickey
 				
-				secretkey = publickey.generateSecretKey(
-				
-				    onetimepublickey, type);
+				   .generateSecretKey(onetimepublickey, type);
 				
 				e[i1] = secretkey;
 			});
@@ -54616,7 +54731,7 @@ class PublicKey
 		String plaintext = new String(plaindata);
 		
 		
-		//  Verify that the text is valid after removing the padding
+		//  Verify that the text is valid after decrypting
 		
 		String teststr = plaintext;
 		
@@ -54674,28 +54789,29 @@ class PublicKey
 	//  with several bytes to verify that the secret key or public key agreement is correct.
 	
 	
-	public static String encrypt(String message, String[] y, PublicKey[] onetimepublickey)
+	public static String encrypt(String message, String[] y, PublicKey[] onetimepublickeys)
 	{
-		return encrypt(message, y, onetimepublickey, false);
+		return encrypt(message, y, onetimepublickeys, false);
 	}
 	
 	
 	public static String encrypt(
 	
-	    String message, String[] y, PublicKey[] onetimepublickey, boolean randkey)
+	    String message, String[] y, PublicKey[] onetimepublickeys, boolean randkey)
 	{
-		//  encrypts a message to the recipient's public key y
+		//  encrypts a message to the recipient's public key y and appends
+		//  a random number of digits to hide the size of the message
 		
 		//  String[] y is the recipient's array of public keys
 		
-		//  PublicKey[] onetimepublickey is the sender's one-time public key
+		//  PublicKey[] onetimepublickeys is the sender's one-time public key
 		
-		//  if (randkey == true)  the method generates a random encryption key
-		//  and appends the encrypted encryption key to the document; this option
-		//  is used if the sender is using a static public key instead of a one-
-		//  time public key. The only reason for a sender to use a static public key
-		//  is if the receiver has to verify the sender's key or if the key agreement
-		//  is used as a password to log in to an account.
+		//  if (randkey == true)  the method generates a random encryption key and
+		//  appends the encrypted encryption key to the document; this option is used
+		//  if the sender is using a static public key instead of a one-time public
+		//  key. The only reason for a sender to use a static public key is if the
+		//  receiver has to verify the sender's key or if the key agreement is used
+		//  as a password to log in to an account.
 		//
 		//  if (randkey == false) the method uses the public key agreement as the
 		//  encryption key; this option is used if the sender is using a random one-
@@ -54707,7 +54823,7 @@ class PublicKey
 		
 		//  Generate a matching one-time public key if the caller doesn't provide one
 		
-		if (onetimepublickey == null)
+		if (onetimepublickeys == null)
 		{
 			//  Choose a one-time private key k = hash(x, m, r, ...)
 			
@@ -54719,7 +54835,7 @@ class PublicKey
 			
 			//  Generate a matching one-time public key
 			
-			onetimepublickey = generateMatchingPublicKey(
+			onetimepublickeys = generateMatchingPublicKeys(
 			
 			    onetimeprivatekey, y);
 		}
@@ -54742,15 +54858,15 @@ class PublicKey
 			
 			final int type = send_encrypt; // sender / encryption
 			
-			final PublicKey publickey = onetimepublickey[j];
+			final PublicKey onetimepublickey = onetimepublickeys[j];
 			
 			tarray[i] = new Thread(() ->
 			{
-				z[j] = publickey.toString();
+				z[j] = onetimepublickey.toString();
 				
-				e[j] = publickey.generateSecretKey(
+				e[j] = onetimepublickey
 				
-					y[j], type);
+				   .generateSecretKey(y[j], type);
 			});
 		}
 		
@@ -54809,8 +54925,8 @@ class PublicKey
 		//  The plaindata is padded to a multiple of 32 bytes or 256 bits so
 		//  that any private key cipher can encrypt and decrypt the message.
 		//
-		//  The length of the padding can be random so that if the same message
-		//  is sent twice or sent to more than one recipient it will not encrypt
+		//  The length of the padding is random so that if the same message is
+		//  sent twice or sent to more than one recipient it will not encrypt
 		//  to the same size.
 		
 		//  Use the System nano time to initialize the Math rng
@@ -54863,8 +54979,8 @@ class PublicKey
 			//  public keys because the key agreement is used to log in to an
 			//  account or to verify the sender, then the sender would set rand-
 			//  key = true and the method would append the encrypted encryption
-			//  key k' = k (+) e[] so the secret key k doesn't get reused for
-			//  encryption.)
+			//  key k' = k (+) e[] so the static key agreement doesn't get used
+			//  for encryption.)
 			
 			String randstr = Number.random(16, 16) .toString(16);
 			
@@ -54952,18 +55068,22 @@ class PublicKey
 		//  C = E(e[], P) or E(k, P)
 		
 		
-		String onetimepublickeys = "";
+		StringBuilder sb = new StringBuilder();
 		
 		for (int i = 0; i < y.length; i++)
 		{
-			onetimepublickeys += z[i];
+			String s = z[i];
+			
+			if ((s != null) && !s.isEmpty())
+			
+			    sb.append(s);
 			
 			if (i < y.length -1)
 			
-			    onetimepublickeys += "\n\n";
+			    sb.append("\n\n");
 		}
 		
-		return onetimepublickeys + "\n\n" +
+		return sb.toString() + "\n\n" +
 		
 		    (!new Number(messagekey) .equals(compositekey) ?
 		
@@ -54974,21 +55094,20 @@ class PublicKey
 	
 	
 	
-	public static PublicKey[] generateMatchingPublicKey(
+	public static PublicKey[] generateMatchingPublicKeys(
 	
 		byte[] privatekey, String[] receivedkey)
 	{
 		//  creates a matching one-time, transient or ephemeral
-		//  public key using the ciphers in the static public key
+		//  public key using the ciphers in the static public key,
+		//  even if some of the ciphers are commented or disabled;
 		//
-		//  If the received key is a public server key then the
-		//  generated matching public key is a public client key.
+		//  for public key sizes that are not valid, the method will
+		//  create a public key element that contains the empty string
+		//  so that the generate secret key method will ignore the key.
 		//
 		//  This method is used by the encrypt method and by the SSL
 		//  Socket class.
-		//
-		//  The one-time public key ciphers or functions have to match
-		//  the static public key ciphers in order to encrypt a message.
 		//
 		//  Because this method is used to generate a matching one-time
 		//  public key (instead of generating a static public key), the
@@ -54996,8 +55115,11 @@ class PublicKey
 		//
 		//  Note that the static key variable is only required for asym-
 		//  metric public key ciphers such as the vector / cross product
-		//  cipher. The other public key ciphers ignore the static key
-		//  because the public keys are symmetrical.
+		//  cipher, the Merkle-Hellman / knapsack cipher, and the factor-
+		//  ization cipher. The other public key ciphers ignore the stat-
+		//  ic key because the public keys are symmetrical or use commu-
+		//  tative one-way functions instead of one-way / invertible
+		//  functions.
 		
 		
 		
@@ -55014,7 +55136,7 @@ class PublicKey
 		
 		Thread[] tarray = new Thread[sizes.length];
 		
-		final PublicKey[] publickeys = new PublicKey[sizes.length];
+		PublicKey[] publickeys = new PublicKey[sizes.length];
 		
 		for (int i = 0; i < tarray.length; i++)
 		{
@@ -55029,10 +55151,6 @@ class PublicKey
 				PublicKey publickey = new PublicKey(
 				
 				    privatekey, statickey, size); // static key required
-				
-				if ((publickey == null) || (publickey.toString() == null))
-				
-				    throw new NullPointerException();
 				
 				publickeys[i1] = publickey;
 			});
@@ -55143,7 +55261,7 @@ class PublicKey
 		
 		Thread[] tarray = new Thread[numberofciphers];
 		
-		final PublicKey[] publickeys = new PublicKey[numberofciphers];
+		PublicKey[] publickeys = new PublicKey[numberofciphers];
 		
 		for (int i = 0; i < tarray.length && i < PublicKey.size.length; i++)
 		{
@@ -55154,10 +55272,6 @@ class PublicKey
 			tarray[i] = new Thread(() ->
 			{
 				PublicKey publickey = new PublicKey(secretkey, null, size);
-				
-				if ((publickey == null) || (publickey.toString() == null))
-				
-				    throw new NullPointerException();
 				
 				publickeys[i1] = publickey;
 			});
@@ -55395,7 +55509,7 @@ class PublicKey
 			
 			String y = Y.toIntegerString(s, radix);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 		
 		
@@ -55466,7 +55580,7 @@ class PublicKey
 			
 			String y = Y2.toIntegerString(s, radix);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 		
 		
@@ -55548,7 +55662,7 @@ class PublicKey
 			
 			String y = Y .toIntegerString(s, radix);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 		
 		
@@ -55633,7 +55747,7 @@ class PublicKey
 			
 			String y = Y .toIntegerString(s, radix);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 		
 		
@@ -55714,7 +55828,7 @@ class PublicKey
 			
 			String y = Y.toIntegerString(s, radix);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 	}
 	
@@ -55794,7 +55908,7 @@ class PublicKey
 			String y = Y1.toIntegerString(s, radix)
 			         + Y2.toIntegerString(s, radix);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 	}
 	
@@ -55902,7 +56016,7 @@ class PublicKey
 			
 			//  System.out.println(y);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 		
 		
@@ -55963,7 +56077,7 @@ class PublicKey
 			
 			String y = Y.toIntegerString(s,radix);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 	}
 	
@@ -56103,7 +56217,9 @@ class PublicKey
 			
 			//  Convert the public key matrix to a number string
 			
-			this.publickey = Y.toIntegerString(s, radix);
+			String y = Y.toIntegerString(s, radix);
+			
+			this.publickey = y;
 		}
 	}
 	
@@ -56303,7 +56419,7 @@ class PublicKey
 			
 			//  Define the private coefficients
 			
-			String xstr = new String();
+			String xstr = "";
 			
 			for (int i = 0; i < x.length; i++)
 			
@@ -56628,7 +56744,7 @@ class PublicKey
 			
 			String y = Y.toIntegerString(s, radix);
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 	}
 	
@@ -56747,7 +56863,7 @@ class PublicKey
 			
 			    y += str;
 			
-			this.publickey = y.trim();
+			this.publickey = y;
 		}
 	}
 	
@@ -58690,8 +58806,9 @@ class PublicKey
 	//
 	//  Gauss's remainder algorithm comes from Disquisitiones Arithmeticae (1801).
 	//  Carl F. Gauss is the greatest mathematician of all time followed by
-	//  Newton, Euler, Lagrange, and Archimedes, and the second most prolific
-	//  after Euler.
+	//  Newton, Euler, Archimedes, Euclid, Diophantus, Lagrange, Fermat, Cauchy,
+	//  Riemann, Descartes, Galois, Leibniz, Fourier, Abel, Legendre, ... and the
+	//  second most prolific after Euler.
 	//
 	//  There is a Chinese remainder algorithm 500 years before Gauss that is
 	//  based on least common multiples, not modular inversion because there was
@@ -58772,7 +58889,7 @@ class PublicKey
 	//                            T
 	//  since b0 = (s0 a[] + r[][] s[] mod n) (m[] + e[])
 	//
-	//  multiply b0 by 1 / s0 to get
+	//  multiply b0 by s0 ^-1 (mod n) to get
 	//
 	//  b' = a[] m[] + (r[][] (m[] + e[])) s[] s0^-1 (mod n);
 	//
@@ -58787,31 +58904,34 @@ class PublicKey
 	//  (m[] + e[]) elements to recover m[].
 	//
 	//
-	//  The first implementation of the cipher used a single large error
-	//  added to m[0] but then this was changed to use multiple small errors
-	//  greater than the quotient of the base of the superincreasing sequence
-	//  a[i] = 16^i.
+	//  The first implementation of the cipher used a single large error added
+	//  to m[0] but then this was changed to use multiple small errors greater
+	//  than the quotient of the base of the superincreasing sequence a[].
 	//
 	//  Note that the cipher could also include small random errors added to
 	//  the static public key. Although the recipient would have to solve the
 	//  superincreasing subset sum problem hundreds of times to find the cor-
-	//  rect key, this would not increase the decryption time because the
-	//  solve superincreasing subset sum method would compensate by testing
-	//  the last two elements of m for 1 so that the cipher could be decrypt-
-	//  ed 16^2 or 256 times faster if the base of the sequence is 16.
+	//  rect key, this would not increase the decryption time because the ssss
+	//  or solve superincreasing subset sum method would compensate by testing
+	//  the last two elements of m for 1 so that the cipher could be decrypted
+	//  16^2 or 256 times faster if the base of the sequence is 16.
 	//
-	//  Also the sender would have to include a non-random pattern in the
-	//  message such as non-consecutive repeating digits so the decryptor
-	//  would know which solution is the correct key. For example, for 64
-	//  elements, the average number of ones for a random base-16, 64-digit
-	//  number would be 1/16 / element * 64 elements == 4, but the probabil-
-	//  ity of getting 24 ones would be Poisson(u = 4, x = 24) ~ 10^-11 or
-	//  one in a hundred billion, and 28 ones would be P(u = 4, x = 28) ~
-	//  10^15 or 1 in a quadrillion.
+	//  Also the sender would have to include a non-random pattern in the mes-
+	//  sage such as non-consecutive repeating digits so the decryptor would
+	//  know which solution is the correct key. For example, for 64 elements,
+	//  the average number of ones for a random base-16, 64-digit number would
+	//  be 1/16 / element * 64 elements == 4, but the probability of getting
+	//  24 ones would be Poisson(u = 4, x = 24) ~ 10^-11 or one in a hundred
+	//  billion, and 28 ones would be P(u = 4, x = 28) ~ 10^15 or 1 in a qua-
+	//  drillion. If the number of elements is 64, the size of m[i] is four
+	//  bits or 16, and the lower 20 elements are discarded because they con-
+	//  tain errors, then the number of solutions is 10^15 * 16 ^ (64-20-28)
+	//  ~ 2^50 * 2^(4*16) == 2 ^ 114. For 60 elements there would be ~ 2 ^ 100
+	//  or 1 nonillion solutions.
 	//
-	//  If the knapsack cipher could be shown to be breakable, then the
-	//  cipher in the public key class would be modified to include small
-	//  random errors in the static public key.
+	//  If the knapsack cipher could be shown to be breakable, then the cipher
+	//  in the public key class would be modified to include small random er-
+	//  rors in the static public key.
 	
 	
 	
@@ -58879,7 +58999,7 @@ class PublicKey
 			//
 			//  c[] = (c[1], c[2], ..., c[k])
 			//
-			//  where c[i] = a[i] s0 + r[][] s[] (mod n)
+			//  where c[i] = s0 a[i] + r[][] s[] (mod n)
 			
 			
 			//  Define the multiplier modulus
@@ -58997,7 +59117,7 @@ class PublicKey
 			//
 			//  c[] = (c[1], c[2], ..., c[k]) where
 			//
-			//  c[i] = a[i] s0 + r[][] s[] (mod n)
+			//  c[i] = s0 a[i] + r[][] s[] (mod n)
 			
 			Number[] c = new Number[a.length];
 			
@@ -59010,23 +59130,23 @@ class PublicKey
 			//  unpermutating the solved m[] values because the lower values of
 			//  m[] are discarded; permutating the higher values of c[] might re-
 			//  quire permutating the rows or columns of the public matrix r[][],
-			//  but then for each public key r[][] would have to use a sequence
-			//  of random numbers instead of the digits of pi or else there would
-			//  be no point to permutating the rows, and that would increase the
-			//  size of the public key.
+			//  but then for each static public key, r[][] would have to use a se-
+			//  quence of random numbers instead of the digits of pi or else there
+			//  would be no point to permutating the rows, and that would expand
+			//  the size of the static public key.
 			
 			
-			System.out.println();
-			
-			Number key = x[3];
-			
+			//  System.out.println();
+			//
 			//  for (Number c1 : c) System.out
 			//    .print(c1.mod(256).toString(16));
 			
+			Number key = x[3];
+			
 			permutateLower(c, key, offset);
 			
-			System.out.println();
-			
+			//  System.out.println();
+			//
 			//  for (Number c1 : c) System.out
 			//    .print(c1.mod(256).toString(16));
 			
@@ -59061,10 +59181,10 @@ class PublicKey
 			
 			
 			//  The Merkle-Hellman / knapsack ciphers could include
-			//  small random errors added to the static public key.
+			//  small random errors added to the static public key
 			
 			
-			//  Create a list of small random errors 0 to k/2 -1
+			//  Create a list of small random errors
 			
 			Number[] rand = new Number[k];
 			
@@ -59096,7 +59216,7 @@ class PublicKey
 			//  public key hash doesn't change every time the public
 			//  key is generated
 			
-			Number key = x[2] .add(t);
+			Number key = x[2];
 			
 			permutate(rand, key);
 			
@@ -59191,32 +59311,41 @@ class PublicKey
 			//  If the Merkle-Hellman ciphers includes small
 			//  random errors added to the static public key
 			
-			//  Set the second-to-last m element to 1
-			//  if small random errors are included in
-			//  the static public key; this will make
-			//  the decryption 16^2 or 256 times faster
+			//  Set the second-to-last m[i] element to 1 if small
+			//  random errors are included in the static public
+			//  key; this will make the decryption 256 times faster
 			//
 			//  m[m.length - 2] = new Number(1);
 			
 			
-			//  Set a number of non-consecutive repeating digits
-			//  so the decryption method know which solution is
-			//  the correct (if small random errors are added to
-			//  the static public key)
+			//  Set a number of non-consecutive repeating digits so the
+			//  decryption method knows which solution is the correct
+			//  key (if small random errors are added to the static
+			//  public key)
+			//
+			//  Create an array of k - offset elements; set a consecu-
+			//  tive number of repeating elements equal to 1 and permu-
+			//  tate the elements so that the 1's and 0's are random;
+			//  then for each array[i] that equals 1 set the correspond-
+			//  ing m[i] element equal to 1.
 			
-			final int rep = 28;
+			final int rep = 28, digit = 1;
 			
-			//  Set the repeating number of digits to 1
-			//  First create an array of k elements;
-			//  set a consecutive number of elements equal
-			//  to 1 and then permute the elements so that
-			//  the 1's and 0's are random; then for each
-			//  array[i] that equals 1 set the correspond-
-			//  ing m[i] element equal to 1. 
+			Number[] ones_zeros = new Number[m.length - offset];
 			
-			//  ...
+			for (int i = rep; i < ones_zeros.length; i++)
 			
-			//  ...
+			    ones_zeros[i] = new Number((i < rep) ? digit : 0);
+			
+			Number key = x[1];
+			
+			permutate(ones_zeros, key);
+			
+			for (int i = offset; i < m.length; i++)
+			
+			    if (ones_zeros[i].equals(digit))
+			
+				m[i] = new Number(digit);
 			
 			
 			********************************/
@@ -59551,7 +59680,7 @@ class PublicKey
 			
 			//  Convert the modulus to string
 			
-			this.publickey = n .toString(digits, 16);
+			this.publickey = n.toString(digits, 16);
 		}
 		
 		
@@ -59666,8 +59795,8 @@ class PublicKey
 		//  then 1/2 or 0.1 ^ k will have k-1 zeros in front of it. For example,
 		//  if k = 256 to make the size of c equal to 128 K bits, then 0.1 ^ k
 		//  == 0.1 ^ 256 which would make the power or product 256 bits smaller.
-		//  If the first three bits are set, then m ^ k can only be up to 64
-		//  bits smaller than the 128 K bit modulus.
+		//  If the first log2(256) == 8 bits are set, then m ^ k can only be up
+		//  to one bit smaller than the 128 K bit modulus.
 		
 		m512.setBit(pbits-1); m512.  setBit(pbits-2);
 		m512.setBit(pbits-3); m512.clearBit(pbits-4);
@@ -59715,9 +59844,12 @@ class PublicKey
 	//  composite static public key and a matching composite one-time public key.
 	//
 	//  To generate a matching composite one-time public key, use the generate
-	//  MatchingPublicKey(byte[] privatekey, String[] statickey) method.
-	//
-	//  These two static methods are used by the SSLServerSocket class
+	//  MatchingPublicKeys(byte[] privatekey, String[] statickey) method.
+	
+	
+	
+	
+	//  These two public static methods are used by the SSLServerSocket class
 	
 	
 	public static Number generateSecretKey(String receivedkey, PublicKey[] y, int type)
@@ -59768,7 +59900,9 @@ class PublicKey
 		
 		    if (y[i].toString().length() != z[i].length())
 		
-			throw new IllegalArgumentException();
+			if (!y[i].toString().isEmpty())
+		
+			    throw new IllegalArgumentException();
 		
 		
 		//  Compute the one-time composite secret key
@@ -59831,8 +59965,23 @@ class PublicKey
 	
 	
 	
-	//  These are private methods for generating the
-	//  secret key from a static or one-time public key
+	
+	
+	
+	//  These are private methods for generating the secret key agreement from the
+	//  user's private key or member variables x[] and the sender's or recipient's
+	//  static or one-time public key.
+	//
+	//  The parameter z is either the recipient's static public key (for sending or
+	//  encrypting) or the sender's one-time public key (for receiving or decrypting).
+	
+	
+	
+	//  This is the private, non-static or instance method for generating the secret
+	//  key agreement from the user's static or one-time public key. If the user's
+	//  key is a static public key, then the argument key z is the sender's one-time
+	//  public key, and if the user's key is a one-time public key, then z is the
+	//  recipient's static public key.
 	
 	
 	private Number generateSecretKey(String z, int type)
@@ -60586,7 +60735,7 @@ class PublicKey
 			
 			//  Define the private coefficients
 			
-			String xstr = new String();
+			String xstr = "";
 			
 			for (int i = 0; i < x.length; i++)
 			
@@ -60765,7 +60914,7 @@ class PublicKey
 			int length = z.trim().length(), digits = length;
 			
 			
-			//  Read the hex / base-16 digits and convert to base-2 string
+			//  Read the base-16 digits and convert to base-2
 			
 			String z0 = new Number(z.trim(), radix)
 			
@@ -60855,18 +61004,14 @@ class PublicKey
 			//  { E1, E2 } = { Z1 ^ x1, Z2 ^ x2 } ,  E = E1 E2
 			
 			
-			//  Read the hex / base-16 digits
+			int p = 23, q = p-1, t = q, bits = 5, radix = 16;
 			
 			int digits = z.trim().length();
-			
-			String z0 = new Number(z.trim(), 16) .toString(16);
-			
-			int p = 23, q = p-1, t = q, bits = 5, radix = 16;
 			
 			
 			//  Convert the string to number
 			
-			Number number = new Number(z0, 16);
+			Number number = new Number(z.trim(), 16);
 			
 			
 			//  Unpack the 5-bit coefficients using subtracts and shifts
@@ -61039,6 +61184,7 @@ class PublicKey
 			int rows = 3, cols = rows, radix = 16;
 			
 			int s = z.trim().length() / rows / cols;
+			
 			
 			//  Initialize the matrix A
 			
@@ -61389,13 +61535,13 @@ class PublicKey
 				//
 				//  b1 = r[][] (m[] + e[]) to solve for m[];
 				//                            T
-				//  since b0 = (a[] s0 + r[][] s[] mod n) (m[] + e[])
+				//  since b0 = (s0 a[] + r[][] s[] mod n) (m[] + e[])
 				//
-				//  multiply b0 by 1 / s0 to get
+				//  multiply b0 by s0 ^-1 (mod n) to get
 				//
-				//  b' = a[] m[] + (r[][] (m[] + e[])) s[] / s0 (mod n);
+				//  b' = a[] m[] + (r[][] (m[] + e[])) s[] s0^-1 (mod n);
 				//
-				//  compute and subtract (r[][] (m[] + e[])) s[] / s0 (mod n)
+				//  compute and subtract (r[][] (m[] + e[])) s[] s0^-1 (mod n)
 				//
 				//  to obtain the superincreasing sum b2 = a[] m[]
 				//
@@ -61579,6 +61725,8 @@ class PublicKey
 				//  sand iterations but it never finds the correct key.
 				
 				
+				final int rep = 28;
+				
 				for (int i = 0; i < 2*1024; i++)
 				{
 					//  Compute the secret subset sum
@@ -61623,7 +61771,8 @@ class PublicKey
 						
 						bool = false;
 						
-						final int rep = 28;
+						//  Sort and collate to count the
+						//  number of repeating elements
 						
 						int[][] array2 = Math.sortAndCollate(mint);
 						
@@ -61781,14 +61930,19 @@ class PublicKey
 		}
 		
 		
-		else
-		{	System.out.println("z.length() == "
-			
-			    + z.trim().length());
-			
-			return null;
-		}
+		
+		//  Since z is either the recipient's static public key
+		//  (for encryption) or the sender's one-time public key
+		//  (for decryption), z could contain unknown ciphers or
+		//  key sizes if z is the recipient's static public key.
+		//
+		//  if z.length() is unknown return the number zero to
+		//  be xor-ed with the composite secret key
+		
+		else return new Number(0);
 	}
+	
+	
 	
 	
 	
@@ -61923,72 +62077,73 @@ class PublicKey
 	
 	
 	
-	private static void permutateLower(Number[] array, Number key, int n)
+	private static void permutateLower(Number[] a, Number key, int n)
 	{
 		//  permutates the numbers from 0 to n
 		
-		if ((array.length % 2) != 0) throw
+		if ((a.length % 2) != 0) throw
 		
 		    new IllegalArgumentException();
 		
-		final int size = array.length;
+		final int size = a.length;
 		
-		Number[] A1_ = new Number[n];
-		Number[] A2_ = new Number[size - n];
+		//  Copy the lower and upper elements
 		
-		for (int i = 0; i < A1_.length; i++) A1_[i] = array[0 + i];
-		for (int i = 0; i < A2_.length; i++) A2_[i] = array[n + i];
+		Number[] a1_ = new Number[n];
+		Number[] a2_ = new Number[size - n];
+		
+		for (int i = 0; i < a1_.length; i++) a1_[i] = a[0 + i];
+		for (int i = 0; i < a2_.length; i++) a2_[i] = a[n + i];
 		
 		
-		Number[] A;
+		Number[] a0;
 		
 		
-		A = A1_;
+		a0 = a1_;
 		
-		{
-			Number[] A1 = new Number[A.length];
+		{	Number[] a1 = new Number[a0.length];
 			
-			for (int i = 0; i < A1.length; i++)
+			for (int i = 0; i < a1.length; i++)
 			
-			    A1[i] = A[i];
+			    a1[i] = a0[i];
 			
-			permutate(A1, key);
+			permutate(a1, key);
 			
 			
-			A = new Number[A.length];
+			a0 = new Number[a0.length];
 			
-			for (int i = 0; i < A1.length; i++)
+			for (int i = 0; i < a1.length; i++)
 			
-			    A[i] = A1[i];
+			    a0[i] = a1[i];
 			
 			
 			//  Re-assign the elements of the array
 			
-			for (int i = 0; i < A.length; i++)
+			for (int i = 0; i < a0.length; i++)
 			
-			    array[i] = A[i];
+			    a[i] = a0[i];
 		}
 	}
 	
 	
 	
-	private static void permutate(Number[] A, Number key)
+	private static void permutate(Number[] a, Number key)
 	{
-		int elements = A.length;
+		int elements = a.length;
 		
 		int[] indexes = permutate(elements, key);
 		
-		for (int i = 0; i < A.length; i++)
+		for (int i = 0; i < a.length; i++)
 		{
 			int j = indexes[i];
 			
 			//  Swap elements i and j
 			
-			Number temp = A[i];
+			Number temp = a[i];
 			
-			A[i] = A[j];
+			a[i] = a[j];
 			
-			A[j] = temp;
+			a[j] = temp;
 		}
 	}
 	
@@ -65882,10 +66037,16 @@ class Cipher
 		//  A faster hash for creating a one-time pad for encryption
 		//
 		//  This makes directory or file encryption 10 times faster
+		//
+		//  The class has only one constructor and one public method. The BigHash(byte[] key)
+		//  constructor sets the private key and then the hash(int bytes) method generates a
+		//  number of random bytes. A hash is created by using byte[] hash = new BigHash(key)
+		//  .hash(numberofbytes) and then a message can be encrypted and decryped by xor-ing
+		//  the plaintext and hash arrays.
 		
 		
-		//  This class uses a circular array of matrices and non-linear arithmetic to generate
-		//  an arbitrary-length sequence of random bytes for encrypting files or messages.
+		//  The BigHash class uses a circular array of matrices and non-linear arithmetic to
+		//  generate a one-time pad or sequence of random bytes for encrypting files or messages.
 		//
 		//  The method uses multiplications and additions but it computes the hash in O(1) steps
 		//  or operations instead of O(log2(n)) operations for exponentiation. The hash function
@@ -65893,10 +66054,7 @@ class Cipher
 		//  addition to generate an explosion of polynomial terms where the coefficients and
 		//  variables are all unknown and it uses different variables for each iteration.
 		//
-		//  The hash constructor initializes the first matrix using the hash of the secret / file
-		//  key and initializes the next matrices by hashing the previous matrices using a regular
-		//  hash function.
-		//
+		//  The hash constructor initializes the matrices using the hash of the private key.
 		//  The hash(int bytes) method computes each hash byte by multiplying the two preceding
 		//  matrices in the array at the current index modulo 2 ^ 32 mod 2 ^ 16 + 1, storing the
 		//  sum of the four elements in a hash array, and then adding the product matrix to the
@@ -65916,6 +66074,16 @@ class Cipher
 		//  matrix hash because commenting the code and returning new byte[bytes] only makes the
 		//  hash method ~ 1/2 faster. An array hash would use a function or sum of the three vari-
 		//  ables so that there would be 2 ^ 512 inverses for each hash value.
+		//
+		//  Because the BigHash class has a large secret array of matrices and each hash is com-
+		//  puted as the sum of the four elements of the matrix at the current array index, the
+		//  hash or encryption can never be broken because there is nothing for a cryptanalyst
+		//  to cryptanalyze. The elements of the matrices are not public, and even the value of
+		//  the hash or the sum of the elements is not public because the hash is added to the
+		//  plaintext to generate the ciphertext. Unlike an encryption cipher which maps each
+		//  block of plaintext p[i] to ciphertext c[i] = E(p[i]), a hash cipher has no one-to-one
+		//  mapping because the ciphertext c[i] = p[i] + H[i] is the sum to two unknown variables
+		//  p[i] and H[i].
 		
 		
 		
@@ -75239,14 +75407,14 @@ class Number implements Comparable<Number>
 	//
 	//   (S. Ramanujan)
 	//            __
-	//    1       \   (2n C n)^3  (42 n + 5)    (2 n)!^3  (42 n + 5)
-	//    --  ==  /_  ---------------------- == -----------------------
-	//    pi      n=0     2 ^(12 n + 4)         (1 n)!^6  2 ^(12 n + 4)
+	//    1       \   (2n C n)^3  (42 n + 5)      (2 n)!^3  (42 n + 5)
+	//    --  ==  /_  ---------------------- == ------------------------
+	//    pi      n=0     2 ^ (12 n + 4)        (1 n)!^6  2 ^ (12 n + 4)
 	//
 	//              _    __
 	//    1       \/8    \    (4 n)! (1103 + 26390 n)
 	//    --  ==  ----   /_   -----------------------
-	//    pi      9801   n=0  (1 n)!^4   396 ^(4 n)
+	//    pi      9801   n=0  (1 n)!^4   396 ^ (4 n)
 	//
 	//   (Each term of the series adds about 8 digits)
 	//
@@ -75257,7 +75425,7 @@ class Number implements Comparable<Number>
 	//   ----  ==  /_   -----------------------------
 	//   12 pi     n=0  (1 n)!^3 (3 n)! C ^ (n + 1/2)
 	//
-	//   A = 13591409,  B = 545140134,  C = 640320 ^3
+	//   A = 13591409,  B = 545140134,  C = 640320 ^ 3
 	//
 	//   (Each term of the series adds about 15 digits)
 	//
@@ -77354,16 +77522,16 @@ class Number implements Comparable<Number>
 		//
 		//  Multiply by 10^1 and subtract the integer value for each iteration
 		//
-		//  3.243f6a88     == 3.243f6a88; - 3    digit == 3
-		//  0.243f6a88 * a == 1.6A7A2955; - 1    digit == 1
-		//  0.6A7A2955 * a == 4.28C59D20; - 4    digit == 4
-		//  0.28C59D20 * a == 1.97B82340; - 1    digit == 1
-		//  0.97B82340 * a == 5.ED316080; - 5    digit == 5
-		//  0.ED316080 * a == 9.43EDC500; - 9    digit == 9
-		//  0.43EDC500 * a == 2.A749B200; - 2    digit == 2
-		//  0.A749B200 * a == 6.88E0F400; - 6    digit == 6
-		//  0.88E0F400 * a == 5.58C98800; - 5    digit == 5
-		//  0.58C98800 * a == 3.77DF5000; - 3    digit == 3
+		//  3.243f6a88     == 3.243f6a88;  digit == 3
+		//  0.243f6a88 * a == 1.6A7A2955;  digit == 1
+		//  0.6A7A2955 * a == 4.28C59D20;  digit == 4
+		//  0.28C59D20 * a == 1.97B82340;  digit == 1
+		//  0.97B82340 * a == 5.ED316080;  digit == 5
+		//  0.ED316080 * a == 9.43EDC500;  digit == 9
+		//  0.43EDC500 * a == 2.A749B200;  digit == 2
+		//  0.A749B200 * a == 6.88E0F400;  digit == 6
+		//  0.88E0F400 * a == 5.58C98800;  digit == 5
+		//  0.58C98800 * a == 3.77DF5000;  digit == 3
 		
 		
 		if (this.isComplex())
@@ -77708,9 +77876,10 @@ class Number implements Comparable<Number>
 		
 		//  Pad the left side of the integer to the minimum number of digits
 		
-		//  If the radix == 16, the number will be padded with zeros because
-		//  base 16 is read by computers and is used for cryptography. If the
-		//  radix is not a power of 2, the number will be padded with spaces.
+		//  If the radix == 16 or a power of 2, the number will be padded with
+		//  zeros because base 16 is read by computers and is used for cryptog-
+		//  raphy. If the radix is not a power of 2, the number will be padded
+		//  with spaces.
 		
 		int length = str.length();
 		
@@ -77722,7 +77891,9 @@ class Number implements Comparable<Number>
 			
 			while (digits - index++ > length)
 			
-			    sb.append("0");
+			    sb.append(((radix == 16) || Math
+			
+				.isPowerOf2(radix)) ? "0" : " ");
 			
 			sb.append(str);
 			
@@ -84795,7 +84966,7 @@ class SSLSocket extends Socket
 	
 	private byte[] privatekey;
 	
-	private PublicKey[] publickey;
+	private PublicKey[] publickeys;
 	
 	private Number keyagreement;
 	
@@ -84945,16 +85116,16 @@ class SSLSocket extends Socket
 		//  Generate the server public key using the max number of ciphers
 		//  (The client will choose a subset of ciphers from this key)
 		
-		if (this.publickey == null)
+		if (this.publickeys == null)
 		
-		    this.publickey = PublicKey.generatePublicKey(
+		    this.publickeys = PublicKey.generatePublicKey(
 		
 			privatekey, maxnumberofciphers);
 		
 		
 		//  Concatenate the static public keys
 		
-		String str = PublicKey.joinKeys(publickey);
+		String str = PublicKey.joinKeys(publickeys);
 		
 		
 		//  Send the static public server key to the client
@@ -84975,7 +85146,7 @@ class SSLSocket extends Socket
 		
 		String[] splitkeys = PublicKey.splitKeys(receivedkey);
 		
-		Object[] objarray = intersection(splitkeys, publickey);
+		Object[] objarray = intersection(splitkeys, publickeys);
 		
 		String[] clientkeysubset = (String[]) objarray[0];
 		
@@ -85027,13 +85198,13 @@ class SSLSocket extends Socket
 		
 		    subsetkey[i] = splitkeys[i];
 		
-		publickey = PublicKey.generateMatchingPublicKey(
+		publickeys = PublicKey.generateMatchingPublicKeys(
 		
 		    privatekey, subsetkey);
 		
 		//  Concatenate the one-time public keys
 		
-		String str = PublicKey.joinKeys(publickey);
+		String str = PublicKey.joinKeys(publickeys);
 		
 		
 		//  Send the one-time client key to the server
@@ -85045,7 +85216,7 @@ class SSLSocket extends Socket
 		
 		this.keyagreement = PublicKey.generateSecretKey(
 		
-		    subsetkey, publickey, PublicKey.send_encrypt);
+		    subsetkey, publickeys, PublicKey.send_encrypt);
 		
 		//  System.out.println("key agreement == "
 		//
