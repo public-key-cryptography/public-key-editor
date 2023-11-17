@@ -129,7 +129,7 @@
 	
 	Note that the new version of the software will not decrypt email messages encrypted by previous ver-
 	sions of the software because a few errors were corrected in the public key class but messages saved
-	users' computers will still be decryptable because file encryption uses private key cryptography.
+	on users' computers will still be decryptable because file encryption uses private key cryptography.
 	
 	
 	
@@ -9405,7 +9405,7 @@ class Programs
 				signkeyfield.setCaretColor(foreground);
 				signkeyfield.setBackground(background);
 				
-				final JScrollPane scrollpane1 =
+				JScrollPane scrollpane1 =
 				
 				  new JScrollPane(passphrasearea,
 				
@@ -10086,11 +10086,11 @@ class Programs
 			private String encrypt(Component parent, String message)
 			{
 			
-				final JList<String> list;
+				JList<String> list;
 				
-				final DefaultListModel<String> emailmodel;
+				DefaultListModel<String> emailmodel;
 				
-				//  final DefaultListModel<String> publickeymodel;
+				//  DefaultListModel<String> publickeymodel;
 				
 				int visiblerowcount = 6;
 				
@@ -15036,7 +15036,7 @@ class Programs
 			
 			private JTable table;
 			
-			private final int stacksize = 128;
+			private int stacksize = 128;
 			
 			private int indexer = 0;
 			
@@ -16661,7 +16661,7 @@ class Programs
 			private int fontstyle;
 			
 			
-			private final int k = 16;
+			private int k = 16;
 			
 			//  1/16 magnification per click
 			
@@ -21008,7 +21008,7 @@ class Programs
 			private int fontstyle;
 			
 			
-			private final int k = 16;
+			private int k = 16;
 			
 			//  1/16 magnification per click
 			
@@ -21469,7 +21469,7 @@ class Programs
 		
 		    defaultfontstyle, defaultfontsize);
 		
-		final private Font defaultfont = font;
+		private Font defaultfont = font;
 		
 		
 		//  Define the message states 0 to 9
@@ -22579,14 +22579,14 @@ class Programs
 					else clicked = true;
 					
 					
-					final String   tostring =   tofield.getText().trim();
-					final String fromstring = fromfield.getText().trim();
-					final String subjstring = subjfield.getText(); // no trim
+					String   tostring =   tofield.getText().trim();
+					String fromstring = fromfield.getText().trim();
+					String subjstring = subjfield.getText(); // no trim
 					
 					
 					String sendtext = null;
 					
-					final boolean encrypt;
+					boolean encrypt;
 					
 					boolean sent1 = false;
 					boolean sent2 = false;
@@ -22596,11 +22596,11 @@ class Programs
 					
 					//  number of encryption ciphers
 					
-					final int encryptciphers;
+					int encryptciphers;
 					
 					//  no of reply key ciphers
 					
-					final int[] numberofciphers1 =
+					int[] numberofciphers1 =
 					
 					    new int[] { numberofciphers };
 					
@@ -23346,7 +23346,7 @@ class Programs
 							JDialog dialog = pane.createDialog(frame, title);
 							
 							
-							final int[] choice = new int[] { -1 };
+							int[] choice = new int[] { -1 };
 							
 							yes_button.addActionListener( new ActionListener()
 							{ public void actionPerformed(ActionEvent e)
@@ -23677,7 +23677,7 @@ class Programs
 							
 							JDialog dialog = pane.createDialog(frame, title);
 							
-							final int[] choice = new int[] { -1 };
+							int[] choice = new int[] { -1 };
 							
 							yes_button.addActionListener( new ActionListener()
 							{ public void actionPerformed(ActionEvent e)
@@ -23947,10 +23947,6 @@ class Programs
 								
 								sendtext1 = PublicKey.encrypt(text1, testpublickey);
 								sendtext2 = PublicKey.encrypt(text1,   mypublickey);
-								
-								if (recipientskey != null) System.out.println(
-								
-								    "recipient's key == \n\n" + recipientskey);
 							}
 							
 							else if (!testmail)
@@ -24082,7 +24078,7 @@ class Programs
 							
 							JDialog dialog = pane.createDialog(frame, title);
 							
-							final int[] choice1 = new int[] { -1 };
+							int[] choice1 = new int[] { -1 };
 							
 							yes_button.addActionListener( new ActionListener()
 							{ public void actionPerformed(ActionEvent e)
@@ -27415,7 +27411,7 @@ class Programs
 					//  Create the list pane (list screen)
 					//  and the text area (message screen)
 					
-					final int t = 0;
+					int t = 0;
 					
 					listpanel = new ListPanel(t);
 					listpanel.setFont1(font);
@@ -28399,7 +28395,7 @@ class Programs
 					addressarea.setText(__.usemyaddresstogeneratereplykey);
 					addressarea.setFont(labelfont);
 					
-					final int defaultkeysize = Math.min(4, PublicKey.numberofciphers);
+					int defaultkeysize = Math.min(4, PublicKey.numberofciphers);
 					
 					JLabel replylabel1 = new JLabel(__.replykeysize);
 					JLabel replylabel2 = new JLabel(String.valueOf(
@@ -28407,7 +28403,7 @@ class Programs
 					    emailpanel.numberofciphers >= 0 ?
 					    emailpanel.numberofciphers : defaultkeysize));
 					
-					final int[] numberofciphers1 = new int[]
+					int[] numberofciphers1 = new int[]
 					
 					    { emailpanel.numberofciphers };
 					
@@ -29127,7 +29123,7 @@ class Programs
 					
 					JDialog dialog = pane.createDialog(frame, title);
 					
-					final int[] choice = new int[] { -1 };
+					int[] choice = new int[] { -1 };
 					
 					copy_button.addActionListener( new ActionListener()
 					{ public void actionPerformed(ActionEvent e)
@@ -30230,10 +30226,10 @@ class Programs
 						return;
 					}
 					
-					final JList<String> list;
-					final JScrollPane scrollpane;
-					final DefaultListModel<String> emailmodel;
-					//  final DefaultListModel<String> publickeymodel;
+					JList<String> list;
+					JScrollPane scrollpane;
+					DefaultListModel<String> emailmodel;
+					//  DefaultListModel<String> publickeymodel;
 					
 					emailmodel = new DefaultListModel<String>();
 					
@@ -31385,7 +31381,7 @@ class Programs
 						int replywidth = __.reply.length() + 3;
 						
 						
-						final String text = emailpanel.textarea.getText();
+						String text = emailpanel.textarea.getText();
 						
 						int viewwidth = __.viewattachedfile.length() + 3;
 						int savewidth = __.saveattachedfile.length() + 3;
@@ -33324,12 +33320,13 @@ class Programs
 				
 				//  If the message was undecryptable and doesn't
 				//  contain any newlines, partition the string so
-				//  the text doesn't become garbled by the text-
+				//  the text doesn't become garbled by the text
 				//  area if the font size is large
 				
 				if (message == null) return;
 				
 				if ((message.length() > minsize)
+				
 				 && !message.trim().contains("\n"))
 				
 				    message = Convert.partition(
@@ -33418,36 +33415,42 @@ class Programs
 				}
 				
 				
-				if (numberofciphers == 0)
-				{
-					//  Determine whether the message was un-
-					//  decryptable or was sent in the clear
-					
-					String message1 = message.trim().replaceAll("\n", "");
-					
-					if (Number.isBase64(message1))
-					
-					    message1 = Convert.base64ToString(message1);
-					
-					//  (the message might not be decryptable if the
-					//  ciphertext is defective or the wrong passphrase
-					//  was used by the sender or recipient)
-					
-					//  This message is undecryptable (wrong passphrase
-					//  was used to encrypt or ciphertext is defective)
-					
-					if (PublicKey.isEncrypted(message)
-					 || PublicKey.isEncrypted(message1))
-					
-					    sb.append("\n" + __.thismessageisundecryptable + "\n");
-					
-					else // this message was sent unencrypted
-					
-					    sb.append("\n" + __.thismessagewassentunencrypted + "\n");
-				}
+				
+				//  Determine whether the message was undecryptable
+				//  or was sent in the clear
+				//
+				//  If the message is undecryptable, display the cipher-
+				//  data instead of the base-64 encoded ciphertext so the
+				//  user sees the cipherdata; otherwise it looks like the
+				//  base-64 encoding wasn't removed and some users might
+				//  copy the text and try to decode it using a text editor
+				//  to see if there is an email message.
+				
+				String message1 = message.trim().replaceAll("\n", "");
+				
+				if (Number.isBase64(message1))
+				
+				    message = Convert.base64ToString(message1);
+				
+				//  (the message might not be decryptable if the
+				//  ciphertext is defective or the wrong passphrase
+				//  was used by the sender or recipient)
+				
+				//  This message is undecryptable (wrong passphrase
+				//  was used to encrypt or ciphertext is defective)
+				
+				if (PublicKey.isEncrypted(message)
+				 || PublicKey.isEncrypted(message1))
+				
+				    sb.append("\n" + __.thismessageisundecryptable + "\n");
 				
 				
-				else // if (numberofciphers > 0)
+				if (numberofciphers == 0) // this message was sent unencrypted
+				
+				    sb.append("\n" + __.thismessagewassentunencrypted + "\n");
+				
+				
+				if (numberofciphers > 0)
 				{
 					//  Read the message header to see if it includes a plaintext subject
 					
@@ -33499,7 +33502,7 @@ class Programs
 				//  If the message is a partitioned encoded string,
 				//  then remove the partitions and decode the string
 				
-				String message1 = message.trim().replaceAll("\n", "");
+				message1 = message.trim().replaceAll("\n", "");
 				
 				if (Number.isBase64(message1))
 				
@@ -34599,6 +34602,7 @@ class Programs
 				private String[] messages;
 				private String[][] filedescs;
 				private byte[][][] filedatas;
+				
 				private int[] numberoffiles;
 				private int[][] viewpos;
 				private int[][] savepos;
@@ -34815,7 +34819,7 @@ class Programs
 					
 					filenames = dir.list();
 					
-					final int t = filenames.length;
+					int t = filenames.length;
 					
 					if (t == 0) return;
 					
@@ -35060,6 +35064,7 @@ class Programs
 				}
 				
 				
+				
 				public boolean isDecryptable(String SP)
 				{
 					//  Each time the user enters a passphrase, the passphrase
@@ -35084,7 +35089,7 @@ class Programs
 					
 					String[] filenames = dir.list();
 					
-					final int t = filenames.length;
+					int t = filenames.length;
 					
 					if (t == 0) return true;
 					
@@ -35139,7 +35144,7 @@ class Programs
 					
 					String[] filenames = dir.list();
 					
-					final int t = filenames.length;
+					int t = filenames.length;
 					
 					if (t == 0) return;
 					
@@ -35315,9 +35320,9 @@ class Programs
 				
 				private JPanel createPanel(int t)
 				{
-					final int rows = 16, cols = 52;
+					int rows = 16, cols = 52;
 					
-					final int l_inset, r_inset;
+					int l_inset, r_inset;
 					
 					l_inset = r_inset = 100;
 					
@@ -35528,7 +35533,7 @@ class Programs
 						//  reappear when the search string is deleted.
 						
 						
-						final int y_size = 20;
+						int y_size = 20;
 						
 						Gbc gbc = new Gbc();
 						
@@ -35886,7 +35891,7 @@ class Programs
 					
 					    numbervisible++;
 					
-					final boolean check_uncheck =
+					boolean check_uncheck =
 					
 					    (numbervisible / (numberofvisiblechecks + 1)) > 2;
 					
@@ -36130,9 +36135,9 @@ class Programs
 						}
 						
 						
-						final int fromlen = 24, subjlen = 44, textlen = 48;
+						int fromlen = 24, subjlen = 44, textlen = 48;
 						
-						final boolean[] newpopmail = new boolean[1];
+						boolean[] newpopmail = new boolean[1];
 						
 						if (reading) return;
 						
@@ -36402,7 +36407,7 @@ class Programs
 									//  The number of messages on the server may
 									//  be less than the messages per screen
 									
-									final int t = Math.min(numberofmessages,
+									int t = Math.min(numberofmessages,
 									
 									    emailpanel.messagesperscreen);
 									
@@ -36477,6 +36482,7 @@ class Programs
 										//  isEncrypted(str) method will return false.
 										
 										if (!PublicKey.isEncrypted(top))
+										
 										if (Number.isBase16(top.replaceAll("[ \t\n]", "")))
 										{
 											//  Re-read the header using more lines
@@ -39523,9 +39529,9 @@ class Programs
 			//
 			//  >= 256 chars / 1 K bits
 			
-			final int largesize = (4+1)*1024;
+			int largesize = (4+1)*1024;
 			
-			final int n = PublicKey.numberofciphers;
+			int n = PublicKey.numberofciphers;
 			
 			int numberoflargekeys = 0;
 			
@@ -39533,7 +39539,7 @@ class Programs
 			
 			    if (size1 > largesize) numberoflargekeys++;
 			
-			final int n1 = numberoflargekeys;
+			int n1 = numberoflargekeys;
 			
 			
 			if (n > 1) singlebutton.setVisible(false);
@@ -39739,7 +39745,7 @@ class Undo
 	
 	private JTextArea textarea;
 	
-	private final int stacksize = 128;
+	private int stacksize = 128;
 	
 	private int indexer = 0;
 	
@@ -40378,8 +40384,8 @@ class FileChooser extends JFileChooser
 	
 	public FileChooser() { super(); }
 	
-	private final float minsize =  8;
-	private final float maxsize = 21;
+	private float minsize =  8;
+	private float maxsize = 21;
 	
 	public FileChooser(String directory)
 	{
@@ -41475,7 +41481,7 @@ class EncryptDirectory
 		
 		//  Create multiple threads
 		
-		final int t = Runtime.getRuntime()
+		int t = Runtime.getRuntime()
 		
 		    .availableProcessors();
 		
@@ -41623,7 +41629,7 @@ class EncryptDirectory
 		
 		//  Create multiple threads
 		
-		final int t = Runtime.getRuntime()
+		int t = Runtime.getRuntime()
 		
 		    .availableProcessors();
 		
@@ -43643,7 +43649,7 @@ class PopMail
 	
 		numberofmessages = 20;
 		
-		final int linewidth = 78; // the partition size
+		int linewidth = 78; // the partition size
 		
 		testmaillist = new String[numberofmessages];
 		
@@ -43657,6 +43663,8 @@ class PopMail
 		 testpublickey = PublicKey.generatePublicKey( testpassphrase, "", numberofciphers);
 		replypublickey = PublicKey.generatePublicKey(replypassphrase, "", numberofciphers);
 		wrongpublickey = PublicKey.generatePublicKey(wrongpassphrase, "", numberofciphers);
+		
+		System.out.println("number of ciphers == " + numberofciphers);
 		
 		
 		//  Create the imaginary senders' one-time test public keys for faster encryption
@@ -48633,7 +48641,7 @@ class Icons
 			if (m > 0) width = (int) (width * (1 + m1*0.0125f*+m) + 1);
 			if (m < 0) width = (int) (width / (1 + m1*0.0125f*-m) + 1);
 			
-			final int maxsize = Math.min(d.width, d.height);
+			int maxsize = Math.min(d.width, d.height);
 			
 			if (width > maxsize) width = maxsize;
 			
@@ -49042,10 +49050,6 @@ class FileChannel1
 	private FileChannel fc;
 	
 	private String filepath;
-	
-	public static OpenOption   readoption = StandardOpenOption.READ;
-	public static OpenOption  writeoption = StandardOpenOption.WRITE;
-	public static OpenOption appendoption = StandardOpenOption.APPEND;
 	
 	public FileChannel1(String filepath, OpenOption openoption) throws IOException
 	{
@@ -49504,7 +49508,7 @@ class Keyboard
 		panel.setLayout(new GridBagLayout());
 		
 		
-		final JButton
+		JButton
 		
 		accentbutton = new JButton(),  onebutton   = new JButton(),
 		twobutton    = new JButton(),  threebutton = new JButton(),
@@ -49594,7 +49598,7 @@ class Keyboard
 		};
 		
 		
-		final char[][] charray = new char[][]
+		char[][] charray = new char[][]
 		{
 			{ '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
 			KeyEvent.VK_BACK_SPACE, },
@@ -49612,7 +49616,7 @@ class Keyboard
 		};
 		
 		
-		final char[][] charray2 = new char[][]
+		char[][] charray2 = new char[][]
 		{
 			{ '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
 			KeyEvent.VK_BACK_SPACE, },
@@ -50030,6 +50034,10 @@ class PublicKeyDialog
 		System.out.println("email address == " + emailaddress);
 		System.out.println("no of ciphers == " + numberofciphers);
 		
+		if (numberofciphers > PublicKey.numberofciphers)
+		    System.out.println("number of ciphers " +
+			numberofciphers + " > " + PublicKey.numberofciphers);
+		
 		//  System.out.println("line width == " + linewidth);
 		
 		keys = PublicKey.generatePublicKey(
@@ -50347,7 +50355,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			randcheckbox.setVisible(false);
 			randcheckbox.setToolTipText(__.rng);
 			
-			final JScrollPane scrollpane1 =
+			JScrollPane scrollpane1 =
 			
 			  new JScrollPane(passphrasearea,
 			
@@ -50484,9 +50492,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//  Count the number of ciphers
 			//  >= 256 chars / 1 K bits
 			
-			final int largesize = (4+1)*1024;
+			int largesize = (4+1)*1024;
 			
-			final int n = PublicKey.numberofciphers;
+			int n = PublicKey.numberofciphers;
 			
 			int numberoflargekeys = 0;
 			
@@ -50494,7 +50502,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			    if (size > largesize) numberoflargekeys++;
 			
-			final int n1 = numberoflargekeys;
+			int n1 = numberoflargekeys;
 			
 			maxcheckbox.setEnabled(n1 > 0);
 			maxcheckbox.setVisible(n1 > 0);
@@ -50569,7 +50577,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			passphrasearea.setLineWrap(true);
 			
-			final JScrollPane scrollpane1 =
+			JScrollPane scrollpane1 =
 			
 			    new JScrollPane(passphrasearea,
 			
@@ -50896,7 +50904,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			else           ascensionbox.setSelectedItem(__.descending);
 			
 			
-			final JScrollPane scrollpane1 =
+			JScrollPane scrollpane1 =
 			
 			    new JScrollPane(passphrasearea,
 			
@@ -50910,7 +50918,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			this.setLayout(new GridBagLayout());
 			
 			
-			final int fieldsize = 8;
+			int fieldsize = 8;
 			
 			int sp_rows = passphrasearea.getRows();
 			
@@ -52288,7 +52296,7 @@ class PublicKey
 	//  tors, quaternions, matrices, cubes, and tesseracts.
 	//
 	//  The matrix ciphers are based on the multivariate functions X1 A X2, X^-1 A^x X, A^-x B^x1 A^x, and
-	//  A^x1 B^x2. The vector ciphers are based on the the vector cross product problem Y = A (x) X, and the
+	//  A^x1 B^x2. The vector ciphers are based on the vector cross product problem Y = A (x) X, and the
 	//  quaternion and polynomial discrete log problem are based on the function X^-1 A^x X. (Matrix and
 	//  linear algebra books use different letters for these functions such as P^-1 D P and C = A (x) B or
 	//  W = U (x) V instead of X^-1 A X and Y = A (x) X.)
@@ -52400,18 +52408,15 @@ class PublicKey
 	//  vector c[] = s0 a[] (mod n) can be solved for the multiplier s0 and modulus n because a[] is a super-
 	//  increasing sequence. If r[][] == 0, a cryptanalyst could find the value of s0 because for one of the
 	//  elements c[0], a[0] == a^0 == 1; then the value of n can be solved from c[1] = a^1 s0 - k n which
-	//  only contains two variables k and n, and k can only be small value such as 0, 1, or 2 if a[i] = 2.
+	//  only contains two variables k and n, and k can only be a small value such as 0, 1, or 2 if a[1] = 2.
 	//  Since the elements of c[] are permutated, it would require O(n^2) tries where n is the number of ele-
-	//  ments to find the the indexes of a[0] and a[1].
+	//  ments to find the indexes of a[0] and a[1].
 	//
 	//  If matrix, cube, and tesseract ciphers could be shown to be breakable by classical or quantum comput-
 	//  ing just like elliptic curve and lattice ciphers, then the Merkle-Hellman / knapsack cipher would be
 	//  the only public key cryptosystem for encryption. The matrix ciphers were designed to be nonlinear and
 	//  non-commutative, and some of the variables were chosen to make the solutions ambiguous to resist clas-
-	//  sical and quantum computing attacks. There is no quantum algorithm for directly solving the modular
-	//  square root or factorization problem without using discrete logs because the solution is ambiguous,
-	//  but there is a classical algorithm for finding congruences of the form x^2 == y^2 (mod n) in sub-expo-
-	//  nential time.
+	//  sical and quantum computing attacks.
 	//
 	//
 	//
@@ -52870,19 +52875,23 @@ class PublicKey
 	
 	//  Rabin / factorization / co-composite root extraction cipher
 	
-	private static final int sizefact1 = 32 * 1024 - 1024; // (32 - 1) K digits ~ 128 K bits
+	private static final int sizefact1 =  32 * 1024 - 1024; // ( 32 - 1) K digits ~  128 K bits
+	private static final int sizefact2 =  64 * 1024 - 1024; // ( 64 - 1) K digits ~  256 K bits
+	private static final int sizefact4 = 128 * 1024 - 1024; // (128 - 1) K digits ~  512 K bits
 	
 	//  A 128 K bit modulus requires O(n ^ 4.58) or O(128 K ^ 4.58) ~ 1 yotta op (including a
 	//  small hidden constant for the multiplier) but the message m = sqrt c mod n decrypts in
 	//  ~ 10^8 operations or < 100 ms on a 1 GHz single-core processor.
 	//
-	//  A 128 K bit modulus requires O(n ^ 4.58) == O(128 K ^ 4.58) or ~   1 yotta op  to factor
-	//  A  64 K bit modulus requires O(n ^ 4.58) == O( 64 K ^ 4.58) or ~ 100 zetta ops to factor
-	//  A  32 K bit modulus requires O(n ^ 4.58) == O( 32 K ^ 4.58) == ~  10 zetta ops to factor
-	//  A  16 K bit modulus requires O(n ^ 4.58) == O( 16 K ^ 4.58) == ~ 200   exa ops to factor
+	//  A  512 K bit modulus requires O(n ^ 4.58) == O(256 K ^ 4.58) or ~  1000 yotta ops to factor
+	//  A  256 K bit modulus requires O(n ^ 4.58) == O(256 K ^ 4.58) or ~    20 yotta ops to factor
+	//  A  128 K bit modulus requires O(n ^ 4.58) == O(128 K ^ 4.58) or ~     1 yotta op  to factor
 	//
-	//  Users can change the size to 256 K, 512 K, or 1 M bits as long as the key size is
-	//  1 K digits smaller so that the message is encrypted.
+	//  A  64 K bit modulus requires O(n ^ 4.58) == O( 64 K ^ 4.58) or ~  100 zetta ops to factor
+	//  A  32 K bit modulus requires O(n ^ 4.58) == O( 32 K ^ 4.58) == ~   10 zetta ops to factor
+	//  A  16 K bit modulus requires O(n ^ 4.58) == O( 16 K ^ 4.58) == ~  200   exa ops to factor
+	//
+	//  The public key class will generate a factorization key for any 2^k - 1024 digits
 	
 	
 	
@@ -52895,6 +52904,15 @@ class PublicKey
 	//  sack cipher, and the vector / cross product ciphers.
 	//
 	//  Symmetric public keys or Diffie-Hellman ciphers ignore this variable
+	//
+	//  Note that only the generate secret key method requires the type of
+	//  key as an argument; the generate public key methods don't require
+	//  the type because they know from the publickey member variable what
+	//  type of key is required; if the publickey == null then the construc-
+	//  tor has to generate the recipient's static public key, and if the
+	//  publickey != null then the constructor has to generate the sender's
+	//  onetime public key. This is why there is no Integer type member var-
+	//  iable and PublicKey setType(int type) method in the PublicKey class.
 	
 	final static int receive_decrypt = 1; // receiver / static key
 	final static int    send_encrypt = 2; //  sender / one-time key
@@ -52958,7 +52976,10 @@ class PublicKey
 		//  and then the decryption thread will not display the subject lines
 		//  or the first few lines of the messages.
 		
-		//  sizefact1, //  Rabin / fact cipher
+		//  Rabin / fact ciphers
+		
+		//  sizefact1, sizefact2, sizefact4
+		
 		
 		
 		
@@ -53474,7 +53495,9 @@ class PublicKey
 		}
 		
 		
-		else if (size == sizefact1)
+		else if ((size == sizefact1)
+		      || (size == sizefact2)
+		      || (size == sizefact4))
 		{
 			this.p = null;
 			
@@ -53552,11 +53575,11 @@ class PublicKey
 		
 		if (!isValidKey(str) && !isEncrypted(str)) return 0;
 		
-		final String[] tokens = str.split(delimiter);
+		String[] tokens = str.split(delimiter);
 		
 		if (tokens.length > 64) return 0;
 		
-		final int t = tokens.length;
+		int t = tokens.length;
 		
 		int numberofciphers = 0;
 		
@@ -53803,7 +53826,7 @@ class PublicKey
 		
 		String[] publickeys = compositekey.split(delimiter);
 		
-		final int len = publickeys.length;
+		int len = publickeys.length;
 		
 		return isValidKey(publickeys);
 	}
@@ -54359,21 +54382,21 @@ class PublicKey
 		
 		int numberofciphers = onetimepublickeylist.size();
 		
-		final Number[] e = new Number[numberofciphers];
+		Number[] e = new Number[numberofciphers];
 		
 		Thread[] tarray = new Thread[numberofciphers];
 		
 		for (int i = 0; i < tarray.length; i++)
 		{
-			final int i1 = i;
+			int i1 = i;
 			
-			final int size = onetimepublickeylist.get(i).length();
+			int size = onetimepublickeylist.get(i).length();
 			
-			final int type = receive_decrypt; // recipient / decryption
+			int type = receive_decrypt; // recipient / decryption
 			
-			final String onetimepublickey = onetimepublickeylist.get(i);
+			String onetimepublickey = onetimepublickeylist.get(i);
 			
-			final byte[] SK1 = SK;
+			byte[] SK1 = SK;
 			
 			tarray[i] = new Thread(() ->
 			{
@@ -54559,19 +54582,19 @@ class PublicKey
 		
 		int numberofciphers = onetimepublickeylist.size();
 		
-		final Number[] e = new Number[numberofciphers];
+		Number[] e = new Number[numberofciphers];
 		
 		Thread[] tarray = new Thread[numberofciphers];
 		
 		for (int i = 0; i < tarray.length; i++)
 		{
-			final int i1 = i;
+			int i1 = i;
 			
-			final int size = onetimepublickeylist.get(i).length();
+			int size = onetimepublickeylist.get(i).length();
 			
-			final int type = receive_decrypt; // recipient / decryption
+			int type = receive_decrypt; // recipient / decryption
 			
-			final String onetimepublickey = onetimepublickeylist.get(i);
+			String onetimepublickey = onetimepublickeylist.get(i);
 			
 			tarray[i] = new Thread(() ->
 			{
@@ -54845,20 +54868,20 @@ class PublicKey
 		//  Compute an array of one-time public keys
 		//  and a composite one-time secret key
 		
-		final String[] z = new String[y.length];
-		final Number[] e = new Number[y.length];
+		String[] z = new String[y.length];
+		Number[] e = new Number[y.length];
 		
 		Thread[] tarray = new Thread[y.length];
 		
 		for (int i = 0; i < tarray.length; i++)
 		{
-			final int j = i;
+			int j = i;
 			
-			final int size = y[j].trim().length();
+			int size = y[j].trim().length();
 			
-			final int type = send_encrypt; // sender / encryption
+			int type = send_encrypt; // sender / encryption
 			
-			final PublicKey onetimepublickey = onetimepublickeys[j];
+			PublicKey onetimepublickey = onetimepublickeys[j];
 			
 			tarray[i] = new Thread(() ->
 			{
@@ -55140,11 +55163,11 @@ class PublicKey
 		
 		for (int i = 0; i < tarray.length; i++)
 		{
-			final int i1 = i;
+			int i1 = i;
 			
-			final int size = sizes[i];
+			int size = sizes[i];
 			
-			final String statickey = receivedkey[i];
+			String statickey = receivedkey[i];
 			
 			tarray[i] = new Thread(() ->
 			{
@@ -55181,11 +55204,14 @@ class PublicKey
 		String passphrase, String email, int numberofciphers)
 	{
 		//  converts a passphrase, email address, and number
-		//  of ciphers to a public key string array
+		//  of ciphers to a static public key string array;
+		
+		if (numberofciphers > PublicKey.numberofciphers)
+		    numberofciphers = PublicKey.numberofciphers;
 		
 		//  Hash the passphrase and address to generate the private key
 		
-		final byte[] SK = Cipher.passphraseToKey(
+		byte[] SK = Cipher.passphraseToKey(
 		
 		    passphrase.trim() + email.trim());
 		
@@ -55195,13 +55221,13 @@ class PublicKey
 		
 		long[] computetime = new long[numberofciphers];
 		
-		final String[] publickeys = new String[numberofciphers];
+		String[] publickeys = new String[numberofciphers];
 		
 		for (int i = 0; i < tarray.length && i < PublicKey.size.length; i++)
 		{
-			final int i1 = i;
+			int i1 = i;
 			
-			final int size = PublicKey.size[i];
+			int size = PublicKey.size[i];
 			
 			tarray[i] = new Thread(() ->
 			{
@@ -55265,9 +55291,9 @@ class PublicKey
 		
 		for (int i = 0; i < tarray.length && i < PublicKey.size.length; i++)
 		{
-			final int i1 = i;
+			int i1 = i;
 			
-			final int size = PublicKey.size[i];
+			int size = PublicKey.size[i];
 			
 			tarray[i] = new Thread(() ->
 			{
@@ -55857,7 +55883,7 @@ class PublicKey
 			
 			int rows = 2, cols = rows, equations = 2, matrices = 5;
 			
-			final int s = digits / rows / cols / equations, radix = 16;
+			int s = digits / rows / cols / equations, radix = 16;
 			
 			
 			//  Define the matrices A, B, C, M1, M2
@@ -58382,7 +58408,7 @@ class PublicKey
 			//
 			//  This method is used only by the polynomial modPow method
 			
-			final int[][] m1 = this.m1;
+			int[][] m1 = this.m1;
 			
 			int[][] terms = new int[t][2];
 			
@@ -58782,45 +58808,45 @@ class PublicKey
 	
 	
 	
-	//  The least common remainder or lcr is used to refer to the object or
-	//  value that is returned instead of the theorem or algorithm, just as
-	//  fact(n) is used instead of fta, uft(n), or quadratic sieve to refer
-	//  to the factorization instead of the fundamental theorem of arithmetic,
-	//  the unique factorization theorem, or the method used to factor the
-	//  number such as the quadratic sieve or number field sieve.
+	//  The least common remainder or lcr is used to refer to the object or value
+	//  that is returned instead of the theorem or algorithm, just as fact(n) is
+	//  used instead of fta, uft(n), or quadratic sieve to refer to the factori-
+	//  zation instead of the fundamental theorem of arithmetic, the unique fac-
+	//  torization theorem, or the method used to factor the number such as the
+	//  quadratic sieve or number field sieve.
 	//
-	//  The terms lcr(r, n) and fact(n) don't replace the terms crt, fta,
-	//  Gauss's algorithm, or quadratic sieve. The theorem, the algorithm,
-	//  and the object or value returned by the algorithm are three different
-	//  things. The crt and fta say that there is a common remainder or a fac-
-	//  torization for any set of reduced residues and reduced moduli, or a
-	//  composite number n, but they don't provide a method for computing the
-	//  composite residue or the factorization of a number.
+	//  The terms lcr(r, n) and fact(n) don't replace the terms crt, fta, Gauss's
+	//  algorithm, or quadratic sieve. The theorem, the algorithm, and the object
+	//  or value returned by the algorithm are three different things. The crt
+	//  and fta say that there is a common remainder or a factorization for any
+	//  set of reduced residues and reduced moduli, or a composite number n, but
+	//  they don't provide a method for computing the composite residue or the
+	//  factorization of a number.
 	//
 	//  It doesn't make sense to use the Chinese remainder theorem to find the
-	//  common remainder of a set of reduced residues r[] and reduced moduli
-	//  n[], or to use the fta to find the factorization of a number n, because
-	//  the crt and fta are not methods or algorithms. Some authors conflate
-	//  the theorem, the algorithm, and the value and refer to Gauss's remainder
+	//  common remainder of a set of reduced residues r[] and reduced moduli n[],
+	//  or to use the fta to find the factorization of a number n, because the
+	//  crt and fta are not methods or algorithms. Some authors conflate the
+	//  theorem, the algorithm, and the value and refer to Gauss's remainder
 	//  algorithm, Garner's formula, and the least common remainder as crt.
 	//
 	//  Gauss's remainder algorithm comes from Disquisitiones Arithmeticae (1801).
-	//  Carl F. Gauss is the greatest mathematician of all time followed by
-	//  Newton, Euler, Archimedes, Euclid, Diophantus, Lagrange, Fermat, Cauchy,
-	//  Riemann, Descartes, Galois, Leibniz, Fourier, Abel, Legendre, ... and the
-	//  second most prolific after Euler.
+	//  Carl F. Gauss is the greatest mathematician of all time followed by Newton,
+	//  Euler, Archimedes, Euclid, Diophantus, Lagrange, Fermat, Cauchy, Riemann,
+	//  Descartes, Galois, Leibniz, Fourier, Abel, Legendre, ... and the second
+	//  most prolific after Euler.
 	//
-	//  There is a Chinese remainder algorithm 500 years before Gauss that is
-	//  based on least common multiples, not modular inversion because there was
-	//  no modular inversion before Fermat's little theorem a^(p-1) == 1 (mod p)
-	//  was published in the seventeenth century. (This theorem says that a^(p-1)
-	//  == 1 == a^0 (mod p) for a != 0 (mod p) which implies that the inverse of
-	//  a is a^(p-2) == 1/a == a^-1 (mod p))
+	//  There is a Chinese remainder algorithm 500 years before Gauss that is based
+	//  on least common multiples, not modular inversion because there was no modu-
+	//  lar inversion before Fermat's little theorem a^(p-1) == 1 (mod p) was pub-
+	//  lished in the seventeenth century. (This theorem says that a^(p-1) == 1 ==
+	//  a^0 (mod p) for a != 0 (mod p) which implies that the inverse of a is a ^
+	//  (p-2) == 1/a == a^-1 (mod p))
 	//
 	//  In the first century A.D., Nicomachus mentioned the problem of computing
-	//  the composite residue from a set of reduced residues and moduli but he
-	//  did not provide a method for solving the problem. One of two treatises
-	//  by Nicomachus that has survived is called Introductio Arithmetica.
+	//  the composite residue from a set of reduced residues and moduli but he did
+	//  not provide a method for solving the problem. One of two treatises by
+	//  Nicomachus that has survived is called Introductio Arithmetica.
 	
 	
 	
@@ -58840,10 +58866,10 @@ class PublicKey
 	//  Choose a secret modulus n greater than the sum of the
 	//  array elements multiplied by the multiplier modulus p.
 	//
-	//  Choose a public table r and a random vector s.
+	//  Choose a public table r[][] and a random vector s[].
 	//
-	//  Convert the private superincreasing vector
-	//  a[] to the nonincreasing public vector
+	//  Convert the private superincreasing vector a[] to
+	//  the nonincreasing public vector
 	//
 	//  c[] = (c[1], c[2], ..., c[k]) where
 	//
@@ -59540,6 +59566,8 @@ class PublicKey
 			//  where k is the number of primes in the modulus n so that
 			//  the size of n equals the sum of the sizes of the primes
 			
+			//  System.out.println("generating static fact key");
+			
 			if (digits <= 2048) throw new IllegalArgumentException();
 			
 			int numberoffactors = digits * 4 / pbits;
@@ -59629,7 +59657,7 @@ class PublicKey
 				{
 					for (int j = 0; j < size; j++)
 					{
-						final int k = size * i1 + j;
+						int k = size * i1 + j;
 						
 						Number prime = X[k] .nextPrime();
 						
@@ -59913,19 +59941,19 @@ class PublicKey
 		
 		int numberofciphers = z.length;
 		
-		final Number[] e = new Number[numberofciphers];
+		Number[] e = new Number[numberofciphers];
 		
 		Thread[] tarray = new Thread[numberofciphers];
 		
 		for (int i = 0; i < tarray.length; i++)
 		{
-			final int i1 = i;
+			int i1 = i;
 			
-			final int size = z[i].length();
+			int size = z[i].length();
 			
-			final String onetimepublickey = z[i];
+			String onetimepublickey = z[i];
 			
-			final PublicKey staticpublickey = y[i];
+			PublicKey staticpublickey = y[i];
 			
 			tarray[i] = new Thread(() ->
 			{
@@ -60607,11 +60635,11 @@ class PublicKey
 			
 			int rows = 2, cols = rows, equations = 2, matrices = 5;
 			
-			final int digits = z.trim().length(), radix = 16;
+			int digits = z.trim().length(), radix = 16;
 			
-			final int s = digits / rows / cols / equations;
+			int s = digits / rows / cols / equations;
 			
-			final Number[] zn = new Number[2*2*2];
+			Number[] zn = new Number[2*2*2];
 			
 			for (int i = 0; i < zn.length; i++)
 			
@@ -60851,13 +60879,13 @@ class PublicKey
 			
 			int rows = 2, cols = rows, matrices = 3;
 			
-			final int radix = 16;
+			int radix = 16;
 			
-			final int s = z.trim().length() / rows / cols;
+			int s = z.trim().length() / rows / cols;
 			
-			final String str = z.trim();
+			String str = z.trim();
 			
-			final Number[] zn = new Number[rows*cols];
+			Number[] zn = new Number[rows*cols];
 			
 			for (int i = 0; i < zn.length; i++)
 			
@@ -61313,19 +61341,17 @@ class PublicKey
 		
 		
 		
-		else if ( ( z.trim().length() == sizefact1 )
-		
-		       || Math.isPowerOf2(z.trim().length() + 1024) )
+		else if ( Math.isPowerOf2( z.trim().length() + 1024 ) )
 		{
 		
 			//  if (type == recipient / decryption) m is computed from z = c = m^2 (mod n)
 			//  if (type ==    sender / encryption) m is chosen and z is ignored
 			
-			final int digits = z.trim().length();
+			int digits = z.trim().length();
 			
-			final int pbits = 512;
+			int pbits = 512;
 			
-			final long starttime = System.currentTimeMillis();
+			long starttime = System.currentTimeMillis();
 			
 			if (type == 1)
 			{
@@ -61335,7 +61361,7 @@ class PublicKey
 				
 				//  System.out.println("decrypting factorization cipher");
 				
-				final int numberoffactors = digits * 4 / pbits;
+				int numberoffactors = digits * 4 / pbits;
 				
 				//  System.out.println("fact digits == " + digits);
 				
@@ -61355,7 +61381,7 @@ class PublicKey
 				
 				Number x1 = x[0], x2 = x[1];
 				
-				final int s = 1 + Math.log2(powerof2);
+				int s = 1 + Math.log2(powerof2);
 				
 				for (int i = 0; i < X.length; i++)
 				{
@@ -61368,7 +61394,7 @@ class PublicKey
 				}
 				
 				
-				//  Use a single thread to generate the primes
+				//  Use a single thread to generate one prime
 				
 				for (int i = 0; i < 1; i++)
 				{
@@ -61497,7 +61523,7 @@ class PublicKey
 			//  if (type == recipient / decryption) m is computed from z = b = c[] m[]
 			//  if (type ==    sender / encryption) m is chosen and z is ignored
 			
-			final int digits = z.trim().length();
+			int digits = z.trim().length();
 			
 			int pbits = -1, nbits = -1;
 			
@@ -64766,12 +64792,12 @@ class Cipher
 	
 	
 	
-	public static byte[] removePadding(final byte[] plaindata)
+	public static byte[] removePadding(byte[] plaindata)
 	{
 	
 		if (plaindata.length < 8) return null;
 		
-		final int s = 256; // the size of a byte
+		int s = 256; // the size of a byte
 		
 		byte[] plaindata1 = Arrays.copyOf(
 		
@@ -64913,7 +64939,7 @@ class Cipher
 		
 		if (array.length < 32) return false;
 		
-		final int s = 256; // the size of a byte
+		int s = 256; // the size of a byte
 		
 		
 		if (front == false)
@@ -65097,7 +65123,7 @@ class Cipher
 		
 		//  Generate a one-time encryption key
 		
-		final byte[] k = oneTimeEncryptionKey(encryptionkey);
+		byte[] k = oneTimeEncryptionKey(encryptionkey);
 		
 		
 		//  Encrypt the one-time encryption key k using
@@ -65105,7 +65131,7 @@ class Cipher
 		//
 		//  encrypted key k' = k (+) static / file key
 		
-		final byte[] encryptedkey = Math.xor(k, encryptionkey);
+		byte[] encryptedkey = Math.xor(k, encryptionkey);
 		
 		
 		//  Encrypt the plaindata with the one-time secret key k
@@ -65190,7 +65216,7 @@ class Cipher
 		
 		//  Read the encrypted encryption key (bytes 0 to 32)
 		
-		final byte[] encryptedkey = new byte[32];
+		byte[] encryptedkey = new byte[32];
 		
 		for (int i = 0; i < 32; i++)
 		
@@ -65213,7 +65239,7 @@ class Cipher
 		
 		//  k = encrypted key k' - static encryption key
 		
-		final byte[] k = Math.xor(encryptedkey, encryptionkey);
+		byte[] k = Math.xor(encryptedkey, encryptionkey);
 		
 		
 		//  Read the cipherdata
@@ -65277,9 +65303,9 @@ class Cipher
 		//  The encryption method was tested by hashing a large file before
 		//  and after encryption and verifying that the hashes are identical
 		
-		//  Note that using using force() after each write operation makes file encryption
-		//  and decryption one-third slower. The updates will be written to storage anyway
-		//  because the file channel reader and writer are closed at the end of the method.
+		//  Note that using force() after each write operation makes file encryption and
+		//  decryption one-third slower. The updates will be written to storage anyway be-
+		//  cause the file channel reader and writer are closed at the end of the method.
 		
 		
 		//  Set the array size for the buffer and read the array size plaindata;
@@ -65349,7 +65375,7 @@ class Cipher
 		
 		//  Generate a one-time encryption key
 		
-		final byte[] k = oneTimeEncryptionKey(encryptionkey);
+		byte[] k = oneTimeEncryptionKey(encryptionkey);
 		
 		
 		//  Encrypt the one-time encryption key k using
@@ -65357,7 +65383,7 @@ class Cipher
 		//
 		//  encrypted key k' = k (+) static / file key
 		
-		final byte[] encryptedkey = Math.xor(k, encryptionkey);
+		byte[] encryptedkey = Math.xor(k, encryptionkey);
 		
 		
 		//  Compute the hash of the encrypted key
@@ -65558,7 +65584,7 @@ class Cipher
 		
 		//  k = encrypted key k' - static encryption key
 		
-		final byte[] k = Math.xor(encryptedkey, encryptionkey);
+		byte[] k = Math.xor(encryptedkey, encryptionkey);
 		
 		
 		//  For each array size read the plaindata from the file channel reader
@@ -65630,7 +65656,7 @@ class Cipher
 			
 			reader.position(position);
 			
-			final int bytesread1 = reader.read(bytebuffer);
+			int bytesread1 = reader.read(bytebuffer);
 			
 			if (bytesread1 > 0) bytesread += bytesread1;
 			
@@ -66385,7 +66411,7 @@ class Cipher
 	
 	
 	
-	public static byte[] hash(final byte[] M)
+	public static byte[] hash(byte[] M)
 	{
 		//  returns a 32-byte hash using SHA256
 		
@@ -66432,7 +66458,7 @@ class Cipher
 		{	reader = new FileChannelReader(file.getPath());
 			
 			do
-			{	final int size = 1024*1024*1024;
+			{	int size = 1024*1024*1024;
 				
 				ByteBuffer bytebuffer;
 				
@@ -67525,7 +67551,7 @@ class Math
 		
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		
-		final int numberofprimes = (int) (2*maxprime / log(maxprime));
+		int numberofprimes = (int) (2*maxprime / log(maxprime));
 		
 		int[] primes = primes(numberofprimes);
 		
@@ -67803,9 +67829,9 @@ class Math
 		//  if a ^ (phi(n) / q[i]) != 1 (mod n) for each prime
 		//  factor (not prime power) q[i] in the totient.
 		
-		final int lambda = lambda(p);
+		int lambda = lambda(p);
 		
-		final int[] factors = factor(lambda);
+		int[] factors = factor(lambda);
 		
 		int[][] primes_exp = sortAndCollate(factors);
 		
@@ -70041,8 +70067,8 @@ class Math
 	
 	public static int[][] sortAndCollate(int[] a)
 	{
-		//  returns the sorted array and the num-
-		//  ber of times that each element occurs;
+		//  returns the sorted array and the
+		//  number of times each element occurs;
 		//  duplicates of elements are removed
 		
 		//  For example, the array
@@ -70062,7 +70088,7 @@ class Math
 		
 		a = Arrays.copyOf(a, a.length);
 		
-		Arrays .sort(a); // Sort the array
+		Arrays.sort(a); // Sort the array
 		
 		return collate(a);
 	}
@@ -71063,7 +71089,7 @@ class Number implements Comparable<Number>
 		{
 			//  Align the integer / fraction points
 			
-			final int r = a.intpoint - b.intpoint;
+			int r = a.intpoint - b.intpoint;
 			
 			if      (r > 0) { b = b.shiftLeft( 32*r,  32*r); b.intpoint += r; }
 			else if (r < 0) { a = a.shiftLeft(-32*r, -32*r); a.intpoint -= r; }
@@ -71428,7 +71454,7 @@ class Number implements Comparable<Number>
 		if (integer.equals(0) && fraction.equals(0)) return 0;
 		
 		
-		final int[] array = c.intarray;
+		int[] array = c.intarray;
 		
 		int d = c.intpoint - array.length;
 		
@@ -72116,9 +72142,9 @@ class Number implements Comparable<Number>
 		//  To call this method from another method,
 		//  first pre-compute the inverse
 		//
-		//  final int digits = (int) n.bitCount() / 4;
+		//  int digits = (int) n.bitCount() / 4;
 		//
-		//  final Number invn = n .setPrecision(2*digits) .inverse();
+		//  Number invn = n .setPrecision(2*digits) .inverse();
 		//
 		//  and then use .mod(n, invn) instead of .mod(n).
 		
@@ -72855,7 +72881,7 @@ class Number implements Comparable<Number>
 		
 		//  Move the integer point of the input so that v ~ 1
 		
-		final int d = (int) (v.bitCount() - 32 * v.intpoint);
+		int d = (int) (v.bitCount() - 32 * v.intpoint);
 		
 		final long bits = (d / 32) * 32;
 		
@@ -72876,9 +72902,9 @@ class Number implements Comparable<Number>
 		
 		//  Set the initial value of u1 ~ 1 / v1
 		
-		final double dblv1 = v1.setPrecision(16) .doubleValue();
+		double dblv1 = v1.setPrecision(16) .doubleValue();
 		
-		final double dblu1 = 1.0D / dblv1;
+		double dblu1 = 1.0D / dblv1;
 		
 		Number u, u1 = new Number((long) dblu1);
 		
@@ -73105,7 +73131,7 @@ class Number implements Comparable<Number>
 		
 		int numberofprimes = maxprime;
 		
-		final int[] primes = Math.primes(maxprime);
+		int[] primes = Math.primes(maxprime);
 		
 		return isFactorable(primes);
 	}
@@ -73119,7 +73145,7 @@ class Number implements Comparable<Number>
 		//  may be faster than isFactorable(maxprime) because
 		//  the primes array only has to be created once
 		
-		final int[] array = factor(primes);
+		int[] array = factor(primes);
 		
 		Number product = new Number(1);
 		
@@ -73910,9 +73936,9 @@ class Number implements Comparable<Number>
 		//  To call this method from another method,
 		//  first pre-compute the inverse
 		//
-		//  final int digits = (int) n.bitCount() / 4;
+		//  int digits = (int) n.bitCount() / 4;
 		//
-		//  final Number invn = n .setPrecision(2*digits) .inverse();
+		//  Number invn = n .setPrecision(2*digits) .inverse();
 		//
 		//  and then use .mod(n, invn) instead of .mod(n).
 		
@@ -74347,7 +74373,7 @@ class Number implements Comparable<Number>
 		
 		//  Pre-compute the inverse(n) for fast modular reduction
 		
-		final int digits = (int) n.bitCount() / 4;
+		int digits = (int) n.bitCount() / 4;
 		
 		Number invn = n .setPrecision(2*digits) .inverse();
 		
@@ -74846,7 +74872,7 @@ class Number implements Comparable<Number>
 		
 		//  Pre-compute the inverse(n) for fast modular reduction
 		
-		final int digits = (int) p.bitCount() / 4;
+		int digits = (int) p.bitCount() / 4;
 		
 		Number invp = p .setPrecision(32 + digits) .inverse();
 		
@@ -74929,7 +74955,7 @@ class Number implements Comparable<Number>
 		
 		//  Find all the small factors in the totient up to some value
 		
-		final int maxprime = 16*1024;
+		int maxprime = 16*1024;
 		
 		Number totient = p.subtract(1);
 		
@@ -75209,7 +75235,7 @@ class Number implements Comparable<Number>
 	public static Number multiplyKaratsuba(Number x, Number y)
 	{
 	
-		//  Karatsuba Multiplication (Karatsuba and Ofman, Soviet Physics, 1962)
+		//  Karatsuba Multiplication (Karatsuba and Ofman, Soviet Physics, 1963)
 		//
 		//  Karatsuba multiplication uses only three multiplications instead of four.
 		//
@@ -76227,7 +76253,7 @@ class Number implements Comparable<Number>
 		
 		int bits = Math.log2(radix) * digits;
 		
-		final long modulus = 0xfffffffffffffL;
+		long modulus = 0xfffffffffffffL;
 		
 		Math.initRng(modulus * System.nanoTime());
 		
@@ -76530,7 +76556,7 @@ class Number implements Comparable<Number>
 	
 	
 	
-	public Number setPrecision(final int precision)
+	public Number setPrecision(int precision)
 	{
 		//  sets the number of fractional digits and expands
 		//  or truncates the right side of the number
@@ -77129,7 +77155,7 @@ class Number implements Comparable<Number>
 		}
 		
 		
-		final int maxsize = 256;
+		int maxsize = 256;
 		
 		Number[] array = null;
 		
@@ -78064,7 +78090,7 @@ class Number implements Comparable<Number>
 		
 		//  Test before recursion
 		
-		final int maxsize = 4096 / 8;
+		int maxsize = 4096 / 8;
 		
 		if (this.length() >= maxsize)
 		{
@@ -80309,8 +80335,8 @@ class Matrix
 			throw new IllegalArgumentException(message);
 		}
 		
-		final int rows = matrix.matrix   .length;
-		final int cols = matrix.matrix[0].length;
+		int rows = matrix.matrix   .length;
+		int cols = matrix.matrix[0].length;
 		
 		if (this.determinant(n).equals(0))
 		{
@@ -80478,7 +80504,7 @@ class Matrix
 		
 		//  Pre-compute the inverse(n) for fast modular reduction
 		
-		final int digits = (int) n.bitCount() / 4;
+		int digits = (int) n.bitCount() / 4;
 		
 		Number invn = n .setPrecision(2*digits) .inverse();
 		
@@ -81293,7 +81319,7 @@ class Matrix
 		
 		matrix = matrix.setPrecision(p);
 		
-		final int rows = matrix.matrix.length;
+		int rows = matrix.matrix.length;
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -81375,7 +81401,7 @@ class Matrix
 		
 		Matrix matrix = new Matrix(this) .mod(n);
 		
-		final int rows = matrix.matrix.length;
+		int rows = matrix.matrix.length;
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -81487,14 +81513,14 @@ class Matrix
 		
 		//  Pre-compute the inverse(n) for fast modular reduction
 		
-		final int digits = (int) n.bitCount() / 4;
+		int digits = (int) n.bitCount() / 4;
 		
-		final Number invn = n .setPrecision(2*digits) .inverse();
+		Number invn = n .setPrecision(2*digits) .inverse();
 		
 		
 		Matrix matrix = new Matrix(this) .mod(n);
 		
-		final int rows = matrix.matrix.length;
+		int rows = matrix.matrix.length;
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -81596,14 +81622,14 @@ class Matrix
 		
 		//  Pre-compute the inverse(n) for fast modular reduction
 		
-		final int digits = (int) n.bitCount() / 4;
+		int digits = (int) n.bitCount() / 4;
 		
-		final Number invn = n .setPrecision(2*digits) .inverse();
+		Number invn = n .setPrecision(2*digits) .inverse();
 		
 		
 		Matrix matrix = new Matrix(this) .mod(n);
 		
-		final int rows = matrix.matrix.length;
+		int rows = matrix.matrix.length;
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -81611,11 +81637,11 @@ class Matrix
 			
 			//  Create a new executor for each row r
 			
-			final int numberofthreads = Math.numberofthreads;
+			int numberofthreads = Math.numberofthreads;
 			
-			final int corepoolsize = numberofthreads;
+			int corepoolsize = numberofthreads;
 			
-			final ScheduledThreadPoolExecutor executor;
+			ScheduledThreadPoolExecutor executor;
 			
 			executor = new ScheduledThreadPoolExecutor(corepoolsize);
 			
@@ -82127,7 +82153,7 @@ class Matrix
 		
 		Number zero = new Number(0);
 		
-		final Matrix temp = matrix .get(0, 0,
+		Matrix temp = matrix .get(0, 0,
 		
 		     matrix.rowCount(), matrix.rowCount());
 		
@@ -83392,7 +83418,7 @@ class Fourier
 	
 	
 	
-	//  final int size = 16*1024;
+	//  int size = 16*1024;
 	//
 	//  int[] array1 = new int[size];
 	//  int[] array2 = new int[size];
@@ -83803,7 +83829,7 @@ class Fourier
 	
 	
 	
-	private static double[] fft(final double[] x, final int sign)
+	private static double[] fft(double[] x, int sign)
 	{
 	
 		//  The fast fourier transform method
@@ -84049,7 +84075,7 @@ class Fourier
 	
 	
 	
-	private static double[] fftr(final double[] x, int sign)
+	private static double[] fftr(double[] x, int sign)
 	{
 	
 		//  A recursive fast fourier transform method
@@ -84083,7 +84109,7 @@ class Fourier
 		z = fftr(z, sign);
 		
 		
-		final int n = x.length / 2;
+		int n = x.length / 2;
 		
 		// the number of complex numbers
 		
@@ -84334,7 +84360,7 @@ class Fourier
 	}
 	
 	
-	private static int[] complexDoubleArrayToIntArray(final double[] array)
+	private static int[] complexDoubleArrayToIntArray(double[] array)
 	{
 		//  converts (52-bit) complex doubles to (8-bit) real integers
 		
