@@ -48,20 +48,18 @@
 	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
 	are unsolvable.
 	
-	The public keys also include the Rabin / factorization cipher c = m ^ 2 (mod n) where n is the cipher
-	or static public key, m is the sender's secret key and c is the one-time public key; and the Merkle-
-	Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
-	the cipher or static public key, a is a superincreasing sequence of integers, r is a public random ma-
-	trix, s0, s[], and n are secret keys, e is a vector of small random errors, and b is the sender's one-
-	time public key.
+	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
+	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
+	sequence of integers, r is a public random matrix, s0, s[], and n are secret keys, e[] is a vector of
+	small random errors, and b is the sender's one-time public key.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
-	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
-	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipher-
-	data or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad to en-
-	crypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing the en-
-	crypted random number using the shared secret key, hashing the random number to create the one-time
-	pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
+	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to cre-
+	ate a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipherdata
+	or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad to encrypt
+	the random number or one-time encryption key. The receiver decrypts a message by xor-ing the encrypted
+	random number using the shared secret key, hashing the random number to create the one-time pad, and
+	then xor-ing the one-time pad and the cipherdata to recover the plaindata.
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
@@ -156,6 +154,7 @@
 	don't have to decrypt and re-encrypt the Documents and Pictures folders because they only read and de-
 	crypt the file input to the program. The files on the disk remain encrypted and unmodified unless the
 	user decrypts them.)
+	
 	
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
@@ -440,13 +439,6 @@
 	and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1] ^ k1 Y2[2] ^
 	k2 == A1 ^ (k1 x1) A2 ^ (k1 x2 + k2 x1) A3 ^ (k2 x2).
 	
-	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Before
-	they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
-	quantity, number, or section of things dealt with as a unit, such as a block of plaintext or cipher-
-	text. (J.J. Sylvester used the term matrix in 1850 to refer to a rectangular block of numbers because
-	a determinant is formed from a matrix, and a matrix is something from which something else originates,
-	develops, or takes form.)
-	
 	Nonlinear multivariate equations are difficult or impossible to solve. If solving an equation such as
 	Y = X A X were as simple as diagonalizing a matrix, doing a Fourier transform, or reducing a matrix
 	to echelon and row canonical form, then math programs would have functions or methods for solving
@@ -499,12 +491,12 @@
 	ed for digital signature standards and for encryption. (Note that RSA refers to the cipher while co-
 	prime root extraction refers to the underlying math problem on which the cipher is based.)
 	
-	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e =
-	2^k) is equivalent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin
-	had thought of using coprime root extraction as a public key cipher but he knew that it wasn't equiv-
-	alent to factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that
-	has the same number in the totient whereas the RSA cipher can only use exponents e > 2 that are co-
-	prime with the totient.
+	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
+	is equivalent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had
+	thought of using coprime root extraction as a public key cipher but he knew that it wasn't equivalent
+	to factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the
+	same number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime with
+	the totient.
 	
 	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squaring
 	and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the message can
@@ -516,12 +508,9 @@
 	The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
 	sub-exponential, quantum, and polynomial-time algorithms for factoring integers. For the cipher to be
 	secure or unbreakable, the key size has to be on the order of 10^5 bits if the running time of the
-	factorization algorithm is on the order of O(n^2) exponentiations, O(n^3) multiplications, or O(n^
-	4.58) operations where n is the number of bits. The Rabin / factorization cipher is included in the
-	public key class but it is not enabled by default because the key size is large. (The integer discrete
-	log cipher y = a ^ x mod n is not included in the public key class because the cipher requires an ex-
-	ponentiation to compute the public key y instead of a multiplication or squaring to compute the one-
-	time public key c = m^2 mod n for factorization.)
+	factorization algorithm is on the order of n^2 exponentiations, n^3 multiplications, or n^4.58 opera-
+	tions where n is the number of bits. The factorization cipher is included in the public key class but
+	it is not enabled by default because the key size is large.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b mod p
 	are not included in the software because the elliptic curve discrete log function has a periodicity
@@ -551,7 +540,9 @@
 	who can break a cipher has to be in the single digits (such as for solving coprime root extraction,
 	factorization, and the integer Diffie-Hellman problem) and in this case the number was in the double
 	digits because there are tens of mathematicians who can understand the math for breaking supersingular
-	isogeny key exchange.
+	isogeny key exchange. This discovery was of no importance to the field of mathematics because the ci-
+	phers included additional information in the public key to do the key agreement, and this information
+	was used to break the cipher.
 	
 	Competitions are good for many things but public key cryptography is not one of them because it just
 	selects ciphers, functions, or equations that only a few people in the world know how to break, in-

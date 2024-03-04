@@ -79,20 +79,18 @@
 	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
 	are unsolvable.
 	
-	The public keys also include the Rabin / factorization cipher c = m ^ 2 (mod n) where n is the cipher
-	or static public key, m is the sender's secret key and c is the one-time public key; and the Merkle-
-	Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]) where the vector c is
-	the cipher or static public key, a is a superincreasing sequence of integers, r is a public random ma-
-	trix, s0, s[], and n are secret keys, e is a vector of small random errors, and b is the sender's one-
-	time public key.
+	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
+	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
+	sequence of integers, r is a public random matrix, s0, s[], and n are secret keys, e[] is a vector of
+	small random errors, and b is the sender's one-time public key.
 	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
-	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to
-	create a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipher-
-	data or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad to en-
-	crypt the random number or one-time encryption key. The receiver decrypts a message by xor-ing the en-
-	crypted random number using the shared secret key, hashing the random number to create the one-time
-	pad, and then xor-ing the one-time pad and the cipherdata to recover the plaindata.
+	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to cre-
+	ate a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipherdata
+	or ciphertext, and then using the passphrase hash or shared secret key as a re-usable pad to encrypt
+	the random number or one-time encryption key. The receiver decrypts a message by xor-ing the encrypted
+	random number using the shared secret key, hashing the random number to create the one-time pad, and
+	then xor-ing the one-time pad and the cipherdata to recover the plaindata.
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
@@ -187,6 +185,7 @@
 	don't have to decrypt and re-encrypt the Documents and Pictures folders because they only read and de-
 	crypt the file input to the program. The files on the disk remain encrypted and unmodified unless the
 	user decrypts them.)
+	
 	
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
@@ -471,13 +470,6 @@
 	and then reducing the public key vector Y[] to a 1x1 block matrix or secret key E = Y[1] ^ k1 Y2[2] ^
 	k2 == A1 ^ (k1 x1) A2 ^ (k1 x2 + k2 x1) A3 ^ (k2 x2).
 	
-	The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Before
-	they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
-	quantity, number, or section of things dealt with as a unit, such as a block of plaintext or cipher-
-	text. (J.J. Sylvester used the term matrix in 1850 to refer to a rectangular block of numbers because
-	a determinant is formed from a matrix, and a matrix is something from which something else originates,
-	develops, or takes form.)
-	
 	Nonlinear multivariate equations are difficult or impossible to solve. If solving an equation such as
 	Y = X A X were as simple as diagonalizing a matrix, doing a Fourier transform, or reducing a matrix
 	to echelon and row canonical form, then math programs would have functions or methods for solving
@@ -530,12 +522,12 @@
 	ed for digital signature standards and for encryption. (Note that RSA refers to the cipher while co-
 	prime root extraction refers to the underlying math problem on which the cipher is based.)
 	
-	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e =
-	2^k) is equivalent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin
-	had thought of using coprime root extraction as a public key cipher but he knew that it wasn't equiv-
-	alent to factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that
-	has the same number in the totient whereas the RSA cipher can only use exponents e > 2 that are co-
-	prime with the totient.
+	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
+	is equivalent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had
+	thought of using coprime root extraction as a public key cipher but he knew that it wasn't equivalent
+	to factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the
+	same number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime with
+	the totient.
 	
 	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squaring
 	and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the message can
@@ -547,12 +539,9 @@
 	The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
 	sub-exponential, quantum, and polynomial-time algorithms for factoring integers. For the cipher to be
 	secure or unbreakable, the key size has to be on the order of 10^5 bits if the running time of the
-	factorization algorithm is on the order of O(n^2) exponentiations, O(n^3) multiplications, or O(n^
-	4.58) operations where n is the number of bits. The Rabin / factorization cipher is included in the
-	public key class but it is not enabled by default because the key size is large. (The integer discrete
-	log cipher y = a ^ x mod n is not included in the public key class because the cipher requires an ex-
-	ponentiation to compute the public key y instead of a multiplication or squaring to compute the one-
-	time public key c = m^2 mod n for factorization.)
+	factorization algorithm is on the order of n^2 exponentiations, n^3 multiplications, or n^4.58 opera-
+	tions where n is the number of bits. The factorization cipher is included in the public key class but
+	it is not enabled by default because the key size is large.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b mod p
 	are not included in the software because the elliptic curve discrete log function has a periodicity
@@ -582,7 +571,9 @@
 	who can break a cipher has to be in the single digits (such as for solving coprime root extraction,
 	factorization, and the integer Diffie-Hellman problem) and in this case the number was in the double
 	digits because there are tens of mathematicians who can understand the math for breaking supersingular
-	isogeny key exchange.
+	isogeny key exchange. This discovery was of no importance to the field of mathematics because the ci-
+	phers included additional information in the public key to do the key agreement, and this information
+	was used to break the cipher.
 	
 	Competitions are good for many things but public key cryptography is not one of them because it just
 	selects ciphers, functions, or equations that only a few people in the world know how to break, in-
@@ -8204,7 +8195,7 @@ class Programs
 							textarea .moveCaretPosition(pos1);
 						}
 						
-						bool = bool ? false : true;
+						bool = ! bool;
 					}
 				});
 				
@@ -25704,7 +25695,7 @@ class Programs
 			ImageIcon  deleteicon = Icons.get(Icons.trash_32x32);        // trash can
 			
 			ImageIcon  importicon = Icons.get(Icons.mail_important_32x32); // red exclamation point
-			ImageIcon  urgenticon = Icons.get(Icons.urgent_32x32);       // red circular clock
+			ImageIcon  urgenticon = Icons.get(Icons.urgent_32x32);        // red circular clock
 			ImageIcon    spamicon = Icons.get(Icons.trash_32x32);        // trash can
 			
 			ImageIcon    staricon = Icons.get(Icons.star_32x32);         // star icon
@@ -33402,7 +33393,7 @@ class Programs
 					if (i == 0) sb.append("\n");
 					
 					if (i < 10) sb.append(String.valueOf(
-					    (i < 9) ? i + 1 : 0) + ". ");
+					   (i < 9) ? i + 1 : 0) + ". ");
 					
 					sb.append(__.AttachedFile + "  ");
 					sb.append(__.viewattachedfile + "  ");
@@ -33834,9 +33825,9 @@ class Programs
 				
 				if (file.exists())
 				{
-					byte[] fileinput = null;
+					byte[] filedata = null;
 					
-					try { fileinput = DataStream.read(file); }
+					try { filedata = DataStream.read(file); }
 					
 					catch (IOException ex)
 					{
@@ -33849,17 +33840,17 @@ class Programs
 					{
 						//  Decrypt the file input
 						
-						fileinput = Cipher.decrypt(fileinput,
+						filedata = Cipher.decrypt(filedata,
 						
 						    Cipher.passphraseToKey(SP));
 						
 						//  Return false if file did not decrypt
 						
-						if (fileinput == null) return false;
+						if (filedata == null) return false;
 						
 						//  Convert the decrypted byte[] to String
 						
-						plaintext = new String(fileinput);
+						plaintext = new String(filedata);
 					}
 				}
 				
@@ -35013,7 +35004,7 @@ class Programs
 						if (i == 0) sb.append("\n");
 						
 						if (i < 10) sb.append(String.valueOf(
-						    (i < 9) ? i + 1 : 0) + ". ");
+						   (i < 9) ? i + 1 : 0) + ". ");
 						
 						sb.append(__.AttachedFile + "  ");
 						sb.append(__.viewattachedfile + "  ");
@@ -39090,11 +39081,11 @@ class Programs
 			
 			File file = new File(filepath);
 			
-			byte[] fileinput = null;
+			byte[] filedata = null;
 			
 			if (file.exists())
 			{
-				try { fileinput = DataStream.read(file); }
+				try { filedata = DataStream.read(file); }
 				
 				catch (IOException ex)
 				{
@@ -39107,13 +39098,13 @@ class Programs
 				{
 					//  Decrypt the file input
 					
-					fileinput = Cipher.decrypt(fileinput,
+					filedata = Cipher.decrypt(filedata,
 					
 					    Cipher.passphraseToKey(SP));
 					
 					//  Return if file did not decrypt
 					
-					if (fileinput == null) return false;
+					if (filedata == null) return false;
 				}
 			}
 			
@@ -39122,7 +39113,7 @@ class Programs
 			
 			//  Convert the decrypted byte array to string
 			
-			String plaintext = new String(fileinput);
+			String plaintext = new String(filedata);
 			
 			//  Read the key value pairs or the hashes
 			//  and message states into the tree map
@@ -39279,11 +39270,11 @@ class Programs
 			
 			File file = new File(filepath);
 			
-			byte[] fileinput = null;
+			byte[] filedata = null;
 			
 			if (file.exists())
 			{
-				try { fileinput = DataStream.read(file); }
+				try { filedata = DataStream.read(file); }
 				
 				catch (IOException ex)
 				{
@@ -39296,13 +39287,13 @@ class Programs
 				{
 					//  Decrypt the file input
 					
-					fileinput = Cipher.decrypt(fileinput,
+					filedata = Cipher.decrypt(filedata,
 					
 					    Cipher.passphraseToKey(SP));
 					
 					//  Return if file did not decrypt
 					
-					if (fileinput == null) return null;
+					if (filedata == null) return null;
 				}
 			}
 			
@@ -39311,7 +39302,7 @@ class Programs
 			
 			//  Convert the decrypted byte array to string
 			
-			String plaintext = new String(fileinput);
+			String plaintext = new String(filedata);
 			
 			
 			//  Read the public keys into a key ring
@@ -45962,7 +45953,7 @@ class Documents
 	"click in the to field and press enter, and the email program will still decrypt " +
 	"the message because it will generate two private keys (using the passphrase and " +
 	"the passphrase + email address) and it will try one or both private keys until i" +
-	"t decrypts the message.\n\n\n\n12.  Write down your secret passphrase, usernames" +
+	"t decrypts the message.\n\n\n\n12. Write down your secret passphrase, usernames" +
 	", and user passwords.\n\nIf you lose this information, you will not be able to a" +
 	"ccess your email accounts or decrypt your emails.\n\nYou can save your passphras" +
 	"e in a file by typing your passphrase on the first line of the dialog box, or yo" +
@@ -50567,10 +50558,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			int index = 0;
 			
-			if (numberofciphers <= 4) index = 0;
-			if (numberofciphers >  4) index = 1;
-			if (numberofciphers >  8) index = 2;
-			if (numberofciphers > 16) index = 3;
+			if (numberofciphers >= 4)  index = 1;
+			if (numberofciphers >= 8)  index = 2;
+			if (numberofciphers >= 16) index = 3;
 			
 			linewidthbox.setSelectedIndex(index);
 			
@@ -50757,10 +50747,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 						
 						    numberofciphers += n1;
 						
-						if (numberofciphers <= 4) index = 0;
-						if (numberofciphers >  4) index = 1;
-						if (numberofciphers >  8) index = 2;
-						if (numberofciphers > 16) index = 3;
+						if (numberofciphers >=  4) index = 1;
+						if (numberofciphers >=  8) index = 2;
+						if (numberofciphers >= 16) index = 3;
 					}
 					
 					if (obj instanceof JCheckBox)
@@ -52319,6 +52308,13 @@ class PublicKey
 	//  cipher Y = A X is a special case of the non-linear cipher Y = X1 A^x X2 in which X1 is the unit ma-
 	//  trix and the exponent equals 1.
 	//
+	//  The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Before
+	//  they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
+	//  quantity, number, or section of things dealt with as a unit, such as a block of plaintext or cipher-
+	//  text. (J.J. Sylvester used the term matrix in 1850 to refer to a rectangular block of numbers because
+	//  a determinant is formed from a matrix, and a matrix is something from which something else origin-
+	//  ates, develops, or takes form.)
+	//
 	//  All the commutative one-way functions or symmetric public key ciphers used in the public key class
 	//  derive from the general matrix function X1 A^x X2 (or B^x1 A^x B^x2) including A^x, A^x X, A X,
 	//  X1 A X2, and X^-1 A^x X (mod p). (The cipher a^x mod n is really X^-1 A^x X mod n where a and x are
@@ -52414,28 +52410,59 @@ class PublicKey
 	//
 	//  If matrix, cube, and tesseract ciphers could be shown to be breakable by classical or quantum comput-
 	//  ing just like elliptic curve and lattice ciphers, then the Merkle-Hellman / knapsack cipher would be
-	//  the only public key cryptosystem for encryption. The matrix ciphers were designed to be nonlinear and
-	//  non-commutative, and some of the variables were chosen to make the solutions ambiguous to resist clas-
-	//  sical and quantum computing attacks.
+	//  the only public key cryptosystem for encryption. This is unlikely as the matrix ciphers were designed
+	//  to be nonlinear, non-commutative, and aperiodic (because any function that has a periodicity can be
+	//  inverted by quantum computing), and some of the variables were chosen to make the solutions ambiguous
+	//  to resist classical and quantum computing attacks.
 	//
 	//
 	//
 	//  The Rabin / factorization / quadratic residue / co-composite or square root extraction cipher
 	//
-	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refrac-
-	//  tory problem to be a public key cipher. It only has to be harder to invert than to compute. Some
-	//  functions such as the factorial function a! (mod p) are neither computable nor invertible in poly-
-	//  nomial time. If a! (mod n) were computable it would solve the factorization problem for n.
+	//  The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
+	//  is equivalent to factorization because there is a many-to-one mapping of m to c. If m1 is chosen and
+	//  c = m1^2 (mod n) is solved for m2 = sqrt(c) (mod n), then the number can be factored using the differ-
+	//  ence of squares m2^2 - m1^2 == 0 (mod n) or (m2 + m1) (m2 - m1) - k n == 0. This implies that f1 =
+	//  (m2 + m1) and f2 = (m2 - m1) each contains a prime or composite factor of n. By dividing n by f1 and
+	//  f2 and then recursively using the factorization algorithm for the reduced modulus, the modulus can be
+	//  completely factored. If the sqrt algorithm returns the same value m2 == m1, then m1 has to be re-chosen
+	//  to be a different value until the algorithm return a different value for m2, but this will only happen
+	//  once in every 2^k times where k is the number of prime factors in the modulus or number being factored.
 	//
-	//  Even with a polynomial-time algorithm, the Rabin cipher can never be completely broken and is still
-	//  unbreakable if the key size is large enough. For example, if a classical algorithm for factoring num-
-	//  bers has a running time of O(n^4.58) operations, then for a 256 K bit number the algorithm would re-
-	//  quire O(4.58*5) or ~ O(10^25.5) operations to break the cipher.
+	//  Solving the coprime root extraction problem c = m ^ e (mod n) where (e, phi(n)) == 1 is not equivalent
+	//  to factorization because there is no difference of squares for the roots of c = m ^ e (mod n) if the
+	//  sqrt(c) always gives the same value of m. The problem with coprime root extraction is that the function
+	//  is invertible without factoring or unmultiplying the modulus n, and the function can be inverted as
+	//  fast as it can be computed. (Michael Rabin had thought of using coprime root extraction as a public key
+	//  cipher but he knew that it wasn't equivalent to factorization.)
+	//
+	//  The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the same number in the
+	//  totient whereas the RSA / coprime root extraction cipher can only use exponents e > 2 that are co-prime
+	//  with the totient. If the message m is a perfect square < n, then the message can be encrypted and de-
+	//  crypted by squaring and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3,
+	//  then the message can be encrypted and decrypted by cubing and uncubing m modulo n. The root of c = m ^
+	//  e (mod n) still has e ^ k solutions where k is the number of factors (or prime powers) in the modulus,
+	//  but the recipient can extract the message by inverting e modulo phi(n)/e instead of modulo phi because
+	//  the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
+	//
+	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refractory
+	//  problem to be a public key cipher. It only has to be harder to invert than to compute. Some functions
+	//  such as the factorial function a! (mod p) are neither computable nor invertible in polynomial time. If
+	//  a! (mod n) were computable it would solve the factorization problem for n.
+	//
+	//  The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
+	//  sub-exponential, quantum, and polynomial-time algorithms for factoring integers. Even with a polyno-
+	//  mial-time algorithm, the Rabin cipher can never be completely broken and is still unbreakable if the
+	//  key size is large enough. For the cipher to be secure or unbreakable, the key size has to be on the
+	//  order of 10^5 bits if the running time of the factorization algorithm is O(n^4.58). For a 256 K bit
+	//  modulus, the size in base 10 is log(256*1024) / log(10) ~ 5.4 digits, which makes the running time
+	//  O((10^5.4)^4.58)) == O(10^25) or 10 septillion operations. For a 512 K bit modulus it would be ~ 256
+	//  septillion operations.
 	//
 	//  (Note that n in the running time represents the log of the modulus or the number of bits instead of
 	//  the value of the modulus so that linear log multiplication can be written as O(n log n) instead of
-	//  O(log n log log n). Unfortunately the modulus uses the same letter for composite numbers as the letter
-	//  used for the running time, and m is unavailable because it is used for the message.)
+	//  O(log n log log n). Unfortunately the modulus uses the same letter or variable name for composite num-
+	//  bers as the letter used for the running time, and m is unavailable because it is used for the message.)
 	//
 	//  Even at 256 K bits, the Rabin cipher can decrypt almost instantly. The encryption method could take
 	//  ~ 1 core-second using a Karatsuba / sesquilinear or three-halves multiplier on a 1 GHz processor. (If
@@ -52450,7 +52477,8 @@ class PublicKey
 	//  method can be modified to use a larger hardware multiplier, then the running time could be a thousand
 	//  times smaller although the number of cores per processor would also be smaller. This is why doing mul-
 	//  tiplication using 32-bit ints is faster than using bits, bytes, or words, or using shifts and adds
-	//  which is equivalent to using a 1-bit multiplier. A bigger hardware multiplier can reduce the running
+	//  even though a 64-bit multiplier requires at least 64^2 registers to do quadratic school or paralello-
+	//  gram multiplication compared to a 1-bit multiplier. A bigger hardware multiplier can reduce the running
 	//  time by a constant factor but it cannot change the order of the polynomial from O(n^4.58).
 	//
 	//  The key generation could be made faster by choosing a large random number for the modulus n and then
@@ -52483,8 +52511,8 @@ class PublicKey
 	//  tic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's
 	//  method can solve the discrete log / factorization problem up to ~ 400 to ~ 600 bits which is on the or-
 	//  der of a thousand bits. Instead of doubling or tripling the number of bits, a polynomial-time algorithm
-	//  that has a running time of O(n^4.58) can increase the number of bits a hundredfold from ~ 1 K bits to
-	//   ~ 100 K bits using a supercomputer.
+	//  that has a running time of O(n^4.58) can increase the number of bits a hundredfold from ~ 512 bits to
+	//  ~ 64 K bits using a supercomputer. A 256 K to 512 K bit number would be impossible to factor.
 	//
 	//  A gigahertz processor that has a thousand cores can do terascale computing or O(10^12) operations per
 	//  second. A thousand processors can do petascale computing, and a millon processors can do exascale com-
@@ -52492,8 +52520,7 @@ class PublicKey
 	//  zetta op and a mega second or ten days to do a yotta op or 10^24 operations. A specialized processor
 	//  such as the ones used to do hashing for the mining of cryptocurrency could be used to do zettascale
 	//  computing or 10^21 operations per second, but it would still take on the order of 100 K seconds to do
-	//  a hundred yotta ops to factor one 256 K bit number. A 1 M bit number would require ~ 10^28 or 10 octil-
-	//  lion operations to factor.
+	//  a hundred yotta ops to factor one 256 K bit number.
 	//
 	//
 	//  Running times for primality testing, prime number generation, and integer factorization
@@ -52501,6 +52528,8 @@ class PublicKey
 	//  primality testing        O(n^0) exponentiations == O(n^1) multiplications == O(n^2.58) operations
 	//  prime number generation  O(n^1) exponentiations == O(n^2) multiplications == O(n^3.58) operations
 	//  integer factorization    O(n^2) exponentiations == O(n^3) multiplications == O(n^4.58) operations
+	
+	
 	
 	
 	
@@ -52720,6 +52749,18 @@ class PublicKey
 	//  The secret key is the volume of the parallelepiped
 	//
 	//  E  = Y * K == - Z * X
+	//
+	//  The volume of a parallelepiped is also defined by
+	//  the determinant
+	//
+	//          |  a1  a2  a3  |
+	//      __  |              |
+	//   V  __  |  b1  b2  b3  |
+	//          |              |
+	//          |  c1  c2  c3  |
+	//
+	//  where the vectors { a1, a2, a3 }, { b1, b2, b3 },
+	//  and { c1, c2, c3 } are any three sides.
 	
 	
 	
@@ -52875,23 +52916,10 @@ class PublicKey
 	
 	//  Rabin / factorization / co-composite root extraction cipher
 	
-	private static final int sizefact1 =  32 * 1024 - 1024; // ( 32 - 1) K digits ~  128 K bits
-	private static final int sizefact2 =  64 * 1024 - 1024; // ( 64 - 1) K digits ~  256 K bits
-	private static final int sizefact4 = 128 * 1024 - 1024; // (128 - 1) K digits ~  512 K bits
+	private static final int sizefact1 =  32 * 1024 - 1024; // ( 32 - 1) K digits ~ 128 K bits
+	private static final int sizefact2 =  64 * 1024 - 1024; // ( 64 - 1) K digits ~ 256 K bits
 	
-	//  A 128 K bit modulus requires O(n ^ 4.58) or O(128 K ^ 4.58) ~ 1 yotta op (including a
-	//  small hidden constant for the multiplier) but the message m = sqrt c mod n decrypts in
-	//  ~ 10^8 operations or < 100 ms on a 1 GHz single-core processor.
-	//
-	//  A  512 K bit modulus requires O(n ^ 4.58) == O(256 K ^ 4.58) or ~  1000 yotta ops to factor
-	//  A  256 K bit modulus requires O(n ^ 4.58) == O(256 K ^ 4.58) or ~    20 yotta ops to factor
-	//  A  128 K bit modulus requires O(n ^ 4.58) == O(128 K ^ 4.58) or ~     1 yotta op  to factor
-	//
-	//  A  64 K bit modulus requires O(n ^ 4.58) == O( 64 K ^ 4.58) or ~  100 zetta ops to factor
-	//  A  32 K bit modulus requires O(n ^ 4.58) == O( 32 K ^ 4.58) == ~   10 zetta ops to factor
-	//  A  16 K bit modulus requires O(n ^ 4.58) == O( 16 K ^ 4.58) == ~  200   exa ops to factor
-	//
-	//  The public key class will generate a factorization key for any 2^k - 1024 digits
+	//  The public key class will generate a factorization key for any 2 ^ k - 1 K digit size
 	
 	
 	
@@ -52968,6 +52996,8 @@ class PublicKey
 		//  b = c[] (m[] + e[]), b1 = r[][]^T (m[] + e[])
 		
 		
+		//  The Rabin / factorization cipher (not enabled)
+		
 		//  The factorization cipher is the only cipher that is not enabled
 		//  by default because the key size is an order of magnitude larger
 		//  than the next largest key which is the knapsack cipher. The fac-
@@ -52976,10 +53006,7 @@ class PublicKey
 		//  and then the decryption thread will not display the subject lines
 		//  or the first few lines of the messages.
 		
-		//  Rabin / fact ciphers
-		
-		//  sizefact1, sizefact2, sizefact4
-		
+		//  sizefact1 or sizefact2
 		
 		
 		
@@ -53496,8 +53523,7 @@ class PublicKey
 		
 		
 		else if ((size == sizefact1)
-		      || (size == sizefact2)
-		      || (size == sizefact4))
+		      || (size == sizefact2))
 		{
 			this.p = null;
 			
@@ -58825,20 +58851,22 @@ class PublicKey
 	//
 	//  It doesn't make sense to use the Chinese remainder theorem to find the
 	//  common remainder of a set of reduced residues r[] and reduced moduli n[],
-	//  or to use the fta to find the factorization of a number n, because the
-	//  crt and fta are not methods or algorithms. Some authors conflate the
-	//  theorem, the algorithm, and the value and refer to Gauss's remainder
-	//  algorithm, Garner's formula, and the least common remainder as crt.
+	//  or to use the fta to find the factorization of a number n, because the crt
+	//  and fta are not methods or algorithms. Some authors conflate the theorem,
+	//  the algorithm, and the value and refer to Gauss's remainder algorithm,
+	//  Garner's formula, and the least common remainder as crt.
 	//
 	//  Gauss's remainder algorithm comes from Disquisitiones Arithmeticae (1801).
 	//  Carl F. Gauss is the greatest mathematician of all time followed by Newton,
 	//  Euler, Archimedes, Euclid, Diophantus, Lagrange, Fermat, Cauchy, Riemann,
-	//  Descartes, Galois, Leibniz, Fourier, Abel, Legendre, ... and the second
-	//  most prolific after Euler.
+	//  Descartes, Galois, Leibniz, Fourier, Laplace, Abel, Legendre, ... and the
+	//  second most prolific after Euler whose works are published in 70 large vol-
+	//  umes. Cauchy is the third most prolific mathematician having 27 volumes of
+	//  collected works.
 	//
 	//  There is a Chinese remainder algorithm 500 years before Gauss that is based
-	//  on least common multiples, not modular inversion because there was no modu-
-	//  lar inversion before Fermat's little theorem a^(p-1) == 1 (mod p) was pub-
+	//  on least common multiples, not modular inversion because modular inversion
+	//  was unknown before Fermat's little theorem a^(p-1) == 1 (mod p) was pub-
 	//  lished in the seventeenth century. (This theorem says that a^(p-1) == 1 ==
 	//  a^0 (mod p) for a != 0 (mod p) which implies that the inverse of a is a ^
 	//  (p-2) == 1/a == a^-1 (mod p))
@@ -60586,9 +60614,7 @@ class PublicKey
 			
 			for (int i = 0; i < x.length; i++) x[i] = x[i] .mod(n);
 			
-			Vector X = new Vector( new Number[]
-			
-			    { x[0], x[1], x[2] } );
+			Vector X = new Vector( new Number[] { x[0], x[1], x[2] } );
 			
 			
 			//  Compute the secret volume of the parallelepiped
@@ -60599,6 +60625,88 @@ class PublicKey
 			//  E  =  Z * X  ==  - Y * K
 			
 			Number E = Z .dot(X) .mod(p);
+			
+			
+			
+			////////////////////////////////////////////////////////////////
+			
+			
+			if (false)
+			{
+				//  Test if a cryptanalyst can compute the same volume as E1 =
+				//  Y1 * K1 == - Z1 * X1 without using X1 or K1 by forming a
+				//  matrix M1 containing the public vectors A1, Y1, and Z1 and
+				//  then computing the determinant.
+				
+				//  Define a public vector A1
+				
+				String[] pidigits = new String[3];
+				
+				final int s1 = s * 3/4;
+				
+				for (int i = 0; i < 3; i++)
+				
+				    pidigits[i] = pi16.substring(i*s1, (i+1)*s1);
+				
+				Number a1 = new Number(pidigits[0],radix);
+				Number a2 = new Number(pidigits[1],radix);
+				Number a3 = new Number(pidigits[2],radix);
+				
+				Vector A1 = new Vector( new Number[] { a1, a2, a3 } );
+				
+				
+				//  Define two private vectors X1 and K1
+				
+				//  Number n = new Number(radix) .pow(s);
+				
+				Number[] x1 = new Number[3];
+				Number[] k1 = new Number[3];
+				
+				for (int i = 0; i < x1.length; i++) x1[i] = new Number(Math.random(0xffffffffL));
+				for (int i = 0; i < k1.length; i++) k1[i] = new Number(Math.random(0xffffffffL));
+				
+				Vector X1 = new Vector( new Number[] { x1[0], x1[1], x1[2] } );
+				Vector K1 = new Vector( new Number[] { k1[0], k1[1], k1[2] } );
+				
+				
+				//  Compute the public key vectors / parallelograms
+				
+				Vector Y1 = A1 .cross(X1) .mod(p);
+				Vector Z1 = A1 .cross(K1) .mod(p);
+				
+				//  Compute the volume E1 = Y * K == - Z * X
+				
+				Number E0 = Y1 .dot(K1) .mod(p);
+				Number E1 = Z1 .dot(X1) .mod(p) .negate(p);
+				
+				if (!E0.equals(E1)) throw new ArithmeticException();
+				
+				
+				//  Form the matrix of the vectors A1, Y1, and Z1
+				//  to try to find the volume E1 = Y * K == - Z * X
+				//  without using X1 or K1
+				
+				Matrix M1 = new Matrix(3, 3);
+				
+				Number[] vec_a1 = A1.toArray();
+				Number[] vec_y1 = Y1.toArray();
+				Number[] vec_z1 = Z1.toArray();
+				
+				M1.setRow(vec_a1, 0);
+				M1.setRow(vec_y1, 1);
+				M1.setRow(vec_z1, 2);
+				
+				Number D1 = M1 .determinant(p);
+				Number D2 = M1 .determinant(p).negate(p);
+				
+				System.out.println("E1 == " + E1);
+				System.out.println("D1 == " + D1);
+				System.out.println("D2 == " + D2);
+			}
+			
+			
+			////////////////////////////////////////////////////////////////
+			
 			
 			
 			//  Either the sender or the receiver can negate
@@ -61344,6 +61452,10 @@ class PublicKey
 		else if ( Math.isPowerOf2( z.trim().length() + 1024 ) )
 		{
 		
+			System.out.println("fact length == " + z.trim().length());
+			
+			//  Rabin / sqrt / factorization cipher
+			
 			//  if (type == recipient / decryption) m is computed from z = c = m^2 (mod n)
 			//  if (type ==    sender / encryption) m is chosen and z is ignored
 			
@@ -61502,7 +61614,9 @@ class PublicKey
 			
 			else // if (type == 2)
 			{
-				//  Choose a random p-bit secret key
+				//  Choose the same random p-bit secret key
+				//  that was used to compute c = m ^ 2 (mod n)
+				//  and reduce the secret key modulo F8 = 2^2^8+1
 				
 				String publickey = z;
 				
@@ -61965,7 +62079,13 @@ class PublicKey
 		//  if z.length() is unknown return the number zero to
 		//  be xor-ed with the composite secret key
 		
-		else return new Number(0);
+		else
+		{	System.out.println(
+			
+			    "Unknown key length " + z.trim().length());
+			
+			return new Number(0);
+		}
 	}
 	
 	
@@ -64320,7 +64440,7 @@ class Signature
 			//      .setPrecision(4) .divide(1L*1024*1024*1024));
 			//  System.out.println(" seconds");
 			
-			return SAS.equals(RYRMR1MMR2RRR3M) ? true : false;
+			return SAS.equals(RYRMR1MMR2RRR3M);
 		}
 		
 		
@@ -68252,39 +68372,6 @@ class Math
 	}
 	
 	
-	public static Matrix lcr(Matrix[] r, Number[] n)
-	{
-		//  r is an array of reduced matrices R mod (n = p[])
-		
-		if (r.length != n.length) throw
-		
-		    new IllegalArgumentException();
-		
-		int matrices = r.length;
-		
-		int rows = r[0].rowCount();
-		int cols = r[0].columnCount();
-		
-		Matrix R = new Matrix(rows, cols);
-		
-		for (int i = 0; i < rows; i++)
-		for (int j = 0; j < cols; j++)
-		{
-			Number[] r_ij = new Number[matrices];
-			
-			for (int k = 0; k < matrices; k++)
-			
-			    r_ij[k] = r[k].get(i, j);
-			
-			Number lcr = lcr(r_ij, n);
-			
-			R.set(lcr, i, j);
-		}
-		
-		return R;
-	}
-	
-	
 	private static Number GarnersFormula(Number[] r, Number[] n)
 	{
 	
@@ -68840,8 +68927,6 @@ class Math
 		
 		long twos1 = 0, twos2 = 0;
 		
-		int[] multiplier1, multiplicand1, product1;
-		
 		for (int i = 0; i < multiplier.length; i++)
 		{
 			if (multiplier[multiplier.length-1-i] == 0) twos1++;
@@ -68858,6 +68943,8 @@ class Math
 		
 		//  Right shift the multiplier and multiplicand to remove the
 		//  trailing zeros and then trim to remove the leading zeros
+		
+		int[] multiplier1, multiplicand1, product1;
 		
 		multiplier1   = trim(shiftRight(multiplier,   32*twos1));
 		multiplicand1 = trim(shiftRight(multiplicand, 32*twos2));
@@ -69303,7 +69390,7 @@ class Math
 		
 		int t = (int) (2*n * log(n));
 		
-		if (t < 0) t = 0x7fffffff -1;
+		if (t < 0) t = 0x7fffffff-1;
 		
 		sieve = new boolean[t];
 		
@@ -69326,7 +69413,7 @@ class Math
 		
 		for (int i = 0; i < sieve.length; i++)
 		
-		    if (sieve[i]) list .add(i);
+		    if (sieve[i]) list.add(i);
 		
 		int[] primes = new int[n];
 		
@@ -71418,6 +71505,17 @@ class Number implements Comparable<Number>
 		
 		//  floating point comparison
 		
+		//  Note that two numbers can be represented differently but should
+		//  compare equally even if there are rounding errors from different
+		//  operations. For example, 1.0000000000000000 and 0.9999999999999999
+		//  should compare equally. In the intarray's two numbers could be
+		//  [12345678, 0, 0] and [12345677, -1, -1] which are identical if the
+		//  numbers are rounded. (Since the round method calls the divide method
+		//  which calls the compareTo method, the compareTo method cannot call
+		//  the round method because it would create an endless loop of function
+		//  calls or method invocations causing the stack to overflow and the
+		//  thread to terminate.)
+		
 		
 		//  Use the smaller of the two precisions
 		//
@@ -71438,6 +71536,34 @@ class Number implements Comparable<Number>
 		b = b.setPrecision(p);
 		
 		
+		//  If the one integer is larger than the other integer by 1,
+		//  and the larger integer is followed by a 0x00000000 while the
+		//  other integer is followed by a -1 or 0xffffffff, then return 0
+		
+		Number a_int = a.toInteger();
+		Number b_int = b.toInteger();
+		
+		Number c_int = a_int.subtract(b_int).abs();
+		
+		if ((c_int.intarray.length == 1) && (c_int.intarray[0] == 1))
+		{
+			Number a_frac = a.toFraction();
+			Number b_frac = b.toFraction();
+			
+			if (a_int.subtract(b_int).intarray[0] == 1)
+			{
+				if ((a_frac.intarray[0] ==  0) &&
+				    (b_frac.intarray[0] == -1))    return 0;
+			}
+			
+			if (a_int.subtract(b_int).intarray[0] == -1)
+			{
+				if ((a_frac.intarray[0] == -1) &&
+				    (b_frac.intarray[0] ==  0))    return 0;
+			}
+		}
+		
+		
 		//  Subtract the two numbers
 		
 		Number c = a.subtract(b);
@@ -71445,11 +71571,9 @@ class Number implements Comparable<Number>
 		Number integer  = c.toInteger();
 		Number fraction = c.toFraction();
 		
-		fraction = fraction .multiply(
+		fraction = fraction .multiply(new
 		
-		    new Number(16).pow(p))
-		
-			.setPrecision(0);
+		    Number(16).pow(p)) .setPrecision(0);
 		
 		if (integer.equals(0) && fraction.equals(0)) return 0;
 		
@@ -72140,7 +72264,7 @@ class Number implements Comparable<Number>
 		//  because the inverse of n can be pre-computed
 		
 		//  To call this method from another method,
-		//  first pre-compute the inverse
+		//  first pre-compute the inverse of n
 		//
 		//  int digits = (int) n.bitCount() / 4;
 		//
@@ -72610,6 +72734,10 @@ class Number implements Comparable<Number>
 		
 		    throw new IllegalArgumentException();
 		
+		if (this.equals(0)) return n;
+		
+		if (n.equals(0)) return this;
+		
 		Number a, b, c, m = this;
 		
 		if (m.abs().isGreaterThan(n.abs()))
@@ -72623,10 +72751,13 @@ class Number implements Comparable<Number>
 			b = new Number(m.abs());
 		}
 		
-		if ( a.equals(0) || a.equals(1)
-		  || b.equals(0) || b.equals(1) )
+		if (a.equals(1) || b.equals(1))
 		
-		     return new Number(1);
+		    return new Number(1);
+		
+		if (a.equals(0) || b.equals(0) )
+		
+		     return a.isGreaterThan(b) ? a : b;
 		
 		if (a.equals(b)) return a;
 		
@@ -73104,11 +73235,15 @@ class Number implements Comparable<Number>
 		//  tests if an integer is evenly divisible
 		//  (divisible without remainder) by n
 		
-		if (!this.isInteger()) throw
+		if (this.isInteger())
 		
-		    new IllegalArgumentException();
+		    return this.mod(n).equals(0);
 		
-		return this.mod(n).equals(0);
+		Number quotient = this.divide(n);
+		
+		return quotient.round().subtract(quotient).equals(
+		
+		    new Number(0).setPrecision(this.precision));
 	}
 	
 	
@@ -73272,12 +73407,97 @@ class Number implements Comparable<Number>
 	{
 		//  tests if a number is a prime power
 		
-		//  if a number n = p^k, then
+		//  if a number n = p^k, then the totient is
 		//
-		//    (p-1) p^(k-1)
-		//  a               == 1 (mod p)
+		//           k           k-1
+		//  phi(n = p ) = (p-1) p
+		//
+		//  This means that for any base a < p
+		//
+		//    (p-1) p^(k-1)      phi(n)
+		//  a               ==  a       ==  1 (mod n)
+		//
+		//  Fermat's test says that for any prime or prime power n = p^k,
+		//  any coprime base raised to the (p-1) p^(k-1) equals 1. But the
+		//  converse is not always true; if a ^ ((p-1) p^(k-1)) == 1 (mod n)
+		//  for (a, n) == 1, it doesn't prove that n is a prime or prime power,
+		//  because Fermat's test can only prove a negative or that a number is
+		//  not a prime or prime power. For this reason the method tries divid-
+		//  ing by the first few or 32 primes before applying the Fermat test.
+		//
+		//  If there are some composite (or prime) numbers that can still pass
+		//  the prime power test then there may have to be an additional test
+		//  similar to the Miller-Rabin test for primality that also uses Fer-
+		//  mat's test but removes the twos from the totient.
+		
+		
+		
+		//  for (int i = 2; i < 1024*1024; i++)
+		//
+		//  if (new Number(i).isPrimePower())
+		//  {
+		//	int[] factors = Math.factor(i);
+		//	
+		//	int[][] prime_exp = Math.sortAndCollate(factors);
+		//	
+		//	int prime = prime_exp[0][0], exp = prime_exp[0][1];
+		//	
+		//	if ((prime_exp.length > 1) || !Math.isPrime(prime))
+		//	
+		//	    throw new ArithmeticException();
+		//	
+		//	System.out.print(prime_exp[0][0]
+		//	        + "  " + prime_exp[0][1] + "   ");
+		//  }
+		//
+		//  2  2   2  3   3  2   2  4   5  2   3  3   2  5   7  2   2  6
+		//  3  4   11  2   5  3   2  7   13  2   3  5   2  8   17  2   7  3
+		//  19  2   2  9   23  2   5  4   3  6   29  2   31  2   2  10
+		//  11  3   37  2   41  2   43  2   2  11   3  7   13  3   47  2
+		//  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..
+		//
+		//  907  2   7  7   911  2   919  2   929  2   937  2   941  2   947  2
+		//  953  2   97  3   31  4   967  2   971  2   977  2   983  2   991  2
+		//  997  2   1009  2   1013  2   101  3   1019  2   1021  2
+		
+		
+		//  Example
+		//
+		//  int n = 1024*1024*1024;
+		//  for (int i = n + 1; i < n + 1024*1024; i++)
+		//    if (new Number(i).isPrimePower())
+		//	System.out.print(i + "  ");
+		//
+		//  the output is 1073938441, 1074462841, 1074725089,
+		//  or the squares of the three consecutive primes
+		//  32771, 32779, and 32883.
+		//
+		//  For n ~ 10^9, there should be 10^4.5 or ~ 32 K perfect
+		//  squares. Since the iteration is only over 10^6 instead
+		//  of 10^9, there should be 32 squares including composite
+		//  bases instead of 32 K squares; but the prime density is
+		//  1 / ln n or 1 / ln 32 K ~ 1 / 10 which means that the
+		//  number of perfect prime squares should be 32.768 / 10.4
+		//  == 3.15 or ~ 3.
+		
 		
 		Number p = this;
+		
+		if (p.isPrime()) return false;
+		
+		int[] primes = Math.primes(32);
+		
+		for (int prime : primes)
+		
+		if (p.mod(prime).intValue() == 0)
+		{
+			while (p.isDivisibleBy(prime))
+			
+			    p = p.divide(prime);
+			
+			return p.equals(1);
+		}
+		
 		
 		Number a = new Number(2);
 		
@@ -73288,9 +73508,13 @@ class Number implements Comparable<Number>
 		
 		Number residue = a .modPow(
 		
-		    p.subtract(1), p) .modPow(p, p);
+		    p.subtract(1), p) .modPow(p, p)
 		
-		return residue.equals(1);
+			.modPow(p, p) .modPow(p, p);
+		
+		if (!residue.equals(1)) return false;
+		
+		return true;
 	}
 	
 	
@@ -73791,7 +74015,7 @@ class Number implements Comparable<Number>
 	}
 	
 	
-	public Number mod(int val)
+	private Number mod(int val)
 	{
 		//  returns the value of this mod n
 		
@@ -73803,17 +74027,23 @@ class Number implements Comparable<Number>
 		//
 		//  a0 b0 (mod p) + a1 b1 (mod p) + ... + ak bk (mod p)
 		
+		int sign = this.signum();
+		
+		if (val < 0) throw new IllegalArgumentException();
+		
 		if (this.isComplex()) return new Number(
 		
 		    this.toReal().mod(val), this.toImag().mod(val));
+		
+		Number n = this.abs();
 		
 		long residue = 0L;
 		
 		long twosr = 1L; // twos residue for (2^32)^i (mod val)
 		
-		for (int i = this.intarray.length -1; i >= 0; i--)
+		for (int i = n.intarray.length -1; i >= 0; i--)
 		{
-			long a = this.intarray[i] & 0xffffffffL;
+			long a = n.intarray[i] & 0xffffffffL;
 			
 			long r = a % val;  r = (r * twosr) % val;
 			
@@ -73823,6 +74053,10 @@ class Number implements Comparable<Number>
 		}
 		
 		residue %= val;
+		
+		if (sign == -1) residue *= -1;
+		
+		if (residue < 0) residue += val;
 		
 		return new Number(residue);
 	}
@@ -73869,10 +74103,9 @@ class Number implements Comparable<Number>
 		
 		if (n.equals(0) || n.isComplex())
 		{
-			String message;
+			String message = (n.equals(0)) ?
 			
-			if (n.equals(0)) message = "n equals 0";
-			else message = "mod is complex";
+			   "n equals 0" : "mod is complex";
 			
 			throw new IllegalArgumentException(message);
 		}
@@ -73891,7 +74124,6 @@ class Number implements Comparable<Number>
 		if (a .equals(0))
 		
 		    return new Number(0);
-		
 		
 		n = n .abs();
 		
@@ -73934,7 +74166,7 @@ class Number implements Comparable<Number>
 		//  (if the same modulus is used more than once)
 		//
 		//  To call this method from another method,
-		//  first pre-compute the inverse
+		//  first pre-compute the inverse of n
 		//
 		//  int digits = (int) n.bitCount() / 4;
 		//
@@ -73973,7 +74205,7 @@ class Number implements Comparable<Number>
 		
 		r = r .subtract(q.multiply(n));
 		
-		if (r.signum() == -1) r = r .add(n);
+		while (r.signum() == -1) r = r .add(n);
 		
 		if (r.equals(n)) r = new Number(0);
 		
@@ -74371,7 +74603,7 @@ class Number implements Comparable<Number>
 		     return a.modPow1(x, n);
 		
 		
-		//  Pre-compute the inverse(n) for fast modular reduction
+		//  Pre-compute the inverse of n for fast modular reduction
 		
 		int digits = (int) n.bitCount() / 4;
 		
@@ -74870,7 +75102,7 @@ class Number implements Comparable<Number>
 		Number a2 = new Number(1);
 		
 		
-		//  Pre-compute the inverse(n) for fast modular reduction
+		//  Pre-compute the inverse of n for fast modular reduction
 		
 		int digits = (int) p.bitCount() / 4;
 		
@@ -78390,6 +78622,19 @@ class Matrix
 	}
 	
 	
+	public Matrix(int n, int rows, int cols)
+	{
+		//  creates a matrix initialized to n
+		
+		this.matrix = new Number[rows][cols];
+		
+		for (int i = 0; i < rows; i++)
+		for (int j = 0; j < cols; j++)
+		
+		    this.matrix[i][j] = new Number(n);
+	}
+	
+	
 	public Matrix(int[] matrix, int rows, int cols)
 	{
 		//  converts an array of elements to a matrix
@@ -78777,25 +79022,130 @@ class Matrix
 	}
 	
 	
+	
+	//  Determinants are used to compute the product of three vectors.
+	//
+	//  The product of three vectors is the volume of a parallelepiped
+	//
+	//           |  x1   y1  z1  |
+	//     V  =  |  x2   y2  z2  |
+	//           |  x3   y3  z3  |
+	//
+	//  where the vectors (x1, y1, z1), (x2, y2, z2), and (x3, y3, z3) are three sides
+	//  starting from the same corner or vertex as the basis vectors i, j, k of the rec-
+	//  tilinear coordinate system. The volume V is a scalar because the determinant is
+	//  a number instead of a matrix or a vector.
+	//
+	//
+	//  If one of the three vectors is the basis vector (i, j, k), then the determinant
+	//  is the area of a parallelogram or the cross product of two vectors C = A (x) B.
+	//
+	//  The area of the parallelogram is defined by
+	//
+	//            |   i    j    k  |
+	//     A  =   |  x1   y1   z1  |
+	//            |  x2   y2   z2  |
+	//
+	//  where the vectors (x1, y1, z1) and (x2, y2, z2) are two sides starting from the
+	//  same vertex and i, j, k are the three basis vectors of the coordinate system.
+	//
+	//  The cross product C = A (x) B is the product of the magnitudes of A and B times
+	//  the sine of the angle between the two vectors. The vector C which represents the
+	//  area of the parallelogram is perpendicular to the plane containing the vectors A
+	//  and B. The product C is a vector instead of a scalar because i, j, and k are let-
+	//  ters instead of numbers.
+	//
+	//
+	//  Determinants can be used also to compute the area of a triangle
+	//
+	//                |  1   x1   y1  |
+	//     A  =  1/2  |  1   x2   y2  |
+	//                |  1   x3   y3  |
+	//
+	//  where (x1, y1), (x2, y2), and (x3, y3) are the coordinates of the vertices.
+	//
+	//  Expanding the determinant into minors and adding the cofactors gives the formula
+	//
+	//  A  = 1/2 [ 1 (x2 y3 - y2 x3) - x1 (y3 - y2) + y1 (x3 - x2) ]
+	//
+	//    == 1/2 [ x2 y3 - x3 y2 - x1 y3 + x1 y2 + x3 y1 - x2 y1 ].
+	//
+	//  This formula should equal 1/2 the base times the height of the triangle.
+	//
+	//  If we place two of the three vertices along the x-axis, then y1 = y2 = 0 and
+	//
+	//  A == 1/2 [ x2 y3 - x1 y3 ] == 1/2 [ (x2 - x1) y3 ] == 1/2 the base x the height.
+	
+	
+	
+	//  Properties of determinants
+	//
+	//  The determinant of the product of two matrices A and B is the product of the
+	//  determinants of A and B, or | A B | == | A || B |. (The determinant of the
+	//  product equals the product of the determinants.)
+	//
+	//  If the rows and columns of a matrix are transposed, the determinant is un-
+	//  changed. (| A | == | A^T |)
+	//
+	//  If any two rows (columns) of a matrix are interchanged then the value of the
+	//  determinant is negated. (For a 2x2 matrix { { a, b }, { c, d } } the deter-
+	//  minant is a d - b c, therefore swapping the two rows gives the determinant
+	//  c b - d a or b c - a d which is the negative of a d - b c.)
+	//
+	//  If any row (column) of a matrix is multiplied by a number k, then the value
+	//  of the determinant is also multiplied by k. (For a 1x1 matrix { a } the de-
+	//  terminant is | a | == a, therefore | k a | == k a.)
+	//
+	//  If any row (column) of a matrix is multiplied and added to another row (col-
+	//  umn), the determinant is unchanged. (For a 2x2 matrix { { a, b }, { c, d } }
+	//  the determinant is a d - b c, therefore a (d + b) - b (c + a) == a d - b c
+	//  + (a b - a b) == a d - b c.)
+	//
+	//  If all elements of any row (column) of a matrix equal zero, then the value
+	//  of the determinant is zero. (Multiplying a row by zero multiplies the deter-
+	//  minant by zero because for a 1x1 matrix | k a | == k a.)
+	//
+	//  If any two rows (columns) of a matrix are identical, then the value of the
+	//  determinant is zero. (All rows or equations have to be linearly independent
+	//  for a matrix to be reducible, solvable, or invertible.)
+	//
+	//  If the determinant of a matrix is zero, then the matrix is singular or non-
+	//  invertible. Conversely, if a matrix is singular or non-invertible, then the
+	//  determinant of the matrix is zero.
+	//
+	//  If a matrix is in echelon (upper or lower triangular) form, then the deter-
+	//  minant equals the product of the diagonal elements. For the 2x2 matrix
+	//  { { a, b }, { c = 0, d } } in echelon form, the determinant is a d - b c ==
+	//  a d - 0 b == a d which is the product of the diagonal elements. For the 1x1
+	//  matrix { a } which is always in echelon form, the product of the diagonal
+	//  elements equals a because there is only one element.
+	//
+	//  If a matrix is reduced to echelon form and any of the diagonal elements is
+	//  missing or zero, then the determinant is zero because the product of the
+	//  diagonal elements equals zero.
+	//
+	//  If the determinant of a matrix is non-zero, then there is a unique solution
+	//  to the equation A X == B. (For the 1x1 equation a x == b, x == b / a.)
+	//
+	//  If the determinant of a matrix A is zero, then there is no solution or there
+	//  are multiple solutions to the equation A X == B, and there are non-trivial or
+	//  non-zero solutions for A X == 0. (For the 1x1 equation a x == 0 where a == 0
+	//  because the determinant is zero, x == 0 / 0 which is undefined.)
+	
+	
 	public Number determinant()
 	{
-		//  returns the determinant
+		//  returns the determinant of a matrix
 		
-		return this.determinant(null);
-	}
-	
-	
-	public Number determinant(Number modulus)
-	{
-	
-		//  This method evaluates the determinant of a matrix by
-		//  reducing the matrix to echelon (upper triangular) form
-		//  and then computing the product of the diagonal elements.
+		//  This method evaluates the determinant of a matrix by reducing the
+		//  matrix to echelon (upper triangular) form and then computing the
+		//  product of the diagonal elements divided by the product of the
+		//  multipliers and multiplied by (-1) ^ the number of swaps modulo 2.
 		
-		//  This method requires only O(n^3) steps or operations (the
-		//  cost of one matrix multiplication), compared to the recursive
-		//  method of expanding the matrix into minors which requires O(n!)!
-		//  (factorial operator! and exclamation point!) steps or operations.
+		//  This method requires only O(n^3) steps or operations (the cost of
+		//  one matrix multiplication), compared to the recursive method of
+		//  expanding the matrix into minors which requires O(n!)! (factorial
+		//  operator! and exclamation point!) steps or operations.
 		
 		
 		Matrix matrix = new Matrix(this);
@@ -78809,39 +79159,52 @@ class Matrix
 		
 		if (matrix.matrix.length == 1)
 		
-		    return matrix.matrix[0][0].mod(modulus);
+		    return matrix.matrix[0][0];
 		
 		if (this.matrix.length == 2)
 		
-		    return determinant1(modulus);
+		    return determinant1();
 		
 		
-		int swaps = 0;
-		
-		Number d = new Number(1);
+		////////////////////////////////////////////////////////////////
 		
 		
 		//  Reduce the matrix to echelon form
 		
-		Number n = modulus;
 		
-		int p = 0;
+		//  Forward Elimination
+		//
+		//  Reduce the matrix to (upper) echelon form
+		//
+		//  (put zeros below each pivot)
 		
-		if (modulus == null)
+		
+		//  For computing determinants, count the number of swaps modulo 2
+		//  to determine the sign and accumulate the product of the m1's
+		//  because multiplying any row by a scalar also multiplies the
+		//  determinant.
+		
+		boolean swap = false;
+		
+		Number m1_product = new Number(1);
+		
+		
+		//  Set a minimum precision to avoid division by zero
+		
+		int p = matrix.getPrecision();
+		
+		if (p == 0) p = 8;
+		
+		
+		int rows = matrix.matrix.length;
+		
+		for (int r = 0; r < rows - 1; r++)
 		{
-			p = Math.max(8, matrix.getPrecision());
+			if (matrix.matrix.length > 256) System.out.print(r + " ");
 			
-			for (int j = 0; j < matrix.matrix[0].length; j++)
+			//  Reduce the augmented matrix [ A | B ] to echelon form
 			
-			    matrix.matrix[0][j] = matrix.matrix[0][j]
-			
-				.setPrecision(p);
-		}
-		
-		for (int r = 0; r < matrix.matrix.length -1; r++)
-		{
-			//  Find the row and column of the first non-zero
-			//  element starting from row i = r, column j = r
+			//  Find the row i and column j of the first non-zero element
 			
 			boolean bool = false;
 			
@@ -78851,22 +79214,13 @@ class Matrix
 			{
 				for (i = r; i < matrix.matrix.length; i++)
 				{
-					if (n != null)
-					{
-						if (!matrix.matrix[i][j].equals(0))
-						
-						    { bool = true;  break; }
-					}
+					if ( matrix.matrix[i][j].equals(0)) continue;
+					if (!matrix.matrix[i][j].equals(0))
 					
-					else if (n == null)
-					{
-						if (!matrix.matrix[i][j].equals(0.0))
-						
-						    { bool = true;  break; }
-					}
+					    { bool = true;  break; }
 				}
 				
-				if (bool) break;
+				if (bool)  break;
 			}
 			
 			if (j >= matrix.matrix[r].length) continue;
@@ -78876,7 +79230,7 @@ class Matrix
 			
 			if (i != r)
 			{
-				swaps += 1;
+				swap = !swap;
 				
 				Number[] tempi = matrix.matrix[i];
 				Number[] tempr = matrix.matrix[r];
@@ -78886,82 +79240,315 @@ class Matrix
 			}
 			
 			
-			//  Put zeros below the pivot for each row below r
+			//  Put zeros below the pivot for each row i below r
 			
-			for (i = r + 1; i < matrix.matrix.length; i++)
+			Number zero = new Number(0).setPrecision(p);
+			
+			for (i = r + 1; i < rows; i++)
 			{
-				//  Compute the multiplier m for row i
+				Number m1 = matrix.matrix[r][j];
+				Number m2 = matrix.matrix[i][j];
 				
-				Number m = null, m1 = null, m2 = null;
+				if (m2.equals(zero)) continue;
 				
-				if (n == null)
-				{
-					m = matrix.matrix[i][j] .negate() .multiply(
-					    matrix.matrix[r][j] .inverse() );
-				}
+				m1 = m1.inverse();
+				m2 = m2.inverse();
 				
-				else
-				{	m1 = matrix.matrix[i][j] .negate(n);
-					m2 = matrix.matrix[r][j];
-				}
-				
-				
-				//  Multiply row r by the multiplier, and add to row i
+				//  Multiply row i by m1 and row r by m2 so that
+				//  the first element of both rows equals 1
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				{
-					if (n == null)
-					{
-						matrix.matrix[i][k] = matrix.matrix[i][k]
-						     .add( m.multiply(matrix.matrix[r][k]) );
-					}
-					
-					else if (n != null)
-					{
-						matrix.matrix[i][k] =
-						
-						        m1.multiply( matrix.matrix[r][k] )
-						  .add( m2.multiply( matrix.matrix[i][k] ) )
-						
-							.mod(n).add(n).mod(n);
-						
-						d = d .multiply(m2) .mod(n).add(n).mod(n);
-					}
+					matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m1);
+					matrix.matrix[r][k] = matrix.matrix[r][k] .multiply(m2);
 				}
+				
+				//  Subtract row r from row i to zero the first element of i
+				
+				for (int k = j; k < matrix.matrix[i].length; k++)
+				
+				    matrix.matrix[i][k] = matrix.matrix[i][k]
+				
+					.subtract(matrix.matrix[r][k]);
+				
+				
+				//  Accumulate the product of m1
+				
+				m1_product = m1_product .multiply(m1);
 			}
 		}
 		
 		
+		////////////////////////////////////////////////////////////////
+		
+		
 		//  Calculate the product of the diagonal elements
+		
+		Number d = new Number(1);
+		
+		for (int k = 0; k < matrix.matrix.length; k++)
+		
+		    d = d .multiply(matrix.matrix[k][k]);
+		
+		
+		//  Negate the sign if the number of swaps == 1 mod 2
+		
+		if (swap) d = d .negate();
+		
+		
+		//  Remove the product of the m1's
+		
+		d = d .divide(m1_product);
+		
+		
+		//  Round the number only if the fraction digits are zero
+		
+		if (d.toFraction().equals(0))
+		
+		    d = d.round();
+		
+		return d;
+	}
+	
+	
+	public Number determinant(int modulus)
+	{
+		return determinant(new Number(modulus));
+	}
+	
+	
+	public Number determinant(Number modulus)
+	{
+		//  returns the determinant of a matrix
+		
+		//  This method evaluates the determinant of a matrix by
+		//  reducing the matrix to echelon (upper triangular) form
+		//  and then computing the product of the diagonal elements.
+		
+		//  This method requires only O(n^3) steps or operations (the
+		//  cost of one matrix multiplication), compared to the recursive
+		//  method of expanding the matrix into minors which requires O(n!)!
+		//  (factorial operator! and exclamation point!) steps or operations.
+		
+		
+		Number n = modulus, n2 = n.square();
+		
+		Matrix matrix = new Matrix(this);
+		
+		if (matrix.matrix.length != matrix.matrix[0].length)
+		{
+			String message = "non-square matrix";
+			
+			throw new IllegalArgumentException(message);
+		}
+		
+		if (matrix.matrix.length == 1)
+		
+		    return matrix.matrix[0][0];
+		
+		if (this.matrix.length == 2)
+		
+		    return determinant1(modulus);
+		
+		
+		////////////////////////////////////////////////////////////////
+		
+		
+		//  Reduce the matrix to echelon form
+		
+		
+		//  Forward Elimination
+		//
+		//  Reduce the matrix to (upper) echelon form
+		//
+		//  (put zeros below each pivot)
+		
+		
+		//  Pre-compute the inverse of n for fast modular reduction
+		
+		int digits = (int) n.bitCount() / 4;
+		
+		Number invn  = n  .setPrecision(2*digits) .inverse();
+		Number invn2 = n2 .setPrecision(4*digits) .inverse();
+		
+		
+		//  For computing determinants, count the number of swaps modulo 2
+		//  to determine the sign and accumulate the product of the m1's
+		//  because multiplying any row by a scalar multiplies the deter-
+		//  minant by the same amount.
+		
+		boolean swap = false;
+		
+		Number m1_product = new Number(1);
+		
+		
+		int base = 1, exp = 0;
+		
+		if (n.isPrimePower())
+		
+		    for (int i = 2; i < 1024*1024; i++)
+		
+			if (n.isDivisibleBy(i))
+		
+			    { base = i; break; }
+		
+		
+		int rows = matrix.matrix.length;
+		
+		for (int r = 0; r < rows - 1; r++)
+		{
+			if (matrix.matrix.length > 256) System.out.print(r + " ");
+			
+			//  Reduce the augmented matrix [ A | B ] to echelon form
+			
+			//  Find the row i and column j of the first non-zero element
+			
+			boolean bool = false;
+			
+			int i = 0, j = 0;
+			
+			for (j = r; j < matrix.matrix[r].length; j++)
+			{
+				for (i = r; i < matrix.matrix.length; i++)
+				{
+					if ( matrix.matrix[i][j].equals(0)) continue;
+					if (!matrix.matrix[i][j].equals(0))
+					
+					    { bool = true;  break; }
+				}
+				
+				if (bool)  break;
+			}
+			
+			if (j >= matrix.matrix[r].length) continue;
+			
+			
+			//  Swap rows i and r if element [r][j] equals zero
+			
+			if (i != r)
+			{
+				swap = !swap;
+				
+				Number[] tempi = matrix.matrix[i];
+				Number[] tempr = matrix.matrix[r];
+				
+				matrix.matrix[i] = tempr;
+				matrix.matrix[r] = tempi;
+			}
+			
+			
+			//  Put zeros below the pivot for each row i below r
+			
+			for (i = r + 1; i < rows; i++)
+			{
+				//  For each row i compute the multipliers
+				//
+				//  m1 = [r][j],  m2 = - [i][j],
+				//
+				//  instead of  m = - [i][j] / [r][j]
+				//
+				//  to avoid the modular inversion.
+				//
+				//  [i][j] m2 + [r][j] m3 == [i][j][r][j] - [i][j][r][j] == 0
+				//
+				//  This method of elimination can only be used for modular systems
+				//  because the coefficient size grows polynomially or quadratically
+				
+				Number m1 = matrix.matrix[r][j];
+				Number m2 = matrix.matrix[i][j];
+				
+				if (m2.equals(0)) continue;
+				
+				//  Remove the common factor from the multipliers before multiplying
+				//  and subtracting the rows because the common factor is not subtracted
+				
+				Number gcd = m1.gcd(m2);
+				
+				m1 = m1.divide(gcd);
+				m2 = m2.divide(gcd);
+				
+				//  Negate the value of m1
+				
+				m1 = m1 .negate();
+				
+				
+				//  Multiply row r by m2, and add to row i multiplied by m1
+				
+				//  For prime power moduli, the method uses the modulus squared
+				//  instead of the modulus to reduce the elements of the matrix.
+				
+				Number    n1 = (base <= 1) ?    n :    n2;
+				Number invn1 = (base <= 1) ? invn : invn2;
+				
+				for (int k = j; k < matrix.matrix[i].length; k++)
+				
+				    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m1)
+				
+					.add( matrix.matrix[r][k] .multiply(m2) ) .mod(n1, invn1);
+				
+				
+				//  Accumulate the product of m1 and remove the base
+				
+				m1_product = m1_product .multiply(m1);
+				
+				if (base >= 2) while (m1_product.isDivisibleBy(base))
+				
+				    { m1_product = m1_product.divide(base); exp++; }
+				
+				m1_product = m1_product.mod(n);
+			}
+		}
+		
+		
+		////////////////////////////////////////////////////////////////
+		
+		
+		//  Calculate the product of the diagonal elements
+		
+		Number d = new Number(1);
 		
 		for (int k = 0; k < matrix.matrix.length; k++)
 		{
 			d = d .multiply(matrix.matrix[k][k]);
 			
-			if ((n != null) && !n.equals(0)) d = d .mod(n);
-		}
-		
-		//  If any two rows (columns) are interchanged
-		//  then the value of the determinant is negated
-		
-		if ((swaps % 2) == 1)
-		{
-			if (n == null)
+			if (base >= 2)
 			
-			     d = d .negate();
-			else d = d .negate(n);
+			    while (d.isDivisibleBy(base) && (exp > 0))
+			
+				{ d = d.divide(base); exp--; }
 		}
 		
-		return d.setPrecision(p);
+		
+		//  Negate the sign if the number of swaps == 1 mod 2
+		
+		if (swap) d = d.negate(n);
+		
+		//  Remove the product of the m1's
+		
+		d = d .modDivide(m1_product, n);
+		
+		
+		//  Round the number only if the fraction digits are zero
+		
+		if (d.toFraction().equals(0))
+		
+		    d = d.round();
+		
+		return d;
 	}
 	
 	
-	private Number determinant1()
+	public Number determinant1()
 	{
 		return this.determinant1(null);
 	}
 	
-	private Number determinant1(Number modulus)
+	public Number determinant1(int modulus)
+	{
+		return this.determinant1(new Number(modulus));
+	}
+	
+	public Number determinant1(Number modulus)
 	{
 		//  This method evaluates the determinant of a matrix recursively
 		//  by expanding the matrix into minors and adding the cofactors
@@ -79012,12 +79599,14 @@ class Matrix
 			Number d = matrix.matrix[0][0]
 			
 			   .multiply(matrix.matrix[1][1])
-			   
+			
 			      .subtract(matrix.matrix[0][1]
 			
 				 .multiply(matrix.matrix[1][0]));
 			
-			if (modulus != null) d = d .mod(n).add(n).mod(n);
+			if (modulus != null)
+			
+			    d = d .mod(n).add(n).mod(n);
 			
 			return d;
 		}
@@ -79039,6 +79628,10 @@ class Matrix
 			if ((j % 2) == 1)  d1 = d1 .negate();
 			
 			d = d .add(d1);
+			
+			if (modulus != null)
+			
+			    d = d .mod(n).add(n).mod(n);
 		}
 		
 		return d;
@@ -79537,6 +80130,28 @@ class Matrix
 	}
 	
 	
+	public Number gcd()
+	{
+		//  returns the gcd or greatest common divisor of the elements;
+		//  the matrix can have zeros and have a gcd > 1 but it cannot
+		//  have a 1 and have a gcd > 1.
+		
+		Number gcd = new Number(0);
+		
+		for (int i = 0; i < this.matrix   .length; i++)
+		for (int j = 0; j < this.matrix[i].length; j++)
+		{
+			Number element = this.matrix[i][j];
+			
+			gcd = this.matrix[i][j].gcd(gcd);
+			
+			System.out.print(element + " " + gcd + "    ");
+		}
+		
+		return  gcd;
+	}
+	
+	
 	public Number get(int i, int j)
 	{
 		//  returns one element
@@ -79861,8 +80476,9 @@ class Matrix
 		
 		if (this.rowCount() == 1) return true;
 		
-		if (this.rowCount() == 2)
-		if (this.matrix[0][0].equals(this.matrix[1][1])
+		if (this.rowCount() == 2
+		
+		 && this.matrix[0][0].equals(this.matrix[1][1])
 		 && this.matrix[1][0].equals(this.matrix[0][1]))
 		
 		    return true;
@@ -79919,7 +80535,7 @@ class Matrix
 	{
 		//  tests if the determinant equals zero
 		
-		int p = this .getPrecision();
+		int p = this.getPrecision();
 		
 		Number zero = new Number(0) .setPrecision(p);
 		
@@ -80065,6 +80681,44 @@ class Matrix
 	}
 	
 	
+	public static Matrix lcr(Matrix[] r, Number[] n)
+	{
+		//  computes a composite matrix R from a set of reduced
+		//  matrices r[] and a set of coprime moduli n[]
+		
+		if (r.length != n.length) throw
+		
+		    new IllegalArgumentException();
+		
+		int t = r.length;
+		
+		int rows = r[0].rowCount();
+		int cols = r[0].columnCount();
+		
+		Matrix R = new Matrix(rows, cols);
+		
+		//  For each i, j in all k matrices
+		//  compute the composite element
+		
+		for (int i = 0; i < rows; i++)
+		for (int j = 0; j < cols; j++)
+		{
+			Number[] array = new Number[t];
+			
+			for (int k = 0; k < t; k++)
+			
+			    array[k] = r[k].matrix[i][j];
+			
+			Number composite = Math.lcr(array, n);
+			
+			R .set(composite, i, j);
+		}
+		
+		return R;
+	}
+	
+	
+	
 	public Matrix[] LU()
 	{
 		//  L U decomposition
@@ -80076,11 +80730,11 @@ class Matrix
 	public Matrix[] LU(Number modulus)
 	{
 	
-		//  decomposes a square matrix into lower
-		//  and upper triangular matrices
+		//  decomposes a square matrix into upper and lower
+		//  triangular matrices
 		//
 		//  The upper triangular matrix U is computed from
-		//  a matrix A by reducing A to echelon form.
+		//  a matrix by reducing the matrix to echelon form.
 		//
 		//  The lower triangular matrix L is defined
 		//  (on, above, and below the diagonal) by
@@ -80089,17 +80743,13 @@ class Matrix
 		//  L[i][j] =   0          i <  j,
 		//  L[i][j] = - m[i][j]    i >  j,
 		//
-		//  where m[i][j] are the multipliers used to reduce the
-		//  matrix A to echelon or upper triangular form U.
+		//  where m[i][j] are the multipliers used to reduce
+		//  the matrix to echelon or upper triangular form U.
 		
-		
-		Number[][] m;
 		
 		Number n = modulus;
 		
-		Matrix A, L, U;
-		
-		A = new Matrix(this);
+		Matrix A = new Matrix(this);
 		
 		if (A.rowCount() != A.columnCount())
 		{
@@ -80110,99 +80760,31 @@ class Matrix
 			throw new IllegalArgumentException(message);
 		}
 		
-		int s = A.rowCount();
 		
-		m = new Number[s][s];
+		//  Compute the upper triangular matrix U
+		//  by reducing A to echelon form
 		
-		L = new Matrix(s, s);
-		U = new Matrix(this);
+		Matrix U = null;
+		
+		if (n == null) U = A.toEchelonForm();
+		if (n != null) U = A.toEchelonForm(n);
 		
 		
-		//  Compute the upper matrix
+		//  Compute the lower triangular matrix L
 		
-		for (int r = 0; r < U.matrix.length; r++)
-		{
-			//  Find the row and column of the first non-zero
-			//  element starting from row i = r, column j = r
-			
-			boolean bool = false;
-			
-			int i = 0, j = 0;
-			
-			for (j = r; j < U.matrix[r].length; j++)
-			{
-				for (i = r; i < U.matrix.length; i++)
-				{
-					if (!U.matrix[i][j].equals(0))
-					
-					    { bool = true; break; }
-				}
-				
-				if (bool) break;
-			}
-			
-			if (j == U.matrix[r].length) continue;
-			
-			
-			//  Swap rows i and r if element [r][j] is zero
-			
-			if (i != r)
-			{
-				Number[] tempi = U.matrix[i];
-				Number[] tempr = U.matrix[r];
-				
-				U.matrix[i] = tempr;
-				U.matrix[r] = tempi;
-			}
-			
-			
-			//  Put zeros below the pivot for each row below r
-			
-			for (i = r+1; i < U.matrix.length; i++)
-			{
-				//  Compute the multiplier for row i
-				
-				m[i][j] = U.matrix[i][j].negate()
-				
-				    .multiply(((n != null) ?
-				
-					U.matrix[r][j] .modInverse(n) :
-					U.matrix[r][j]    .inverse()));
-				
-				//  Multiply row i by the multiplier, and add to row i
-				
-				for (int k = j; k < (U.matrix[i].length); k++)
-				{
-					U.matrix[i][k] = U.matrix[i][k]
-					
-					    .add( m[i][j].multiply(U.matrix[r][k]) );
-					
-					if (n != null)
-					
-					    U.matrix[i][k] = U.matrix[i][k]
-					
-						.mod(n).add(n).mod(n);
-				}
-			}
-		}
+		//  Since  A == L U  or  L U == A, the lower
+		//  triangular matrix can be computed by post-
+		//  multiplying A by U^-1 to get L == A U^-1
 		
-		//  Compute the lower matrix
+		Matrix L = A.multiply(U.inverse());
 		
-		for (int i = 0; i < s; i++)
-		for (int j = 0; j < s; j++)
-		{
-			if (i > j)
-			{
-				L.matrix[i][j] = m[i][j].negate();
-				
-				if (n != null) L.matrix[i][j] = L.matrix[i][j]
-				
-				    .mod(n).add(n).mod(n);
-			}
-			
-			else if (i == j) L.matrix[i][j] = new Number(1);
-			else if (i <  j) L.matrix[i][j] = new Number(0);
-		}
+		if (n != null) L = L .mod(n);
+		
+		//  Verify that A == L U
+		
+		if (!A.equals(L.multiply(U))) throw
+		
+		    new ArithmeticException();
 		
 		return new Matrix[] { L, U };
 	}
@@ -80340,9 +80922,9 @@ class Matrix
 		
 		if (this.determinant(n).equals(0))
 		{
-			//  non-invertible matrix
+			String message = "non-invertible matrix";
 			
-			throw new NullPointerException();
+			throw new NullPointerException(message);
 		}
 		
 		
@@ -80502,7 +81084,7 @@ class Matrix
 		//  Use the square and multiply method
 		
 		
-		//  Pre-compute the inverse(n) for fast modular reduction
+		//  Pre-compute the inverse of n for fast modular reduction
 		
 		int digits = (int) n.bitCount() / 4;
 		
@@ -81006,6 +81588,14 @@ class Matrix
 	}
 	
 	
+	public void set(int n, int i, int j)
+	{
+		//  sets an element
+		
+		set(new Number(n), i, j);
+	}
+	
+	
 	public void set(Number n, int i, int j)
 	{
 		//  sets an element
@@ -81130,59 +81720,18 @@ class Matrix
 	public Number[] solve(Number n)
 	{
 	
-		//  solves the matrix equation A X == B for the
-		//  variable X == A^-1 B where B and X are vectors
+		//  Solves the matrix equation A x == b for the
+		//  variable x == A^-1 b where b and x are vectors.
+		//  This requires O(n^3) multiplications to invert
+		//  the matrix A and then to post-multiply by b.
 		
 		//  Note that A^-1 only has to be computed once to
-		//  solve an array of matrix equations A X[] == B[]
-		//  where X[] and B[] are column vectors. This reduces
-		//  the amount of work from O(n^3) to O(n^2) multipli-
-		//  cations to solve for each X[i] = A^-1 B[i].
-		//
-		//  Example Solve an array of matrix equations A X[] == B[]
-		//
-		//  Matrix A = new Matrix(new int[][]
-		//
-		//      { { 3, 1, 4 }, { 1, 5, 9 }, { 2, 6, 5 } });
-		//
-		//  System.out.println(A.toMatrixString());
-		//
-		//  final int t = 3;
-		//
-		//  Matrix[] B = new Matrix[t];
-		//  Matrix[] X = new Matrix[t];
-		//
-		//  B[0] = new Matrix(new int[] { 3, 5, 8 }).transpose();
-		//  B[1] = new Matrix(new int[] { 9, 7, 9 }).transpose();
-		//  B[2] = new Matrix(new int[] { 3, 2, 3 }).transpose();
-		//
-		//  if (!A.toEchelonForm().isEchelonForm())
-		//
-		//	throw new ArithmeticException("System is not solvable");
-		//
-		//  Matrix invA = A.inverse();
-		//
-		//  for (int i = 0; i < t; i++)
-		//
-		//      X[i] = invA .multiply(B[i]);
-		//
-		//  System.out.println("X[] == " +
-		//
-		//     Arrays.toString(X) + "\n");
-		//
-		//  //  Verify the solutions
-		//
-		//  for (int i = 0; i < t; i++)
-		//  {
-		//	Matrix A_X = A.multiply(X[i]);
-		//	
-		//	System.out.println(A_X + "  " + B[i]);
-		//	
-		//	boolean bool = A_X.equals(B[i]);
-		//	
-		//	System.out.println(bool);
-		//  }
-		
+		//  solve an array of matrix equations A x[] == b[].
+		//  Then each solution x[i] == A^-1 b[i] can be com-
+		//  puted in O(n^2) operations because b[i] is an n
+		//  by 1 matrix or a column vector. Solving an array
+		//  of n matrix equations takes the same amount of
+		//  time as solving a single matrix equation.
 		
 		
 		Matrix M = new Matrix(this);
@@ -81190,7 +81739,7 @@ class Matrix
 		int rows = M.rowCount();
 		int cols = M.columnCount();
 		
-		if (cols != rows + 1) // && (cols != 2*rows))
+		if (cols != rows + 1)
 		
 		    throw new IllegalArgumentException();
 		
@@ -81311,13 +81860,15 @@ class Matrix
 		
 		Matrix matrix = new Matrix(this);
 		
-		int p = matrix.getPrecision();
 		
 		//  Set a minimum precision to avoid division by zero
+		
+		int p = matrix.getPrecision();
 		
 		if (p == 0) p = 8;
 		
 		matrix = matrix.setPrecision(p);
+		
 		
 		int rows = matrix.matrix.length;
 		
@@ -81342,7 +81893,7 @@ class Matrix
 			
 			if (j >= matrix.matrix[r].length) continue;
 			
-			//  Swap rows i and r if element [r][j] equals zero
+			//  Swap rows i and r if element[r][j] equals zero
 			
 			if (i != r)
 			{
@@ -81356,29 +81907,34 @@ class Matrix
 			
 			//  Put zeros below the pivot for each row i below r
 			
+			Number zero = new Number(0).setPrecision(p);
+			
 			for (i = r + 1; i < rows; i++)
 			{
-				//  For each row i compute the multiplier
-				//
-				//  m = - [i][j] / [r][j]
+				Number m1 = matrix.matrix[r][j];
+				Number m2 = matrix.matrix[i][j];
 				
-				Number m = null;
+				if (m2.equals(zero)) continue;
 				
-				//  A divide by zero exception can occur if the precision
-				//  equals zero depending on the implementation of the
-				//  divider or inverter. This is avoided by setting a
-				//  minimum non-zero precision.
+				m1 = m1.inverse();
+				m2 = m2.inverse();
 				
-				m = matrix.matrix[i][j]  .negate() .multiply(
-				    matrix.matrix[r][j] .inverse() );
+				//  Multiply row r by m1 and row i by m2 so that
+				//  the first element of both rows equals 1
 				
-				//  Multiply row r by m, and add to row i
+				for (int k = j; k < matrix.matrix[i].length; k++)
+				{
+					matrix.matrix[r][k] = matrix.matrix[r][k] .multiply(m1);
+					matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m2);
+				}
+				
+				//  Subtract row r from row i to zero the first element of i
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
 				    matrix.matrix[i][k] = matrix.matrix[i][k]
 				
-					.add(matrix.matrix[r][k].multiply(m));
+					.subtract(matrix.matrix[r][k]);
 			}
 		}
 		
@@ -81402,6 +81958,20 @@ class Matrix
 		Matrix matrix = new Matrix(this) .mod(n);
 		
 		int rows = matrix.matrix.length;
+		
+		
+		long n2 = (1L*n)*(1L*n);
+		
+		int base = 1, exp = 0;
+		
+		if (new Number(n).isPrimePower())
+		
+		    for (int i = 2; i < 1024*1024; i++)
+		
+			if (new Number(n).isDivisibleBy(i))
+		
+			    { base = i; break; }
+		
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -81448,7 +82018,7 @@ class Matrix
 			{
 				//  For each row i compute the multipliers
 				//
-				//  m1 = - [i][j],  m2 = [r][j]
+				//  m1 = [r][j],  m2 = - [i][j]
 				//
 				//  instead of  m = - [i][j] / [r][j]
 				//
@@ -81459,32 +82029,41 @@ class Matrix
 				//  This method of elimination can only be used for modular systems
 				//  because the coefficient size grows polynomially or quadratically
 				
-				Number m1 = matrix.matrix[i][j] .negate(n);
-				Number m2 = matrix.matrix[r][j];
+				Number m1 = matrix.matrix[r][j];
+				Number m2 = matrix.matrix[i][j];
 				
-				//  Remove the greatest common factor from the multipliers
-				//  because the gcd is not subtracted
-				//
-				//  This is required only if the modulus is a small prime power such as 2^k.
-				//  For a composite modulus the matrix can be solved modulo the prime factors
-				//  and then the composite matrix can be computed using a remainder algorithm.
+				if (m2.equals(0)) continue;
 				
-				//  Number gcd = m1.gcd(m2); m1 = m1.divide(gcd); m2 = m2.divide(gcd);
+				//  Remove the common factor from the multipliers before multiplying
+				//  and subtracting the rows because the common factor is not subtracted
 				
-				int m1int = m1.intValue(), m2int = m2.intValue();
+				Number gcd = m1.gcd(m2);
 				
-				//  Multiply row r by m1, and add to row i multiplied by m2
+				m1 = m1.divide(gcd);
+				m2 = m2.divide(gcd);
+				
+				//  Negate the value of m1
+				
+				m1 = m1 .negate(n);
+				
+				int m1int = m1.intValue();
+				int m2int = m2.intValue();
+				
+				//  Multiply row r by m2, and add to row i multiplied by m1
+				
+				//  For prime power moduli, the method uses the modulus squared
+				//  instead of the modulus to reduce the elements of the matrix.
+				
+				long n1 = (base <= 1) ? n : n2;
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
 				    matrix.matrix[i][k] = new Number(
 				
-					( 1L*matrix.matrix[i][k] .intValue() * (m2int) +
-					( 1L*matrix.matrix[r][k] .intValue() * (m1int) ) ) % n );
+					( 1L*matrix.matrix[r][k] .intValue() * (m2int) +
+					( 1L*matrix.matrix[i][k] .intValue() * (m1int) ) ) % n1 );
 			}
 		}
-		
-		matrix = matrix .mod(n) .add(n) .mod(n);
 		
 		return matrix;
 	}
@@ -81499,6 +82078,8 @@ class Matrix
 		//  If the matrix is large use the multi-threaded version;
 		//  else if the modulus is an int, use the int method
 		
+		Matrix matrix = new Matrix(this) .mod(n);
+		
 		if (this.columnCount() >= 128) return toEchelonForm1(n);
 		
 		if (n.length() == 1) return toEchelonForm(n.intValue());
@@ -81511,14 +82092,26 @@ class Matrix
 		//  (put zeros below each pivot)
 		
 		
-		//  Pre-compute the inverse(n) for fast modular reduction
+		//  Pre-compute the inverse of n for fast modular reduction
+		
+		Number n2 = n.square();
 		
 		int digits = (int) n.bitCount() / 4;
 		
-		Number invn = n .setPrecision(2*digits) .inverse();
+		Number invn  = n          .setPrecision(2*digits) .inverse();
+		Number invn2 = n.square() .setPrecision(4*digits) .inverse();
 		
 		
-		Matrix matrix = new Matrix(this) .mod(n);
+		int base = 1, exp = 0;
+		
+		if (n.isPrimePower())
+		
+		    for (int i = 2; i < 1024*1024; i++)
+		
+			if (n.isDivisibleBy(i))
+		
+			    { base = i; break; }
+		
 		
 		int rows = matrix.matrix.length;
 		
@@ -81568,7 +82161,7 @@ class Matrix
 			{
 				//  For each row i compute the multipliers
 				//
-				//  m1 = - [i][j],  m2 = [r][j]
+				//  m1 = [r][j],  m2 = - [i][j]
 				//
 				//  instead of  m = - [i][j] / [r][j]
 				//
@@ -81579,28 +82172,42 @@ class Matrix
 				//  This method of elimination can only be used for modular systems
 				//  because the coefficient size grows polynomially or quadratically
 				
-				Number m1 = matrix.matrix[i][j] .negate(n);
-				Number m2 = matrix.matrix[r][j];
+				Number m1 = matrix.matrix[r][j];
+				Number m2 = matrix.matrix[i][j];
 				
-				//  Remove the common factor from the multipliers because the gcd is not subtracted
-				//
-				//  This is required only if the modulus is a small prime power such as 2^k.
-				//  For a composite modulus the matrix can be solved modulo the prime factors
-				//  and then the composite matrix can be computed using a remainder algorithm.
+				if (m2.equals(0)) continue;
 				
-				//  Number gcd = m1.gcd(m2); m1 = m1.divide(gcd); m2 = m2.divide(gcd);
 				
-				//  Multiply row r by m1, and add to row i multiplied by m2
+				//  Remove the common factor from the multipliers before multiplying
+				//  and subtracting the rows because the common factor is not subtracted
+				
+				Number gcd = m1.gcd(m2);
+				
+				m1 = m1.divide(gcd);
+				m2 = m2.divide(gcd);
+				
+				//  Negate the value of m1
+				
+				m1 = m1 .negate(n);
+				
+				
+				//  Multiply row r by m2, and add to row i multiplied by m1
+				
+				//  For prime power moduli, the method uses the modulus squared
+				//  instead of the modulus to reduce the elements of the matrix.
+				
+				Number    n1 = (base <= 1) ?    n :    n2;
+				Number invn1 = (base <= 1) ? invn : invn2;
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
-				    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m2)
+				    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m1)
 				
-					.add( matrix.matrix[r][k] .multiply(m1) ) .mod(n, invn);
+					.add( matrix.matrix[r][k] .multiply(m2) ) .mod(n1, invn1);
 			}
 		}
 		
-		return matrix;
+		return matrix.mod(n);
 	}
 	
 	
@@ -81620,11 +82227,27 @@ class Matrix
 		//  (put zeros below each pivot)
 		
 		
-		//  Pre-compute the inverse(n) for fast modular reduction
+		//  Pre-compute the inverse of n for fast modular reduction
+		
+		Number n2 = n.square();
 		
 		int digits = (int) n.bitCount() / 4;
 		
-		Number invn = n .setPrecision(2*digits) .inverse();
+		Number invn  = n          .setPrecision(2*digits) .inverse();
+		Number invn2 = n.square() .setPrecision(4*digits) .inverse();
+		
+		
+		int base1 = 1, exp = 0;
+		
+		if (n.isPrimePower())
+		
+		    for (int i = 2; i < 1024*1024; i++)
+		
+			if (n.isDivisibleBy(i))
+		
+			    { base1 = i; break; }
+		
+		final int base = base1;
 		
 		
 		Matrix matrix = new Matrix(this) .mod(n);
@@ -81722,11 +82345,14 @@ class Matrix
 						
 						//  Multiply row r by m1, and add to row i multiplied by m2
 						
+						Number    n1 = (base <= 1) ?    n :    n2;
+						Number invn1 = (base <= 1) ? invn : invn2;
+						
 						for (int k = j1; k < matrix.matrix[i1].length; k++)
 						
 						    matrix.matrix[i1][k] = matrix.matrix[i1][k] .multiply(m2)
 						
-							.add( matrix.matrix[r1][k] .multiply(m1) ) .mod(n, invn);
+							.add( matrix.matrix[r1][k] .multiply(m1) ) .mod(n1, invn1);
 					}
 				});
 				
@@ -81736,7 +82362,7 @@ class Matrix
 				
 				if (!matrix.matrix[i1][j1] .equals(0))
 				
-				    executor .execute(R);
+				    executor.execute(R);
 				
 				//  else if (matrix[i1][j1]) .equals(0)) continue;
 			}
@@ -81885,41 +82511,51 @@ class Matrix
 		//  { { a11, a12, ... }, { a21, a22, ... }, ... }.
 		
 		
+		Matrix matrix = new Matrix(this);
+		
+		boolean isechelonform      = matrix.isEchelonForm();
+		boolean isrowcanonicalform = matrix.isRowCanonicalForm();
+		
 		int mindigits = 0, digitsize = 0;
 		
-		for (int i = 0; i < this.matrix   .length; i++)
-		for (int j = 0; j < this.matrix[i].length; j++)
+		for (int i = 0; i < matrix.matrix   .length; i++)
+		for (int j = 0; j < matrix.matrix[i].length; j++)
 		{
-			if (this.matrix[i][j] == null)
+			if (matrix.matrix[i][j] == null)
 			
 			    { if (4 > mindigits) mindigits = 4;  continue; }
 			
-			digitsize = this.matrix[i][j] .toString(radix).length()
+			digitsize = matrix.matrix[i][j] .toString(radix).length()
 			
-			    + ((this.matrix[i][j].signum() == -1) ? 1 : 0);
+			    + ((matrix.matrix[i][j].signum() == -1) ? 1 : 0);
 			
 			if (digitsize > mindigits)  mindigits = digitsize;
 		}
 		
 		StringBuilder sb = new StringBuilder(), sbdigit;
 		
-		for (int i = 0; i < this.matrix.length; i++)
+		for (int i = 0; i < matrix.matrix.length; i++)
 		{
 			sb.append("| ");
 			
-			for (int j = 0; j < this.matrix[i].length; j++)
+			for (int j = 0; j < matrix.matrix[i].length; j++)
 			{
 				//  Convert the element to a number string
 				
 				String numberstr = null;
 				
-				if (this.matrix[i][j] != null)
+				if (matrix.matrix[i][j] != null)
 				
-				    numberstr = this.matrix[i][j]
+				    numberstr = matrix.matrix[i][j]
 				
 					.toString(digits, radix);
 				
 				else numberstr = "null";
+				
+				if (isechelonform      && (i > j)) numberstr = " ";
+				if (isrowcanonicalform && (i < j)
+				
+				    && (j < matrix.matrix.length)) numberstr = " ";
 				
 				
 				//  Prepend zeros to pad the number
@@ -81945,17 +82581,15 @@ class Matrix
 				
 				    numberstr.length() : 4);
 				
-				if (j < this.matrix[i].length -1) sb.append("  ");
+				if (j < matrix.matrix[i].length -1) sb.append("  ");
 				
 				for (int k = 0; k < spaces; k++)  sb.append(" ");
 			}
 			
 			sb .append(" |");
 			
-			if (i < this.matrix.length -1)  sb.append("\n");
+			if (i < matrix.matrix.length -1)  sb.append("\n");
 		}
-		
-		sb.append("\n");
 		
 		return sb.toString();
 	}
@@ -82009,7 +82643,10 @@ class Matrix
 		//  If the matrix is augmented with a vector, use toRowCanonicalForm1
 		//  If the matrix is augmented with a matrix, use toRowCanonicalForm2
 		
-		int method = (this.columnCount() <= this.rowCount() + 1) ? 1 : 2;
+		int rows = this.rowCount();
+		int cols = this.columnCount();
+		
+		int method = (cols <= rows + 1) ? 1 : 2;
 		
 		if   (method == 1) return toRowCanonicalForm1(n);
 		else               return toRowCanonicalForm2(n);
@@ -82037,12 +82674,10 @@ class Matrix
 		
 		if (n != null) matrix = matrix .mod(n);
 		
-		int rows = matrix.columnCount() -1;
+		int rows = matrix.rowCount();
 		int cols = matrix.columnCount();
 		
-		if (matrix.rowCount() < matrix.columnCount() - 1)
-		
-		    rows = matrix.rowCount();
+		if (rows >= cols) rows = cols - 1;
 		
 		int p = matrix .getPrecision();
 		
@@ -82089,7 +82724,9 @@ class Matrix
 					
 					Number gcd = matrix.matrix[i][i] .gcd(n);
 					
-					if (!B1.isDivisibleBy(gcd)) throw new ArithmeticException();
+					if (!B1.equals(0) && !B1.isDivisibleBy(gcd))
+					
+					    throw new ArithmeticException();
 					
 					matrix.matrix[i][i] = matrix.matrix[i][i] .divide(gcd);
 					
@@ -83283,7 +83920,7 @@ class Fourier
 	//  Example  Test the slow / quadratic discrete fourier
 	//           transform and inverse transform method
 	//
-	//  int[] intarray          = new int[] { 1, 2, 3, 4 };
+	//     int[] intarray    = new    int[] { 1, 2, 3, 4 };
 	//  double[] doublearray = new double[] { 1, 2, 3, 4 };
 	//
 	//     int[] x1_ = Convert.realArrayToComplexArray(intarray);
