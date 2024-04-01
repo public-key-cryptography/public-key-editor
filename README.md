@@ -156,7 +156,6 @@
 	user decrypts them.)
 	
 	
-	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
 	If you are running a live version of Linux, you can drag and drop the openjdk-21_linux-x64_bin.tar.gz
@@ -482,35 +481,6 @@
 	(A quantum algorithm already exists that can search for keys for any unknown function or black box in
 	sub-exponential time by trying only the square root of the number of combinations, and there may be
 	another quantum or classical algorithm that can find keys in polynomial time.)
-	
-	The RSA / coprime root extraction cipher c = m ^ e (mod n) where (e, phi(n)) == 1 (e and phi(n) are
-	coprime) is not included or allowed in the public key class because coprime root extraction is not
-	equivalent to integer factorization or based on any hard math problem. The problem with this cipher
-	is that there is a one-to-one correspondence of the private keys m to the public keys c which makes
-	the function invertible without factoring or unmultiplying the modulus n. This is why RSA was reject-
-	ed for digital signature standards and for encryption. (Note that RSA refers to the cipher while co-
-	prime root extraction refers to the underlying math problem on which the cipher is based.)
-	
-	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
-	is equivalent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had
-	thought of using coprime root extraction as a public key cipher but he knew that it wasn't equivalent
-	to factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the
-	same number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime with
-	the totient.
-	
-	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squaring
-	and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the message can
-	be encrypted and decrypted by cubing and uncubing m modulo n. The root of c = m ^ e (mod n) still has
-	e ^ k solutions where k is the number of factors (or prime powers) in the modulus, but the recipient
-	can extract the message by inverting e modulo phi(n)/e instead of modulo phi because the message is a
-	perfect square or cube in addition to a quadratic or cubic residue modulo n.
-	
-	The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
-	sub-exponential, quantum, and polynomial-time algorithms for factoring integers. For the cipher to be
-	secure or unbreakable, the key size has to be on the order of 10^5 bits if the running time of the
-	factorization algorithm is on the order of n^2 exponentiations, n^3 multiplications, or n^4.58 opera-
-	tions where n is the number of bits. The factorization cipher is included in the public key class but
-	it is not enabled by default because the key size is large.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b mod p
 	are not included in the software because the elliptic curve discrete log function has a periodicity

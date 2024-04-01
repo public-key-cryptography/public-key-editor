@@ -15,8 +15,7 @@
 	and encryption. The ciphers use hypercomplex and hyper-dimensional
 	numbers (including vectors, quaternions, matrices, cubes, and tes-
 	seracts), polynomials, multi-variable, multi-equation, and multi-
-	dimensional arithmetic, integer factorization, and Merkle-Hellman
-	knapsacks.
+	dimensional arithmetic, and Merkle-Hellman knapsacks.
 	
 	
 	github.com/public-key-cryptography
@@ -185,7 +184,6 @@
 	don't have to decrypt and re-encrypt the Documents and Pictures folders because they only read and de-
 	crypt the file input to the program. The files on the disk remain encrypted and unmodified unless the
 	user decrypts them.)
-	
 	
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
@@ -513,35 +511,6 @@
 	(A quantum algorithm already exists that can search for keys for any unknown function or black box in
 	sub-exponential time by trying only the square root of the number of combinations, and there may be
 	another quantum or classical algorithm that can find keys in polynomial time.)
-	
-	The RSA / coprime root extraction cipher c = m ^ e (mod n) where (e, phi(n)) == 1 (e and phi(n) are
-	coprime) is not included or allowed in the public key class because coprime root extraction is not
-	equivalent to integer factorization or based on any hard math problem. The problem with this cipher
-	is that there is a one-to-one correspondence of the private keys m to the public keys c which makes
-	the function invertible without factoring or unmultiplying the modulus n. This is why RSA was reject-
-	ed for digital signature standards and for encryption. (Note that RSA refers to the cipher while co-
-	prime root extraction refers to the underlying math problem on which the cipher is based.)
-	
-	The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
-	is equivalent to factorization because there is a many-to-one mapping of m to c. (Michael Rabin had
-	thought of using coprime root extraction as a public key cipher but he knew that it wasn't equivalent
-	to factorization.) The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the
-	same number in the totient whereas the RSA cipher can only use exponents e > 2 that are coprime with
-	the totient.
-	
-	If the message m is a perfect square < n, then the message can be encrypted and decrypted by squaring
-	and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then the message can
-	be encrypted and decrypted by cubing and uncubing m modulo n. The root of c = m ^ e (mod n) still has
-	e ^ k solutions where k is the number of factors (or prime powers) in the modulus, but the recipient
-	can extract the message by inverting e modulo phi(n)/e instead of modulo phi because the message is a
-	perfect square or cube in addition to a quadratic or cubic residue modulo n.
-	
-	The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
-	sub-exponential, quantum, and polynomial-time algorithms for factoring integers. For the cipher to be
-	secure or unbreakable, the key size has to be on the order of 10^5 bits if the running time of the
-	factorization algorithm is on the order of n^2 exponentiations, n^3 multiplications, or n^4.58 opera-
-	tions where n is the number of bits. The factorization cipher is included in the public key class but
-	it is not enabled by default because the key size is large.
 	
 	Elliptic curve ciphers Q = k P where the points are defined by the equation y^2 == x^3 + a x + b mod p
 	are not included in the software because the elliptic curve discrete log function has a periodicity
@@ -1489,7 +1458,7 @@ class __
 	
 	
 	
-	text_bold = "Text bold",
+	text_bold = "Text Bold",
 	
 	printpublickey = "Print public key",
 	
@@ -1732,7 +1701,7 @@ class __
 	mediumblue = "medium blue",
 	darkblue = "dark blue",
 	
-	brightpink = "bright pink (red + 3/4 blue)",
+	brightpink = "bright pink (r + 3/4 b + 1/4 g)",
 	pink = "pink (bluish red)",
 	
 	brightmagenta = "bright magenta (red + blue)",
@@ -27060,7 +27029,7 @@ class Programs
 				//  sendmail frame also gives the user the option to
 				//  change the reply key size for each message.
 				
-				private int numberofciphers = -1;
+				private int numberofciphers = 8;
 				private boolean usereplyaddresskey = true;
 				
 				private String incomingmailserver;
@@ -40144,8 +40113,8 @@ class Colors
 		
 		//  bluish reds
 		
-		{ 0xe000a8, __.brightpink },
-		{ 0xc00090, __.pink },
+		{ 0xeb30b0, __.brightpink },
+		{ 0xd736a1, __.pink },
 		
 		//  red + blue
 		
@@ -52280,9 +52249,9 @@ class PublicKey
 	//  Public key cipher notes
 	
 	
-	//  All ciphers in the public key class except for factorization and subset sum ciphers are based on
-	//  hypercomplex numbers. Hypercomplex numbers are multi-dimensional arrays of numbers that include vec-
-	//  tors, quaternions, matrices, cubes, and tesseracts.
+	//  All ciphers in the public key class except for subset sum ciphers are based on hypercomplex numbers.
+	//  Hypercomplex numbers are multi-dimensional arrays of numbers that include vectors, quaternions, ma-
+	//  trices, cubes, and tesseracts.
 	//
 	//  The matrix ciphers are based on the multivariate functions X1 A X2, X^-1 A^x X, A^-x B^x1 A^x, and
 	//  A^x1 B^x2. The vector ciphers are based on the vector cross product problem Y = A (x) X, and the
@@ -52353,8 +52322,7 @@ class PublicKey
 	//  which represents the volume of the parallelepiped formed by the product of the public vector Y and
 	//  the private vector K. (The implementation of the vector cross product cipher is asymmetrical because
 	//  it requires different public key generation and public key agreement methods, but unlike the Merkle-
-	//  Hellman or factorization ciphers it uses two commutative functions instead of a one-way / invertible
-	//  function.)
+	//  Hellman cipher it uses two commutative functions instead of a one-way / invertible function.)
 	//
 	//  A secret matrix, vector, or hypercomplex number can be reduced to a secret key or number by concaten-
 	//  ating the elements or removing the commas or delimiters. For example, the array { 1, 2, 3, 4 } or the
@@ -52414,121 +52382,6 @@ class PublicKey
 	//  to be nonlinear, non-commutative, and aperiodic (because any function that has a periodicity can be
 	//  inverted by quantum computing), and some of the variables were chosen to make the solutions ambiguous
 	//  to resist classical and quantum computing attacks.
-	//
-	//
-	//
-	//  The Rabin / factorization / quadratic residue / co-composite or square root extraction cipher
-	//
-	//  The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
-	//  is equivalent to factorization because there is a many-to-one mapping of m to c. If m1 is chosen and
-	//  c = m1^2 (mod n) is solved for m2 = sqrt(c) (mod n), then the number can be factored using the differ-
-	//  ence of squares m2^2 - m1^2 == 0 (mod n) or (m2 + m1) (m2 - m1) - k n == 0. This implies that f1 =
-	//  (m2 + m1) and f2 = (m2 - m1) each contains a prime or composite factor of n. By dividing n by f1 and
-	//  f2 and then recursively using the factorization algorithm for the reduced modulus, the modulus can be
-	//  completely factored. If the sqrt algorithm returns the same value m2 == m1, then m1 has to be re-chosen
-	//  to be a different value until the algorithm return a different value for m2, but this will only happen
-	//  once in every 2^k times where k is the number of prime factors in the modulus or number being factored.
-	//
-	//  Solving the coprime root extraction problem c = m ^ e (mod n) where (e, phi(n)) == 1 is not equivalent
-	//  to factorization because there is no difference of squares for the roots of c = m ^ e (mod n) if the
-	//  sqrt(c) always gives the same value of m. The problem with coprime root extraction is that the function
-	//  is invertible without factoring or unmultiplying the modulus n, and the function can be inverted as
-	//  fast as it can be computed. (Michael Rabin had thought of using coprime root extraction as a public key
-	//  cipher but he knew that it wasn't equivalent to factorization.)
-	//
-	//  The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the same number in the
-	//  totient whereas the RSA / coprime root extraction cipher can only use exponents e > 2 that are co-prime
-	//  with the totient. If the message m is a perfect square < n, then the message can be encrypted and de-
-	//  crypted by squaring and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3,
-	//  then the message can be encrypted and decrypted by cubing and uncubing m modulo n. The root of c = m ^
-	//  e (mod n) still has e ^ k solutions where k is the number of factors (or prime powers) in the modulus,
-	//  but the recipient can extract the message by inverting e modulo phi(n)/e instead of modulo phi because
-	//  the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
-	//
-	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refractory
-	//  problem to be a public key cipher. It only has to be harder to invert than to compute. Some functions
-	//  such as the factorial function a! (mod p) are neither computable nor invertible in polynomial time. If
-	//  a! (mod n) were computable it would solve the factorization problem for n.
-	//
-	//  The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
-	//  sub-exponential, quantum, and polynomial-time algorithms for factoring integers. Even with a polyno-
-	//  mial-time algorithm, the Rabin cipher can never be completely broken and is still unbreakable if the
-	//  key size is large enough. For the cipher to be secure or unbreakable, the key size has to be on the
-	//  order of 10^5 bits if the running time of the factorization algorithm is O(n^4.58). For a 256 K bit
-	//  modulus, the size in base 10 is log(256*1024) / log(10) ~ 5.4 digits, which makes the running time
-	//  O((10^5.4)^4.58)) == O(10^25) or 10 septillion operations. For a 512 K bit modulus it would be ~ 256
-	//  septillion operations.
-	//
-	//  (Note that n in the running time represents the log of the modulus or the number of bits instead of
-	//  the value of the modulus so that linear log multiplication can be written as O(n log n) instead of
-	//  O(log n log log n). Unfortunately the modulus uses the same letter or variable name for composite num-
-	//  bers as the letter used for the running time, and m is unavailable because it is used for the message.)
-	//
-	//  Even at 256 K bits, the Rabin cipher can decrypt almost instantly. The encryption method could take
-	//  ~ 1 core-second using a Karatsuba / sesquilinear or three-halves multiplier on a 1 GHz processor. (If
-	//  biquadratic means quartic or a power of 2*2, then sesquilinear should mean 3/2*1 or a power of 3/2.)
-	//  The fft or linear log multiplier is not faster at 256 K bits than the Karatsuba multiplier because of
-	//  the larger hidden constant in the running time; it only begins to overtake and outrun the three-halves
-	//  multiplier at around ~ 512 K to 1 M bits.
-	//
-	//  Note that the hidden constant in the software multiplier may be largely canceled or offset by the hard-
-	//  ware multiplier for a 64-bit processor because the running time is for bit size, not byte or word size.
-	//  Also, if a math processor can do 256-bit, 512-bit, or 1024-bit multiplications, and the multiplier
-	//  method can be modified to use a larger hardware multiplier, then the running time could be a thousand
-	//  times smaller although the number of cores per processor would also be smaller. This is why doing mul-
-	//  tiplication using 32-bit ints is faster than using bits, bytes, or words, or using shifts and adds
-	//  even though a 64-bit multiplier requires at least 64^2 registers to do quadratic school or paralello-
-	//  gram multiplication compared to a 1-bit multiplier. A bigger hardware multiplier can reduce the running
-	//  time by a constant factor but it cannot change the order of the polynomial from O(n^4.58).
-	//
-	//  The key generation could be made faster by choosing a large random number for the modulus n and then
-	//  multiplying n by a 512-bit prime. The encryption method was made faster by choosing a secret key m ~
-	//  sqrt(n) and log2(n) = 2^k - 1024; then computing c = m^2 mod n only requires one large multiplication
-	//  but no large division. The modular reduction is several times faster because the divide method calls
-	//  the quadratic divider instead of the inverter if the dividend is only slightly larger than the divisor.
-	//  If the message were chosen such that m ~ n, then the modulus and inverse would have to be stored in a
-	//  static class member to avoid doing inversions for each decryption because division is ten to twenty
-	//  times more expensive than multiplication.
-	//
-	//  A quantum computer could reduce the factorization running time to O(n) multi-precision multiplications
-	//  for large numbers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the
-	//  factors f1 = (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-
-	//  residue. For example, if n = 77, a quantum computer would compute the order of a^x (mod n) or lambda(n)
-	//  = lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^ (lambda
-	//  /2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The exponentiation requires O(n) multi-
-	//  plications or O(n^2 log n) operations, and the gcd function only requires O(n) multi-precision subtrac-
-	//  tions or O(n^2) operations.
-	//
-	//  The sub-exponential method for solving the integer discrete log problem (modulo a prime) is called the
-	//  index-calculus algorithm. The Handbook of Applied Cryptography says that "...the basic ideas behind the
-	//  index-calculus algorithm first appeared in the work of Kraitchik (circa 1922-1924) and of Cunningham
-	//  and was rediscovered by several authors ... Pomerance credits the idea of multiplying congruences to
-	//  produce a solution to x^2 == y^2 (mod n) for the purpose of factoring n to some old work of Kraitchik
-	//  circa 1926-1929."
-	//
-	//  Kraitchik's method can only solve the discrete log / factorization problem up to ~ 200 bits because it
-	//  has to find round numbers or numbers that contain only small factors. By using a linear sieve, quadra-
-	//  tic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's
-	//  method can solve the discrete log / factorization problem up to ~ 400 to ~ 600 bits which is on the or-
-	//  der of a thousand bits. Instead of doubling or tripling the number of bits, a polynomial-time algorithm
-	//  that has a running time of O(n^4.58) can increase the number of bits a hundredfold from ~ 512 bits to
-	//  ~ 64 K bits using a supercomputer. A 256 K to 512 K bit number would be impossible to factor.
-	//
-	//  A gigahertz processor that has a thousand cores can do terascale computing or O(10^12) operations per
-	//  second. A thousand processors can do petascale computing, and a millon processors can do exascale com-
-	//  puting or O(10^18) operations per second. Even an exascale computer would take a kilo second to do a
-	//  zetta op and a mega second or ten days to do a yotta op or 10^24 operations. A specialized processor
-	//  such as the ones used to do hashing for the mining of cryptocurrency could be used to do zettascale
-	//  computing or 10^21 operations per second, but it would still take on the order of 100 K seconds to do
-	//  a hundred yotta ops to factor one 256 K bit number.
-	//
-	//
-	//  Running times for primality testing, prime number generation, and integer factorization
-	//
-	//  primality testing        O(n^0) exponentiations == O(n^1) multiplications == O(n^2.58) operations
-	//  prime number generation  O(n^1) exponentiations == O(n^2) multiplications == O(n^3.58) operations
-	//  integer factorization    O(n^2) exponentiations == O(n^3) multiplications == O(n^4.58) operations
-	
 	
 	
 	
@@ -52914,22 +52767,13 @@ class PublicKey
 	
 	
 	
-	//  Rabin / factorization / co-composite root extraction cipher
-	
-	private static final int sizefact1 =  32 * 1024 - 1024; // ( 32 - 1) K digits ~ 128 K bits
-	private static final int sizefact2 =  64 * 1024 - 1024; // ( 64 - 1) K digits ~ 256 K bits
-	
-	//  The public key class will generate a factorization key for any 2 ^ k - 1 K digit size
-	
-	
-	
 	
 	
 	//  Public keys can be static / receiver or one-time / sender keys
 	//
 	//  The type of key is only important for asymmetric public key ciphers
-	//  such as the Rabin / factorization cipher, the Merkle-Hellman / knap-
-	//  sack cipher, and the vector / cross product ciphers.
+	//  such as the Merkle-Hellman / knapsack cipher and the parallelogram /
+	//  parallelepiped or vector / cross product ciphers.
 	//
 	//  Symmetric public keys or Diffie-Hellman ciphers ignore this variable
 	//
@@ -52995,18 +52839,6 @@ class PublicKey
 		//
 		//  b = c[] (m[] + e[]), b1 = r[][]^T (m[] + e[])
 		
-		
-		//  The Rabin / factorization cipher (not enabled)
-		
-		//  The factorization cipher is the only cipher that is not enabled
-		//  by default because the key size is an order of magnitude larger
-		//  than the next largest key which is the knapsack cipher. The fac-
-		//  torization cipher also causes problems for email programs because
-		//  reading the top 256 lines is not enough to decrypt the message
-		//  and then the decryption thread will not display the subject lines
-		//  or the first few lines of the messages.
-		
-		//  sizefact1 or sizefact2
 		
 		
 		
@@ -53522,15 +53354,6 @@ class PublicKey
 		}
 		
 		
-		else if ((size == sizefact1)
-		      || (size == sizefact2))
-		{
-			this.p = null;
-			
-			generateFactKey(publickey, size);
-		}
-		
-		
 		
 		//  else if (size == size...)
 		//  {
@@ -53880,9 +53703,9 @@ class PublicKey
 		
 		//  the number of public keys in another user's public key
 		//  could exceed the number of public keys in the public key
-		//  class because other users may enable a large cipher such
-		//  as factorization or may have a newer version of the soft-
-		//  ware that contains additional ciphers.
+		//  class because other users may enable a large cipher or
+		//  may have a newer version of the software that contains
+		//  additional ciphers.
 		
 		final int minkeys = 4;
 		
@@ -58799,6 +58622,41 @@ class PublicKey
 	
 	
 	
+	
+	
+	//  The Rabin / factorization / quadratic residue / co-composite or square root extraction cipher
+	//
+	//  The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
+	//  is equivalent to factorization because there is a many-to-one mapping of m to c. If m1 is chosen and
+	//  c = m1^2 (mod n) is solved for m2 = sqrt(c) (mod n), then the number can be factored using the differ-
+	//  ence of squares m2^2 - m1^2 == 0 (mod n) or (m2 + m1) (m2 - m1) - k n == 0. This implies that f1 =
+	//  (m2 + m1) and f2 = (m2 - m1) each contains a prime or composite factor of n. By dividing n by f1 and
+	//  f2 and then recursively using the factorization algorithm for the reduced modulus, the modulus can be
+	//  completely factored. If the sqrt algorithm returns the same value m2 == m1, then m1 has to be re-chosen
+	//  to be a different value until the algorithm return a different value for m2, but this will only happen
+	//  once in every 2^k times where k is the number of prime factors in the modulus or number being factored.
+	//
+	//  Solving the coprime root extraction problem c = m ^ e (mod n) where (e, phi(n)) == 1 is not equivalent
+	//  to factorization because there is no difference of squares for the roots of c = m ^ e (mod n) if the
+	//  sqrt(c) always gives the same value of m. The problem with coprime root extraction is that the function
+	//  is invertible without factoring or unmultiplying the modulus n, and the function can be inverted as
+	//  fast as it can be computed. (Michael Rabin had thought of using coprime root extraction as a public key
+	//  cipher but he knew that it wasn't equivalent to factorization.)
+	//
+	//  The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the same number in the
+	//  totient whereas the RSA / coprime root extraction cipher can only use exponents e > 2 that are co-prime
+	//  with the totient. If the message m is a perfect square < n, then the message can be encrypted and de-
+	//  crypted by squaring and unsquaring m modulo n. If m is a perfect cube and phi(n) is divisible by 3, then
+	//  the message can be encrypted and decrypted by cubing and uncubing m modulo n. The root of c = m ^ e
+	//  (mod n) still has e ^ k solutions where k is the number of factors (or prime powers) in the modulus, but
+	//  the recipient can extract the message by inverting e modulo phi(n)/e instead of modulo phi because the
+	//  message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
+	//
+	//  The Rabin / factorization cipher is susceptible to quantum and classical computing because there are
+	//  sub-exponential, quantum, and polynomial-time algorithms for factoring integers.
+	
+	
+	
 	//  The Rabin / factorization / co-composite root extraction cipher
 	//
 	//  This cipher works with any exponent 2, 3, 4, 5, 6, ...
@@ -58830,51 +58688,12 @@ class PublicKey
 	//
 	//               1/(2 k)
 	//  m1  ==  c[i]        (mod p[i])
+	//
+	//
+	//  private static final int sizefact =  64 * 1024*1024 - 1024; // (64 M - 1 K) digits ~ 64 M bits
+	//
+	//  The public key class will generate a factorization key for any 2 ^ k - 1 K digit size
 	
-	
-	
-	
-	//  The least common remainder or lcr is used to refer to the object or value
-	//  that is returned instead of the theorem or algorithm, just as fact(n) is
-	//  used instead of fta, uft(n), or quadratic sieve to refer to the factori-
-	//  zation instead of the fundamental theorem of arithmetic, the unique fac-
-	//  torization theorem, or the method used to factor the number such as the
-	//  quadratic sieve or number field sieve.
-	//
-	//  The terms lcr(r, n) and fact(n) don't replace the terms crt, fta, Gauss's
-	//  algorithm, or quadratic sieve. The theorem, the algorithm, and the object
-	//  or value returned by the algorithm are three different things. The crt
-	//  and fta say that there is a common remainder or a factorization for any
-	//  set of reduced residues and reduced moduli, or a composite number n, but
-	//  they don't provide a method for computing the composite residue or the
-	//  factorization of a number.
-	//
-	//  It doesn't make sense to use the Chinese remainder theorem to find the
-	//  common remainder of a set of reduced residues r[] and reduced moduli n[],
-	//  or to use the fta to find the factorization of a number n, because the crt
-	//  and fta are not methods or algorithms. Some authors conflate the theorem,
-	//  the algorithm, and the value and refer to Gauss's remainder algorithm,
-	//  Garner's formula, and the least common remainder as crt.
-	//
-	//  Gauss's remainder algorithm comes from Disquisitiones Arithmeticae (1801).
-	//  Carl F. Gauss is the greatest mathematician of all time followed by Newton,
-	//  Euler, Archimedes, Euclid, Diophantus, Lagrange, Fermat, Cauchy, Riemann,
-	//  Descartes, Galois, Leibniz, Fourier, Laplace, Abel, Legendre, ... and the
-	//  second most prolific after Euler whose works are published in 70 large vol-
-	//  umes. Cauchy is the third most prolific mathematician having 27 volumes of
-	//  collected works.
-	//
-	//  There is a Chinese remainder algorithm 500 years before Gauss that is based
-	//  on least common multiples, not modular inversion because modular inversion
-	//  was unknown before Fermat's little theorem a^(p-1) == 1 (mod p) was pub-
-	//  lished in the seventeenth century. (This theorem says that a^(p-1) == 1 ==
-	//  a^0 (mod p) for a != 0 (mod p) which implies that the inverse of a is a ^
-	//  (p-2) == 1/a == a^-1 (mod p))
-	//
-	//  In the first century A.D., Nicomachus mentioned the problem of computing
-	//  the composite residue from a set of reduced residues and moduli but he did
-	//  not provide a method for solving the problem. One of two treatises by
-	//  Nicomachus that has survived is called Introductio Arithmetica.
 	
 	
 	
@@ -61452,7 +61271,7 @@ class PublicKey
 		else if ( Math.isPowerOf2( z.trim().length() + 1024 ) )
 		{
 		
-			System.out.println("fact length == " + z.trim().length());
+			System.out.println("fact digits == " + z.trim().length());
 			
 			//  Rabin / sqrt / factorization cipher
 			
@@ -62307,9 +62126,9 @@ class PublicKey
 		//
 		//  This swaps the elements in the array in reverse order
 		//  starting from element n. Each highest element n, n-1,
-		//  n-2, n-3, ... can only be swapped once because the
-		//  modulus (n - i) of the random number generator de-
-		//  creases for each iteration.
+		//  n-2, n-3, ... can only be swapped once because the mod-
+		//  lus (n - i) of the random number generator decreases
+		//  for each iteration.
 		
 		
 		int n = elements;
@@ -62719,11 +62538,10 @@ class Signature
 	//  s = 2 x 30 digits (1.5 lines)
 	//  s = 2 x 40 digits (2 lines)
 	//
-	//  Add 10 digits or 40 bits to each s so that
-	//  there are 1 septillion solutions out of 240
-	//  bits or a septillion cubed. This means that
-	//  one out of every septillion squared numbers
-	//  or pairs of { x1, x2 } is a solution.
+	//  Add 10 digits or 40 bits to each s so that there are
+	//  1 septillion solutions out of 240 bits or a septillion
+	//  cubed. This means that one out of every septillion
+	//  squared numbers or pairs of { x1, x2 } is a solution.
 	//
 	//                          120-40         120+40
 	//  p = q r + 1  where r = 2      and q ~ 2
@@ -68227,28 +68045,63 @@ class Math
 	
 		//  computes the least common remainder, least Chinese remainder,
 		//  or least composite residue using Gauss's remainder algorithm
-		
+		//
 		//  The name lcr refers to the value that is computed and returned
 		//  instead of the algorithm or theorem. The method was originally
 		//  called GaussRemainderAlgorithm.
+		
+		
+		//  The least common remainder or lcr is used to refer to the object or value
+		//  that is returned instead of the theorem or algorithm, just as fact(n) is
+		//  used instead of fta, uft(n), or quadratic sieve to refer to the factori-
+		//  zation instead of the fundamental theorem of arithmetic, the unique fac-
+		//  torization theorem, or the method used to factor the number such as the
+		//  quadratic sieve or number field sieve.
 		//
-		//  It doesn't make sense to use the name of a theorem for a method
-		//  because all other methods are named for the value or object that
-		//  is returned instead of the theorem. For example, fact(n) is used
-		//  instead of fta(n) or uft(n) for factorization methods; gcd(a, b)
-		//  is used instead of Euclidean theorem or et(a, b) for the greatest
-		//  common divisor method; and hypot(a, b) is used instead of Pythag-
-		//  orean theorem or pt(a, b) for the hypotenuse method. If the name
-		//  crt() is used for the least common remainder method, then uft()
-		//  or fta() should be used for the factorization method.
+		//  The terms lcr(r, n) and fact(n) don't replace the terms crt, fta, Gauss's
+		//  algorithm, or quadratic sieve. The theorem, the algorithm, and the object
+		//  or value returned by the algorithm are three different things. The crt
+		//  and fta say that there is a common remainder or a factorization for any
+		//  set of reduced residues and reduced moduli, or a composite number n, but
+		//  they don't provide a method for computing the composite residue or the
+		//  factorization of a number.
 		//
-		//  The name crt is still used to refer to the Chinese remainder
-		//  theorem. lcr is used to refer to the least Chinese remainder,
-		//  least common remainder, or least composite residue. Gauss uses
-		//  the term "least residue" in his book Disquisitiones Arithmeticae.
-		//  The word common makes the least common remainder consistent with
-		//  the terms least common multiple, greatest common divisor, and
-		//  least common denominator.
+		//  It doesn't make sense to use the Chinese remainder theorem to find the
+		//  common remainder of a set of reduced residues r[] and reduced moduli n[],
+		//  or to use the fta to find the factorization of a number n, because the crt
+		//  and fta are not methods or algorithms. Some authors conflate the theorem,
+		//  the algorithm, and the value and refer to Gauss's remainder algorithm,
+		//  Garner's formula, and the least common remainder as crt.
+		//
+		//  Gauss's remainder algorithm comes from Disquisitiones Arithmeticae (1801).
+		//  Carl F. Gauss is the greatest mathematician of all time followed by Newton,
+		//  Euler, Archimedes, Euclid, Diophantus, Lagrange, Fermat, Cauchy, Riemann,
+		//  Descartes, Galois, Leibniz, Fourier, Laplace, Abel, Legendre, ... and the
+		//  second most prolific after Euler whose works are published in 70 large vol-
+		//  umes. Cauchy is the third most prolific mathematician having 27 volumes of
+		//  collected works.
+		//
+		//  There is a Chinese remainder algorithm 500 years before Gauss that is based
+		//  on least common multiples, not modular inversion because modular inversion
+		//  was unknown before Fermat's little theorem a^(p-1) == 1 (mod p) was pub-
+		//  lished in the seventeenth century. (This theorem says that a^(p-1) == 1 ==
+		//  a^0 (mod p) for a != 0 (mod p) which implies that the inverse of a is a ^
+		//  (p-2) == 1/a == a^-1 (mod p))
+		//
+		//  In the first century A.D., Nicomachus mentioned the problem of computing
+		//  the composite residue from a set of reduced residues and moduli but he did
+		//  not provide a method for solving the problem. One of two treatises by
+		//  Nicomachus that has survived is called Introductio Arithmetica.
+		//
+		//  The name crt is still correctly used to refer to the Chinese remainder the-
+		//  orem, just as fta is used to refer to the fundamental theorem of arithmetic.
+		//  The name lcr is used to refer to the least Chinese remainder, least common
+		//  remainder, or least composite residue. Gauss uses the term "least residue"
+		//  in his book Disquisitiones Arithmeticae. The word common makes the least
+		//  common remainder consistent with the terms least common multiple, greatest
+		//  common divisor, and least common denominator.
+		
+		
 		
 		
 		
@@ -71439,9 +71292,6 @@ class Number implements Comparable<Number>
 		Number a = new Number(this);
 		Number b = new Number(val);
 		
-		//  zero can be positive or negative;
-		//  set the zero sign to positive
-		
 		int[] array1 = a.intarray;
 		int[] array2 = b.intarray;
 		
@@ -71456,6 +71306,8 @@ class Number implements Comparable<Number>
 		
 		    if (array2[i] != 0) { zero2 = false; break; }
 		
+		//  zero can be positive or negative
+		
 		if (zero1) { a.sign = '+'; };
 		if (zero2) { b.sign = '+'; };
 		
@@ -71469,19 +71321,26 @@ class Number implements Comparable<Number>
 			a = b.abs();  b = temp.abs();
 		}
 		
-		if (a.sign != b.sign)
-		{
-			//  If signs are opposite, return 1 or -1
-			
-			if      ((a.sign != '-') && (b.sign == '-'))  return  1;
-			else if ((a.sign == '-') && (b.sign != '-'))  return -1;
-		}
 		
 		//  integer comparison
 		
 		if ((a.precision == 0) && (b.precision == 0))
 		{
 			//  both values are integers
+			
+			//  First test for equality
+			
+			if (zero1 && zero2) return 0;
+			
+			if (a.sign != b.sign)
+			{
+				//  If signs are opposite and the numbers are integers, return 1 or -1
+				//  (This test only works if the numbers have already been tested
+				//  for equality because in math zero can be positive or negative)
+				
+				if      ((a.sign != '-') && (b.sign == '-'))  return  1;
+				else if ((a.sign == '-') && (b.sign != '-'))  return -1;
+			}
 			
 			array1 = Math.trim(a.intarray);
 			array2 = Math.trim(b.intarray);
@@ -72914,7 +72773,11 @@ class Number implements Comparable<Number>
 	public Number inverse()
 	{
 	
-		//  computes the inverse u == 1 / v using the formula u = u (2 - v u)
+		//  computes the inverse of a number u = 1 / v
+		//
+		//  If the number is small the method uses the quadratic divider.
+		//  If the number is large the method uses Newton's iteration to com-
+		//  pute u = u (2 - v u) where the initial value of u is set to ~ 1/v.
 		//
 		//  This iteration requires only a few multi-precision multiplications.
 		//  Instead of converging linearly by 1 bit, 1 digit, or 1 int per iter-
@@ -72987,10 +72850,13 @@ class Number implements Comparable<Number>
 		//  of bits is less than a minimum threshold
 		
 		if (this.bitCount() < 1024)
-		
-		    return new Number(1) .setPrecision(inv_precision)
-		
-			.divide(this);
+		{
+			Number u = new Number(1) .setPrecision(
+			
+			    inv_precision).divide(this);
+			
+			return u;
+		}
 		
 		
 		//  Compute u  = 1 / v by iterating
@@ -73431,21 +73297,18 @@ class Number implements Comparable<Number>
 		//  mat's test but removes the twos from the totient.
 		
 		
-		
+		//  Example Find the first several prime powers
+		//          4, 8, 9, 16, 25, 27, 32, 49, 64, 81, 121, ...
+		//
 		//  for (int i = 2; i < 1024*1024; i++)
 		//
 		//  if (new Number(i).isPrimePower())
 		//  {
 		//	int[] factors = Math.factor(i);
-		//	
 		//	int[][] prime_exp = Math.sortAndCollate(factors);
-		//	
 		//	int prime = prime_exp[0][0], exp = prime_exp[0][1];
-		//	
 		//	if ((prime_exp.length > 1) || !Math.isPrime(prime))
-		//	
 		//	    throw new ArithmeticException();
-		//	
 		//	System.out.print(prime_exp[0][0]
 		//	        + "  " + prime_exp[0][1] + "   ");
 		//  }
@@ -73461,7 +73324,7 @@ class Number implements Comparable<Number>
 		//  997  2   1009  2   1013  2   101  3   1019  2   1021  2
 		
 		
-		//  Example
+		//  Example  Find the prime powers between 10^9 and 10^9 + 10^6
 		//
 		//  int n = 1024*1024*1024;
 		//  for (int i = n + 1; i < n + 1024*1024; i++)
@@ -79251,8 +79114,8 @@ class Matrix
 				
 				if (m2.equals(zero)) continue;
 				
-				m1 = m1.inverse();
-				m2 = m2.inverse();
+				m1 = m1.inverse().setPrecision(p);
+				m2 = m2.inverse().setPrecision(p);
 				
 				//  Multiply row i by m1 and row r by m2 so that
 				//  the first element of both rows equals 1
@@ -79263,7 +79126,7 @@ class Matrix
 					matrix.matrix[r][k] = matrix.matrix[r][k] .multiply(m2);
 				}
 				
-				//  Subtract row r from row i to zero the first element of i
+				//  Subtract row r from row i to eliminate the first element of i
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
@@ -80410,7 +80273,7 @@ class Matrix
 		
 		int p = matrix.getPrecision();
 		
-		if (p != 0) zero = zero.setPrecision(p);
+		zero = zero.setPrecision(p);
 		
 		int index = -1;
 		
@@ -81807,11 +81670,17 @@ class Matrix
 	//  isEchelonForm() method. If some of the rows or equations are not linearly
 	//  independent or are just multiples of another row or equation, then rows of
 	//  zeros will appear at the bottom of the matrix which make the system unsolv-
-	//  able. For sparse matrices, even if the rows or equations are all independ-
-	//  ent, one or more diagonal elements could be missing from the reduced matrix
-	//  unless there are many more rows than there are variables. The isEchelonForm
-	//  method will verify that the reduced matrix is in upper triangular form and
-	//  that the diagonal elements are all non-zero.
+	//  able. For sparse matrices, even if the rows or equations are all independent,
+	//  one or more diagonal elements could be missing from the reduced matrix unless
+	//  there are many more rows than there are variables. The isEchelonForm method
+	//  will verify that the reduced matrix is in upper triangular form or that the
+	//  first element of each row is to the right of the the previous row, but it may
+	//  not verify that the diagonal elements are all non-zero. The diagonal elements
+	//  of a matrix in echelon form can be set to 1 by multiplying each row by the
+	//  inverse of its diagonal element so that the result of the matrix reduction is
+	//  unambiguous, or else the result would be implementation dependent. A matrix
+	//  in echelon form in which the diagonals are all equal to 1 could be called a
+	//  standard or canonical form of the matrix similar to row canonical form.
 	
 	
 	
@@ -81869,6 +81738,8 @@ class Matrix
 		
 		matrix = matrix.setPrecision(p);
 		
+		Number zero = new Number(0).setPrecision(p);
+		
 		
 		int rows = matrix.matrix.length;
 		
@@ -81884,7 +81755,7 @@ class Matrix
 			{
 				for (i = r; i < matrix.matrix.length; i++)
 				
-				    if (!matrix.matrix[i][j].equals(0.0))
+				    if (!matrix.matrix[i][j].equals(zero))
 				
 					{ bool = true;  break; }
 				
@@ -81907,8 +81778,6 @@ class Matrix
 			
 			//  Put zeros below the pivot for each row i below r
 			
-			Number zero = new Number(0).setPrecision(p);
-			
 			for (i = r + 1; i < rows; i++)
 			{
 				Number m1 = matrix.matrix[r][j];
@@ -81916,8 +81785,13 @@ class Matrix
 				
 				if (m2.equals(zero)) continue;
 				
-				m1 = m1.inverse();
-				m2 = m2.inverse();
+				//  Compute the inverse of m1 and m2
+				//
+				//  (allow the precision or size of the inverse to expand
+				//  or else the product of m and inv m will not equal 1)
+				
+				m1 = m1.inverse(); // no setPrecision
+				m2 = m2.inverse(); // no setPrecision
 				
 				//  Multiply row r by m1 and row i by m2 so that
 				//  the first element of both rows equals 1
@@ -81928,14 +81802,33 @@ class Matrix
 					matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m2);
 				}
 				
-				//  Subtract row r from row i to zero the first element of i
+				//  Subtract row r from row i to eliminate the first element of i
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
-				    matrix.matrix[i][k] = matrix.matrix[i][k]
+					matrix.matrix[i][k] = matrix.matrix[i][k]
+					
+					    .subtract(matrix.matrix[r][k]);
 				
-					.subtract(matrix.matrix[r][k]);
+				//  Set the precision of the matrix after each iteration
+				
+				matrix = matrix.setPrecision(p);
 			}
+		}
+		
+		//  Set the diagonal elements equal to 1
+		
+		for (int i = 0; i < rows; i++)
+		{
+			Number m = matrix.matrix[i][i];
+			
+			if (m.equals(zero)) continue;
+			
+			m = m.inverse().setPrecision(p);
+			
+			for (int k = i; k < matrix.matrix[rows-1].length; k++)
+			
+			    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m);
 		}
 		
 		matrix = matrix.setPrecision(p);
@@ -82207,6 +82100,21 @@ class Matrix
 			}
 		}
 		
+		//  Set the diagonal elements equal to 1
+		
+		for (int i = 0; i < rows; i++)
+		{
+			Number m = matrix.matrix[i][i];
+			
+			if (m.equals(0)) continue;
+			
+			m = m.modInverse(n);
+			
+			for (int k = i; k < matrix.matrix[rows-1].length; k++)
+			
+			    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m) .mod(n);
+		}
+		
 		return matrix.mod(n);
 	}
 	
@@ -82383,6 +82291,21 @@ class Matrix
 			while (!executor.isTerminated()) ;
 		}
 		
+		//  Set the diagonal elements equal to 1
+		
+		for (int i = 0; i < rows; i++)
+		{
+			Number m = matrix.matrix[i][i];
+			
+			if (m.equals(0)) continue;
+			
+			m = m.modInverse(n);
+			
+			for (int k = i; k < matrix.matrix[rows-1].length; k++)
+			
+			    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m) .mod(n);
+		}
+		
 		return matrix;
 	}
 	
@@ -82516,29 +82439,55 @@ class Matrix
 		boolean isechelonform      = matrix.isEchelonForm();
 		boolean isrowcanonicalform = matrix.isRowCanonicalForm();
 		
-		int mindigits = 0, digitsize = 0;
-		
-		for (int i = 0; i < matrix.matrix   .length; i++)
-		for (int j = 0; j < matrix.matrix[i].length; j++)
+		if (isechelonform)
 		{
-			if (matrix.matrix[i][j] == null)
+			//  If one or more diagonal elements equals zero
+			//  set isechelonform to false so that a zero matrix
+			//  is not displayed in echelon form
 			
-			    { if (4 > mindigits) mindigits = 4;  continue; }
+			Number[] diagonals = matrix.getDiagonals();
+			
+			for (Number d : diagonals) if (d.equals(0))
+			
+			    isechelonform = false;
+		}
+		
+		int rows = matrix.rowCount();
+		int cols = matrix.columnCount();
+		
+		int[] mindigits = new int[cols];
+		
+		int mindigits1 = 0, digitsize = 0;
+		
+		for (int j = 0; j < cols; j++)
+		for (int i = 0; i < rows; i++)
+		{
+			if (i == 0) { mindigits1 = 0; digitsize = 0; }
+			
+			if (matrix.matrix[i][j] == null) // null == 4 digits
+			
+			    { if (mindigits1 < 4) mindigits1 = 4; continue; }
 			
 			digitsize = matrix.matrix[i][j] .toString(radix).length()
 			
 			    + ((matrix.matrix[i][j].signum() == -1) ? 1 : 0);
 			
-			if (digitsize > mindigits)  mindigits = digitsize;
+			//  Set mindigits1 to the largest element digit size
+			
+			if (digitsize > mindigits1) mindigits1 = digitsize;
+			
+			if (i == rows -1) mindigits[j] = mindigits1;
 		}
 		
-		StringBuilder sb = new StringBuilder(), sbdigit;
+		StringBuilder sb = new StringBuilder();
 		
-		for (int i = 0; i < matrix.matrix.length; i++)
+		for (int i = 0; i < rows; i++)
 		{
-			sb.append("| ");
+			if      (i == 0)       sb.append((char) 9121);
+			else if (i == rows -1) sb.append((char) 9123);
+			else                   sb.append((char) 9122);
 			
-			for (int j = 0; j < matrix.matrix[i].length; j++)
+			for (int j = 0; j < cols; j++)
 			{
 				//  Convert the element to a number string
 				
@@ -82558,11 +82507,11 @@ class Matrix
 				    && (j < matrix.matrix.length)) numberstr = " ";
 				
 				
-				//  Prepend zeros to pad the number
+				//  Prepend spaces to pad the number
 				
-				sbdigit = new StringBuilder(numberstr);
+				StringBuilder sbdigit = new StringBuilder(numberstr);
 				
-				while (sbdigit.length() < mindigits)
+				while (sbdigit.length() < mindigits[j])
 				
 				    sbdigit.insert(0, " ");
 				
@@ -82577,21 +82526,21 @@ class Matrix
 				
 				sb.append(sbdigit);
 				
-				int spaces = mindigits - (numberstr != null ?
+				int spaces = mindigits[j] - (numberstr != null ?
 				
 				    numberstr.length() : 4);
 				
 				if (j < matrix.matrix[i].length -1) sb.append("  ");
 				
-				for (int k = 0; k < spaces; k++)  sb.append(" ");
+				for (int k = 0; k < spaces; k++) sb.append(" ");
 			}
 			
-			sb .append(" |");
-			
-			if (i < matrix.matrix.length -1)  sb.append("\n");
+			if      (i == 0)       { sb.append(" "); sb.append((char) 9124); sb.append("\n"); }
+			else if (i == rows -1) { sb.append(" "); sb.append((char) 9126); sb.append("\n"); }
+			else                   { sb.append(" "); sb.append((char) 9125); sb.append("\n"); }
 		}
 		
-		return sb.toString();
+		return sb.toString().trim();
 	}
 	
 	
@@ -82642,6 +82591,10 @@ class Matrix
 		
 		//  If the matrix is augmented with a vector, use toRowCanonicalForm1
 		//  If the matrix is augmented with a matrix, use toRowCanonicalForm2
+		
+		if (!this.isEchelonForm()) throw
+		
+		    new IllegalArgumentException();
 		
 		int rows = this.rowCount();
 		int cols = this.columnCount();
