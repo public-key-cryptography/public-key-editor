@@ -39,14 +39,14 @@
 	message encryption.
 	
 	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
-	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters and x1, x2, and X are private keys.
-	The equations use polynomials, vectors, matrices, cubes, and tesseracts. The vector cross product ci-
-	pher Y = A (x) X,  E = Y * K uses a parallelogram as a public key and a parallelepiped as a shared
-	secret key or key agreement. The matrix product cipher  Y = |A1|X1| uses 2-dimensional arithmetic
-	which multiplies from left to right and from top to bottom. |X2|    The matrix polynomial discrete
-	log cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected for public key
-	cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modular equations
-	are unsolvable.
+	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters, x1, x2, and X are private keys, and
+	Y is the public key. The equations use polynomials, vectors, matrices, cubes, and tesseracts. The vec-
+	tor cross product cipher Y = A (x) X,  E = Y * K uses a parallelogram as a public key and a parallele-
+	piped as a shared secret key or key agreement. The matrix product cipher  Y = |A1|X1| uses 2-dimen-
+	sional arithmetic which multiplies from left to right and from top to bottom. |X2|    The matrix poly-
+	nomial discrete log cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected
+	for public key cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modu-
+	lar equations are unsolvable.
 	
 	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
 	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
@@ -64,7 +64,7 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
 	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
-	includes 16 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
+	includes 17 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
@@ -94,9 +94,10 @@
 	tion protocols changes.
 	
 	
-	Note that the new version of the software will not decrypt email messages encrypted by previous ver-
-	sions of the software because a few errors were corrected in the public key class but messages saved
-	on users' computers will still be decryptable because file encryption uses private key cryptography.
+	** Note that the new version of the software will not decrypt email messages encrypted by previous ver-
+	sions of the software because a private key was modified in one of the 17 public key ciphers but mes-
+	sages saved on users' computers will still be decryptable because file encryption uses private key
+	cryptography.
 	
 	
 	
@@ -335,11 +336,11 @@
 	\n, 3 size 1 \n, ..., or  1 size time-stamp state \n, 2 size time-stamp state \n, 3 size time-stamp
 	state \n, et cetera.
 	
-	This would be backward compatible with the POP mail protocol because it would only display a num-
-	ber if a user changes the state of a message. Also the client could retrieve and delete messages
-	using the ordinal / cardinal numbers or the time stamps. If multiple users want to retrieve and
-	delete the same messages simultaneously they would have to use a newer POP mail program that re-
-	trieves and deletes messages using the time stamps or message hashes.
+	This would be backward compatible with the POP mail protocol because it would only display a number
+	if a user changes the state of a message. Also the client could retrieve and delete messages using
+	the ordinal / cardinal numbers or the time stamps. If multiple users want to retrieve and delete
+	the same messages simultaneously they would have to use a newer POP mail program that retrieves and
+	deletes messages using the time stamps or message hashes.
 	
 	The client program stores the message hashes and message states in a file but the user has to use
 	the same computer or store the mail folder / directory on a USB storage device to view the message
@@ -519,7 +520,8 @@
 	vert, or solve, and it gives users a false sense of security and confidence in the ciphers. Some users
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
-	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive.
+	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
+	know that the coprime root extraction cipher has been broken for a few decades.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
