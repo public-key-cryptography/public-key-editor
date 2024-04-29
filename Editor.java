@@ -125,9 +125,9 @@
 	
 	
 	** Note that the new version of the software will not decrypt email messages encrypted by previous ver-
-	sions of the software because a private key was modified in one of the 17 public key ciphers but mes-
-	sages saved on users' computers will still be decryptable because file encryption uses private key
-	cryptography.
+	sions of the software if the maximum number of ciphers is used because a private key was modified in
+	one of the 17 public key ciphers but messages saved on users' computers will still be decryptable be-
+	cause file encryption uses private key cryptography.
 	
 	
 	
@@ -551,7 +551,7 @@
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
 	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
-	know that the coprime root extraction cipher has been broken for a few decades.
+	know that coprime root extraction has been broken for a few decades.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -1711,6 +1711,7 @@ class __
 	brightmagenta = "bright magenta (red + blue)",
 	magenta = "magenta (purplish red)",
 	darkmagenta = "dark magenta (red + blue)",
+	crimson = "crimson (red + 2/3 blue)",
 	
 	brightpurple = "bright purple",
 	purple = "purple (blue + 1/2 red)",
@@ -40124,12 +40125,13 @@ class Colors
 		
 		{ 0xdf38a6, __.brightpink },
 		{ 0xcf339b, __.pink },
-		{ 0xd71a6b, __.redpink },
+		{ 0xcf1967, __.redpink },
 		
 		//  red + blue
 		
 		{ 0xa800a8, __.magenta },
 		{ 0x780078, __.darkmagenta },
+		{ 0x800055, __.crimson },
 		
 		//  reddish blues
 		
@@ -40140,7 +40142,6 @@ class Colors
 		{ 0x2000A0, __.reddishblue },
 		{ 0x170080, __.darkreddishblue },
 		
-		//  ...
 		
 		//  ...
 	};
@@ -53198,7 +53199,7 @@ class PublicKey
 		this.publickey = publickey;
 		
 		
-		x = new Number[12];
+		x = new Number[8];
 		
 		x[0] = new Number(Cipher.hash(this.privatekey));
 		
@@ -56213,8 +56214,8 @@ class PublicKey
 			x[0] = x[0] .and(new Number(2).pow(digits*2).subtract(1));
 			x[1] = x[1] .and(new Number(2).pow(digits*2).subtract(1));
 			
-			int[] x1 = x[0] .toIntArray();
-			int[] x2 = x[1] .toIntArray();
+			int[] x1 = x[0].toIntArray();
+			int[] x2 = x[1].toIntArray();
 			
 			
 			//  Compute the public key
@@ -56224,8 +56225,8 @@ class PublicKey
 			Polynomial B2x1 = B.modPow(x1);
 			Polynomial C2x2 = C.modPow(x2);
 			
-			Polynomial Y1 = A2x1.multiply(B2x2) .add();
-			Polynomial Y2 = B2x1.multiply(C2x2) .add();
+			Polynomial Y1 = A2x1.multiply(B2x2).add();
+			Polynomial Y2 = B2x1.multiply(C2x2).add();
 			
 			
 			//  Extract the coefficients and exponents
@@ -56740,9 +56741,9 @@ class PublicKey
 			
 			Matrix Y = X .modInverse(p)
 			
-			  .multiply( A.modPow(x[0], p) ) .mod(p)
+			  .multiply(A.modPow(x[0], p)) .mod(p)
 			
-			      .multiply( X ) .mod(p);
+			      .multiply(X) .mod(p);
 			
 			
 			//  Convert the matrix to a number string
@@ -58962,17 +58963,22 @@ class PublicKey
 		//  Computes the recipient's static public key if null
 		//  or else computes the sender's one-time public key
 		
-		final int s, t, radix, bits; Number ones;
+		final int s, t, radix, bits; Number ones, d;
 		
 		if (digits == size768)
-		
-		    { t = 6; s = digits / t; radix = 16; bits = 128;
-		
-			ones = new Number(2).pow(bits).subtract(1); }
+		{
+			t = 6; s = digits / t; radix = 16; bits = 128;
+			
+			ones = new Number(2).pow(bits).subtract(1);
+			
+			d = new Number(2).pow(bits);
+		}
 		
 		else return;
 		
-		if ((s % 4) != 0) throw new IllegalArgumentException();
+		if ((s % 4) != 0) throw new
+		
+		    IllegalArgumentException();
 		
 		
 		if ((publickey == null) || publickey.isEmpty())
@@ -58982,34 +58988,32 @@ class PublicKey
 			
 			Number[] A = new Number[t];
 			
+			
+			//  Choose a random 128-bit radix or base B
+			//  xor the upper and lower halves of x[0]
+			//  because only 128 bits are required for B
+			
+			Number upper = new Number(x[0]).divide(d).and(ones);
+			Number lower = new Number(x[0]).divide(1).and(ones);
+			
+			Number B = upper.xor(lower); B.setBit(bits-1);
+			
+			
 			//  Choose 2 x 6 secret 128-bit numbers
-			
-			byte[][] hashes1 = new byte[t][];
-			byte[][] hashes2 = new byte[t][];
-			
-			for (int i = 0; i < t; i++)
-			{
-				hashes1[i] = x[0+i].toByteArray(bits/8);
-				hashes2[i] = x[t+i].toByteArray(bits/8);
-			}
 			
 			Number[] numbers1 = new Number[t];
 			Number[] numbers2 = new Number[t];
 			
 			for (int i = 0; i < t; i++)
 			{
-				numbers1[i] = new Number(hashes1[i]).and(ones);
-				numbers2[i] = new Number(hashes2[i]).and(ones);
+				//  Extract the upper and lower halves of x[1] to x[6]
+				
+				numbers1[i] = new Number(x[1+i]).divide(d).and(ones);
+				numbers2[i] = new Number(x[1+i]).divide(1).and(ones);
 				
 				numbers1[i].clearBit(bits-1);
 				numbers2[i].clearBit(bits-1);
 			}
-			
-			//  Choose a random 128-bit radix or base B
-			
-			//  Number B = x[0].mod(new Number(2).pow(bits));
-			
-			Number B = x[0].and(ones);  B.setBit(bits-1);
 			
 			for (int i = 0; i < t; i++)
 			{
@@ -61268,20 +61272,24 @@ class PublicKey
 		
 		else if (z.trim().length() == size768)
 		{
-			//  Vector dop product cipher
+			//  Vector dot product cipher
 			
 			//  if (type == recipient / decryption) the sum of X[] is computed from z = b = A[] * X[]
 			//  if (type ==    sender / encryption) the sum of X[] is chosen and z is ignored
 			
 			int digits = z.trim().length();
 			
-			final int s, t, radix, bits; Number ones;
+			final int s, t, radix, bits; Number ones, d;
 			
 			t = 6; s = digits / t; radix = 16; bits = 128;
 			
 			ones = new Number(2).pow(bits).subtract(1);
 			
-			if ((s % 4) != 0) throw new IllegalArgumentException();
+			d = new Number(2).pow(bits);
+			
+			if ((s % 4) != 0) throw new
+			
+			    IllegalArgumentException();
 			
 			
 			Number M = null;
@@ -61301,10 +61309,13 @@ class PublicKey
 				
 				
 				//  Choose a random 128-bit radix or base B
+				//  xor the upper and lower halves of x[0]
+				//  because only 128 bits are required for B
 				
-				//  Number B = x[0].mod(new Number(2).pow(bits));
+				Number upper = new Number(x[0]).divide(d).and(ones);
+				Number lower = new Number(x[0]).divide(1).and(ones);
 				
-				Number B = x[0].and(ones);  B.setBit(bits-1);
+				Number B = upper.xor(lower); B.setBit(bits-1);
 				
 				
 				//  Read the base coefficients
