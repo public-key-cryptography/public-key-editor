@@ -14,8 +14,8 @@
 	A java text editor and email client for public key cryptography
 	and encryption. The ciphers use hypercomplex and hyper-dimensional
 	numbers (including vectors, quaternions, matrices, cubes, and tes-
-	seracts), polynomials, multi-variable, multi-equation, and multi-
-	dimensional arithmetic, and Merkle-Hellman knapsacks.
+	seracts), polynomials, determinants, multi-variable, multi-equation,
+	and multi-dimensional arithmetic, and Merkle-Hellman knapsacks.
 	
 	
 	github.com/public-key-cryptography
@@ -551,7 +551,7 @@
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
 	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
-	know that coprime root extraction has been broken for a few decades.
+	know that the coprime root extraction cipher has been broken for a few decades.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -1711,7 +1711,7 @@ class __
 	brightmagenta = "bright magenta (red + blue)",
 	magenta = "magenta (purplish red)",
 	darkmagenta = "dark magenta (red + blue)",
-	crimson = "crimson (red + 2/3 blue)",
+	    crimson = "crimson (red + 2/3 blue)",
 	
 	brightpurple = "bright purple",
 	purple = "purple (blue + 1/2 red)",
@@ -40142,6 +40142,7 @@ class Colors
 		{ 0x2000A0, __.reddishblue },
 		{ 0x170080, __.darkreddishblue },
 		
+		//  ...
 		
 		//  ...
 	};
@@ -52167,7 +52168,7 @@ class PublicKey
 	//
 	//  1. For each public key cipher in z[]
 	//
-	//     compute the one-time secret key
+	//     compute the one-time secret key agreement
 	//
 	//     e[i] = f[i](z[i], x[i]).
 	//
@@ -52410,7 +52411,7 @@ class PublicKey
 	//  K is the one-time private key
 	//  Z is the one-time public key
 	//
-	//  E is the secret key
+	//  E is the secret key agreement
 	
 	
 	
@@ -52432,6 +52433,12 @@ class PublicKey
 	//
 	//  where A, B, C, X, X1, and X2 are matrices, Latin squares,
 	//  quaternions, cubes, tesseracts, or polynomials
+	//
+	//  The vector ciphers are based on the vector dot product,
+	//  the vector cross product, and the cross product determinant
+	//  problems.
+	
+	
 	
 	
 	
@@ -52580,6 +52587,8 @@ class PublicKey
 	
 	
 	
+	
+	
 	//  The vector dot product cipher
 	//
 	//  (asymmetrical or invertible / one-way function)
@@ -52597,6 +52606,31 @@ class PublicKey
 	//  of A[] and X[] or b = A[] * X[];
 	//
 	//  the secret key x is the sum of X[].
+	
+	
+	
+	
+	//  The vector cross product determinant cipher
+	//
+	//  The static and one-time public keys Y and Z
+	//  are the cross products of the private keys
+	//  X1, X2, and K1, K2. The secret key agreement
+	//  E is the determinant of the public key Y and
+	//  the private keys K or the public key Z and
+	//  the private keys X.
+	//
+	//                    |  i   j   k  |
+	//  Y = X1 (x) X2  == | x11 x12 x13 |
+	//                    | x21 x22 x23 |
+	//
+	//                    |  i   j   k  |
+	//  Z = K1 (x) K2  == | k11 k12 k13 |
+	//                    | k21 k22 k23 |
+	//
+	//         | y1  y2  y3  | __ |  z1  z2  z3 |
+	//  E  ==  | k11 k12 k13 | __ | x11 x12 x13 |
+	//         | k21 k22 k23 |    | x21 x22 x23 |
+	
 	
 	
 	
@@ -52641,6 +52675,8 @@ class PublicKey
 	//
 	//  where the vectors { a1, a2, a3 }, { b1, b2, b3 },
 	//  and { c1, c2, c3 } are any three sides.
+	
+	
 	
 	
 	
@@ -52777,6 +52813,11 @@ class PublicKey
 	private static final int size120 = 3*40; // 120 digits
 	
 	
+	//  Vector cross product determinant (vcpd) cipher
+	
+	private static final int size192 = 3*64; // 192 digits
+	
+	
 	//  Polynomial matrix X A X cipher
 	
 	private static final int size150 = 50*3; // 150 digits
@@ -52865,6 +52906,8 @@ class PublicKey
 		
 		size76,  //  A^-x' C^-1  B^x  C^1  A^x'  m-dl
 		
+		size192, //  Y = X1 (x) X2, E = det(Z, X1, X2)
+		
 		
 		//  vector dot product / vcp
 		
@@ -52891,8 +52934,9 @@ class PublicKey
 		//  mpdl = matrix polynomial discrete log
 		//  lsdl = Latin square discrete log  X^-1 A^x X
 		//  lsd  = Latin square discrete cipher X A X
-		//  vcp  = vector cross product cipher A (x) X
 		//  vdp  = vector dot product cipher A * X
+		//  vcp  = vector cross product cipher A (x) X
+		//  vcpd = vector cross product determinant cipher
 		//
 		//  ....   ....
 		
@@ -53381,6 +53425,15 @@ class PublicKey
 			this.p = p20;
 			
 			generateQuaternionKey(size);
+		}
+		
+		
+		
+		else if (size == size192)
+		{
+			this.p = null;
+			
+			generateVectorKey(size);
 		}
 		
 		
@@ -56621,6 +56674,7 @@ class PublicKey
 			
 			int s = digits / 3, radix = 16;
 			
+			
 			//  Define the public vector A
 			
 			String[] pidigits = new String[3];
@@ -56659,6 +56713,57 @@ class PublicKey
 			if ((publickey == null) || publickey.isEmpty()) {  }
 			
 			else if ((publickey != null) && !publickey.isEmpty()) {  }
+			
+			
+			//  Convert the public key vector to string
+			
+			String y = Y.toIntegerString(s, radix);
+			
+			this.publickey = y;
+		}
+		
+		
+		
+		if (digits == size192)
+		{
+		
+			//  Compute the static or one-time public key
+			//
+			//  Y  =  X1 (x) X2   or   Z  =  K1 (x) K2
+			
+			
+			//  Define the private vectors X1, X2 (or K1, K2)
+			
+			final int t = 3, bits = 128, s = digits / t / 1, radix = 16;
+			
+			Number d = new Number(2).pow(bits);
+			
+			Number ones = d.subtract(1);
+			
+			Number[] numbers1 = new Number[t];
+			Number[] numbers2 = new Number[t];
+			
+			for (int i = 0; i < t; i++)
+			{
+				//  Extract the upper and lower halves of x[0] to x[t-1]
+				
+				numbers1[i] = new Number(x[i]).divide(d).and(ones);
+				numbers2[i] = new Number(x[i]).divide(1).and(ones);
+				
+				numbers1[i].clearBit(bits-1);
+				numbers2[i].clearBit(bits-1);
+				
+				numbers1[i].setBit(bits-2);
+				numbers2[i].setBit(bits-2);
+			}
+			
+			Vector X1 = new Vector(new Number[] { numbers1[0], numbers1[1], numbers1[2] });
+			Vector X2 = new Vector(new Number[] { numbers2[0], numbers2[1], numbers2[2] });
+			
+			
+			//  Compute the cross product of X1 and X2
+			
+			Vector Y = X1 .cross(X2);
 			
 			
 			//  Convert the public key vector to string
@@ -56935,19 +57040,27 @@ class PublicKey
 		{
 			//  converts a vector to an integer string
 			
+			Number mod = new Number(radix).pow(digits);
+			
 			Number[] Y = this.array;
 			
 			String[] y = new String[Y.length];
 			
 			for (int i = 0; i < y.length; i++)
-			
-			    y[i] = Y[i] .toString(radix) .trim();
+			{
+				if (Y[i].signum() == -1)
+				
+				    Y[i] = mod.subtract(Y[i].abs());
+				
+				y[i] = Y[i] .toString(radix) .trim();
+			}
 			
 			for (int i = 0; i < y.length; i++)
 			
 			    while (y[i].length() < digits)
 			
 				y[i] = "0" + y[i];
+			
 			
 			String str = "";
 			
@@ -58969,9 +59082,9 @@ class PublicKey
 		{
 			t = 6; s = digits / t; radix = 16; bits = 128;
 			
-			ones = new Number(2).pow(bits).subtract(1);
-			
 			d = new Number(2).pow(bits);
+			
+			ones = d.subtract(1);
 		}
 		
 		else return;
@@ -60549,6 +60662,90 @@ class PublicKey
 		
 		
 		
+		
+		else if ( z.trim().length() == size192 )
+		{
+		
+			//  Y = X1 (x) X2   Z = K1 (x) K2
+			//
+			//  E = det(Z, X1, X2) == det(Y, K1, K2) 
+			
+			
+			int digits = z.length();
+			
+			final int t = 3, bits = 128, s = digits / t / 1, radix = 16;
+			
+			
+			//  Initialize the public vector Z
+			
+			Number[] Z = new Number[3];
+			
+			for (int i = 0; i < 3; i++)
+			
+			    Z[i] = new Number(z.substring(i*s, (i+1)*s), 16);
+			
+			
+			Number mod = new Number(radix).pow(s);
+			
+			for (int i = 0; i < Z.length; i++)
+			
+			    if (Z[i].isGreaterThan(mod.divide(2)))
+			
+				Z[i] = mod.subtract(Z[i]) .multiply(-1);
+			
+			
+			//  Define the private vectors X1, X2 (or K1, K2)
+			
+			Number d = new Number(2).pow(bits);
+			
+			Number ones = d.subtract(1);
+			
+			Number[] numbers1 = new Number[t];
+			Number[] numbers2 = new Number[t];
+			
+			for (int i = 0; i < t; i++)
+			{
+				//  Extract the upper and lower halves of x[0] to x[t-1]
+				
+				numbers1[i] = new Number(x[i]).divide(d).and(ones);
+				numbers2[i] = new Number(x[i]).divide(1).and(ones);
+				
+				numbers1[i].clearBit(bits-1);
+				numbers2[i].clearBit(bits-1);
+				
+				numbers1[i].setBit(bits-2);
+				numbers2[i].setBit(bits-2);
+			}
+			
+			Number[] X1 = new Number[] { numbers1[0], numbers1[1], numbers1[2] };
+			Number[] X2 = new Number[] { numbers2[0], numbers2[1], numbers2[2] };
+			
+			
+			//  Compute the determinant of { Z, X1, X2 }  or  { Y, K1, K2 }
+			
+			Matrix matrix = new Matrix(new Number[][] { Z, X1, X2 });
+			
+			//  Determinant1() and determinant() give the same answer but
+			//  determinant1 uses integers whereas determinant() uses frac-
+			//  tions, inverses and divisions to reduce the matrix to echelon
+			//  form. Determinant() also returns an integer if the fractional
+			//  part of the result is zero or if the elements of the original
+			//  matrix are all zero. For matrices larger than 3 x 3 or 4 x 4,
+			//  determinant() would have to be used because determinant1() has
+			//  an exponential running time.
+			
+			Number E1 = matrix.determinant1();
+			Number E  = matrix.determinant ();
+			
+			
+			//  Reduce E modulo F8 and return the secret key
+			
+			return E .mod(new Number(16).pow(64).add(1));
+		}
+		
+		
+		
+		
 		else if ( z.trim().length() == size112 )
 		{
 		
@@ -61283,9 +61480,9 @@ class PublicKey
 			
 			t = 6; s = digits / t; radix = 16; bits = 128;
 			
-			ones = new Number(2).pow(bits).subtract(1);
-			
 			d = new Number(2).pow(bits);
+			
+			ones = d.subtract(1);
 			
 			if ((s % 4) != 0) throw new
 			
@@ -71199,7 +71396,7 @@ class Number implements Comparable<Number>
 		
 		Number n = new Number(this);
 		
-		if (n.intpoint != 0) n = n.toInteger();
+		if (n.intpoint != 0) n = n.toInteger(true);
 		
 		int intval = n.intarray[n.intarray.length -1];
 		
@@ -71231,27 +71428,27 @@ class Number implements Comparable<Number>
 	{
 		//  compares two numbers and returns 1, 0, -1
 		
-		Number a = new Number(this);
-		Number b = new Number(val);
+		Number a = new Number(this) .roundBit();
+		Number b = new Number(val)  .roundBit();
 		
 		int[] array1 = a.intarray;
 		int[] array2 = b.intarray;
 		
-		boolean zero1 = true;
-		boolean zero2 = true;
+		boolean iszero1 = true;
+		boolean iszero2 = true;
 		
 		for (int i = 0; i < array1.length; i++)
 		
-		    if (array1[i] != 0) { zero1 = false; break; }
+		    if (array1[i] != 0) { iszero1 = false; break; }
 		
 		for (int i = 0; i < array2.length; i++)
 		
-		    if (array2[i] != 0) { zero2 = false; break; }
+		    if (array2[i] != 0) { iszero2 = false; break; }
 		
 		//  zero can be positive or negative
 		
-		if (zero1) { a.sign = '+'; };
-		if (zero2) { b.sign = '+'; };
+		if (iszero1) { a.sign = '+'; };
+		if (iszero2) { b.sign = '+'; };
 		
 		
 		//  If signs are both '-' swap the numbers and negate
@@ -71272,7 +71469,7 @@ class Number implements Comparable<Number>
 			
 			//  First test for equality
 			
-			if (zero1 && zero2) return 0;
+			if (iszero1 && iszero2) return 0;
 			
 			if (a.sign != b.sign)
 			{
@@ -71309,9 +71506,9 @@ class Number implements Comparable<Number>
 		//  Note that two numbers can be represented differently but should
 		//  compare equally even if there are rounding errors from different
 		//  operations. For example, 1.0000000000000000 and 0.9999999999999999
-		//  should compare equally. In the intarray's two numbers could be
-		//  [12345678, 0, 0] and [12345677, -1, -1] which are identical if the
-		//  numbers are rounded. (Since the round method calls the divide method
+		//  should compare equally. In two intarrays the same number could be
+		//  written as [12345678, 0, 0] or [12345677, -1, -1] because of the
+		//  rounding error. (Since the round method calls the divide method
 		//  which calls the compareTo method, the compareTo method cannot call
 		//  the round method because it would create an endless loop of function
 		//  calls or method invocations causing the stack to overflow and the
@@ -71337,32 +71534,21 @@ class Number implements Comparable<Number>
 		b = b.setPrecision(p);
 		
 		
-		//  If the one integer is larger than the other integer by 1,
-		//  and the larger integer is followed by a 0x00000000 while the
-		//  other integer is followed by a -1 or 0xffffffff, then return 0
 		
-		Number a_int = a.toInteger();
-		Number b_int = b.toInteger();
+		//  Convert the numbers to integers and fractions
+		//  and compare the integers and fractions
 		
-		Number c_int = a_int.subtract(b_int).abs();
+		Number a_int = a.toInteger(true);
+		Number b_int = b.toInteger(true);
 		
-		if ((c_int.intarray.length == 1) && (c_int.intarray[0] == 1))
-		{
-			Number a_frac = a.toFraction();
-			Number b_frac = b.toFraction();
-			
-			if (a_int.subtract(b_int).intarray[0] == 1)
-			{
-				if ((a_frac.intarray[0] ==  0) &&
-				    (b_frac.intarray[0] == -1))    return 0;
-			}
-			
-			if (a_int.subtract(b_int).intarray[0] == -1)
-			{
-				if ((a_frac.intarray[0] == -1) &&
-				    (b_frac.intarray[0] ==  0))    return 0;
-			}
-		}
+		Number a_frac = a.toFraction(true);
+		Number b_frac = b.toFraction(true);
+		
+		if ( Arrays.equals(a_int .intarray, b_int .intarray)
+		 &&  Arrays.equals(a_frac.intarray, b_frac.intarray) )
+		
+		    return 0;
+		
 		
 		
 		//  Subtract the two numbers
@@ -71376,8 +71562,6 @@ class Number implements Comparable<Number>
 		
 		    Number(16).pow(p)) .setPrecision(0);
 		
-		if (integer.equals(0) && fraction.equals(0)) return 0;
-		
 		
 		int[] array = c.intarray;
 		
@@ -71390,22 +71574,22 @@ class Number implements Comparable<Number>
 		{
 			//  Read the digits to the left of the intpoint
 			
-			boolean zero = true;
+			boolean iszero = true;
 			
 			for (int i = 0; i < array.length + d; i++)
 			
-			    if (array[i] != 0) zero = false;
+			    if (array[i] != 0) iszero = false;
 			
-			if (!zero) return  c.sign == '-' ? -1 : 1;
+			if (!iszero) return  c.sign == '-' ? -1 : 1;
 		}
 		
-		boolean zero = true;
+		boolean iszero = true;
 		
 		for (int i = 0; (i < p - 8*d) && (i < array.length); i++)
 		
-		    if (array[i] != 0) { zero = false;  break; }
+		    if (array[i] != 0) { iszero = false;  break; }
 		
-		if (zero) return 0;
+		if (iszero) return 0;
 		
 		//  Test for greater or less than zero
 		
@@ -71699,6 +71883,7 @@ class Number implements Comparable<Number>
 			
 			return new Number(real, imag);
 		}
+		
 		
 		
 		Number a = new Number(this)    .abs() .trim();
@@ -72701,7 +72886,7 @@ class Number implements Comparable<Number>
 		
 		Number n = new Number(this);
 		
-		if (n.intpoint != 0) n = n.toInteger();
+		if (n.intpoint != 0) n = n.toInteger(true);
 		
 		int intval = n.intarray[n.intarray.length -1];
 		
@@ -72785,7 +72970,7 @@ class Number implements Comparable<Number>
 		
 		//  Set the inverse precision
 		
-		int inv_precision = this.precision + 32;
+		int inv_precision = fracdigits + 2*intdigits + 32;
 		
 		
 		//  Use the quadratic divider if the number
@@ -72793,7 +72978,7 @@ class Number implements Comparable<Number>
 		
 		if (this.bitCount() < 1024)
 		{
-			Number u = new Number(1) .setPrecision(
+			Number u = new Number(1).setPrecision(
 			
 			    inv_precision).divide(this);
 			
@@ -76566,11 +76751,11 @@ class Number implements Comparable<Number>
 		//  (such as a perfect square or perfect cube)
 		//  then return the root r as an integer
 		
-		if (this.toFraction().equals(0) && r.add(0.1)
+		if (this.toFraction().equals(0) &&
 		
-		    .toInteger() .pow(k) .equals(this))
+		    r.toInteger(true) .pow(k) .equals(this))
 		
-			return r.add(0.1).toInteger();
+			return r.toInteger(true);
 		
 		int precision = Math.max(n.precision, 8);
 		
@@ -76635,6 +76820,38 @@ class Number implements Comparable<Number>
 		return number.setPrecision(p);
 	}
 	
+	
+	
+	public Number roundBit()
+	{
+		//  adds a 1 to the least significant bit of the array
+		
+		int p = this.precision;
+		
+		while ((p % 8) != 0) p++;
+		
+		//  Set the precision to expand the left side of the intarray
+		
+		Number n = this.setPrecision(p);
+		
+		int d = n.intpoint - p / 8;
+		
+		int index = n.intarray.length -1 -d;
+		
+		int[] intarray1 = new int[n.intarray.length];
+		
+		intarray1[index] = 1;
+		
+		if (n.intarray[index] == -1)
+		
+		    n.intarray = Math.add(n.intarray, intarray1);
+		
+		n.precision = this.precision;
+		
+		n.sign = this.sign;
+		
+		return n;
+	}
 	
 	
 	public void setBit(long bit)
@@ -77379,11 +77596,20 @@ class Number implements Comparable<Number>
 		return Convert.intArrayToByteArray(this.intarray, bytes);
 	}
 	
+	
 	public Number toFraction()
 	{
-		//  returns the frac value or the number mod 1
+		return toFraction(false);
+	}
+	
+	public Number toFraction(boolean round)
+	{
+		//  returns the fractional value of a number or the number modulo 1
+		//
+		//  If round is true, then a 1 is added to the least significant bit
+		//  to round the number up before reading and returning the fraction.
 		
-		return this.subtract(this.toInteger());
+		return this.subtract(this.toInteger(round));
 	}
 	
 	
@@ -77574,28 +77800,71 @@ class Number implements Comparable<Number>
 	}
 	
 	
+	
 	public Number toInteger()
 	{
-		//  converts the number to integer
+		//  returns the integer value to the left of the intpoint
+		//
+		//  This integer value is ambiguous because an integer n could
+		//  be represented as n + 0.00000000... or as n-1 + 0.99999999.
 		
-		if ((this.precision == 0) && (this.intpoint == 0))
+		return toInteger(false);
+	}
+	
+	
+	public Number toInteger(boolean round)
+	{
+		//  returns the integer to the left of the intpoint
+		//
+		//  If round is true, then a 1 is added to the least significant bit
+		//  to round the number up before reading and returning the integer.
+		
+		
+		//  Note that two numbers can be represented differently but should
+		//  compare equally even if there are rounding errors from different
+		//  operations. For example, 1.0000000000000000 and 0.9999999999999999
+		//  should compare equally. In two intarrays the same number could be
+		//  written as [12345678, 0, 0] or [12345677, -1, -1] because of the
+		//  rounding error.
+		//
+		//  Adding a 1 to the last bit in the intarray might not round the
+		//  number to the next integer because a number could have additional
+		//  insignificant integers depending on the implementation of the number
+		//  methods. For example, instead of the number [xxxxxxxx, -1, -1] where
+		//  the intpoint and precision equal 2*8 or 16, the same number could be
+		//  represented as [xxxxxxxx, -1, -1, xxxxxxxx] where the intpoint == 3
+		//  and p == 2*8 == 16. In this example a 1 would have to be added to
+		//  the element at index 2, not index 3.
+		//
+		//  To add a 1 to the least significant bit, the index of the element
+		//  to add a 1 to is array.length -1 - (intpoint - p/8).
+		
+		
+		int p = precision; while ((p % 8) != 0) p++;
+		
+		if ((p == 0) && (intpoint == 0))
 		
 		    return new Number(this);
 		
-		if (this.intpoint >= this.intarray.length)
+		if (intpoint > this.intarray.length)
 		
 		    return new Number(0);
 		
-		int arraylength = this.length() - this.intpoint;
+		Number n = new Number(this);
 		
-		Number n = new Number(Math.shiftRight(
+		if (round) n = n.roundBit();
 		
-		    this.intarray, 32*intpoint)) .trim();
+		int[] intarray = n.intarray;
+		
+		n = new Number(Math.shiftRight(
+		
+		    intarray, 32*intpoint)) .trim();
 		
 		n.sign = this.sign;
 		
 		return n;
 	}
+	
 	
 	
 	public Number toReal()
@@ -77686,7 +77955,11 @@ class Number implements Comparable<Number>
 		}
 		
 		
-		//  At 64 K digits the pi and toString methods take around 3 minutes and 1 minute
+		//  At 64 K digits the pi method still has a running time greater than
+		//  the toString method so there is no need to use recursion for strings
+		//  less than or equal to 64 K digits to convert pi to base 10, but for
+		//  strings greater than 64 K the O(n^2) running time of the toString
+		//  method will exceed the O(n log n) time of the pi method.
 		
 		int maxsize = 8*1024; // 8 K ints x 8 digits / int == 64 K digits
 		
@@ -78034,23 +78307,14 @@ class Number implements Comparable<Number>
 		}
 		
 		
-		//  Pad the right side of the number to precision + 1 digits
+		//  Remove the last fraction digit
 		
-		length = fractionstr.length(); index = 0;
+		if (this.precision > 0)
 		
-		if ((this.precision > 0) && (this.precision + 1 > length))
-		{
-			if (!str.contains("."))  str = str + ".";
-			
-			StringBuilder sb = new StringBuilder();  sb.append(str);
-			
-			while (this.precision + 1 - index++ > length)  sb.append("0");
-			
-			str = sb.toString();
-		}
+		    str = str.substring(0, str.length() -1);
 		
 		
-		//  Round the fraction up one digit
+		//  Round the fraction up one digit before padding the right side
 		
 		if ((radix <= 16) && (this.precision > 0) &&
 		
@@ -78068,14 +78332,20 @@ class Number implements Comparable<Number>
 				
 				if (c == '.') continue;
 				
-				//  Roll the digit over to zero or add one and break
+				//  Roll the digit over to 0 or add 1 and break
 				
 				if ( ((c +  0 - '0') == (radix -1))
 				  || ((c + 10 - 'a') == (radix -1)) )
 				
 				     { sb.setCharAt(i, '0');  carry = true; }
 				
-				else { sb.setCharAt(i, (char)(c + 1));  carry = false; }
+				else
+				{	if (c != '9') sb.setCharAt(i, (char) (c + 1));
+					
+					else if (c == '9') sb.setCharAt(i, 'a');
+					
+					carry = false;
+				}
 				
 				if (!carry) break;
 			}
@@ -78086,11 +78356,20 @@ class Number implements Comparable<Number>
 		}
 		
 		
-		//  Remove the last fraction digit
+		//  Pad the right side of the number to precision + 1 digits
 		
-		if (this.precision > 0)
+		length = fractionstr.length(); index = 0;
 		
-		    str = str.substring(0, str.length() -1);
+		if ((this.precision > 0) && (this.precision + 1 > length))
+		{
+			if (!str.contains("."))  str = str + ".";
+			
+			StringBuilder sb = new StringBuilder();  sb.append(str);
+			
+			while (this.precision + 1 - index++ > length)  sb.append("0");
+			
+			str = sb.toString();
+		}
 		
 		
 		//  Prepend the sign
@@ -78966,7 +79245,7 @@ class Matrix
 	//  If any two rows (columns) of a matrix are interchanged then the value of the
 	//  determinant is negated. (For a 2x2 matrix { { a, b }, { c, d } } the deter-
 	//  minant is a d - b c, therefore swapping the two rows gives the determinant
-	//  c b - d a or b c - a d which is the negative of a d - b c.)
+	//  c b - d a  or  b c - a d  which is the negative of  a d - b c.)
 	//
 	//  If any row (column) of a matrix is multiplied by a number k, then the value
 	//  of the determinant is also multiplied by k. (For a 1x1 matrix { a } the de-
@@ -78974,12 +79253,14 @@ class Matrix
 	//
 	//  If any row (column) of a matrix is multiplied and added to another row (col-
 	//  umn), the determinant is unchanged. (For a 2x2 matrix { { a, b }, { c, d } }
-	//  the determinant is a d - b c, therefore a (d + b) - b (c + a) == a d - b c
+	//  the determinant is  a d - b c, therefore a (d + b) - b (c + a) == a d - b c
 	//  + (a b - a b) == a d - b c.)
 	//
 	//  If all elements of any row (column) of a matrix equal zero, then the value
 	//  of the determinant is zero. (Multiplying a row by zero multiplies the deter-
-	//  minant by zero because for a 1x1 matrix | k a | == k a.)
+	//  minant by zero because for a 1x1 matrix | k a | == k a; similarly, for a 2x2
+	//  matrix { { a, b }, { c, d } }, the determinant  a d - b c  is  0 d - 0 c  or
+	//  a 0 - b 0  which is 0 if either row { a, b } or { c, d } == { 0, 0 })
 	//
 	//  If any two rows (columns) of a matrix are identical, then the value of the
 	//  determinant is zero. (All rows or equations have to be linearly independent
@@ -79026,16 +79307,34 @@ class Matrix
 		
 		Matrix matrix = new Matrix(this);
 		
-		//  Set a minimum precision to avoid division by zero
+		int rows = matrix.matrix.length;
+		int cols = matrix.matrix[0].length;
+		
+		
+		//  Set a minimum precision
 		
 		int p = matrix.getPrecision();
 		
 		if (p == 0) p = 8;
 		
+		
+		//  Set the inverse precision
+		
+		int invp = 0;
+		
+		for (int i = 0; i < rows; i++)
+		for (int j = 0; j < cols; j++)
+		{
+			int invp1 = matrix.get(i,j)
+			
+			    .inverse().getPrecision();
+			
+			if (invp1 > invp) invp = invp1;
+		} 
+		
 		//  Define the precision of zero
 		
 		Number zero = new Number(0).setPrecision(p);
-		
 		
 		if (matrix.matrix.length != matrix.matrix[0].length)
 		{
@@ -79058,28 +79357,17 @@ class Matrix
 		
 		//  Reduce the matrix to echelon form
 		
-		
-		//  Forward Elimination
-		//
-		//  Reduce the matrix to (upper) echelon form
-		//
-		//  (put zeros below each pivot)
-		
-		
 		//  For computing determinants, count the number of swaps modulo 2
-		//  to determine the sign and accumulate the product of the m1's
+		//  to determine the sign and accumulate the product of the m's
 		//  because multiplying any row by a scalar also multiplies the
 		//  determinant.
 		
 		boolean swap = false;
 		
-		Number m1_product = new Number(1);
-		
+		Number m_product = new Number(1);
 		
 		
 		//  Reduce the matrix to echelon form
-		
-		int rows = matrix.matrix.length;
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -79111,6 +79399,8 @@ class Matrix
 				
 				matrix.matrix[i] = tempr;
 				matrix.matrix[r] = tempi;
+				
+				swap = !swap;
 			}
 			
 			
@@ -79121,6 +79411,7 @@ class Matrix
 				Number m1 = matrix.matrix[r][j];
 				Number m2 = matrix.matrix[i][j];
 				
+				if (m1.equals(zero)) continue;
 				if (m2.equals(zero)) continue;
 				
 				//  Compute the inverse of m1 and m2
@@ -79128,33 +79419,33 @@ class Matrix
 				//  (allow the precision or size of the inverse to expand
 				//  or else the product of m and inv m will not equal 1)
 				
-				m1 = m1.inverse(); // no setPrecision
-				m2 = m2.inverse(); // no setPrecision
+				Number inv_m1 = m1.setPrecision(invp).inverse();
+				Number inv_m2 = m2.setPrecision(invp).inverse();
 				
 				//  Multiply row r by m1 and row i by m2 so that
 				//  the first element of both rows equals 1
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				{
-					matrix.matrix[r][k] = matrix.matrix[r][k] .multiply(m1);
-					matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m2);
+					matrix.matrix[r][k] = matrix.matrix[r][k] .multiply(inv_m1);
+					matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(inv_m2);
 				}
 				
 				//  Subtract row r from row i to eliminate the first element of i
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
-					matrix.matrix[i][k] = matrix.matrix[i][k]
-					
-					    .subtract(matrix.matrix[r][k]);
+				    matrix.matrix[i][k] = matrix.matrix[i][k]
+				
+					.subtract(matrix.matrix[r][k]);
 				
 				//  Set the precision of the matrix after each iteration
 				
-				matrix = matrix.setPrecision(p);
+				matrix = matrix.setPrecision(invp);
 				
-				//  Accumulate the product of m1
+				//  Accumulate the product of the row multipliers
 				
-				m1_product = m1_product .multiply(m1);
+				m_product = m_product .multiply(inv_m1) .multiply(inv_m2);
 			}
 		}
 		
@@ -79176,16 +79467,19 @@ class Matrix
 		if (swap) d = d .negate();
 		
 		
-		//  Remove the product of the m1's
+		//  Remove the product of the row multipliers
 		
-		d = d .divide(m1_product);
+		d = d .divide(m_product) .setPrecision(p);
 		
 		
 		//  Round the number only if the fraction digits are zero
+		//  or if the elements of the original matrix are all zero
 		
-		if (d.toFraction().equals(0))
+		if ((this.getPrecision() == 0)
 		
-		    d = d.round();
+		    || d.toFraction(true).equals(zero))
+		
+			d = d.round().toInteger();
 		
 		return d;
 	}
@@ -79407,13 +79701,6 @@ class Matrix
 		
 		d = d .modDivide(m1_product, n);
 		
-		
-		//  Round the number only if the fraction digits are zero
-		
-		if (d.toFraction().equals(0))
-		
-		    d = d.round();
-		
 		return d;
 	}
 	
@@ -79440,9 +79727,10 @@ class Matrix
 		//  This method is inefficient for large matrices because it re-
 		//  quires O(n!) or n factorial steps or operations.
 		
-		//  This method computes the determinant by recursion
+		
+		//  Compute the determinant by recursion
 		//
-		//  using the definition | a11 | == a11  and
+		//  using the definitions | a11 | == a11  and
 		//
 		//  | a11  a12 |
 		//  |          | == a11 a22 - a12 a21.
@@ -79581,8 +79869,12 @@ class Matrix
 			if (p != null) sqrt = discriminant.modSqrt(p);
 			else           sqrt = discriminant.sqrt();
 			
-			if (sqrt == null) { System.out.println(
-			    "mod sqrt error"); return null; }
+			if (sqrt == null)
+			{
+				System.out.println("mod sqrt error");
+				
+				return null;
+			}
 			
 			Number u1, u2;
 			
@@ -81746,13 +82038,30 @@ class Matrix
 		
 		Matrix matrix = new Matrix(this);
 		
-		//  Set a minimum precision to avoid division by zero
+		int rows = matrix.matrix.length;
+		int cols = matrix.matrix[0].length;
+		
+		
+		//  Set a minimum precision
 		
 		int p = matrix.getPrecision();
 		
 		if (p == 0) p = 8;
 		
-		matrix = matrix.setPrecision(p);
+		
+		//  Set the inverse precision
+		
+		int invp = 0;
+		
+		for (int i = 0; i < rows; i++)
+		for (int j = 0; j < cols; j++)
+		{
+			int invp1 = matrix.get(i,j)
+			
+			    .inverse().getPrecision();
+			
+			if (invp1 > invp) invp = invp1;
+		} 
 		
 		//  Define the precision of zero
 		
@@ -81760,8 +82069,6 @@ class Matrix
 		
 		
 		//  Reduce the matrix to echelon form
-		
-		int rows = matrix.matrix.length;
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -81810,8 +82117,8 @@ class Matrix
 				//  (allow the precision or size of the inverse to expand
 				//  or else the product of m and inv m will not equal 1)
 				
-				m1 = m1.inverse(); // no setPrecision
-				m2 = m2.inverse(); // no setPrecision
+				m1 = m1.setPrecision(invp).inverse();
+				m2 = m2.setPrecision(invp).inverse();
 				
 				//  Multiply row r by m1 and row i by m2 so that
 				//  the first element of both rows equals 1
@@ -81826,13 +82133,13 @@ class Matrix
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
-					matrix.matrix[i][k] = matrix.matrix[i][k]
-					
-					    .subtract(matrix.matrix[r][k]);
+				    matrix.matrix[i][k] = matrix.matrix[i][k]
+				
+					.subtract(matrix.matrix[r][k]);
 				
 				//  Set the precision of the matrix after each iteration
 				
-				matrix = matrix.setPrecision(p);
+				matrix = matrix.setPrecision(invp);
 			}
 		}
 		
@@ -82331,6 +82638,21 @@ class Matrix
 	
 	
 	
+	public Matrix toFraction()
+	{
+		//  converts matrix elements to fractional numbers
+		
+		Matrix matrix = new Matrix(this);
+		
+		for (int i = 0; i < matrix.matrix   .length; i++)
+		for (int j = 0; j < matrix.matrix[i].length; j++)
+		
+		    matrix.matrix[i][j] = this.matrix[i][j] .toFraction(true);
+		
+		return matrix;
+	}
+	
+	
 	public Matrix toImag()
 	{
 		Matrix matrix = new Matrix(this);
@@ -82355,7 +82677,7 @@ class Matrix
 		for (int i = 0; i < matrix.matrix   .length; i++)
 		for (int j = 0; j < matrix.matrix[i].length; j++)
 		
-		    matrix.matrix[i][j] = this.matrix[i][j] .toInteger();
+		    matrix.matrix[i][j] = this.matrix[i][j] .toInteger(true);
 		
 		return matrix;
 	}
@@ -82796,10 +83118,8 @@ class Matrix
 			//  Multiply row r by the multiplier so the pivot equals one
 			
 			for (int k = 0; k < matrix.matrix[r].length; k++)
-			{
-				matrix.matrix[r][k] = matrix.matrix[r][k] .multiply(inv);
-				matrix.matrix[r][k] = matrix.matrix[r][k] .mod(n);
-			}
+			
+			    matrix.matrix[r][k] = matrix.matrix[r][k].multiply(inv).mod(n);
 			
 			
 			//  Put zeros above the pivot for each row above r
@@ -82908,9 +83228,9 @@ class Matrix
 			
 			for (int k = 0; k < matrix.matrix[r].length; k++)
 			{
-				matrix.matrix[r][k] = matrix.matrix[r][k] .multiply(inv);
+				matrix.matrix[r][k] = matrix.matrix[r][k].multiply(inv);
 				
-				if (n != null) matrix.matrix[r][k] = matrix.matrix[r][k] .mod(n);
+				if (n != null) matrix.matrix[r][k] = matrix.matrix[r][k].mod(n);
 			}
 			
 			
@@ -82942,15 +83262,18 @@ class Matrix
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				{
-					matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m2)
-					                .add( matrix.matrix[r][k] .multiply(m1) );
+					matrix.matrix[i][k] =
 					
-					if (n != null) matrix.matrix[i][k] = matrix.matrix[i][k] .mod(n);
+					      matrix.matrix[i][k] .multiply(m2)
+					.add( matrix.matrix[r][k] .multiply(m1) );
+					
+					if (n != null) matrix.matrix[i][k]
+					             = matrix.matrix[i][k] .mod(n);
 				}
 			}
 		}
 		
-		if (n != null) matrix = matrix .mod(n) .add(n) .mod(n);
+		if (n != null) matrix = matrix.mod(n).add(n).mod(n);
 		
 		if (n == null) matrix = matrix.setPrecision(p);
 		
