@@ -94,7 +94,7 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
 	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
-	includes 17 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
+	includes 18 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
@@ -543,7 +543,7 @@
 	digits because there are tens of mathematicians who can understand the math for breaking supersingular
 	isogeny key exchange. This discovery was of no importance to the field of mathematics because the ci-
 	phers included additional information in the public key to do the key agreement, and this information
-	was used to break the cipher.
+	was used to break the cipher without solving the underlying math problem.
 	
 	Competitions are good for many things but public key cryptography is not one of them because it just
 	selects ciphers, functions, or equations that only a few people in the world know how to break, in-
@@ -551,7 +551,8 @@
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
 	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
-	know that the coprime root extraction cipher has been broken for a few decades.
+	know that coprime root extraction has been broken for a few decades which is why RSA was rejected for
+	digital signature algorithms.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -71392,11 +71393,17 @@ class Number implements Comparable<Number>
 	
 	public byte byteValue()
 	{
-		//  returns the number as a byte
+		//  returns the byte value of a number
 		
+		return byteValue(true);
+	}
+	
+	
+	private byte byteValue(boolean round)
+	{
 		Number n = new Number(this);
 		
-		if (n.intpoint != 0) n = n.toInteger(true);
+		if (n.intpoint != 0) n = n.toInteger(round);
 		
 		int intval = n.intarray[n.intarray.length -1];
 		
@@ -72882,11 +72889,20 @@ class Number implements Comparable<Number>
 	
 	public int intValue()
 	{
-		//  returns the number as an int
+		//  returns the int value of a number
 		
+		//  the Number toString method requires the
+		//  unrounded int value or else it will cause
+		//  an error and throw an exception
+		
+		return intValue(true);
+	}
+	
+	private int intValue(boolean round)
+	{
 		Number n = new Number(this);
 		
-		if (n.intpoint != 0) n = n.toInteger(true);
+		if (n.intpoint != 0) n = n.toInteger(round);
 		
 		int intval = n.intarray[n.intarray.length -1];
 		
@@ -73513,9 +73529,9 @@ class Number implements Comparable<Number>
 	{
 		//  tests if a number is an nth power
 		
-		Number root = this .root(n) .add(0.1) .toInteger();
+		Number root = this.root(n).round().toInteger();
 		
-		return root .pow(n) .equals(this);
+		return root.pow(n).equals(this);
 	}
 	
 	
@@ -73961,11 +73977,16 @@ class Number implements Comparable<Number>
 	
 	public long longValue()
 	{
-		//  returns the integer value as a long
+		//  returns the long value of a number
 		
+		return longValue(true);
+	}
+	
+	private long longValue(boolean round)
+	{
 		Number n = new Number(this);
 		
-		if (n.intpoint != 0)  n = n.toInteger();
+		if (n.intpoint != 0)  n = n.toInteger(round);
 		
 		long longval = n.intarray[n.intarray.length -1];
 		
@@ -76787,7 +76808,7 @@ class Number implements Comparable<Number>
 		
 		else  number = number.subtract(0.5);
 		
-		return number .toInteger();
+		return number.toInteger();
 	}
 	
 	
@@ -76822,7 +76843,7 @@ class Number implements Comparable<Number>
 	
 	
 	
-	public Number roundBit()
+	private Number roundBit()
 	{
 		//  adds a 1 to the least significant bit of the array
 		
@@ -77207,7 +77228,7 @@ class Number implements Comparable<Number>
 		
 		if ((this.precision != 0) && (bit >= 0))
 		
-		    array = this.toInteger().intarray;
+		    array = this.toInteger(false).intarray;
 		
 		if ((this.precision != 0) && (bit < 0))
 		
@@ -77599,10 +77620,10 @@ class Number implements Comparable<Number>
 	
 	public Number toFraction()
 	{
-		return toFraction(false);
+		return toFraction(true);
 	}
 	
-	public Number toFraction(boolean round)
+	private Number toFraction(boolean round)
 	{
 		//  returns the fractional value of a number or the number modulo 1
 		//
@@ -77808,11 +77829,11 @@ class Number implements Comparable<Number>
 		//  This integer value is ambiguous because an integer n could
 		//  be represented as n + 0.00000000... or as n-1 + 0.99999999.
 		
-		return toInteger(false);
+		return toInteger(true);
 	}
 	
 	
-	public Number toInteger(boolean round)
+	private Number toInteger(boolean round)
 	{
 		//  returns the integer to the left of the intpoint
 		//
@@ -78136,7 +78157,7 @@ class Number implements Comparable<Number>
 					
 					//  Remove trailing zeros
 					
-					while (number.multiply(radix).intValue() == 0)
+					while (number.multiply(radix).intValue(false) == 0)
 					{
 						number = number.multiply(radix);
 						
@@ -78154,7 +78175,7 @@ class Number implements Comparable<Number>
 					{
 						number0 = number0 .multiply(radix);
 						
-						int digit = number0 .intValue();
+						int digit = number0 .intValue(false);
 						
 						if (digit >= radix) throw new ArithmeticException();
 						
@@ -78234,7 +78255,7 @@ class Number implements Comparable<Number>
 					{
 						number = number .multiply(radix);
 						
-						int digit = number.intValue();
+						int digit = number.intValue(false);
 						
 						if (digit < 10)
 						
@@ -78529,11 +78550,11 @@ class Number implements Comparable<Number>
 		
 		//  Read the left and right (integer and fractional) values
 		
-		Number left = number .toInteger();
+		Number left = number.toInteger();
 		
 		Number number1 = number .subtract(left) .multiply(multiplier);
 		
-		Number right = number1 .add(0.5) .toInteger();
+		Number right = number1.round().toInteger();
 		
 		//  Verify that the left and right numbers are correct
 		
@@ -79477,7 +79498,7 @@ class Matrix
 		
 		if ((this.getPrecision() == 0)
 		
-		    || d.toFraction(true).equals(zero))
+		    || d.toFraction().equals(zero))
 		
 			d = d.round().toInteger();
 		
@@ -82647,7 +82668,7 @@ class Matrix
 		for (int i = 0; i < matrix.matrix   .length; i++)
 		for (int j = 0; j < matrix.matrix[i].length; j++)
 		
-		    matrix.matrix[i][j] = this.matrix[i][j] .toFraction(true);
+		    matrix.matrix[i][j] = this.matrix[i][j] .toFraction();
 		
 		return matrix;
 	}
@@ -82677,7 +82698,7 @@ class Matrix
 		for (int i = 0; i < matrix.matrix   .length; i++)
 		for (int j = 0; j < matrix.matrix[i].length; j++)
 		
-		    matrix.matrix[i][j] = this.matrix[i][j] .toInteger(true);
+		    matrix.matrix[i][j] = this.matrix[i][j] .toInteger();
 		
 		return matrix;
 	}

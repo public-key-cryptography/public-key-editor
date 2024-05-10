@@ -64,7 +64,7 @@
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
 	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
-	includes 17 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
+	includes 18 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
@@ -513,7 +513,7 @@
 	digits because there are tens of mathematicians who can understand the math for breaking supersingular
 	isogeny key exchange. This discovery was of no importance to the field of mathematics because the ci-
 	phers included additional information in the public key to do the key agreement, and this information
-	was used to break the cipher.
+	was used to break the cipher without solving the underlying math problem.
 	
 	Competitions are good for many things but public key cryptography is not one of them because it just
 	selects ciphers, functions, or equations that only a few people in the world know how to break, in-
@@ -521,7 +521,8 @@
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
 	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
-	know that the coprime root extraction cipher has been broken for a few decades.
+	know that coprime root extraction has been broken for a few decades which is why RSA was rejected for
+	digital signature algorithms.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
