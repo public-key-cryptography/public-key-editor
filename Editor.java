@@ -194,12 +194,12 @@
 	single command line
 	
 	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java
+	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java
 	
 	or for the email client
 	
 	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java mail
+	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
