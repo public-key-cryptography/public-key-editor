@@ -28,7 +28,7 @@
 	Readme file
 	
 	
-	The Java Editor program contains a text editor, email editor, table editor, and image viewer. The
+	The Java Editor program contains a text editor, table editor, email editor and image viewer. The
 	program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert classes.
 	These classes contain all the ciphers, algorithms, protocols, and software required to do cryptog-
 	raphy. The Mail, PopMail, and SendMail classes contain the software required to send and retrieve
@@ -126,8 +126,8 @@
 	
 	** Note that the new version of the software will not decrypt email messages encrypted by previous ver-
 	sions of the software if the maximum number of ciphers is used because a private key was modified in
-	one of the 17 public key ciphers but messages saved on users' computers will still be decryptable be-
-	cause file encryption uses private key cryptography.
+	one of the public key ciphers but messages saved on users' computers will still be decryptable because
+	file encryption uses private key cryptography.
 	
 	
 	
@@ -144,7 +144,7 @@
 	Downloading the java development kit (JDK)
 	
 	To download the JDK, go to jdk.java.net
-	Click on the link that says  Ready for use: JDK 21.
+	Click on the link that says  Ready for use: JDK 22.
 	
 	Then click on a tar file link that says tar.gz.
 	Choose the correct file for your processor architecture
@@ -154,28 +154,28 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-21_linux-x64_bin.tar.gz
+	openjdk-22.0.1_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-21_linux-x64_bin.tar.gz  from the website jdk.java.net/21.
+	0.  Download the file openjdk-22.0.1_linux-x64_bin.tar.gz  from the website jdk.java.net/22.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-21_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-21_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-21/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -189,17 +189,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-21_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-22.0.1_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-21_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-21_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-21/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java
 	
 	or for the email client
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-21_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-21_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-21/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -213,20 +213,20 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-21 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-22 using the command
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-21_linux-x64_bin.tar.gz /usr/jdk;
-	cd /usr/jdk; sudo tar zxvf openjdk-21_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-21/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-21/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-21/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-22/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-22/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -256,10 +256,10 @@
 	
 	If the Editor.java file is in the Downloads folder, use the commands
 	
-	/usr/jdk/jdk-21/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-21/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-22/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-22/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-21/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-22/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
 	by copying and pasting into the terminal.
@@ -298,7 +298,7 @@
 	doesn't start with a slash /, but it is redundant to use cd if the next command has an
 	absolute path name because then it doesn't do anything.
 	
-	The path name /usr/jdk/jdk-21/bin/java can be replaced by the file name java if the
+	The path name /usr/jdk/jdk-22/bin/java can be replaced by the file name java if the
 	terminal knows where to find the java command. The path name is included because some
 	users may be running a live version of Linux.
 	
@@ -308,11 +308,11 @@
 	
 	The jar file can be run using the command
 	
-	cd; /usr/jdk/jdk-21/bin/java -jar Editor.jar (text) for the text editor, or
+	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar (text) for the text editor, or
 	
-	cd; /usr/jdk/jdk-21/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-21/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-21/bin/java -jar Editor.jar image
+	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar image
 	
 	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
@@ -1718,8 +1718,8 @@ class __
 	purple = "purple (blue + 1/2 red)",
 	darkpurple = "dark purple (blue + 1/2 red)",
 	
-	reddishblue = "reddish blue (indigo)",
-	darkreddishblue  = "dark reddish blue (violet)",
+	reddishblue = "indigo (reddish blue)",
+	darkreddishblue  = "violet (dark reddish blue)",
 	
 	aqua = "aqua (greenish blue)",
 	darkaqua = "dark aqua (blue + 1/2 green)",
@@ -40113,7 +40113,7 @@ class Colors
 		
 		{ 0x003060, __.aqua },
 		{ 0x002040, __.darkaqua },
-		{ 0x003fbf, __.cobaltblue },
+		{ 0x00359f, __.cobaltblue },
 		
 		//  blues
 		
@@ -50239,7 +50239,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//   | My email address |__________________________________|
 		//   |                   0123 4567 89ab cdef               |
 		//   |                                                  __ |
-		//   | number of ciphers 4 o quad  o oct  o max  width |40||
+		//   | number of ciphers 4 o quad  o oct  o max  width |56||
 		//   |                         ____                        |
 		//   |                        |_OK_|                       |
 		//   |_____________________________________________________|
@@ -50388,7 +50388,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//   | My email address |__________________________________|
 			//   |                   0123 4567 89ab cdef               |
 			//   |                                                  __ |
-			//   | number of ciphers 4 o quad  o oct  o max  width |40||
+			//   | number of ciphers 4 o quad  o oct  o max  width |56||
 			//   |                         ____                        |
 			//   |                        |_OK_|                       |
 			//   |_____________________________________________________|
@@ -57017,7 +57017,7 @@ class PublicKey
 			
 			for (int i = 0; i < a.length; i++)
 			
-			    b[i] = a[i] .mod(n).add(n).mod(n);
+			    b[i] = a[i] .mod(n);
 			
 			return new Vector(b);
 		}
@@ -58131,7 +58131,7 @@ class PublicKey
 			
 			for (int i = 0; i < A.array.length; i++)
 			
-			    A.array[i] = A.array[i] .mod(n).add(n).mod(n);
+			    A.array[i] = A.array[i] .mod(n);
 			
 			return A;
 		}
@@ -58837,9 +58837,10 @@ class PublicKey
 	//  The Rabin / factorization / square root or co-composite root extraction cipher
 	//
 	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refractory
-	//  problem to be a public key cipher. It only has to be harder to invert than to compute. Some functions
-	//  such as the factorial function a! (mod p) are neither computable nor invertible in polynomial time. If
-	//  a! (mod n) were computable it would solve the factorization problem for n.
+	//  problem to be a public key cipher. It only has to be harder to invert than to compute either because of
+	//  the time complexity or because of the space requirements of the algorithm. Some functions such as the
+	//  factorial function a! (mod p) are neither computable nor invertible in polynomial time. If a! (mod n)
+	//  were computable it would solve the factorization problem for n.
 	//
 	//  The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
 	//  is equivalent to factorization because there is a many-to-one mapping of m to c. If m1 is chosen and
@@ -58878,7 +58879,7 @@ class PublicKey
 	//  exponential, quantum, and polynomial-time algorithms for factoring integers. Even with a polynomial-time
 	//  algorithm, the Rabin cipher can never be completely broken and is still unbreakable if the key size is
 	//  large enough. For the cipher to be secure or unbreakable, the key size has to be on the order of 10^8
-	//  or 128 M bits if the running time of the factorization algorithm is O(n^3 log n).
+	//  or 128 M bits.
 	//
 	//  The key generation could be made faster by choosing a large random number for the modulus n and then
 	//  multiplying n by a 512-bit prime. The encryption method was made faster by choosing a secret key m ~
@@ -58889,14 +58890,14 @@ class PublicKey
 	//  static class member to avoid doing inversions for each decryption because division is ten to twenty
 	//  times more expensive than multiplication.
 	//
-	//  A quantum computer could reduce the factorization running time to O(n) multi-precision multiplications
-	//  for large numbers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the
-	//  factors f1 = (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-
-	//  residue. For example, if n = 77, a quantum computer would compute the order of a^x (mod n) or lambda(n)
-	//  = lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^ (lambda
-	//  /2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The exponentiation requires O(n) multi-
-	//  plications or O(n^2 log n) operations, and the gcd function only requires O(n) multi-precision subtrac-
-	//  tions or O(n^2) operations.
+	//  Factorization can be solved in O(1) exponentiations, O(n) multi-precision multiplications, or O(n^2
+	//  log n) operations for large numbers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or
+	//  to solve for the factors f1 = (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is
+	//  a quadratic non-residue. For example, if n = 77, a quantum computer would compute the order of a^x
+	//  (mod n) or lambda(n) = lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer
+	//  would compute 2 ^ (lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The exponen-
+	//  tiation requires O(n) multiplications or O(n^2 log n) operations, and the gcd function only requires
+	//  O(n) multi-precision subtractions or O(n^2) operations.
 	//
 	//  The sub-exponential method for solving the integer discrete log problem (modulo a prime) is called the
 	//  index-calculus algorithm. The Handbook of Applied Cryptography says that "...the basic ideas behind the
@@ -58909,9 +58910,9 @@ class PublicKey
 	//  has to find round numbers or numbers that contain only small factors. By using a linear sieve, quadra-
 	//  tic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's
 	//  method can solve the discrete log / factorization problem up to ~ 512 to ~ 768 bits which is on the or-
-	//  der of a thousand bits. Instead of doubling or tripling the number of bits, a polynomial-time algorithm
-	//  that has a running time of O(n^3 log n) can increase the number of bits almost ten thousand fold from ~
-	//  1 K bits to ~ 10 M bits using a supercomputer. A 128 M bit number would be impossible to factor.
+	//  der of a thousand bits. A polynomial-time algorithm can increase the number of bits almost ten thousand
+	//  fold from ~ 1 K bits to ~ 16 M bits using a supercomputer. A 128 M bit number would be impossible to
+	//  factor because of the running time or the space requirements of the algorithm.
 	
 	
 	
@@ -59059,8 +59060,8 @@ class PublicKey
 	//  or 1 nonillion solutions.
 	//
 	//  If the knapsack cipher could be shown to be breakable, then the cipher
-	//  in the public key class would be modified to include small random er-
-	//  rors in the static public key.
+	//  in the public key class would have to be modified to include small
+	//  random errors in the static public key.
 	
 	
 	
@@ -59490,9 +59491,7 @@ class PublicKey
 			
 			for (int i = 0; i < k; i++)
 			
-			    rand[i] = rand[i] .multiply(t)
-			
-				.mod(n) .add(n) .mod(n);
+			    rand[i] = rand[i] .multiply(t) .mod(n);
 			
 			
 			//  Permutate the list of random errors
@@ -59607,14 +59606,13 @@ class PublicKey
 			
 			//  Set a number of non-consecutive repeating digits so the
 			//  decryption method knows which solution is the correct
-			//  key (if small random errors are added to the static
-			//  public key)
+			//  key (if small random errors are added to the static key)
 			//
-			//  Create an array of k - offset elements; set a consecu-
-			//  tive number of repeating elements equal to 1 and permu-
-			//  tate the elements so that the 1's and 0's are random;
-			//  then for each array[i] that equals 1 set the correspond-
-			//  ing m[i] element equal to 1.
+			//  Create an array of k - offset elements; set a consecutive
+			//  number of repeating elements equal to 1 and permutate the
+			//  elements so that the 1's and 0's are random; then for each
+			//  array[i] that equals 1 set the corresponding m[i] element
+			//  equal to 1.
 			
 			final int rep = 28, digit = 1;
 			
@@ -61450,7 +61448,7 @@ class PublicKey
 			
 			//  Compute the secret matrix
 			
-			Matrix E = X.modInverse(p) .mod(p).add(p).mod(p)
+			Matrix E = X.modInverse(p) .mod(p)
 			
 			    .multiply( Z.modPow(x[0], p) ) .mod(p)
 			
@@ -61776,7 +61774,7 @@ class PublicKey
 				
 				    b = b .add( s1[i1].multiply(inv_r).negate(n) );
 				
-				b = b .mod(n) .add(n) .mod(n);
+				b = b .mod(n);
 				
 				
 				
@@ -61816,9 +61814,7 @@ class PublicKey
 					//
 					//  b1 = r^-1 ( b - s_r1_m ) (mod n);
 					
-					final Number b1 = b .subtract(product)
-					
-					    .mod(n) .add(n) .mod(n);
+					final Number b1 = b .subtract(product).mod(n);
 					
 					final Number b1_ = b .add(product) .mod(n);
 					
@@ -71018,7 +71014,7 @@ class Number implements Comparable<Number>
 		//  This method bifurcates an n-digit integer string into two d and
 		//  (n - d) length strings where d = (approx) n / 2, computes the
 		//  left and right numbers separately, and then computes the number
-		//  n = (left x radix ^ d) + right. This reduces the running time
+		//  n = (left x radix ^ d) + right. This reduces the time complexity
 		//  from quadratic to linear log or O(n^2) to O(n log(n)).
 		
 		
@@ -73717,7 +73713,7 @@ class Number implements Comparable<Number>
 		
 		    throw new IllegalArgumentException();
 		
-		Number a = this .mod(p).add(p).mod(p);
+		Number a = this .mod(p);
 		
 		Number phi;
 		
@@ -74635,7 +74631,7 @@ class Number implements Comparable<Number>
 		}
 		
 		
-		Number a = this .mod(n).add(n).mod(n);
+		Number a = this .mod(n);
 		
 		Number x = new Number(exp);
 		
@@ -75149,9 +75145,7 @@ class Number implements Comparable<Number>
 		//
 		//  b = sqrt(a^2 - n) mod p
 		
-		Number b2 = a.square().subtract(n)
-		
-		    .mod(p).add(p).mod(p);
+		Number b2 = a.square().subtract(n).mod(p);
 		
 		
 		//  Initialize y to 1 + 0 b == 1
@@ -76664,7 +76658,12 @@ class Number implements Comparable<Number>
 		//  (so that n ~ r^2) and then iterating  r = (r + n / r) / 2.
 		
 		
-		if (this.equals(0) || this.equals(1))
+		int precision = Math.max(this.precision, 8);
+		
+		Number zero = new Number("0", 16) .setPrecision(precision * 3/4);
+		Number  one = new Number("1", 16) .setPrecision(precision * 3/4);
+		
+		if (this.equals(zero) || this.equals(zero))
 		
 		    //  zero and one are idempotent
 		
@@ -76700,9 +76699,7 @@ class Number implements Comparable<Number>
 		//
 		//  so that the root of 2 ^ bits == 2 ^ (bits / k)
 		
-		while ((b % k) != 0)
-		
-		    { n = n .shiftLeft(1);  b++; }
+		while ((b++ % k) != 0) { n = n.shiftLeft(1); }
 		
 		
 		//  First iterate a few times at 64 bits precision
@@ -76744,13 +76741,8 @@ class Number implements Comparable<Number>
 		
 		//  Verify that the root is correct
 		
-		int digits = n.precision;
-		
-		Number zero = new Number("0", 16) .setPrecision(digits * 3/4);
-		Number  one = new Number("1", 16) .setPrecision(digits * 3/4);
-		
 		if (!r.pow(k) .subtract(this) .abs() .equals(zero)
-		 || !r.pow(k) .divide(this).subtract(1) .abs() .equals(zero))
+		 || !r.pow(k)   .divide(this) .abs() .equals(one))
 		{
 			System.out.println(r.pow(k).divide(this).subtract(1));
 			System.out.println("r^k == " + r.pow(k) .toString(16));
@@ -76761,7 +76753,7 @@ class Number implements Comparable<Number>
 			System.out.println("r^k - this == " + r.pow(k)
 			    .subtract(this) .abs() .toString(16) + " != 0");
 			System.out.println("r^k - this should have at least "
-			    + digits + " zero digits");
+			    + precision + " zero digits");
 			
 			String message = "root extraction error";
 			
@@ -76777,8 +76769,6 @@ class Number implements Comparable<Number>
 		    r.toInteger(true) .pow(k) .equals(this))
 		
 			return r.toInteger(true);
-		
-		int precision = Math.max(n.precision, 8);
 		
 		return r.setPrecision(precision);
 	}
@@ -79795,7 +79785,7 @@ class Matrix
 			
 			if (modulus != null)
 			
-			    d = d .mod(n).add(n).mod(n);
+			    d = d .mod(n);
 			
 			return d;
 		}
@@ -79820,7 +79810,7 @@ class Matrix
 			
 			if (modulus != null)
 			
-			    d = d .mod(n).add(n).mod(n);
+			    d = d .mod(n);
 		}
 		
 		return d;
@@ -79880,7 +79870,7 @@ class Matrix
 				//  If the discriminant is a quadratic non-residue
 				//  then the matrix is not diagonalizable
 				
-				discriminant = discriminant .mod(p).add(p).mod(p);
+				discriminant = discriminant .mod(p);
 				
 				if (!discriminant.isQuadraticResidue(p)) return null;
 			}
@@ -79915,8 +79905,8 @@ class Matrix
 			
 			if (p != null)
 			{
-				M1 = M1 .mod(p).add(p).mod(p);
-				M2 = M2 .mod(p).add(p).mod(p);
+				M1 = M1 .mod(p);
+				M2 = M2 .mod(p);
 			}
 			
 			//  a1 u1 + b1 v1 == 0;  b1 v1 == - a1 u1;  v1 == - (a1 / b1) u1
@@ -81036,7 +81026,7 @@ class Matrix
 	{
 		//  returns the modular quotient of a matrix and number
 		
-		Matrix a = this.mod(n).add(n).mod(n);
+		Matrix a = this.mod(n);
 		
 		if (!divisor.isInteger() || !n.isInteger())
 		
@@ -81046,7 +81036,7 @@ class Matrix
 		
 		Matrix quotient = a .multiply( divisor.modInverse(n) ) .mod(n);
 		
-		if (! quotient .multiply(divisor) .mod(n).add(n).mod(n) .equals(a) )
+		if (! quotient .multiply(divisor) .mod(n) .equals(a) )
 		
 		    throw new ArithmeticException();
 		
@@ -81060,15 +81050,15 @@ class Matrix
 		
 		//  If the divisor matrix is non-square, then the matrix is non-invertible
 		
-		if (!divisor.isSquare()) throw new IllegalArgumentException();
+		if (!divisor.isSquare() || !n.isInteger())
 		
-		Matrix a = this .mod(n).add(n).mod(n);
+		    throw new IllegalArgumentException();
 		
-		if (!n.isInteger()) throw new IllegalArgumentException();
+		Matrix a = this.mod(n);
 		
 		Matrix quotient = a .multiply( divisor.modInverse(n) ) .mod(n);
 		
-		if (! quotient .multiply(divisor) .mod(n).add(n).mod(n) .equals(a) )
+		if (! quotient .multiply(divisor) .mod(n) .equals(a) )
 		
 		    throw new ArithmeticException();
 		
@@ -81156,7 +81146,7 @@ class Matrix
 		
 		//  Verify the modular inverse
 		
-		if (!this.multiply(inv_matrix) .mod(n) .add(n) .mod(n) .equals(I))
+		if (!this.multiply(inv_matrix) .mod(n) .equals(I))
 		
 		    throw new ArithmeticException();
 		
@@ -82166,7 +82156,7 @@ class Matrix
 		
 		//  Set the diagonal elements equal to 1
 		
-		for (int i = 0; i < rows; i++)
+		for (int i = 0; i < Math.min(rows, cols); i++)
 		{
 			Number m = matrix.matrix[i][i];
 			
@@ -82198,7 +82188,8 @@ class Matrix
 		
 		Matrix matrix = new Matrix(this) .mod(n);
 		
-		int rows = matrix.matrix.length;
+		int rows = matrix.matrix   .length;
+		int cols = matrix.matrix[0].length;
 		
 		
 		long n2 = (1L*n)*(1L*n);
@@ -82306,7 +82297,22 @@ class Matrix
 			}
 		}
 		
-		return matrix;
+		//  Set the diagonal elements equal to 1
+		
+		for (int i = 0; i < Math.min(rows, cols); i++)
+		{
+			Number m = matrix.matrix[i][i];
+			
+			if (m.equals(0)) continue;
+			
+			m = m.modInverse(n);
+			
+			for (int k = i; k < matrix.matrix[rows-1].length; k++)
+			
+			    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m) .mod(n);
+		}
+		
+		return matrix.mod(n);
 	}
 	
 	
@@ -82354,7 +82360,8 @@ class Matrix
 			    { base = i; break; }
 		
 		
-		int rows = matrix.matrix.length;
+		int rows = matrix.matrix   .length;
+		int cols = matrix.matrix[0].length;
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -82450,7 +82457,7 @@ class Matrix
 		
 		//  Set the diagonal elements equal to 1
 		
-		for (int i = 0; i < rows; i++)
+		for (int i = 0; i < Math.min(rows, cols); i++)
 		{
 			Number m = matrix.matrix[i][i];
 			
@@ -82508,7 +82515,8 @@ class Matrix
 		
 		Matrix matrix = new Matrix(this) .mod(n);
 		
-		int rows = matrix.matrix.length;
+		int rows = matrix.matrix   .length;
+		int cols = matrix.matrix[0].length;
 		
 		for (int r = 0; r < rows - 1; r++)
 		{
@@ -82641,7 +82649,7 @@ class Matrix
 		
 		//  Set the diagonal elements equal to 1
 		
-		for (int i = 0; i < rows; i++)
+		for (int i = 0; i < Math.min(rows, cols); i++)
 		{
 			Number m = matrix.matrix[i][i];
 			
@@ -83025,7 +83033,7 @@ class Matrix
 			
 			Number B1 = B[i] .subtract(sum);
 			
-			if (n != null) B1 = B1 .mod(n) .add(n) .mod(n);
+			if (n != null) B1 = B1 .mod(n);
 			
 			try
 			{	Number inverse = null, n1 = null;
@@ -83179,7 +83187,7 @@ class Matrix
 			}
 		}
 		
-		matrix = matrix .mod(n) .add(n) .mod(n);
+		matrix = matrix .mod(n);
 		
 		return matrix;
 	}
@@ -83294,7 +83302,7 @@ class Matrix
 			}
 		}
 		
-		if (n != null) matrix = matrix.mod(n).add(n).mod(n);
+		if (n != null) matrix = matrix.mod(n);
 		
 		if (n == null) matrix = matrix.setPrecision(p);
 		
@@ -84186,7 +84194,7 @@ class Fourier
 	//  because for each x[k] the index n has to be iterated from 0 to N-1, and for each
 	//  x[n] the index k has to be iterated from 0 to N-1. This means that there are two
 	//  iterators or a double loop for computing the Fourier transform. The Danielson-
-	//  Lanczos lemma can be used to reduce the running time from O(n^2) to O(n log n)
+	//  Lanczos lemma can be used to reduce the time complexity from O(n^2) to O(n log n)
 	//  where n is the number of elements in the array.
 	
 	
