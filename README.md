@@ -1,3 +1,4 @@
+
 	The Java Editor program contains a text editor, table editor, email editor and image viewer. The
 	program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert classes.
 	These classes contain all the ciphers, algorithms, protocols, and software required to do cryptog-
@@ -97,7 +98,8 @@
 	** Note that the new version of the software will not decrypt email messages encrypted by previous ver-
 	sions of the software if the maximum number of ciphers is used because a private key was modified in
 	one of the public key ciphers but messages saved on users' computers will still be decryptable because
-	file encryption uses private key cryptography.
+	file encryption uses private key cryptography. Also an error was corrected in the passphrase dialog
+	that caused problems on some versions of Linux.
 	
 	
 	

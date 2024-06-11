@@ -1189,6 +1189,8 @@ class __
 	
 	    "Directory is not in home folder",
 	
+	media = "media",
+	
 	test = "Test",
 	
 	encryptfilename    = "Encrypt file name",
@@ -11245,8 +11247,8 @@ class Programs
 				
 				if (array == null) return;
 				
-				String passphrase0 = array[0];
-				String passphrase1 = array[1];
+				String passphrase0  = array[0];
+				String passphrase1  = array[1];
 				String publickeystr = array[2];
 				
 				if (publickeystr == null) return;
@@ -11261,7 +11263,6 @@ class Programs
 				newlistener.run();
 				
 				textarea = textareapanel.textarea;
-				
 				
 				//  Insert the public key in the text area
 				
@@ -16397,7 +16398,8 @@ class Programs
 					return;
 				}
 				
-				ArrayList<Number> numbers
+				ArrayList<Number> numberlist
+				
 				    = new ArrayList<Number>();
 				
 				String firstcell = null;
@@ -16434,7 +16436,7 @@ class Programs
 							continue;
 						}
 						
-						numbers.add(new Number(celltext.trim()));
+						numberlist.add(new Number(celltext.trim()));
 					}
 				}
 				
@@ -16470,36 +16472,36 @@ class Programs
 							continue;
 						}
 						
-						numbers.add(new Number(celltext.trim()));
+						numberlist.add(new Number(celltext.trim()));
 					}
 				}
 				
-				if (numbers.size() == 0) return;
+				if (numberlist.size() == 0) return;
 				
 				
 				//  Sort the numbers
 				
-				int size = numbers.size();
+				int size = numberlist.size();
 				
-				Object[] objarray = new Object[size];
-				
-				for (int i = 0; i < size; i++)
-				
-				    objarray[i] = numbers.get(i);
-				
-				Arrays.sort(objarray);
+				Number[] numbers = new Number[size];
 				
 				for (int i = 0; i < size; i++)
 				
-				    numbers.set(i, (Number) objarray[i]);
+				    numbers[i] = numberlist.get(i);
+				
+				Arrays.sort(numbers);
+				
+				for (int i = 0; i < size; i++)
+				
+				    numberlist.set(i, (Number) numbers[i]);
 				
 				
 				Number sum = new Number(0).setPrecision(2);
-				for (Number n : numbers) sum = sum.add(n);
-				Number average = sum .divide(numbers.size());
-				Number median = numbers.get(size/2);
-				Number min = numbers.get(0);
-				Number max = numbers.get(size-1);
+				for (Number n : numberlist) sum = sum.add(n);
+				Number average = sum .divide(numberlist.size());
+				Number median = numberlist.get(size/2);
+				Number min = numberlist.get(0);
+				Number max = numberlist.get(size-1);
 				
 				String range = firstcell + ":" + lastcell;
 				
@@ -41277,7 +41279,7 @@ class EncryptDirectory
 		//  else the program can become deadlocked if the user
 		//  clicks on the text area as the file names are scrolling
 		
-		filearea = new JTextArea(10, 56);
+		filearea = new JTextArea(10, 64);
 		filearea.setEditable(false);
 		filearea.setHighlighter(null);
 		filearea.setFont(font);
@@ -41407,7 +41409,7 @@ class EncryptDirectory
 			
 			home = home.substring(0, home.indexOf(File.separator, 1));
 			
-			if (!parent.equals(home))
+			if (!parent.equals(home) && !directory.getPath().contains(__.media))
 			{
 				//  Warn the user that the file
 				//  is not in the home directory
@@ -41552,10 +41554,8 @@ class EncryptDirectory
 			
 			home = home.substring(0, home.indexOf(File.separator, 1));
 			
-			if (!parent.equals(home))
+			if (!parent.equals(home) && !directory.getPath().contains(__.media) && !test)
 			{
-				if (test) return; // encrypt already issued a warning
-				
 				//  Warn the user that the file is not in the home dir
 				
 				String title = "";
@@ -41810,9 +41810,9 @@ class EncryptDirectory
 		
 		    { this.files = files; }
 		
+		
 		public void run()
 		{
-		
 			for (File file : files)
 			{
 				if ((file == null) || file.isDirectory()) continue;
@@ -41824,8 +41824,11 @@ class EncryptDirectory
 					String message = __.unencryptedfile + " " + file;
 					
 					if (!Cipher.isEncrypted(file))
-					
-					    append(message);
+					{
+						append(message);
+						
+						System.out.println(message);
+					}
 					
 					continue;
 				}
@@ -49962,7 +49965,7 @@ class PublicKeyDialog
 		
 		if (address != null) pd.setEmailAddress(address);
 		
-		String[] input = pd .readDialogInput();
+		String[] input = pd.readDialogInput();
 		
 		//  System.out.println("input == " + Arrays.toString(input));
 		
@@ -50278,18 +50281,17 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		
 		
-		
+
 		
 		super(window);
-		
-		dialog = this;
 		
 		this.window = window;
 		
 		this.dialogtype = dialogtype;
 		
-		okbutton = new JButton(__.OK);
+		dialog = this;
 		
+		okbutton = new JButton(__.OK);
 		
 		Gbc gbc;  int y = 0;
 		
@@ -51278,6 +51280,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		Dimension newsize = this.getPreferredSize();
 		this.setSize(newsize.width, newsize.height);
 		
+		
 		//  Center the dialog in the parent frame
 		
 		Point p = window.getLocation();
@@ -51295,12 +51298,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setLocation(x2pos, y2pos);
 		
-		
-		//  this method doesn't block because
-		//  the modality is set to false
-		
-		this.setVisible(true);
-		
+
 		
 		okbutton.addActionListener(new ActionListener()
 		{
@@ -51856,7 +51854,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		if ((dialogtype == passphrase_email_encrypt)
 		 || (dialogtype == passphrase_email_decrypt))
-		
 		{
 			if (this == null) return null;
 			
@@ -51900,7 +51897,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		else if (dialogtype == passphrase_mailserver)
 		{
-		
 			String SP0 = passphrasefield.getText().trim();
 			String SP1 = passphrasearea .getText().trim();
 			
@@ -56189,7 +56185,7 @@ class PublicKey
 			
 			//  Compute the public key matrix
 			
-			Matrix Y = modPow(A0, B0, C0, null, x0);
+			Matrix Y = Polynomial.modPow(A0, B0, C0, null, x0, p);
 			
 			//  Convert the public key matrix to a number string
 			
@@ -56473,9 +56469,8 @@ class PublicKey
 			//
 			//  Y  =  X1  A  X2
 			
-			int[][][][] AX2 = multiply(A, X2, p, q);
-			
-			int[][][][] Y = multiply(X1, AX2, p, q);
+			int[][][][] AX2 = Polynomial.multiply( A,  X2, p, q);
+			int[][][][]   Y = Polynomial.multiply(X1, AX2, p, q);
 			
 			
 			//  Extract the coefficients and exponents
@@ -58391,9 +58386,15 @@ class PublicKey
 		//  5^2 == 1 (mod 8), and 7^2 == 1 (mod 8))
 		
 		
+		
+		//  member variables
+		
 		private int p, q, t;
 		
 		private int[][] m1;
+		
+		
+		//  member methods
 		
 		public Polynomial(int[][] a, int p, int q, int t)
 		{
@@ -58599,185 +58600,182 @@ class PublicKey
 			
 			return m3;
 		}
+	
+	
+	
+	
+		//  static methods for polynomials
+		
+		
+		private static int[][] add(int[][] m1, int[][] m2, int p, int q)
+		{
+			//  compares the exponents in two polynomials and adds
+			//  the coefficients of terms that have the same exponents
+			
+			final int t = q;
+			
+			int[][] terms = new int[t][2];
+			
+			for (int i = 0; i < terms.length; i++)
+			
+			    { terms[i][0] = 0; terms[i][1] = i; }
+			
+			for (int i = 0; i < m1.length; i++)
+			{
+				int coefficient = m1[i][0] % p;
+				int    exponent = m1[i][1] % q;
+				
+				 terms[exponent][0] =
+				(terms[exponent][0] + coefficient) % p;
+			}
+			
+			for (int i = 0; i < m2.length; i++)
+			{
+				int coefficient = m2[i][0] % p;
+				int    exponent = m2[i][1] % q;
+				
+				 terms[exponent][0] =
+				(terms[exponent][0] + coefficient) % p;
+			}
+			
+			return terms;
+		}
+		
+		
+		private static int[][] multiply(int[][] m1, int[][] m2, int p, int q)
+		{
+			//  computes the modular product of two polynomials
+			
+			int t = m1.length * m2.length;
+			
+			int[][] m3 = new int[t][2];
+			
+			//  For each term in m1[i] and m2[j], multiply the coefficient of
+			//  m2[j] by the coefficient of m1[i] modulo p and add the exponents
+			//  m1[i] and m2[j] modulo q.
+			
+			for (int i = 0; i < m1.length; i++)
+			for (int j = 0; j < m2.length; j++)
+			{
+				m3[m2.length*i + j][0] = (((m1[i][0] * m2[j][0]) % p) + p) % p;
+				m3[m2.length*i + j][1] = (((m1[i][1] + m2[j][1]) % q) + q) % q;
+			}
+			
+			return m3;
+		}
+		
+		
+		//  static methods for matrix polynomials
+		
+		private static int[][][][] multiply(int[][][][] m1, int[][][][] m2, int p, int q)
+		{
+			//  multiplies two matrices of polynomials (mod p)
+			
+			//  int[rows][cols][terms][0 or 1]  0 = coef, 1 = exp
+			
+			int rows = m1.length, cols = m2[0].length;
+			
+			int t = m1[0][0].length;
+			
+			int[][][][] m3 = new int[rows][cols][t][2];
+			
+			for (int i = 0; i < m3   .length; i++)
+			for (int j = 0; j < m3[i].length; j++)
+			for (int k = 0; k < m1[i].length; k++)
+			
+			    { m3[i][j][k][0] = 0; m3[i][j][k][1] = k; }
+			
+			for (int i = 0; i < m3   .length; i++)
+			for (int j = 0; j < m3[i].length; j++)
+			for (int k = 0; k < m1[i].length; k++)
+			
+			    m3[i][j] = add( m3[i][j], multiply(
+			
+				m1[i][k], m2[k][j], p , p-1), p, q );
+			
+			return m3;
+		}
+		
+		
+		private static void print(int[][][][] m)
+		{
+			//  prints an int array matrix
+			
+			int rows = m.length, cols = m[0].length;
+			
+			for (int i = 0; i < rows; i++, System.out.println())
+			for (int j = 0; j < cols; j++)
+			{
+				int[][] p = m[i][j];
+				
+				System.out.print(" { ");
+				
+				for (int s = 0; s < p   .length; s++, System.out.print(" "))
+				for (int t = 0; t < p[0].length; t++)
+				
+				    System.out.print(p[s][t] + " ");
+				
+				System.out.println(" } ");
+			}
+		}
+		
+		
+		
+		
+		private static Matrix modPow(Matrix A0, Matrix B0, Matrix C0, Matrix A1, Number x, Number p)
+		{
+			//  The matrix polynomial discrete log modPow method
+			//
+			//  A^x C B^x + ... + A^0 C B^0
+			
+			final int t = (int) x.bitCount();
+			
+			final int rows = A0.rowCount();
+			
+			final Matrix[]  A = new Matrix[t];
+			final Matrix[]  B = new Matrix[t];
+			final Matrix[] CC = new Matrix[t];
+			
+			A[0] = Matrix.identityMatrix(rows);
+			B[0] = Matrix.identityMatrix(rows);
+			
+			A[1] = new Matrix(A0);
+			B[1] = new Matrix(B0);
+			
+			CC[0] = Matrix.identityMatrix(rows);
+			
+			for (int i = 2; i < A.length; i++)
+			
+			    A[i] = A[i-1] .square() .mod(p);
+			
+			for (int i = 2; i < B.length; i++)
+			
+			    B[i] = B[i-1] .square() .mod(p);
+			
+			for (int i = 1; i < t; i++)
+			
+			   CC[i] = A[i] .multiply(CC[i-1])
+			
+			      .multiply(B[i]) .mod(p)
+			
+				  .add(CC[i-1]) .mod(p);
+			
+			Matrix Y = (A1 == null) ? C0 : A1;
+			
+			for (int i = t - 1; i >= 1; i--)
+			
+			   if (x.testBit(i)) // multiply and add
+			
+			      Y = A[i] .multiply(Y) .multiply(B[i])
+			
+			         .add(CC[i-1]) .mod(p);
+			
+			return Y;
+		}
 	}
 	
 	
 	//  End class Polynomial
-	
-	
-	
-	
-	//  Matrices of polynomials
-	
-	//  these methods should be wrapped, packaged or encapsulated in a class
-	
-	private int[][] add(int[][] m1, int[][] m2, int p, int q)
-	{
-		//  compares the exponents in two polynomials and adds
-		//  the coefficients of terms that have the same exponents
-		
-		final int t = q;
-		
-		int[][] terms = new int[t][2];
-		
-		for (int i = 0; i < terms.length; i++)
-		
-		    { terms[i][0] = 0; terms[i][1] = i; }
-		
-		for (int i = 0; i < m1.length; i++)
-		{
-			int coefficient = m1[i][0] % p;
-			int    exponent = m1[i][1] % q;
-			
-			 terms[exponent][0] =
-			(terms[exponent][0] + coefficient) % p;
-		}
-		
-		for (int i = 0; i < m2.length; i++)
-		{
-			int coefficient = m2[i][0] % p;
-			int    exponent = m2[i][1] % q;
-			
-			 terms[exponent][0] =
-			(terms[exponent][0] + coefficient) % p;
-		}
-		
-		return terms;
-	}
-	
-	
-	private int[][] multiply(int[][] m1, int[][] m2, int p, int q)
-	{
-		//  computes the modular product of two polynomials
-		
-		int t = m1.length * m2.length;
-		
-		int[][] m3 = new int[t][2];
-		
-		//  For each term in m1[i] and m2[j], multiply the coefficient of
-		//  m2[j] by the coefficient of m1[i] modulo p and add the exponents
-		//  m1[i] and m2[j] modulo q.
-		
-		for (int i = 0; i < m1.length; i++)
-		for (int j = 0; j < m2.length; j++)
-		{
-			m3[m2.length*i + j][0] = (((m1[i][0] * m2[j][0]) % p) + p) % p;
-			m3[m2.length*i + j][1] = (((m1[i][1] + m2[j][1]) % q) + q) % q;
-		}
-		
-		return m3;
-	}
-	
-	
-	private int[][][][] multiply(int[][][][] m1, int[][][][] m2, int p, int q)
-	{
-		//  multiplies two matrices of polynomials (mod p)
-		
-		//  int[rows][cols][terms][0 or 1]  0 = coef, 1 = exp
-		
-		int rows = m1.length, cols = m2[0].length;
-		
-		int t = m1[0][0].length;
-		
-		int[][][][] m3 = new int[rows][cols][t][2];
-		
-		for (int i = 0; i < m3   .length; i++)
-		for (int j = 0; j < m3[i].length; j++)
-		for (int k = 0; k < m1[i].length; k++)
-		
-		    { m3[i][j][k][0] = 0; m3[i][j][k][1] = k; }
-		
-		for (int i = 0; i < m3   .length; i++)
-		for (int j = 0; j < m3[i].length; j++)
-		for (int k = 0; k < m1[i].length; k++)
-		
-		    m3[i][j] = add( m3[i][j], multiply(
-		
-			m1[i][k], m2[k][j], p , p-1), p, q );
-		
-		return m3;
-	}
-	
-	
-	private void print(int[][][][] m)
-	{
-		//  prints an int array matrix
-		
-		int rows = m.length, cols = m[0].length;
-		
-		for (int i = 0; i < rows; i++, System.out.println())
-		for (int j = 0; j < cols; j++)
-		{
-			int[][] p = m[i][j];
-			
-			System.out.print(" { ");
-			
-			for (int s = 0; s < p   .length; s++, System.out.print(" "))
-			for (int t = 0; t < p[0].length; t++)
-			
-			    System.out.print(p[s][t] + " ");
-			
-			System.out.println(" } ");
-		}
-	}
-	
-	
-	
-	
-	
-	private Matrix modPow(Matrix A0, Matrix B0, Matrix C0, Matrix A1, Number x)
-	{
-		//  The matrix polynomial discrete log modPow method
-		//
-		//  A^x C B^x + ... + A^0 C B^0
-		
-		
-		final int t = (int) x.bitCount();
-		
-		final int rows = A0.rowCount();
-		
-		final Matrix[]  A = new Matrix[t];
-		final Matrix[]  B = new Matrix[t];
-		final Matrix[] CC = new Matrix[t];
-		
-		A[0] = Matrix.identityMatrix(rows);
-		B[0] = Matrix.identityMatrix(rows);
-		
-		A[1] = new Matrix(A0);
-		B[1] = new Matrix(B0);
-		
-		CC[0] = Matrix.identityMatrix(rows);
-		
-		for (int i = 2; i < A.length; i++)
-		
-		    A[i] = A[i-1] .square() .mod(p);
-		
-		for (int i = 2; i < B.length; i++)
-		
-		    B[i] = B[i-1] .square() .mod(p);
-		
-		for (int i = 1; i < t; i++)
-		
-		   CC[i] = A[i] .multiply(CC[i-1])
-		
-		      .multiply(B[i]) .mod(p)
-		
-			  .add(CC[i-1]) .mod(p);
-		
-		Matrix Y = (A1 == null) ? C0 : A1;
-		
-		for (int i = t - 1; i >= 1; i--)
-		
-		   if (x.testBit(i)) // multiply and add
-		
-		      Y = A[i] .multiply(Y) .multiply(B[i])
-		
-		         .add(CC[i-1]) .mod(p);
-		
-		return Y;
-	}
-	
-	
 	
 	
 	
@@ -58868,19 +58866,6 @@ class PublicKey
 	//  ulus, but the recipient can extract the message by inverting e modulo phi(n)/e instead of modulo phi be-
 	//  cause the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
 	//
-	//  Note that the terms Rabin cipher and RSA refer to the ciphers whereas quadratic residue and coprime root
-	//  extraction refer to the math problems on which the ciphers are based. The math problems of root extrac-
-	//  tion modulo a prime or composite number existed before they were discovered or used as ciphers, just as
-	//  the discrete log problem existed and was studied long before it was used as a cipher. Math books would
-	//  not refer to co-composite root extraction, coprime root extraction, or discrete logarithms as Rabin, RSA,
-	//  or Diffie-Hellman problems.
-	//
-	//  The Rabin / factorization cipher is susceptible to quantum and classical computing because there are sub-
-	//  exponential, quantum, and polynomial-time algorithms for factoring integers. Even with a polynomial-time
-	//  algorithm, the Rabin cipher can never be completely broken and is still unbreakable if the key size is
-	//  large enough. For the cipher to be secure or unbreakable, the key size has to be on the order of 10^8
-	//  or 128 M bits.
-	//
 	//  The key generation could be made faster by choosing a large random number for the modulus n and then
 	//  multiplying n by a 512-bit prime. The encryption method was made faster by choosing a secret key m ~
 	//  sqrt(n) and log2(n) = 2^k - 1024; then computing c = m^2 mod n only requires one large multiplication
@@ -58890,14 +58875,24 @@ class PublicKey
 	//  static class member to avoid doing inversions for each decryption because division is ten to twenty
 	//  times more expensive than multiplication.
 	//
-	//  Factorization can be solved in O(1) exponentiations, O(n) multi-precision multiplications, or O(n^2
-	//  log n) operations for large numbers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or
-	//  to solve for the factors f1 = (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is
-	//  a quadratic non-residue. For example, if n = 77, a quantum computer would compute the order of a^x
-	//  (mod n) or lambda(n) = lcm(phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer
-	//  would compute 2 ^ (lambda/2) (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The exponen-
-	//  tiation requires O(n) multiplications or O(n^2 log n) operations, and the gcd function only requires
-	//  O(n) multi-precision subtractions or O(n^2) operations.
+	//  Note that the terms Rabin cipher and RSA refer to the ciphers whereas quadratic residue and coprime root
+	//  extraction refer to the math problems on which the ciphers are based. The math problems of root extrac-
+	//  tion modulo a prime or composite number existed before they were discovered or used as ciphers, just as
+	//  the discrete log problem existed and was studied long before it was used as a cipher. Math books would
+	//  not refer to co-composite root extraction, coprime root extraction, or discrete logarithms as Rabin, RSA,
+	//  or Diffie-Hellman problems.
+	//
+	//  The Rabin / factorization cipher is susceptible to quantum and classical computing because there are sub-
+	//  exponential, quantum, and polynomial-time algorithms for factoring integers. Factorization can be solved
+	//  in O(1) exponentiations, O(n) multi-precision multiplications, or O(n^2 log n) operations for large num-
+	//  bers which is the time required to compute a ^ (lamdba(n)/2) (mod n) or to solve for the factors f1 =
+	//  (a ^ (lambda(n)/2) + 1, n) and f2 = (a ^ (lambda(n)/2) - 1, n) where a is a quadratic non-residue.
+	//
+	//  For example, if n = 77, a quantum computer would compute the order of a^x (mod n) or lambda(n) = lcm(
+	//  phi(7), phi(11)) == lcm(7-1, 11-1) == 30; and then a classical computer would compute 2 ^ (lambda/2)
+	//  (mod 77) == 43; f1 = (77, 44) == 11 and f2 = (77, 42) == 7. The exponentiation requires O(n) multiplica-
+	//  tions or O(n^2 log n) operations, and the gcd function only requires O(n) multi-precision subtractions
+	//  or O(n^2) operations.
 	//
 	//  The sub-exponential method for solving the integer discrete log problem (modulo a prime) is called the
 	//  index-calculus algorithm. The Handbook of Applied Cryptography says that "...the basic ideas behind the
@@ -58910,9 +58905,7 @@ class PublicKey
 	//  has to find round numbers or numbers that contain only small factors. By using a linear sieve, quadra-
 	//  tic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's
 	//  method can solve the discrete log / factorization problem up to ~ 512 to ~ 768 bits which is on the or-
-	//  der of a thousand bits. A polynomial-time algorithm can increase the number of bits almost ten thousand
-	//  fold from ~ 1 K bits to ~ 16 M bits using a supercomputer. A 128 M bit number would be impossible to
-	//  factor because of the running time or the space requirements of the algorithm.
+	//  der of a thousand bits. A polynomial-time algorithm can factor numbers up to 16 M bits.
 	
 	
 	
@@ -60956,8 +60949,8 @@ class PublicKey
 			
 			//  Compute the secret key
 			
-			int[][][][] ZX = multiply(Z,  X2, p, q);
-			int[][][][] E1 = multiply(X1, ZX, p, q);
+			int[][][][] ZX = Polynomial.multiply(Z,  X2, p, q);
+			int[][][][] E1 = Polynomial.multiply(X1, ZX, p, q);
 			
 			
 			//  Extract the coefficients and exponents
@@ -61042,7 +61035,7 @@ class PublicKey
 			
 			//  Compute the secret matrix
 			
-			Matrix E = modPow(A0, B0, C0, Z, x0);
+			Matrix E = Polynomial.modPow(A0, B0, C0, Z, x0, p);
 			
 			
 			//  Reduce E modulo F8 and return the secret key
@@ -71197,17 +71190,35 @@ class Number implements Comparable<Number>
 	}
 	
 	
-	public static Number add(Number[] n)
+	public static Number add(Number[] array)
 	{
-		//  returns the sum of n[]
+		//  returns the sum of array[]
 		
 		Number sum = new Number(0);
 		
-		for (int i = 0; i < n.length; i++)
+		for (int i = 0; i < array.length; i++)
 		
-		    sum = sum .add(n[i]);
+		    sum = sum.add(array[i]);
 		
 		return sum;
+	}
+	
+	
+	public static Number[] add(Number[] array1, Number[] array2)
+	{
+		//  returns the sum of two number arrays
+		
+		if (array1.length != array2.length)
+		
+		    throw new IllegalArgumentException();
+		
+		Number[] array3 = new Number[array1.length];
+		
+		for (int i = 0; i < array3.length; i++)
+		
+		    array3[i] = array1[i].add(array2[i]);
+		
+		return array3;
 	}
 	
 	
@@ -76598,6 +76609,14 @@ class Number implements Comparable<Number>
 		
 		//  computes the kth root of a number
 		
+		//  This method will expand the precision of the number by
+		//  the number of integer digits (just like the inverse method)
+		//  unless the number is a perfect power such as a perfect square.
+		//
+		//  For example, the sqrt of the integer 12345678 will return
+		//  the real number 3513.6417 because 3513.6417 ^ 2 ~ 12345678
+		//  while 3513.641 ^ 2 only equals ~ 12345673.
+		
 		
 		//  Newton's iteration for root extraction
 		//
@@ -76658,7 +76677,15 @@ class Number implements Comparable<Number>
 		//  (so that n ~ r^2) and then iterating  r = (r + n / r) / 2.
 		
 		
-		int precision = Math.max(this.precision, 8);
+		//  Expand the precision to the number of integer digits plus the precision
+		
+		int precision = this.precision +
+		
+		    (int) this.toInteger().bitCount()/4;
+		
+		if (precision < 8) precision = 8;
+		
+		Number n0 = new Number(this).setPrecision(precision);
 		
 		Number zero = new Number("0", 16) .setPrecision(precision * 3/4);
 		Number  one = new Number("1", 16) .setPrecision(precision * 3/4);
@@ -76679,13 +76706,11 @@ class Number implements Comparable<Number>
 		if (k == 1)  return new Number(this);
 		
 		
-		//  Move the integer point so the number is close to 1
+		//  Remove the integer point from the number n = a / 2 ^ b
 		
-		//  Remove the integer point from the number n = a / 2^b
+		Number n = n0.trim();  n.intpoint = 0;
 		
-		Number n = this.trim();  n.intpoint = 0;
-		
-		int b = 32*this.intpoint;
+		int b = 32 * n0.intpoint;
 		
 		
 		//  Set the root r approx equal to n ^ (1 / k)
@@ -76704,13 +76729,11 @@ class Number implements Comparable<Number>
 		
 		//  First iterate a few times at 64 bits precision
 		
-		int p = 64 / 4;
+		int t = Math.max(8, (int) Math.log2(n0.toInteger().bitCount()));
 		
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < t; i++) r = r.setPrecision(64) .multiply(k-1)
 		
-		    r = r .multiply(k-1) .add( n.setPrecision(p)
-		
-			.divide(r.pow(k-1)) ) .divide(k) .trim();
+		    .add( n.setPrecision(64).divide(r.pow(k-1)) ) .divide(k) .trim();
 		
 		
 		//  Do a few more iterations doubling the precision for each iteration
@@ -76723,16 +76746,18 @@ class Number implements Comparable<Number>
 		//  hidden constant in the running time that makes it higher than 1.5
 		//  multiplications.
 		
+		int p = precision;
+		
 		while (true)
 		{
-			int p1 = Math.min(p = p*2, this.precision);
+			r = r.setPrecision(p) .multiply(k-1) .add( n.setPrecision(p)
 			
-			r = r .multiply(k-1) .add(
+			    .divide(r.pow(k-1)) ) .divide(k) .setPrecision(p);
 			
-			    n.setPrecision(p1) .divide(r.pow(k-1)) ) .divide(k);
-			
-			if (p1 >= this.precision) break;
+			if (p > n0.precision + 16) break;  p *= 2;
 		}
+		
+		//  Restore the integer point for the root r
 		
 		//  the kth root of a (= n x 2^b) == root(n) x 2^(b/k)
 		
@@ -76741,17 +76766,20 @@ class Number implements Comparable<Number>
 		
 		//  Verify that the root is correct
 		
-		if (!r.pow(k) .subtract(this) .abs() .equals(zero)
-		 || !r.pow(k)   .divide(this) .abs() .equals(one))
+		if (!r.pow(k) .subtract(n0) .abs() .equals(zero)
+		 || !r.pow(k)   .divide(n0) .abs() .equals(one))
 		{
 			System.out.println(r.pow(k).divide(this).subtract(1));
-			System.out.println("r^k == " + r.pow(k) .toString(16));
+			System.out.println(" r^k == " + r.pow(k) .toString(16));
 			System.out.println("this == " + this.toString(16));
-			System.out.println("r^k / this == " + r.pow(k)
-			    .divide(this) .abs() .toString(16) + " != 1");
-			System.out.println("zero == " + zero.toString(16));
+			
 			System.out.println("r^k - this == " + r.pow(k)
-			    .subtract(this) .abs() .toString(16) + " != 0");
+			    .subtract(this) .abs() .toString(16));
+			System.out.println("r^k / this == " + r.pow(k)
+			    .divide(this) .abs() .toString(16));
+			
+			System.out.println("zero == " + zero.toString(16));
+			System.out.println(" one == " +  one.toString(16));
 			System.out.println("r^k - this should have at least "
 			    + precision + " zero digits");
 			
@@ -79635,9 +79663,6 @@ class Matrix
 				//  to avoid the modular inversion.
 				//
 				//  [i][j] m2 + [r][j] m3 == [i][j][r][j] - [i][j][r][j] == 0
-				//
-				//  This method of elimination can only be used for modular systems
-				//  because the coefficient size grows polynomially or quadratically
 				
 				Number m1 = matrix.matrix[r][j];
 				Number m2 = matrix.matrix[i][j];
@@ -79826,10 +79851,9 @@ class Matrix
 	
 	public Matrix[] diagonalize(Number p)
 	{
-		//  finds a matrix P such that P^-1 A P == D so that A
-		//  can be factored as P D P^-1; and returns the array
-		//  { P, D, P^-1 } if the matrix is diagonalizable or
-		//  else returns null.
+		//  Finds a matrix P such that P^-1 A P == D so that A can be
+		//  factored as P D P^-1 and returns the array { P, D, P^-1 }
+		//  if the matrix is diagonalizable or else returns null.
 		//
 		//  Diagonalization is useful for exponentiation because it
 		//  is faster to compute D^x than to compute A^x, except for
@@ -80699,12 +80723,19 @@ class Matrix
 			one  = one  .setPrecision(matrix.getPrecision());
 		}
 		
-		for (int i = 0; i < matrix.matrix[0].length -1; i++)
+		//  Verify that the diagonal elements equal 1
 		
-		    if (!matrix.matrix[i][i] .equals(one)) return false;
+		Number[] diagonals = matrix.getDiagonals();
 		
-		for (int i = 0; i < matrix.matrix[0].length -1; i++)
-		for (int j = 0; j < matrix.matrix[0].length -1; j++)
+		for (Number d : diagonals)
+		
+		    if (!d .equals(one)) return false;
+		
+		//  Verify that the elements above and below
+		//  the diagonal elements are all nonzero
+		
+		for (int j = 0; j < matrix.matrix.length; j++)
+		for (int i = 0; i < matrix.matrix.length; i++)
 		
 		    if ((i != j) && !matrix.matrix[i][j] .equals(zero))
 		
@@ -81201,20 +81232,18 @@ class Matrix
 		//  Find a matrix P such that P^-1 A P == D
 		//  so Y = A^x can be computed from P D^x P^-1
 		//
-		//  This makes the matrix modPow method several times
-		//  faster for matrices; for example, for a 2x2 matrix
-		//  and a 160-bit modulus the modPow method is ~ 8 times
-		//  faster if Tonelli's algorithm is used for modular
-		//  square roots.
+		//  This makes the matrix modPow method several times faster
+		//  for matrices; for example, for a 2x2 matrix and a 160-bit
+		//  modulus the modPow method is ~ 8 times faster if Tonelli's
+		//  algorithm is used for modular square roots.
 		//
-		//  Diagonalization is not used in this program for expo-
-		//  nentiation because for Latin squares the method uses
-		//  multiplyLs() which is very fast. If diagonalization
-		//  were used, it would make the signature algorithm 2 to
-		//  3 times slower because the square root algorithm has
-		//  to do a modular exponentiation using complex arithmetic
-		//  which requires 4 multiplications per bit instead of one
-		//  multiplication per bit for real integers.
+		//  Diagonalization is not used in this program for exponentiation
+		//  because for Latin squares the method uses multiplyLs() which
+		//  is very fast. If diagonalization were used, it would make the
+		//  signature algorithm 2 to 3 times slower because the square root
+		//  algorithm has to do a modular exponentiation using complex
+		//  arithmetic which requires 4 multiplications per bit instead of
+		//  one multiplication per bit for real integers.
 		
 		
 		Matrix[] PDP1 = null;
@@ -81682,11 +81711,13 @@ class Matrix
 	}
 	
 	
+	public Matrix rotate() { return rotate(1); }
+	
 	public Matrix rotate(int dir)
 	{
-		if (dir == -1) return rotate1();
+		if (dir == 1) return rotate1();
 		
-		else if (dir == 1)
+		else if (dir == -1)
 		
 		    return rotate1().rotate1().rotate1();
 		
@@ -81703,7 +81734,7 @@ class Matrix
 		for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++)
 		
-		    R.set(this.get(i, j), j, rows -1 -i);
+		    R.set(this.get(i, j), cols -1 -j, i);
 		
 		return R;
 	}
@@ -82060,6 +82091,11 @@ class Matrix
 		if (p == 0) p = 8;
 		
 		
+		//  Define the precision of zero
+		
+		Number zero = new Number(0).setPrecision(p);
+		
+		
 		//  Set the inverse precision
 		
 		int invp = 0;
@@ -82067,16 +82103,14 @@ class Matrix
 		for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++)
 		{
-			int invp1 = matrix.get(i,j)
+			if (matrix.get(i, j).equals(0)) continue;
+			
+			int invp1 = matrix.get(i, j)
 			
 			    .inverse().getPrecision();
 			
 			if (invp1 > invp) invp = invp1;
 		} 
-		
-		//  Define the precision of zero
-		
-		Number zero = new Number(0).setPrecision(p);
 		
 		
 		//  Reduce the matrix to echelon form
@@ -82257,9 +82291,6 @@ class Matrix
 				//  to avoid the modular inversion.
 				//
 				//  [i][j] m2 + [r][j] m1 == [i][j][r][j] - [i][j][r][j] == 0
-				//
-				//  This method of elimination can only be used for modular systems
-				//  because the coefficient size grows polynomially or quadratically
 				
 				Number m1 = matrix.matrix[r][j];
 				Number m2 = matrix.matrix[i][j];
@@ -82416,9 +82447,6 @@ class Matrix
 				//  to avoid the modular inversion.
 				//
 				//  [i][j] m2 + [r][j] m1 == [i][j][r][j] - [i][j][r][j] == 0
-				//
-				//  This method of elimination can only be used for modular systems
-				//  because the coefficient size grows polynomially or quadratically
 				
 				Number m1 = matrix.matrix[r][j];
 				Number m2 = matrix.matrix[i][j];
@@ -82580,9 +82608,6 @@ class Matrix
 				//  to avoid the modular inversion.
 				//
 				//  [i][j] m2 + [r][j] m1 == [i][j][r][j] - [i][j][r][j] == 0
-				//
-				//  This method of elimination can only be used for modular systems
-				//  because the coefficient size grows polynomially or quadratically
 				
 				
 				//  Create a new runnable object R for each row i below r
