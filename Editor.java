@@ -127,7 +127,9 @@
 	** Note that the new version of the software will not decrypt email messages encrypted by previous ver-
 	sions of the software if the maximum number of ciphers is used because a private key was modified in
 	one of the public key ciphers but messages saved on users' computers will still be decryptable because
-	file encryption uses private key cryptography.
+	file encryption uses private key cryptography. Also, an error was corrected in the passphrase dialog
+	that caused problems on some versions of Linux, and an error in the Save As encryption method was cor-
+	rected.
 	
 	
 	
@@ -551,8 +553,10 @@
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
 	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
-	know that coprime root extraction has been broken for a few decades which is why RSA was rejected for
-	digital signature algorithms.
+	know that coprime root extraction has been broken for a few decades (which is why RSA was rejected for
+	digital signature algorithms) or that lattice ciphers and error-correcting code ciphers are completely
+	broken for all key sizes and parameters. This is why some companies are implementing lattice ciphers
+	in their software.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -572,9 +576,8 @@
 	by inverting u to find the indices of the samples and then using the indices to find the subset sum of
 	b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
 	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
-	lyst may also be able to break the static public key because the equations are linear and the modulus
-	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
-	ulus.
+	lyst can also break the static public key because the equations are linear and the modulus is public
+	unlike the knapsack cipher which is also linear and has small errors but uses a private modulus.
 	
 	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]), b1 =
 	r[][] ^ T (m[] + e[]) is included in the public key class because it is the only cipher that uses a
@@ -2085,9 +2088,9 @@ class Programs
 		
 		float q1 = q - 1; // q ~ 0 to 1
 		
-		textfont = new JTextArea().getFont() .deriveFont( // ~ 17 to 20
+		textfont = new JTextArea().getFont() .deriveFont( // ~ 16 to 19
 		
-		    new JTextArea().getFont().getSize() + 5 + 3.0f * q1);
+		    new JTextArea().getFont().getSize() + 2 + 3.0f * q1);
 		
 		labelfont = new JLabel() .getFont() .deriveFont(
 		
@@ -2095,11 +2098,11 @@ class Programs
 		
 		menufont = new JMenu().getFont() .deriveFont(
 		
-		    new JMenu().getFont().getSize() + 1 + 2.5f * q1);
+		    new JMenu().getFont().getSize() + 1 + 2.0f * q1);
 		
 		menuitemfont = new JMenuItem().getFont() .deriveFont(
 		
-		    new JMenuItem().getFont().getSize() + 2 + 2.0f * q1);
+		    new JMenuItem().getFont().getSize() + 2 + 1.5f * q1);
 	}
 	
 	
@@ -2232,8 +2235,8 @@ class Programs
 		
 		private float fontsize = textfont.getSize();
 		
-		private int width  = (int) d.getWidth() * 55/64;
-		private int height = (int) d.getHeight()* 1/1;
+		private int width  = (int) d.getWidth() * 2/3;
+		private int height = (int) d.getHeight()* 3/4;
 		
 		private boolean showhidebuttons = true;
 		
@@ -4651,31 +4654,27 @@ class Programs
 				
 				JTextArea textarea = textareapanel.textarea;
 				
-				File file = new SaveFile(frame, __.saveas)
+				File newfile = new SaveFile(frame, __.saveas)
 				
 				    .setDirectory(directory) .setFont(font)
 				
 					.chooseFile();
 				
-				if (file == null) return;
+				if (newfile == null) return;
 				
 				
-				directory = file.getParent();
+				directory = newfile.getParent();
 				
 				byte[] data = textarea.getText() .getBytes();
-				
-				//  If the user is reading an existing encrypted file
-				//  then the textarea panel encrypted variable is true
-				
-				if (textareapanel.encrypted)
-				
-				    data = Cipher.encrypt(data, filekey);
 				
 				
 				//  If the existing file is already encrypted
 				//  ask if the user wants to encrypt the new file
 				
-				if (Cipher.isEncrypted(file))
+				if (textareapanel.file != null)
+				
+				if (Cipher.isEncrypted(textareapanel.file)
+				 || Cipher.isEncrypted(newfile))
 				{
 					String message = __.encryptfile + "?";
 					
@@ -4730,7 +4729,7 @@ class Programs
 				
 				    .setDirectory(directory) .setFont(font)
 				
-					.save(data, file, true);
+					.save(data, newfile, true);
 				
 				if ((result == JOptionPane.NO_OPTION)
 				 || (result == JOptionPane.CANCEL_OPTION)
@@ -4739,73 +4738,40 @@ class Programs
 				    return;
 				
 				
-				if (Cipher.isEncrypted(file))
+				textareapanel.encrypted = 
 				
-				    textareapanel.encrypted = true;
-				
-				
-				
-				String filename = file.getName();
-				
-				if (textareapanel.encrypted && (filename.length() >= 64)
-				
-				    && Number.isBase16(filename))
-				{
-					int choice = JOptionPane
-					
-					   .showConfirmDialog(frame,
-					
-						__.encryptfilename + " ?");
-					
-					if (choice == JOptionPane.YES_OPTION)
-					{
-						//  Re-encrypt the new file name
-						
-						String name0 = FileNameEncryptor
-						
-						  .decryptFileName(file.getName(), filekey);
-						
-						String name1 = FileNameEncryptor
-						
-						  .encryptFileName(name0, filekey);
-						
-						String path1 = file.getParent()
-						
-						    + File.separator + name1;
-						
-						file.renameTo(new File(path1));
-					}
-				}
+				    Cipher.isEncrypted(newfile);
 				
 				
+				//  Set the tab color to the encrypted or unencrypted color
+				
+				int index = tabbedpane.getSelectedIndex();
 				
 				if (textareapanel.encrypted)
 				{
-					//  Set the tab color to the encrypted color
-					
-					int index = tabbedpane.getSelectedIndex();
-					
 					Color foreground = textarea.getForeground();
 					Color background = textarea.getBackground();
 					
-					if (textareapanel.encrypted)
-					{
-						if (!foreground.equals(Color.white))
-						
-						     tabbedpane.setForegroundAt(index, foreground);
-						
-						else tabbedpane.setForegroundAt(index,
-						
-						     textarea.getBackground());
-					}
+					if (!foreground.equals(Color.white))
+					
+					     tabbedpane.setForegroundAt(index, foreground);
+					
+					else tabbedpane.setForegroundAt(index,
+					
+					     textarea.getBackground());
+				}
+				
+				else
+				{	tabbedpane.setForegroundAt(index, Color.black);
+					tabbedpane.setBackgroundAt(index, background);
 				}
 				
 				tabbedpane.setTitleAt(tabbedpane
 				
-				    .getSelectedIndex(), file.getName() );
+				    .getSelectedIndex(), newfile.getName() );
 				
 				textareapanel.filechanged = false;
-				textareapanel.file = file;
+				textareapanel.file = newfile;
 				
 				setFrameTitle();
 			}
@@ -4982,6 +4948,10 @@ class Programs
 		
 			private int maxfontsize = 24;
 			
+			private ArrayList<JButton> buttonlist;
+			
+			private int buttonindex = -1;
+			
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -5000,6 +4970,74 @@ class Programs
 					if (e.getButton() != MouseEvent.BUTTON1)
 					{
 						cutAndPaste();
+					}
+				}
+				
+				public void mouseClicked(MouseEvent e)
+				{
+					if (e.getSource() instanceof JButton)
+					{
+						for (int i = 0; i < buttonlist.size(); i++)
+						
+						    if (buttonlist.get(i).equals((JButton) e.getSource()))
+						
+							buttonindex = i;
+						
+						if ((buttonindex >= 0) && buttonindex < buttonlist.size()-1)
+						{
+							if (textfieldlist.get(buttonindex).getText().isBlank())
+							{
+								//  Remove the blank space
+								
+								for (int i = buttonindex; i < textfieldlist.size()-1; i++)
+								{
+									String text = textfieldlist.get(i+1).getText();
+									
+									textfieldlist.get(i).setText(text);
+									
+									if (i+1 == textfieldlist.size()-1)
+									
+									    textfieldlist.get(i+1).setText("");
+								}
+								
+								return;
+							}
+							
+							boolean spaceavailable = false;
+							
+							for (int i = buttonindex; i < textfieldlist.size(); i++)
+							
+							    if (textfieldlist.get(i).getText().isBlank())
+							
+								{ spaceavailable = true; break; }
+							
+							if (spaceavailable)
+							{
+								//  Insert a blank space
+								
+								int emptyspaceindex = 0;
+								
+								for (int i = buttonindex; i < textfieldlist.size(); i++)
+								{
+									if (textfieldlist.get(i).getText().isBlank())
+									
+									    { emptyspaceindex = i; break; }
+								}
+								
+								for (int i = emptyspaceindex; i > buttonindex; i--)
+								{
+									String text = textfieldlist.get(i-1).getText();
+									
+									textfieldlist.get(i).setText(text);
+									
+									if (i-1 == buttonindex)
+									
+									    textfieldlist.get(i-1).setText("");
+								}
+								
+								return;
+							}
+						}
 					}
 				}
 			}
@@ -5033,12 +5071,16 @@ class Programs
 				//  to add or remove commonly used or important files
 				
 				textfieldlist = new ArrayList<JTextField>();
+				   buttonlist = new ArrayList<JButton>();
+				
+				MouseListener mouselistener = new MouseListener();
+				FocusListener focuslistener = new FocusListener();
 				
 				for (int i = 0; i < numberoffiles; i++)
 				{
-					JTextField textfield;
+					JTextField textfield = new JTextField(48);
 					
-					textfield = new JTextField(48);
+					JButton textbutton = new JButton();
 					
 					Font font1 = font.deriveFont((float)
 					
@@ -5050,20 +5092,25 @@ class Programs
 					textfield.setCaretColor(foreground);
 					textfield.setBackground(background);
 					
+					textfield.addMouseListener(mouselistener);
+					textfield.addFocusListener(focuslistener);
+					
+					textbutton.addMouseListener(mouselistener);
+					
 					textfieldlist.add(textfield);
-					
-					MouseListener mouselistener = new MouseListener();
-					FocusListener focuslistener = new FocusListener();
-					
-					textfieldlist.get(i).addMouseListener(mouselistener);
-					textfieldlist.get(i).addFocusListener(focuslistener);
+					   buttonlist.add(textbutton);
 				}
 				
 				Box vbox = Box.createVerticalBox();
 				
-				for (JTextField textfield : textfieldlist)
+				for (int i = 0; i < textfieldlist.size(); i++)
 				{
-					vbox.add(textfield);
+					Box hbox = Box.createHorizontalBox();
+					
+					hbox.add(   buttonlist.get(i));
+					hbox.add(textfieldlist.get(i));
+					
+					vbox.add(hbox);
 					
 					vbox.add(Box.createVerticalStrut(5));
 				}
@@ -5112,7 +5159,13 @@ class Programs
 						
 						//  System.out.println("file path == " + filepath);
 						
-						for (JTextField textfield : textfieldlist)
+						if ((buttonindex >= 0) && textfieldlist
+						
+						    .get(buttonindex).getText().isBlank())
+						
+							textfieldlist.get(buttonindex).setText(filepath);
+						
+						else for (JTextField textfield : textfieldlist)
 						
 						    if (textfield.getText().isBlank())
 						
@@ -11772,7 +11825,6 @@ class Programs
 					
 					return;
 				}
-				
 				
 				frame.setLocation(x, y);
 				
@@ -40882,7 +40934,7 @@ class EncryptDirectory
 {
 
 
-	//  The user could have the option to convert the directory to a
+	//  The user could have the option to convert a directory to a
 	//  tar file, but if this option is used to encrypt and decrypt
 	//  the directory, then the encryption is not parallelizable, and
 	//  the entire directory has to be decrypted just to read one file.
@@ -41587,7 +41639,6 @@ class EncryptDirectory
 		
 		File[] files = ListFiles.listFiles(directory);
 		
-		
 		long totalbytes = 0;
 		
 		for (File file : files)
@@ -41674,7 +41725,7 @@ class EncryptDirectory
 		
 		if (!test) append(message + "\n" +
 		
-		    __.encrypteddirectory + " " + directory);
+		    __.decrypteddirectory + " " + directory);
 	}
 	
 	
@@ -41827,7 +41878,7 @@ class EncryptDirectory
 					{
 						append(message);
 						
-						System.out.println(message);
+						//  System.out.println(message);
 					}
 					
 					continue;
@@ -41856,6 +41907,12 @@ class EncryptDirectory
 					
 					try
 					{	bool = FileDecryptor.decrypt(file, filekey);
+						
+						if (bool && Cipher.isEncrypted(file))
+						
+						    System.out.println("Error: " + file.getName() +
+						
+							" was encrypted more than once, decrypt again");
 						
 						file.setLastModified(time);
 					}
@@ -48649,9 +48706,15 @@ class Icons
 			
 			label.repaint();
 			
-			dialog.setSize(dialog
+			int locx = dialog.getX();
+			int locy = dialog.getY();
 			
-			    .getPreferredSize());
+			//  On some versions of Linux, the location
+			//  of the dialog keeps incrementing.
+			
+			dialog.setLocation(locx, locy);
+			
+			dialog.setSize(dialog.getPreferredSize());
 		}
 	}
 	
@@ -58905,7 +58968,7 @@ class PublicKey
 	//  has to find round numbers or numbers that contain only small factors. By using a linear sieve, quadra-
 	//  tic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's
 	//  method can solve the discrete log / factorization problem up to ~ 512 to ~ 768 bits which is on the or-
-	//  der of a thousand bits. A polynomial-time algorithm can factor numbers up to 16 M bits.
+	//  der of a thousand bits. A polynomial-time algorithm can factor numbers up to 1 to 10 M bits.
 	
 	
 	
@@ -58915,7 +58978,8 @@ class PublicKey
 	//  The Rabin / factorization / co-composite root extraction cipher
 	//
 	//  This cipher works with any exponent 2, 3, 4, 5, 6, ...
-	//  that is co-composite with the totient of the modulus.
+	//  that is co-composite with the totient of the modulus;
+	//  the size of the public key is 10^7 or ~ 10 M bits.
 	//
 	//  For the exponent 2
 	//

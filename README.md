@@ -98,8 +98,9 @@
 	** Note that the new version of the software will not decrypt email messages encrypted by previous ver-
 	sions of the software if the maximum number of ciphers is used because a private key was modified in
 	one of the public key ciphers but messages saved on users' computers will still be decryptable because
-	file encryption uses private key cryptography. Also an error was corrected in the passphrase dialog
-	that caused problems on some versions of Linux.
+	file encryption uses private key cryptography. Also, an error was corrected in the passphrase dialog
+	that caused problems on some versions of Linux, and an error in the Save As encryption method was cor-
+	rected.
 	
 	
 	
@@ -523,8 +524,10 @@
 	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
 	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
 	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
-	know that coprime root extraction has been broken for a few decades which is why RSA was rejected for
-	digital signature algorithms.
+	know that coprime root extraction has been broken for a few decades (which is why RSA was rejected for
+	digital signature algorithms) or that lattice ciphers and error-correcting code ciphers are completely
+	broken for all key sizes and parameters. This is why some companies are implementing lattice ciphers
+	in their software.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -544,9 +547,8 @@
 	by inverting u to find the indices of the samples and then using the indices to find the subset sum of
 	b[] and solving for m[i] == (v - the subset of b[] (mod q)) / [q/2]. Even if the subset sum problem
 	has a many-to-one mapping, any solution to the subset sum problem will break the cipher. A cryptana-
-	lyst may also be able to break the static public key because the equations are linear and the modulus
-	is public unlike the knapsack cipher which is also linear and has small errors but uses a private mod-
-	ulus.
+	lyst can also break the static public key because the equations are linear and the modulus is public
+	unlike the knapsack cipher which is also linear and has small errors but uses a private modulus.
 	
 	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]), b1 =
 	r[][] ^ T (m[] + e[]) is included in the public key class because it is the only cipher that uses a
@@ -554,3 +556,4 @@
 	static public key c[] and the one-time public key b. Unless the static public key could be broken, the
 	one-time public key can never be broken because the solution is ambiguous and the search space or so-
 	lution set is too large to try all the possible keys or combinations.
+	
