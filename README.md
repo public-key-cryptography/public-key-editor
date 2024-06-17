@@ -97,13 +97,13 @@
 	tion protocols changes.
 	
 	
-	** Note that the new version of the software will not decrypt email messages encrypted by previous ver-
-	sions of the software if the maximum number of ciphers is used because a private key was modified in
-	one of the public key ciphers but messages saved on users' computers will still be decryptable because
-	file encryption uses private key cryptography. Also, an error was corrected in the passphrase dialog
-	that caused problems on some versions of Linux; an error in the Save As menu item was corrected that
-	caused files to be encrypted twice; and an error in the save mail settings method was corrected so
-	that the method saves the font size, frame size, number of ciphers, and other mail settings.
+	** Note that the new version of the software will not decrypt email messages encrypted by previous
+	versions of the software if the maximum number of ciphers is used because a private key was modified
+	in one of the public key ciphers but messages saved on users' computers will still be decryptable be-
+	cause file encryption uses private key cryptography. Also, an error was corrected in the passphrase
+	dialog that caused problems on some versions of Linux; an error in the Save As menu item was corrected
+	that caused files to be encrypted twice; and an error in the save mail settings method was corrected
+	so that the method saves the font size, frame size, number of ciphers, and other mail settings.
 	
 	
 	

@@ -127,13 +127,13 @@
 	tion protocols changes.
 	
 	
-	** Note that the new version of the software will not decrypt email messages encrypted by previous ver-
-	sions of the software if the maximum number of ciphers is used because a private key was modified in
-	one of the public key ciphers but messages saved on users' computers will still be decryptable because
-	file encryption uses private key cryptography. Also, an error was corrected in the passphrase dialog
-	that caused problems on some versions of Linux; an error in the Save As menu item was corrected that
-	caused files to be encrypted twice; and an error in the save mail settings method was corrected so
-	that the method saves the font size, frame size, number of ciphers, and other mail settings.
+	** Note that the new version of the software will not decrypt email messages encrypted by previous
+	versions of the software if the maximum number of ciphers is used because a private key was modified
+	in one of the public key ciphers but messages saved on users' computers will still be decryptable be-
+	cause file encryption uses private key cryptography. Also, an error was corrected in the passphrase
+	dialog that caused problems on some versions of Linux; an error in the Save As menu item was corrected
+	that caused files to be encrypted twice; and an error in the save mail settings method was corrected
+	so that the method saves the font size, frame size, number of ciphers, and other mail settings.
 	
 	
 	
@@ -9755,7 +9755,9 @@ class Programs
 					
 					pd.setMinimumLength(minlength);
 					
-					pd.setFont1((font != null) ? font : frame.getFont());
+					pd.setFont1((font != null) ?
+					
+					    font : frame.getFont());
 					
 					pd.setForeground1(foreground);
 					pd.setBackground1(background);
@@ -50339,7 +50341,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		
 		
-
+		
 		
 		super(window);
 		
@@ -50359,24 +50361,35 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		final int textlength = 30;
 		
 		
+		//  the number of rows in the passphrase area
+		
+		final int rows = 1;
+		
+		
+		JPanel panel = new JPanel();
+		
+		panel.setLayout(new GridBagLayout());
+		
+		 this.setLayout(new GridBagLayout());
+		
 		
 		if (dialogtype == PASSPHRASE_ONLY)
 		{
-			//   ______________________________
-			//  |______________________________|
-			//  |                              |
-			//  |                              |
-			//  |______________________________|
-			//  | 0123 4567 89ab cdef          |
-			//  |             ____             |
-			//  |            |_OK_|            |
-			//  |______________________________|
+			//   ________________________________
+			//  |________________________________|
+			//  |                                |
+			//  |                                |
+			//  |________________________________|
+			//  |      0123 4567 89ab cdef       |
+			//  |              ____              |
+			//  |             |_OK_|             |
+			//  |________________________________|
 			
 			
 			passphrasehashlabel = new JLabel("");
 			
 			passphrasefield = new JTextField(textlength);
-			passphrasearea = new JTextArea(3, textlength);
+			passphrasearea = new JTextArea(rows, textlength);
 			passphrasearea.setLineWrap(true);
 			
 			hashfield = new JTextField(24);
@@ -50389,14 +50402,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			randcheckbox.setVisible(false);
 			randcheckbox.setToolTipText(__.rng);
 			
-			JScrollPane scrollpane1 =
 			
-			  new JScrollPane(passphrasearea,
-			
-			      JScrollPane.  VERTICAL_SCROLLBAR_NEVER,
-			      JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			
-			textarealabel = new JTextArea(4, 16);
+			textarealabel = new JTextArea(rows, 16);
 			
 			textarealabel.setLineWrap(true);
 			textarealabel.setWrapStyleWord(true);
@@ -50409,8 +50416,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			passphrasearea.addMouseListener(mouselistener1);
 			
 			
-			this.setLayout(new GridBagLayout());
-			
 			
 			gbc = new Gbc();
 			
@@ -50419,7 +50424,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(scrollpane1, gbc);
+			panel.add(passphrasearea, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50429,7 +50434,12 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(hashfield, gbc);
+			panel.add(hashfield, gbc);
+			
+			//  Set the value of y so the constructor can ap-
+			//  pend the virtual keyboard and the ok button
+			
+			y = 2;
 		}
 		
 		
@@ -50467,7 +50477,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			passphrasehashlabel = new JLabel("");
 			
 			passphrasefield = new JTextField(textlength);
-			passphrasearea  = new JTextArea(2, textlength);
+			passphrasearea  = new JTextArea(rows, textlength);
 			
 			emailfield = new JTextField(textlength);
 			
@@ -50610,19 +50620,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			passphrasearea.setLineWrap(true);
 			
-			JScrollPane scrollpane1 =
-			
-			    new JScrollPane(passphrasearea,
-			
-				JScrollPane.  VERTICAL_SCROLLBAR_NEVER,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			
 			
 			mouselistener1 = new MouseListener1(passphrasearea);
 			passphrasearea.addMouseListener(mouselistener1);
-			
-			
-			this.setLayout(new GridBagLayout());
 			
 			
 			
@@ -50642,7 +50642,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(passphraselabel, gbc);
+			panel.add(passphraselabel, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50652,7 +50652,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(randcheckbox, gbc);
+			panel.add(randcheckbox, gbc);
 			
 			
 			
@@ -50663,7 +50663,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(passphrasefield, gbc);
+			panel.add(passphrasefield, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50673,7 +50673,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(scrollpane1, gbc);
+			panel.add(passphrasearea, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50683,7 +50683,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(emaillabel, gbc);
+			panel.add(emaillabel, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50693,7 +50693,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(emailfield, gbc);
+			panel.add(emailfield, gbc);
 			
 			
 			
@@ -50704,7 +50704,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(new JLabel(), gbc);
+			panel.add(new JLabel(), gbc);
 			
 			
 			gbc = new Gbc();
@@ -50714,7 +50714,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			this.add(hashfield, gbc);
+			panel.add(hashfield, gbc);
 			
 			
 			
@@ -50727,7 +50727,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
-				this.add(numberofcipherslabel, gbc);
+				panel.add(numberofcipherslabel, gbc);
 				
 				
 				gbc = new Gbc();
@@ -50738,7 +50738,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
-				this.add(numberofcipherslabel1, gbc);
+				panel.add(numberofcipherslabel1, gbc);
 				
 				
 				gbc = new Gbc();
@@ -50748,7 +50748,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
-				this.add(buttonpanel, gbc);
+				panel.add(buttonpanel, gbc);
 			}
 			
 			
@@ -50866,7 +50866,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			passphraselabel = new JLabel(passphraselabelstring0);
 			
 			passphrasefield = new JTextField(textlength);
-			passphrasearea  = new JTextArea(2, textlength);
+			passphrasearea  = new JTextArea(rows, textlength);
 			
 			hashfield = new JTextField(textlength);
 			hashfield.setBorder(null);
@@ -50936,18 +50936,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			else           ascensionbox.setSelectedItem(__.descending);
 			
 			
-			JScrollPane scrollpane1 =
-			
-			    new JScrollPane(passphrasearea,
-			
-				JScrollPane.  VERTICAL_SCROLLBAR_NEVER,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-			
 			mouselistener1 = new MouseListener1(passphrasearea);
 			passphrasearea.addMouseListener(mouselistener1);
 			
-			
-			this.setLayout(new GridBagLayout());
 			
 			
 			int fieldsize = 8;
@@ -50959,7 +50950,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setSize(fieldsize, 1);
 			gbc.setWeight(100, 100);
 			
-			this.add(passphraselabel, gbc);
+			panel.add(passphraselabel, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50968,7 +50959,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(incomingmailserverlabel, gbc);
+			panel.add(incomingmailserverlabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
@@ -50976,7 +50967,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(outgoingmailserverlabel, gbc);
+			panel.add(outgoingmailserverlabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
@@ -50984,7 +50975,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(numberofmessageslabel, gbc);
+			panel.add(numberofmessageslabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
@@ -50993,7 +50984,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(maildirectorylabel, gbc);
+			panel.add(maildirectorylabel, gbc);
 			
 			
 			
@@ -51008,14 +50999,14 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(passphrasefield, gbc);
+			panel.add(passphrasefield, gbc);
 			
 			gbc.setPosition(9, y);
 			gbc.setSize(1, 1);
 			gbc.setAnchor(Gbc.right);
 			gbc.setWeight(100, 100);
 			
-			this.add(randcheckbox, gbc);
+			panel.add(randcheckbox, gbc);
 			
 			
 			
@@ -51025,7 +51016,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(scrollpane1, gbc);
+			panel.add(passphrasearea, gbc);
 			
 			
 			gbc = new Gbc();
@@ -51035,7 +51026,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(hashfield, gbc);
+			panel.add(hashfield, gbc);
 			
 			
 			gbc = new Gbc();
@@ -51044,7 +51035,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(incomingmailserverbox, gbc);
+			panel.add(incomingmailserverbox, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
@@ -51052,7 +51043,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(outgoingmailserverbox, gbc);
+			panel.add(outgoingmailserverbox, gbc);
 			
 			
 			gbc = new Gbc();
@@ -51061,7 +51052,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(numberofmessagesbox, gbc);
+			panel.add(numberofmessagesbox, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1+4, y);
@@ -51069,7 +51060,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(ascensionbox, gbc);
+			panel.add(ascensionbox, gbc);
 			
 			
 			gbc = new Gbc();
@@ -51079,7 +51070,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			this.add(maildirectoryfield, gbc);
+			panel.add(maildirectoryfield, gbc);
 			
 			
 			
@@ -51296,18 +51287,33 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		gbc.setInsets(15, 0, 15, 0);
 		gbc.setWeight(100, 100);
 		
-		this.add(keyboardpanel, gbc);
+		panel.add(keyboardpanel, gbc);
 		
-		//  Add the OK button
+		
+		//  Add the ok button
 		
 		gbc = new Gbc();
 		gbc.setPosition(0, ++y);
 		gbc.setSize(length, 1);
-		gbc.setAnchor(Gbc.center);
-		gbc.setInsets(10, 0, 10, 0);
+		gbc.setFill(Gbc.both);
 		gbc.setWeight(100, 100);
 		
-		this.add(okbutton, gbc);
+		panel.add(okbutton, gbc);
+		
+		
+		
+		//  Add the panel to the dialog
+		
+		gbc = new Gbc();
+		gbc.setPosition(0, 0);
+		gbc.setSize(1, 1);
+		gbc.setFill(Gbc.both);
+		gbc.setWeight(100, 100);
+		
+		this.add(panel);
+		
+		
+		
 		
 		keyboardpanel.setVisible(showkeyboard);
 		
@@ -51356,7 +51362,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setLocation(x2pos, y2pos);
 		
-
 		
 		okbutton.addActionListener(new ActionListener()
 		{
@@ -51697,7 +51702,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		}
 		
 		keyboardlistener.keyboard.setBackground(color);
-		
+	  	
 		return this;
 	}
 	
@@ -51750,6 +51755,11 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		if (keyboardfontsize < minfontsize) keyboardfontsize = minfontsize;
 		
 		keyboardlistener.keyboard.setFont(font.deriveFont(keyboardfontsize));
+		
+		//  Pack the dialog and then set the preferred size to
+		//  the packed size so the ok button doesn't collapse
+		
+		this.pack(); this.setPreferredSize(this.getSize());
 		
 		return this;
 	}
