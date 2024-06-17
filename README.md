@@ -1,4 +1,3 @@
-
 	The Java Editor program contains a text editor, table editor, email editor and image viewer. The
 	program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert classes.
 	These classes contain all the ciphers, algorithms, protocols, and software required to do cryptog-
@@ -10,6 +9,41 @@
 	Software developers can copy and paste these classes into other free and open source software pro-
 	grams that have compatible licenses. This means that the software can be used with a more permissive
 	license but not a more restrictive or proprietary license.
+	
+	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
+	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters, x1, x2, and X are private keys, and
+	Y is the public key. The equations use polynomials, vectors, determinants, matrices, cubes, and tes-
+	seracts. The vector cross product cipher Y = A (x) X,  E = Y * K uses a parallelogram as a public key
+	and a parallelepiped as a shared secret key or key agreement. The matrix product cipher  Y = |A1|X1|
+	uses 2-dimensional arithmetic which multiplies from left to right and from top to bottom.    |X2|
+	The matrix polynomial discrete log cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equa-
+	tions were selected for public key cryptography because nonlinear, multivariate, multi-dimensional,
+	modular and non-modular equations are unsolvable.
+	
+	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
+	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
+	sequence of integers, r is a public random matrix, s0, s[], and n are secret keys, e[] is a vector of
+	small random errors, and b is the sender's one-time public key.
+	
+	The email encryption program uses a composite key that has multiple public key ciphers. The public key
+	agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate the
+	composite secret key, session key or encryption key. Each public key agreement or cipher functions as
+	a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers. The
+	composite key is then used to initialize a hash function that generates another one-time pad for the
+	message encryption.
+	
+	The public key agreement or encryption is unbreakable since every public key cipher would have to be
+	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
+	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
+	includes 18 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
+	
+	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
+	solved because it uses integers and a single equation, then it can be replaced by another cipher that
+	uses matrices, polynomials, powers of a matrix (cube or tesseract), or fractional numbers instead of
+	integers. Similarly, if a cipher can be broken because a matrix is diagonalizable or real and symme-
+	tric, then it can be replaced by a non-diagonalizable, non-real, or non-symmetric matrix.
+	
+	
 	
 	The Mail program can send and retrieve messages using POP mail or Post Office Protocol. The Mail pro-
 	gram has a test mail feature on the help menu for the user to try the mail program without being con-
@@ -32,28 +66,6 @@
 	computer because the messages get re-numbered every time one of the users deletes a message and signs
 	out, and the wrong messages will get deleted or retrieved.
 	
-	The email encryption program uses a composite key that has multiple public key ciphers. The public key
-	agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate the
-	composite secret key, session key or encryption key. Each public key agreement or cipher functions as
-	a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers. The
-	composite key is then used to initialize a hash function that generates another one-time pad for the
-	message encryption.
-	
-	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
-	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters, x1, x2, and X are private keys, and
-	Y is the public key. The equations use polynomials, vectors, matrices, cubes, and tesseracts. The vec-
-	tor cross product cipher Y = A (x) X,  E = Y * K uses a parallelogram as a public key and a parallele-
-	piped as a shared secret key or key agreement. The matrix product cipher  Y = |A1|X1| uses 2-dimen-
-	sional arithmetic which multiplies from left to right and from top to bottom. |X2|    The matrix poly-
-	nomial discrete log cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected
-	for public key cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modu-
-	lar equations are unsolvable.
-	
-	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
-	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
-	sequence of integers, r is a public random matrix, s0, s[], and n are secret keys, e[] is a vector of
-	small random errors, and b is the sender's one-time public key.
-	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to cre-
 	ate a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipherdata
@@ -61,17 +73,6 @@
 	the random number or one-time encryption key. The receiver decrypts a message by xor-ing the encrypted
 	random number using the shared secret key, hashing the random number to create the one-time pad, and
 	then xor-ing the one-time pad and the cipherdata to recover the plaindata.
-	
-	The public key agreement or encryption is unbreakable since every public key cipher would have to be
-	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
-	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
-	includes 18 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
-	
-	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
-	solved because it uses integers and a single equation, then it can be replaced by another cipher that
-	uses matrices, polynomials, powers of a matrix (cube or tesseract), or fractional numbers instead of
-	integers. Similarly, if a cipher can be broken because a matrix is diagonalizable or real and symme-
-	tric, then it can be replaced by a non-diagonalizable, non-real, or non-symmetric matrix.
 	
 	The email text, file attachments, and file descriptions are each encoded in base-64, and then the en-
 	coded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to remove
@@ -81,6 +82,7 @@
 	tion method includes a base-64 encoding because it has to encode the cipherdata to attach the one-time
 	public keys.) Other protocols may use one encoding but this would only reduce the expansion to 3/4 the
 	size.
+	
 	
 	The text editor and email program were written to test the public key software and to show developers
 	how to use and implement the public key ciphers in other programs. The text editor was also used to
@@ -99,8 +101,9 @@
 	sions of the software if the maximum number of ciphers is used because a private key was modified in
 	one of the public key ciphers but messages saved on users' computers will still be decryptable because
 	file encryption uses private key cryptography. Also, an error was corrected in the passphrase dialog
-	that caused problems on some versions of Linux, and an error in the Save As encryption method was cor-
-	rected.
+	that caused problems on some versions of Linux; an error in the Save As menu item was corrected that
+	caused files to be encrypted twice; and an error in the save mail settings method was corrected so
+	that the method saves the font size, frame size, number of ciphers, and other mail settings.
 	
 	
 	
@@ -148,7 +151,7 @@
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -167,12 +170,12 @@
 	single command line
 	
 	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java
+	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java
 	
 	or for the email client
 	
 	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java mail
+	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -186,7 +189,7 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-22 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-22.0.1 using the command
 	
 	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk;
 	cd /usr/jdk; sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd;
@@ -194,12 +197,12 @@
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22.0.1/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-22/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-22/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-22.0.1/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-22.0.1/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -221,7 +224,6 @@
 	
 	
 	
-	
 	Creating a compiled / executable java .jar file
 	
 	You can create a java archive or java jar file
@@ -229,10 +231,10 @@
 	
 	If the Editor.java file is in the Downloads folder, use the commands
 	
-	/usr/jdk/jdk-22/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-22/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-22.0.1/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-22.0.1/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-22/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-22.0.1/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
 	by copying and pasting into the terminal.
@@ -271,7 +273,7 @@
 	doesn't start with a slash /, but it is redundant to use cd if the next command has an
 	absolute path name because then it doesn't do anything.
 	
-	The path name /usr/jdk/jdk-22/bin/java can be replaced by the file name java if the
+	The path name /usr/jdk/jdk-22.0.1/bin/java can be replaced by the file name java if the
 	terminal knows where to find the java command. The path name is included because some
 	users may be running a live version of Linux.
 	
@@ -281,11 +283,11 @@
 	
 	The jar file can be run using the command
 	
-	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar (text) for the text editor, or
+	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar (text) for the text editor, or
 	
-	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar image
+	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar image
 	
 	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
@@ -402,7 +404,8 @@
 	key matrix X, but in public key cryptography the private key X is the plaintext message encrypted by
 	the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher. Because the
 	encryption key A is public, the security of public key cryptography is based entirely on the non-
-	invertibility of the function instead of the secrecy of the private key.
+	invertibility of the function. If the function could be inverted then a cryptanalyst could solve for
+	the private key or message X.
 	
 	A recipient who wants to receive encrypted messages computes the static public key Y = A X. This is
 	the same equation as A X == B but the equation is written using X and Y instead of A and B because
@@ -417,15 +420,14 @@
 	plication because each of them knows either K or X. A wiretapper would have to do an inversion to
 	solve for K or X, but this is a hard math problem because A is chosen to be non-invertible.
 	
-	The cipher Y = A X doesn't work for integers or matrices (1 x 1 or n x n dimensional objects) because
-	A can be inverted to solve for X = A^-1 Y; even if A is a singular matrix the equation can still be
-	solved for X. But the equation can be generalized to Y = X A X so that A is non-invertible and immov-
-	able because matrix multiplication is not generally commutative. Multiplication is commutative only
-	for 0-dimensional numbers such as integers, complex numbers, and quaternions which are points on a
-	line, plane, or tesseract. (Also, because multiplication is non-commutative, there is no division
-	operation defined for matrices except for integers or scalars; to divide a matrix by a matrix, the
-	matrix has to be pre- or post-multiplied by the inverse of the divisor, and the divisor has to be an
-	invertible or non-singular matrix.)
+	The cipher Y = A X doesn't work for integers or matrices because A can be inverted to solve for X =
+	A^-1 Y; even if A is a singular matrix the equation can still be solved for X. But the equation can
+	be generalized to Y = X A X so that A is non-invertible and immovable because matrix multiplication
+	is not generally commutative. Multiplication is commutative only for 0-dimensional numbers such as
+	integers, complex numbers, and quaternions which are points on a line, plane, or tesseract. (Also,
+	because multiplication is non-commutative, there is no division operation defined for matrices except
+	for integers or scalars; to divide a matrix by a matrix, the matrix has to be pre- or post-multiplied
+	by the inverse of the divisor, and the divisor has to be an invertible or non-singular matrix.)
 	
 	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of one-
 	dimensional multiplication. For example, for 2-D multiplication, matrices can be multiplied from left
@@ -503,8 +505,8 @@
 	standardization and it was being promoted and backed by a few companies, a method was published for
 	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
 	this algorithm would have been standardized and implemented in software programs along with the other
-	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, the
-	learning with errors cipher, and other lattice ciphers.
+	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, the Mc-
+	Eliece cipher, the learning with errors cipher, and other lattice ciphers.
 	
 	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
 	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
@@ -526,8 +528,9 @@
 	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
 	know that coprime root extraction has been broken for a few decades (which is why RSA was rejected for
 	digital signature algorithms) or that lattice ciphers and error-correcting code ciphers are completely
-	broken for all key sizes and parameters. This is why some companies are implementing lattice ciphers
-	in their software.
+	broken for all key sizes and parameters. Some companies are implementing lattice ciphers into their
+	software programs even though some of them have been publicly broken and all of them have been pri-
+	vately broken just like RSA.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -556,4 +559,3 @@
 	static public key c[] and the one-time public key b. Unless the static public key could be broken, the
 	one-time public key can never be broken because the solution is ambiguous and the search space or so-
 	lution set is too large to try all the possible keys or combinations.
-	

@@ -40,6 +40,41 @@
 	grams that have compatible licenses. This means that the software can be used with a more permissive
 	license but not a more restrictive or proprietary license.
 	
+	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
+	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters, x1, x2, and X are private keys, and
+	Y is the public key. The equations use polynomials, vectors, determinants, matrices, cubes, and tes-
+	seracts. The vector cross product cipher Y = A (x) X,  E = Y * K uses a parallelogram as a public key
+	and a parallelepiped as a shared secret key or key agreement. The matrix product cipher  Y = |A1|X1|
+	uses 2-dimensional arithmetic which multiplies from left to right and from top to bottom.    |X2|
+	The matrix polynomial discrete log cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equa-
+	tions were selected for public key cryptography because nonlinear, multivariate, multi-dimensional,
+	modular and non-modular equations are unsolvable.
+	
+	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
+	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
+	sequence of integers, r is a public random matrix, s0, s[], and n are secret keys, e[] is a vector of
+	small random errors, and b is the sender's one-time public key.
+	
+	The email encryption program uses a composite key that has multiple public key ciphers. The public key
+	agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate the
+	composite secret key, session key or encryption key. Each public key agreement or cipher functions as
+	a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers. The
+	composite key is then used to initialize a hash function that generates another one-time pad for the
+	message encryption.
+	
+	The public key agreement or encryption is unbreakable since every public key cipher would have to be
+	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
+	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
+	includes 18 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
+	
+	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
+	solved because it uses integers and a single equation, then it can be replaced by another cipher that
+	uses matrices, polynomials, powers of a matrix (cube or tesseract), or fractional numbers instead of
+	integers. Similarly, if a cipher can be broken because a matrix is diagonalizable or real and symme-
+	tric, then it can be replaced by a non-diagonalizable, non-real, or non-symmetric matrix.
+	
+	
+	
 	The Mail program can send and retrieve messages using POP mail or Post Office Protocol. The Mail pro-
 	gram has a test mail feature on the help menu for the user to try the mail program without being con-
 	nected to the internet or using a real email account. The help menu of the Mail program also has a
@@ -61,28 +96,6 @@
 	computer because the messages get re-numbered every time one of the users deletes a message and signs
 	out, and the wrong messages will get deleted or retrieved.
 	
-	The email encryption program uses a composite key that has multiple public key ciphers. The public key
-	agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate the
-	composite secret key, session key or encryption key. Each public key agreement or cipher functions as
-	a one-time pad to encrypt the other public key agreements which are also one-time pads or ciphers. The
-	composite key is then used to initialize a hash function that generates another one-time pad for the
-	message encryption.
-	
-	The public keys are based on the Diffie-Hellman ciphers  Y = A X,  Y = X^-1 A X, and Y = x A1^x1 A0
-	A2^x2 (mod p), where A, A0, A1, A2, and p are public parameters, x1, x2, and X are private keys, and
-	Y is the public key. The equations use polynomials, vectors, matrices, cubes, and tesseracts. The vec-
-	tor cross product cipher Y = A (x) X,  E = Y * K uses a parallelogram as a public key and a parallele-
-	piped as a shared secret key or key agreement. The matrix product cipher  Y = |A1|X1| uses 2-dimen-
-	sional arithmetic which multiplies from left to right and from top to bottom. |X2|    The matrix poly-
-	nomial discrete log cipher uses Y = A^x C B^x + ... + A^0 C B^0 (mod p). These equations were selected
-	for public key cryptography because nonlinear, multivariate, multi-dimensional, modular and non-modu-
-	lar equations are unsolvable.
-	
-	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
-	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
-	sequence of integers, r is a public random matrix, s0, s[], and n are secret keys, e[] is a vector of
-	small random errors, and b is the sender's one-time public key.
-	
 	Messages are encrypted by choosing a random number or one-time encryption key (using the passphrase,
 	the plaintext hash, and the system nano time as sources of entropy), hashing the random number to cre-
 	ate a one-time pad, xor-ing the one-time pad and the plaindata or plaintext to generate the cipherdata
@@ -90,17 +103,6 @@
 	the random number or one-time encryption key. The receiver decrypts a message by xor-ing the encrypted
 	random number using the shared secret key, hashing the random number to create the one-time pad, and
 	then xor-ing the one-time pad and the cipherdata to recover the plaindata.
-	
-	The public key agreement or encryption is unbreakable since every public key cipher would have to be
-	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
-	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
-	includes 18 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
-	
-	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
-	solved because it uses integers and a single equation, then it can be replaced by another cipher that
-	uses matrices, polynomials, powers of a matrix (cube or tesseract), or fractional numbers instead of
-	integers. Similarly, if a cipher can be broken because a matrix is diagonalizable or real and symme-
-	tric, then it can be replaced by a non-diagonalizable, non-real, or non-symmetric matrix.
 	
 	The email text, file attachments, and file descriptions are each encoded in base-64, and then the en-
 	coded data are concatenated using newline chars (\n\n), encrypted, and re-encoded in base 64 to remove
@@ -110,6 +112,7 @@
 	tion method includes a base-64 encoding because it has to encode the cipherdata to attach the one-time
 	public keys.) Other protocols may use one encoding but this would only reduce the expansion to 3/4 the
 	size.
+	
 	
 	The text editor and email program were written to test the public key software and to show developers
 	how to use and implement the public key ciphers in other programs. The text editor was also used to
@@ -128,8 +131,9 @@
 	sions of the software if the maximum number of ciphers is used because a private key was modified in
 	one of the public key ciphers but messages saved on users' computers will still be decryptable because
 	file encryption uses private key cryptography. Also, an error was corrected in the passphrase dialog
-	that caused problems on some versions of Linux, and an error in the Save As encryption method was cor-
-	rected.
+	that caused problems on some versions of Linux; an error in the Save As menu item was corrected that
+	caused files to be encrypted twice; and an error in the save mail settings method was corrected so
+	that the method saves the font size, frame size, number of ciphers, and other mail settings.
 	
 	
 	
@@ -177,7 +181,7 @@
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -196,12 +200,12 @@
 	single command line
 	
 	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java
+	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java
 	
 	or for the email client
 	
 	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22/bin/java ./Downloads/Editor.java mail
+	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -215,7 +219,7 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-22 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-22.0.1 using the command
 	
 	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk;
 	cd /usr/jdk; sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd;
@@ -223,12 +227,12 @@
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22.0.1/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-22/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-22/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-22.0.1/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-22.0.1/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -250,7 +254,6 @@
 	
 	
 	
-	
 	Creating a compiled / executable java .jar file
 	
 	You can create a java archive or java jar file
@@ -258,10 +261,10 @@
 	
 	If the Editor.java file is in the Downloads folder, use the commands
 	
-	/usr/jdk/jdk-22/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-22/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-22.0.1/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-22.0.1/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-22/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-22.0.1/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
 	by copying and pasting into the terminal.
@@ -300,7 +303,7 @@
 	doesn't start with a slash /, but it is redundant to use cd if the next command has an
 	absolute path name because then it doesn't do anything.
 	
-	The path name /usr/jdk/jdk-22/bin/java can be replaced by the file name java if the
+	The path name /usr/jdk/jdk-22.0.1/bin/java can be replaced by the file name java if the
 	terminal knows where to find the java command. The path name is included because some
 	users may be running a live version of Linux.
 	
@@ -310,11 +313,11 @@
 	
 	The jar file can be run using the command
 	
-	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar (text) for the text editor, or
+	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar (text) for the text editor, or
 	
-	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-22/bin/java -jar Editor.jar image
+	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar image
 	
 	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
@@ -431,7 +434,8 @@
 	key matrix X, but in public key cryptography the private key X is the plaintext message encrypted by
 	the public parameter A, and the public key Y is the ciphertext, cipherdata or cipher. Because the
 	encryption key A is public, the security of public key cryptography is based entirely on the non-
-	invertibility of the function instead of the secrecy of the private key.
+	invertibility of the function. If the function could be inverted then a cryptanalyst could solve for
+	the private key or message X.
 	
 	A recipient who wants to receive encrypted messages computes the static public key Y = A X. This is
 	the same equation as A X == B but the equation is written using X and Y instead of A and B because
@@ -446,15 +450,14 @@
 	plication because each of them knows either K or X. A wiretapper would have to do an inversion to
 	solve for K or X, but this is a hard math problem because A is chosen to be non-invertible.
 	
-	The cipher Y = A X doesn't work for integers or matrices (1 x 1 or n x n dimensional objects) because
-	A can be inverted to solve for X = A^-1 Y; even if A is a singular matrix the equation can still be
-	solved for X. But the equation can be generalized to Y = X A X so that A is non-invertible and immov-
-	able because matrix multiplication is not generally commutative. Multiplication is commutative only
-	for 0-dimensional numbers such as integers, complex numbers, and quaternions which are points on a
-	line, plane, or tesseract. (Also, because multiplication is non-commutative, there is no division
-	operation defined for matrices except for integers or scalars; to divide a matrix by a matrix, the
-	matrix has to be pre- or post-multiplied by the inverse of the divisor, and the divisor has to be an
-	invertible or non-singular matrix.)
+	The cipher Y = A X doesn't work for integers or matrices because A can be inverted to solve for X =
+	A^-1 Y; even if A is a singular matrix the equation can still be solved for X. But the equation can
+	be generalized to Y = X A X so that A is non-invertible and immovable because matrix multiplication
+	is not generally commutative. Multiplication is commutative only for 0-dimensional numbers such as
+	integers, complex numbers, and quaternions which are points on a line, plane, or tesseract. (Also,
+	because multiplication is non-commutative, there is no division operation defined for matrices except
+	for integers or scalars; to divide a matrix by a matrix, the matrix has to be pre- or post-multiplied
+	by the inverse of the divisor, and the divisor has to be an invertible or non-singular matrix.)
 	
 	Public key ciphers can also be generalized by using multi-dimensional multiplication instead of one-
 	dimensional multiplication. For example, for 2-D multiplication, matrices can be multiplied from left
@@ -532,8 +535,8 @@
 	standardization and it was being promoted and backed by a few companies, a method was published for
 	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
 	this algorithm would have been standardized and implemented in software programs along with the other
-	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, the
-	learning with errors cipher, and other lattice ciphers.
+	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, the Mc-
+	Eliece cipher, the learning with errors cipher, and other lattice ciphers.
 	
 	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
 	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
@@ -555,8 +558,9 @@
 	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
 	know that coprime root extraction has been broken for a few decades (which is why RSA was rejected for
 	digital signature algorithms) or that lattice ciphers and error-correcting code ciphers are completely
-	broken for all key sizes and parameters. This is why some companies are implementing lattice ciphers
-	in their software.
+	broken for all key sizes and parameters. Some companies are implementing lattice ciphers into their
+	software programs even though some of them have been publicly broken and all of them have been pri-
+	vately broken just like RSA.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -1593,6 +1597,8 @@ class __
 	encryptfilebeforesaving = "Encrypt file before saving",
 	
 	deleteorclosetab = "Delete address or close tab",
+	
+	deletetab = "Delete email address",
 	
 	encryptkeysize = "Encrypt Key Size",
 	myreplykeysize = "My Reply Key Size",
@@ -28012,9 +28018,9 @@ class Programs
 					    tabbedpane.remove(tabbedpane.getSelectedComponent());
 					
 					else
-					{	String title = __.deleteorclosetab;
+					{	String title = __.deletetab;
 						
-						Object[] choices = { __.Delete, __.hide, __.cancel };
+						Object[] choices = { __.Delete, __.cancel };
 						
 						int choice = JOptionPane.showOptionDialog(frame, "", title,
 						
@@ -28022,8 +28028,9 @@ class Programs
 						
 						        null, choices, choices[1]);
 						
-						if ((choice == 2) // cancel option
-						 || (choice == JOptionPane.CLOSED_OPTION)) return;
+						if ((choice == 1) ||  // cancel option
+						
+						    (choice == JOptionPane.CLOSED_OPTION)) return;
 						
 						if (choice == 0) // Delete tab / remove panel from list
 						{
@@ -28035,8 +28042,13 @@ class Programs
 						}
 						
 						else if (choice == 1) // close / remove the tab
-						
-						    tabbedpane.remove(tabbedpane.getSelectedComponent());
+						{
+						//	System.out.println("closing tab");
+						//	
+						//	int index = tabbedpane.getSelectedIndex();
+						//	
+						//	tabbedpane.setEnabledAt(index, false);
+						}
 					}
 					
 					
@@ -28262,10 +28274,6 @@ class Programs
 					
 					if ((SP != null) && !SP.isEmpty())
 					{
-						//  Read the previous mail settings so email addresses
-						//  are not deleted unless the user deletes an email tab
-						
-						readMailSettings();
 						saveMailSettings();
 					}
 					
@@ -29477,11 +29485,11 @@ class Programs
 			private class FontSizeListener extends MouseAdapter implements ActionListener
 			{
 			
-				//  The RetrieveMail FontSizeListener allows the user
-				//  to change the maxfontsize. The setFont1() method
-				//  calls the frameSizeToFontSize() method which calc-
-				//  ulates the current font size using the maxfontsize,
-				//  and then it uses the returned value to set the font.
+				//  The RetrieveMail FontSizeListener allows the user to
+				//  change the maxfontsize. The setFont1() method calls
+				//  the frameSizeToFontSize() method which calculates the
+				//  current font size using the maxfontsize, and then it
+				//  uses the returned value to set the font.
 				
 				
 				private JPanel panel;
@@ -48706,15 +48714,9 @@ class Icons
 			
 			label.repaint();
 			
-			int locx = dialog.getX();
-			int locy = dialog.getY();
+			dialog.setSize(dialog
 			
-			//  On some versions of Linux, the location
-			//  of the dialog keeps incrementing.
-			
-			dialog.setLocation(locx, locy);
-			
-			dialog.setSize(dialog.getPreferredSize());
+			    .getPreferredSize());
 		}
 	}
 	
@@ -48738,8 +48740,8 @@ class Icons
 		//  open multiple copies of the same attached file
 		
 		//  This test can use the == operator instead of the
-		//  Arrays.equals(array1, array2) method but the Doc-
-		//  uments display method has to use the equals method
+		//  Arrays.equals(array1, array2) method but the Docu-
+		//  ments display method has to use the equals method
 		
 		for (byte[] array : images)
 		
@@ -48811,24 +48813,17 @@ class Icons
 		
 		dialog.setLocation(xpos, ypos);
 		
-		dialog.setResizable(false);
+		//  set resizable is set to true or else on some
+		//  versions of Linux the location of the window
+		//  will move down as the user enlarges the image 
+		
+		dialog.setResizable(true);
 		
 		dialog.setTitle(title);
 		
 		dialog.setSize(dialog
 		
 		    .getPreferredSize());
-		
-		
-		//  Change the magnification by 1 or add 0 so the user
-		//  doesn't see a discontinuity in the image size;
-		//  otherwise an image occupies the entire screen and
-		//  then shrinks to its correct size even if the user
-		//  rotates the mouse wheel in the positive or magnify-
-		//  ing direction instead of the negative or minifying
-		//  direction.
-		
-		mwl1.changeImageSize(0);
 		
 		dialog.setVisible(true);
 		
@@ -52421,8 +52416,9 @@ class PublicKey
 	//  least common remainder x = lcr(x mod q[], q[]) where x mod q[] is the set of solutions to the re-
 	//  duced discrete log problems.
 	//
-	//  Elliptic curves and lattices are not used in the public key class because these ciphers are suscep-
-	//  tible to classical and quantum computing or polynomial-time algorithms.
+	//  Elliptic curves, lattices, polynomial factorization, and error-correcting codes are not used in the
+	//  public key class because ciphers based on these math problems are susceptible to classical and quan-
+	//  tum computing and are completely broken for all key sizes and parameters.
 	//
 	//
 	//
@@ -52727,11 +52723,11 @@ class PublicKey
 	//  The volume of a parallelepiped is also defined by
 	//  the determinant
 	//
-	//          |  a1  a2  a3  |
-	//      __  |              |
-	//   V  __  |  b1  b2  b3  |
-	//          |              |
-	//          |  c1  c2  c3  |
+	//            |  a1  a2  a3  |
+	//       __   |              |
+	//   V   __   |  b1  b2  b3  |
+	//            |              |
+	//            |  c1  c2  c3  |
 	//
 	//  where the vectors { a1, a2, a3 }, { b1, b2, b3 },
 	//  and { c1, c2, c3 } are any three sides.
@@ -58887,13 +58883,12 @@ class PublicKey
 	//  version method can use the extended Euclidean algorithm to invert a instead of Fermat's little
 	//  theorem a^p == a, a^(p-1) == a^0 == 1, a^(p-2) == 1/a (mod p) which requires the factorization of
 	//  the modulus into primes and then the reconstruction of the composite inverse using a least common
-	//  remainder method such as Gauss's remainder algorithm or Garner's formula which is several times
-	//  faster for numbers greater than 10^6 bits.
+	//  remainder method such as Gauss's remainder algorithm or Garner's formula.
 	
 	
 	
 	
-	//  The quadratic cipher c = m ^ 2 (mod n)
+	//  The quadratic cipher c = m ^ 2 ^ k (mod n)
 	//
 	//  The Rabin / factorization / square root or co-composite root extraction cipher
 	//
@@ -58938,12 +58933,12 @@ class PublicKey
 	//  static class member to avoid doing inversions for each decryption because division is ten to twenty
 	//  times more expensive than multiplication.
 	//
-	//  Note that the terms Rabin cipher and RSA refer to the ciphers whereas quadratic residue and coprime root
-	//  extraction refer to the math problems on which the ciphers are based. The math problems of root extrac-
-	//  tion modulo a prime or composite number existed before they were discovered or used as ciphers, just as
-	//  the discrete log problem existed and was studied long before it was used as a cipher. Math books would
-	//  not refer to co-composite root extraction, coprime root extraction, or discrete logarithms as Rabin, RSA,
-	//  or Diffie-Hellman problems.
+	//  Note that the terms Rabin cipher and RSA refer to the ciphers whereas quadratic residue, square root ex-
+	//  traction, and coprime root extraction refer to the math problems on which the ciphers are based. The math
+	//  problems of root extraction modulo a prime or composite number existed before they were discovered or
+	//  used as ciphers, just as the discrete log problem existed and was studied long before it was used as a
+	//  cipher. Math books would not refer to co-composite or square root extraction, coprime root extraction,
+	//  or discrete logarithms as Rabin, RSA, or Diffie-Hellman problems.
 	//
 	//  The Rabin / factorization cipher is susceptible to quantum and classical computing because there are sub-
 	//  exponential, quantum, and polynomial-time algorithms for factoring integers. Factorization can be solved
@@ -58978,8 +58973,9 @@ class PublicKey
 	//  The Rabin / factorization / co-composite root extraction cipher
 	//
 	//  This cipher works with any exponent 2, 3, 4, 5, 6, ...
-	//  that is co-composite with the totient of the modulus;
-	//  the size of the public key is 10^7 or ~ 10 M bits.
+	//  that is co-composite with the totient of the modulus
+	//
+	//  the size of the public key is 10^7 or ~ 10 M bits
 	//
 	//  For the exponent 2
 	//
@@ -59091,34 +59087,34 @@ class PublicKey
 	//  (m[] + e[]) elements to recover m[].
 	//
 	//
-	//  The first implementation of the cipher used a single large error added
-	//  to m[0] but then this was changed to use multiple small errors greater
-	//  than the quotient of the base of the superincreasing sequence a[].
+	//  The first implementation of the cipher used a single large error added to
+	//  m[0] but then this was changed to use multiple small errors greater than
+	//  the quotient of the base of the superincreasing sequence a[].
 	//
-	//  Note that the cipher could also include small random errors added to
-	//  the static public key. Although the recipient would have to solve the
-	//  superincreasing subset sum problem hundreds of times to find the cor-
-	//  rect key, this would not increase the decryption time because the ssss
-	//  or solve superincreasing subset sum method would compensate by testing
-	//  the last two elements of m for 1 so that the cipher could be decrypted
-	//  16^2 or 256 times faster if the base of the sequence is 16.
+	//  Note that the cipher could also include small random errors added to the
+	//  static public key. Although the recipient would have to solve the super-
+	//  increasing subset sum problem hundreds of times to find the correct key,
+	//  this would not increase the decryption time because the ssss or solve
+	//  superincreasing subset sum method would compensate by testing the last two
+	//  elements of m for 1 so that the cipher could be decrypted 16^2 or 256 times
+	//  faster if the base of the sequence is 16.
 	//
-	//  Also the sender would have to include a non-random pattern in the mes-
-	//  sage such as non-consecutive repeating digits so the decryptor would
-	//  know which solution is the correct key. For example, for 64 elements,
-	//  the average number of ones for a random base-16, 64-digit number would
-	//  be 1/16 / element * 64 elements == 4, but the probability of getting
-	//  24 ones would be Poisson(u = 4, x = 24) ~ 10^-11 or one in a hundred
-	//  billion, and 28 ones would be P(u = 4, x = 28) ~ 10^15 or 1 in a qua-
-	//  drillion. If the number of elements is 64, the size of m[i] is four
-	//  bits or 16, and the lower 20 elements are discarded because they con-
-	//  tain errors, then the number of solutions is 10^15 * 16 ^ (64-20-28)
-	//  ~ 2^50 * 2^(4*16) == 2 ^ 114. For 60 elements there would be ~ 2 ^ 100
-	//  or 1 nonillion solutions.
+	//  Also the sender would have to include a non-random pattern in the message
+	//  such as non-consecutive repeating digits so the decryptor would know which
+	//  solution is the correct key. For example, for 64 elements, the average num-
+	//  ber of ones for a random base-16, 64-digit number would be 1/16 / element *
+	//  64 elements == 4, but the probability of getting 24 ones would be Poisson(
+	//  u = 4, x = 24) ~ 10^-11 or one in a hundred billion, and 28 ones would be
+	//  P(u = 4, x = 28) ~ 10^15 or 1 in a quadrillion. If the number of elements is
+	//  64, the size of m[i] is four bits or 16, and the lower 20 elements are dis-
+	//  carded because they contain errors, then the number of solutions is 10^15 *
+	//  16 ^ (64-20-28) ~ 2^50 * 2^(4*16) == 2 ^ 114. For 60 elements there would be
+	//  ~ 2 ^ 100 or 1 nonillion solutions.
 	//
-	//  If the knapsack cipher could be shown to be breakable, then the cipher
-	//  in the public key class would have to be modified to include small
-	//  random errors in the static public key.
+	//  If the knapsack cipher could be shown to be breakable, then the cipher in the
+	//  public key class would have to be modified to include small random errors in
+	//  the static public key. The one-time public key is already unbreakable because
+	//  it include random errors in the message m[].
 	
 	
 	
@@ -59316,7 +59312,7 @@ class PublicKey
 		
 		int k = new Number(digits)
 		
-		    .sqrt().round().intValue();
+		    .sqrt() .round() .intValue();
 		
 		while ((k % 4) != 0) k--;
 		
@@ -59608,9 +59604,9 @@ class PublicKey
 		else // if (publickey != null)
 		{
 		
-			//  Generate the sender's one-time
+			//  Generate the sender's one-time public key
 			//
-			//  public key b = c[] (m[] + e[])
+			//  b = c[] (m[] + e[]),  b1 = r[][] ^ T (m[] + e[])
 			//
 			//  from the recipient's static public key c[]
 			
@@ -59624,9 +59620,9 @@ class PublicKey
 			
 			//  Define the values for m[]
 			
-			m[0] = new Number( hash2( new Number(
+			m[0] = new Number( hash2( new Number(publickey, 16)
 			
-			    publickey, 16) .add(x[0]) .toByteArray(32), bits ) );
+			    .add(x[0]) .toByteArray(32), bits ) );
 			
 			for (int i = 1; i < m.length; i++)
 			
@@ -59637,9 +59633,11 @@ class PublicKey
 			
 			//  Reduce m[] modulo (2 ^ pbits)
 			
+			Number p = new Number(2).pow(1*pbits);
+			
 			for (int i = 0; i < m.length; i++)
 			
-			    m[i] = m[i] .mod(new Number(2).pow(1*pbits));
+			    m[i] = m[i] .mod(p);
 			
 			
 			//  Set the last m[i] to 1
@@ -59653,7 +59651,7 @@ class PublicKey
 			
 			//  If the Merkle-Hellman ciphers includes small
 			//  random errors added to the static public key
-			
+			//
 			//  Set the second-to-last m[i] element to 1 if small
 			//  random errors are included in the static public key;
 			//  this will make the decryption 256 times faster
@@ -59662,8 +59660,8 @@ class PublicKey
 			
 			
 			//  Set a number of non-consecutive repeating digits so the
-			//  decryption method knows which solution is the correct
-			//  key (if small random errors are added to the static key)
+			//  decryption method knows which solution is the correct key
+			//  (if small random errors are added to the static key)
 			//
 			//  Create an array of k - offset elements; set a consecutive
 			//  number of repeating elements equal to 1 and permutate the
@@ -59691,6 +59689,7 @@ class PublicKey
 			
 			
 			********************************/
+			
 			
 			
 			//  Initialize the vector cstr[] from
