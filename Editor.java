@@ -42424,6 +42424,7 @@ class FileEncryptor
 				pd.setMinimumLength(minlength);
 				pd.setForeground1(foreground);
 				pd.setBackground1(background);
+				
 				pd.setFont1(font != null ?
 				    font : window.getFont());
 				
@@ -50287,8 +50288,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//          |                              |
 		//          |______________________________|
 		//          | 0123 4567 89ab cdef          |
-		//          |             ____             |
-		//          |            |_OK_|            |
+		//          |______________________________|
+		//          |            O K               |
 		//          |______________________________|
 		
 		
@@ -50303,8 +50304,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//   |                   0123 4567 89ab cdef               |
 		//   |                                                  __ |
 		//   | number of ciphers 4 o quad  o oct  o max  width |56||
-		//   |                         ____                        |
-		//   |                        |_OK_|                       |
+		//   |_____________________________________________________|
+		//   |                         O K                         |
 		//   |_____________________________________________________|
 		
 		
@@ -50317,8 +50318,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//   |                  |__________________________________|
 		//   | My email address |__________________________________|
 		//   |                   0123 4567 89ab cdef               |
-		//   |                           ____                      |
-		//   |                          |_OK_|                     |
+		//   |_____________________________________________________|
+		//   |                         O K                         |
 		//   |_____________________________________________________|
 		
 		
@@ -50335,8 +50336,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//   | Outgoing mail server|_____________________________|_|
 		//   | Mail directory      |_____________________________|_|
 		//   | Number of messages  |__________|_|________________|_|
-		//   |                          ____                       |
-		//   |                         |_OK_|                      |
+		//   |_____________________________________________________|
+		//   |                         O K                         |
 		//   |_____________________________________________________|
 		
 		
@@ -50363,14 +50364,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		//  the number of rows in the passphrase area
 		
-		final int rows = 1;
+		int rows = 2;
 		
-		
-		JPanel panel = new JPanel();
-		
-		panel.setLayout(new GridBagLayout());
-		
-		 this.setLayout(new GridBagLayout());
+		this.setLayout(new GridBagLayout());
 		
 		
 		if (dialogtype == PASSPHRASE_ONLY)
@@ -50381,8 +50377,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//  |                                |
 			//  |________________________________|
 			//  |      0123 4567 89ab cdef       |
-			//  |              ____              |
-			//  |             |_OK_|             |
+			//  |________________________________|
+			//  |              O K               |
 			//  |________________________________|
 			
 			
@@ -50391,6 +50387,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			passphrasefield = new JTextField(textlength);
 			passphrasearea = new JTextArea(rows, textlength);
 			passphrasearea.setLineWrap(true);
+			
+			JScrollPane scrollpane1 = new JScrollPane(passphrasearea);
 			
 			hashfield = new JTextField(24);
 			hashfield.setBorder(null);
@@ -50401,7 +50399,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			randcheckbox = new JCheckBox();
 			randcheckbox.setVisible(false);
 			randcheckbox.setToolTipText(__.rng);
-			
 			
 			textarealabel = new JTextArea(rows, 16);
 			
@@ -50424,7 +50421,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(passphrasearea, gbc);
+			this.add(scrollpane1, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50434,7 +50431,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(hashfield, gbc);
+			this.add(hashfield, gbc);
 			
 			//  Set the value of y so the constructor can ap-
 			//  pend the virtual keyboard and the ok button
@@ -50459,8 +50456,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//   |                   0123 4567 89ab cdef               |
 			//   |                                                  __ |
 			//   | number of ciphers 4 o quad  o oct  o max  width |56||
-			//   |                         ____                        |
-			//   |                        |_OK_|                       |
+			//   |_____________________________________________________|
+			//   |                         O K                         |
 			//   |_____________________________________________________|
 			
 			
@@ -50478,6 +50475,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			passphrasefield = new JTextField(textlength);
 			passphrasearea  = new JTextArea(rows, textlength);
+			
+			JScrollPane scrollpane1 = new JScrollPane(passphrasearea);
 			
 			emailfield = new JTextField(textlength);
 			
@@ -50642,7 +50641,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(passphraselabel, gbc);
+			this.add(passphraselabel, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50652,7 +50651,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(randcheckbox, gbc);
+			this.add(randcheckbox, gbc);
 			
 			
 			
@@ -50663,7 +50662,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(passphrasefield, gbc);
+			this.add(passphrasefield, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50673,7 +50672,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(passphrasearea, gbc);
+			this.add(scrollpane1, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50683,7 +50682,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(emaillabel, gbc);
+			this.add(emaillabel, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50693,7 +50692,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(emailfield, gbc);
+			this.add(emailfield, gbc);
 			
 			
 			
@@ -50704,7 +50703,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(new JLabel(), gbc);
+			this.add(new JLabel(), gbc);
 			
 			
 			gbc = new Gbc();
@@ -50714,7 +50713,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.both);
 			gbc.setWeight(100, 100);
 			
-			panel.add(hashfield, gbc);
+			this.add(hashfield, gbc);
 			
 			
 			
@@ -50727,7 +50726,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
-				panel.add(numberofcipherslabel, gbc);
+				this.add(numberofcipherslabel, gbc);
 				
 				
 				gbc = new Gbc();
@@ -50738,7 +50737,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
-				panel.add(numberofcipherslabel1, gbc);
+				this.add(numberofcipherslabel1, gbc);
 				
 				
 				gbc = new Gbc();
@@ -50748,7 +50747,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 				gbc.setFill(Gbc.both);
 				gbc.setWeight(100, 100);
 				
-				panel.add(buttonpanel, gbc);
+				this.add(buttonpanel, gbc);
 			}
 			
 			
@@ -50858,8 +50857,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//   | Outgoing mail server|_____________________________|_|
 			//   | Number of messages  |__________|_|________________|_|
 			//   | Mail directory      |_____________________________|_|
-			//   |                          ____                       |
-			//   |                         |_OK_|                      |
+			//   |_____________________________________________________|
+			//   |                         O K                         |
 			//   |_____________________________________________________|
 			
 			
@@ -50867,6 +50866,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			
 			passphrasefield = new JTextField(textlength);
 			passphrasearea  = new JTextArea(rows, textlength);
+			
+			JScrollPane scrollpane1 = new JScrollPane(passphrasearea);
 			
 			hashfield = new JTextField(textlength);
 			hashfield.setBorder(null);
@@ -50950,7 +50951,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setSize(fieldsize, 1);
 			gbc.setWeight(100, 100);
 			
-			panel.add(passphraselabel, gbc);
+			this.add(passphraselabel, gbc);
 			
 			
 			gbc = new Gbc();
@@ -50959,7 +50960,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(incomingmailserverlabel, gbc);
+			this.add(incomingmailserverlabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
@@ -50967,7 +50968,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(outgoingmailserverlabel, gbc);
+			this.add(outgoingmailserverlabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
@@ -50975,7 +50976,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(numberofmessageslabel, gbc);
+			this.add(numberofmessageslabel, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(0, ++y);
@@ -50984,7 +50985,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(maildirectorylabel, gbc);
+			this.add(maildirectorylabel, gbc);
 			
 			
 			
@@ -50999,14 +51000,14 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(passphrasefield, gbc);
+			this.add(passphrasefield, gbc);
 			
 			gbc.setPosition(9, y);
 			gbc.setSize(1, 1);
 			gbc.setAnchor(Gbc.right);
 			gbc.setWeight(100, 100);
 			
-			panel.add(randcheckbox, gbc);
+			this.add(randcheckbox, gbc);
 			
 			
 			
@@ -51016,7 +51017,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(passphrasearea, gbc);
+			this.add(scrollpane1, gbc);
 			
 			
 			gbc = new Gbc();
@@ -51026,7 +51027,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(hashfield, gbc);
+			this.add(hashfield, gbc);
 			
 			
 			gbc = new Gbc();
@@ -51035,7 +51036,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(incomingmailserverbox, gbc);
+			this.add(incomingmailserverbox, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1, ++y);
@@ -51043,7 +51044,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(outgoingmailserverbox, gbc);
+			this.add(outgoingmailserverbox, gbc);
 			
 			
 			gbc = new Gbc();
@@ -51052,7 +51053,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(numberofmessagesbox, gbc);
+			this.add(numberofmessagesbox, gbc);
 			
 			gbc = new Gbc();
 			gbc.setPosition(pos1+4, y);
@@ -51060,7 +51061,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(ascensionbox, gbc);
+			this.add(ascensionbox, gbc);
 			
 			
 			gbc = new Gbc();
@@ -51070,7 +51071,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			gbc.setFill(Gbc.horizontal);
 			gbc.setWeight(100, 100);
 			
-			panel.add(maildirectoryfield, gbc);
+			this.add(maildirectoryfield, gbc);
 			
 			
 			
@@ -51264,7 +51265,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		    .setToolTipText(__.clicktoshowhidekeyboard);
 		
 		
-		
 		//  Set the passphrase hash
 		
 		setPassphraseHash();
@@ -51287,7 +51287,8 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		gbc.setInsets(15, 0, 15, 0);
 		gbc.setWeight(100, 100);
 		
-		panel.add(keyboardpanel, gbc);
+		this.add(keyboardpanel, gbc);
+		
 		
 		
 		//  Add the ok button
@@ -51298,19 +51299,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		gbc.setFill(Gbc.both);
 		gbc.setWeight(100, 100);
 		
-		panel.add(okbutton, gbc);
-		
-		
-		
-		//  Add the panel to the dialog
-		
-		gbc = new Gbc();
-		gbc.setPosition(0, 0);
-		gbc.setSize(1, 1);
-		gbc.setFill(Gbc.both);
-		gbc.setWeight(100, 100);
-		
-		this.add(panel);
+		this.add(okbutton, gbc);
 		
 		
 		
@@ -51334,7 +51323,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setTitle(title);
 		
-		this.setResizable(false);
+		this.setResizable(true);
 		
 		passphrasearea.requestFocusInWindow();
 		
@@ -51345,23 +51334,12 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		this.setSize(newsize.width, newsize.height);
 		
 		
-		//  Center the dialog in the parent frame
+		//  Center the dialog box
 		
-		Point p = window.getLocation();
+		centerDialogBox();
 		
-		int xpos = p.x, ypos = p.y;
 		
-		int  width = window.getWidth();
-		int height = window.getHeight();
-		
-		int  width1 = dialog.getWidth();
-		int height1 = dialog.getHeight();
-		
-		int x2pos = xpos +  width/2 -  width1/2;
-		int y2pos = ypos + height/2 - height1/2;
-		
-		this.setLocation(x2pos, y2pos);
-		
+		//  Add the ok button action
 		
 		okbutton.addActionListener(new ActionListener()
 		{
@@ -51382,7 +51360,26 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	
 	
-	
+	private void centerDialogBox()
+	{
+		//  Center the dialog in the parent frame
+		
+		Point p = window.getLocation();
+		
+		int xpos = p.x, ypos = p.y;
+		
+		int  width = window.getWidth();
+		int height = window.getHeight();
+		
+		int  width1 = dialog.getWidth();
+		int height1 = dialog.getHeight();
+		
+		int x2pos = xpos +  width/2 -  width1/2;
+		int y2pos = ypos + height/2 - height1/2;
+		
+		this.setLocation(x2pos, y2pos);
+	}
+		
 	
 	
 	//  The PassphraseDialog KeyboardListener
