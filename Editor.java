@@ -535,8 +535,8 @@
 	standardization and it was being promoted and backed by a few companies, a method was published for
 	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
 	this algorithm would have been standardized and implemented in software programs along with the other
-	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, the Mc-
-	Eliece cipher, the learning with errors cipher, and other lattice ciphers.
+	broken public key ciphers, including polynomial factorization, error-correcting code ciphers, the Mc-
+	Eliece cipher, the learning with errors cipher, and lattice ciphers.
 	
 	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
 	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
@@ -1710,27 +1710,30 @@ class __
 	green = "green",
 	darkgreen = "dark green",
 	
+	
 	brightblue = "bright blue",
 	blue = "blue",
 	mediumblue = "medium blue",
 	darkblue = "dark blue",
 	cobaltblue = "cobalt blue (blue + 1/3 green)",
+	paleblue = "pale blue",
 	
-	brightpink = "bright pink (r + 3/4 b + 1/4 g)",
+	brightpink = "bright pink (r + 3/4 b)",
 	pink = "pink (bluish red)",
-	redpink = "red pink (r + 1/2 b + 1/8 g)",
+	redpink = "red pink (r + 1/2 b)",
+	reddishblue = "blue + 3/4 red",
 	
-	brightmagenta = "bright magenta (red + blue)",
-	magenta = "magenta (purplish red)",
-	darkmagenta = "dark magenta (red + blue)",
+	magenta = "magenta (red + blue)",
+	darkmagenta = "dark magenta (purplish red)",
 	    crimson = "crimson (red + 2/3 blue)",
 	
+	palepurple = "pale purple / lavender blue",
 	brightpurple = "bright purple",
 	purple = "purple (blue + 1/2 red)",
 	darkpurple = "dark purple (blue + 1/2 red)",
 	
-	reddishblue = "indigo (reddish blue)",
-	darkreddishblue  = "violet (dark reddish blue)",
+	purplishblue = "indigo (royal / purplish blue)",
+	violet  = "violet (dark reddish blue)",
 	
 	aqua = "aqua (greenish blue)",
 	darkaqua = "dark aqua (blue + 1/2 green)",
@@ -21211,7 +21214,7 @@ class Programs
 					
 					String numberstr = new Number(size1).add(0.5)
 					
-					    .round() .toInteger() .toString() .trim();
+					    .round() .toString() .trim();
 					
 					sb.insert(index1, numberstr);
 					
@@ -21290,7 +21293,7 @@ class Programs
 					
 					String numberstr = new Number(size1) .subtract(0.5)
 					
-					    .round() .toInteger() .toString() .trim();
+					    .toInteger() .toString() .trim();
 					
 					sb.insert(index1, numberstr);
 					
@@ -40166,21 +40169,22 @@ class Colors
 		
 		//  greens
 		
-		{ 0x008000, __.brightgreen },
-		{ 0x006000, __.green },
-		{ 0x003000, __.darkgreen },
+		{ 0x009000, __.brightgreen },
+		{ 0x006800, __.green },
+		{ 0x003800, __.darkgreen },
 		
 		//  greenish blues
 		
 		{ 0x006060, __.cyan },
 		{ 0x004040, __.darkcyan },
 		
-		{ 0x003060, __.aqua },
-		{ 0x002040, __.darkaqua },
+		{ 0x003870, __.aqua },
+		{ 0x002850, __.darkaqua },
 		{ 0x00359f, __.cobaltblue },
 		
 		//  blues
 		
+		{ 0x4040a0, __.paleblue },
 		{ 0x0000e0, __.brightblue },
 		{ 0x0000b0, __.blue },
 		{ 0x000070, __.mediumblue },
@@ -40191,6 +40195,7 @@ class Colors
 		{ 0xdf38a6, __.brightpink },
 		{ 0xcf339b, __.pink },
 		{ 0xcf1967, __.redpink },
+		{ 0xa800e0, __.reddishblue },
 		
 		//  red + blue
 		
@@ -40200,12 +40205,13 @@ class Colors
 		
 		//  reddish blues
 		
-		{ 0x8800D7, __.brightpurple },
-		{ 0x6000a8, __.purple },
-		{ 0x400070, __.darkpurple },
+		{ 0x6038c0,  __.palepurple },
+		{ 0x7000e0,  __.brightpurple },
+		{ 0x5000a0,  __.purple },
+		{ 0x380070,  __.darkpurple },
 		
-		{ 0x2000A0, __.reddishblue },
-		{ 0x170080, __.darkreddishblue },
+		{ 0x2000A0, __.purplishblue },
+		{ 0x170080, __.violet },
 		
 		//  ...
 		
@@ -50461,9 +50467,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 			//   |_____________________________________________________|
 			
 			
-			//  Number of ciphers to be used for a composite key
-			
-			
 			passphraselabel = new JLabel(passphraselabelstring0);
 			     emaillabel = new JLabel(emaillabelstring);
 			numberofcipherslabel  = new JLabel(numberofciphersstring);
@@ -51753,10 +51756,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		keyboardlistener.keyboard.setFont(font.deriveFont(keyboardfontsize));
 		
-		//  Pack the dialog and then set the preferred size to
-		//  the packed size so the ok button doesn't collapse
+		//  Pack the frame so the text area doesn't collapse
 		
-		this.pack(); this.setPreferredSize(this.getSize());
+		this.pack();
 		
 		return this;
 	}
@@ -51859,11 +51861,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		     passphrasearea.requestFocusInWindow();
 		
-		//  Set the dialog size or else the frame will collapse
-		
-		Dimension newsize = this.getPreferredSize();
-		this.setSize(newsize.width, newsize.height);
-		
 		//  The frame visibility has to be set to false
 		//  and then to true to force the method to block
 		
@@ -51894,11 +51891,6 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		//  and the okbutton listener sets visible to false
 		
 		this.setModal(true);
-		
-		//  Set the dialog size or else the frame will collapse
-		
-		Dimension newsize = this.getPreferredSize();
-		this.setSize(newsize.width, newsize.height);
 		
 		//  The frame visibility has to be set to false
 		//  and then to true to force the method to block
@@ -52972,9 +52964,9 @@ class PublicKey
 		size192, //  Y = X1 (x) X2, E = det(Z, X1, X2)
 		
 		
-		//  vector dot product / vcp
+		//  vector dot product / vdp
 		
-		size768, //  y = a[], z == a[] * x[]
+		size768, //  y = a[],  z = a[] * x[]
 		
 		
 		sizeknapsack1, //  knapsack cipher
@@ -52997,9 +52989,9 @@ class PublicKey
 		//  mpdl = matrix polynomial discrete log
 		//  lsdl = Latin square discrete log  X^-1 A^x X
 		//  lsd  = Latin square discrete cipher X A X
-		//  vdp  = vector dot product cipher A * X
 		//  vcp  = vector cross product cipher A (x) X
 		//  vcpd = vector cross product determinant cipher
+		//  vdp  = vector dot product cipher A * X
 		//
 		//  ....   ....
 		
@@ -61647,7 +61639,7 @@ class PublicKey
 			
 			int k = new Number(digits)
 			
-			    .sqrt().round().intValue();
+			    .sqrt() .round() .intValue();
 			
 			while ((k % 4) != 0) k--;
 			
@@ -69040,7 +69032,7 @@ class Math
 		//  returns the number of ways to choose r elements
 		//  from a set of n elements (or n C r == n Choose r)
 		
-		//  The number of combinations of n elements taken r at a time
+		//  The number of combinations of n elements taken r at a time is
 		//
 		//  n C r  ==  n! / r! / (n - r)!
 		//
@@ -71847,6 +71839,27 @@ class Number implements Comparable<Number>
 		return Math.countOneBits(this.intarray);
 	}
 	
+	public int countSignificantDigits(int base)
+	{
+		if (this.precision == 0) return 0;
+		
+		String str = this.toString(base);
+		
+		if (!str.contains(".")) return 0;
+		
+		String substr = str.substring(str.indexOf(".") + 1);
+		
+		int len = substr.length(), zeros = 0;
+		
+		for (int i = 0; i < len; i++) if (substr
+		
+		    .charAt(len -1 - i) == '0') zeros++;
+		
+		int digits = len - zeros;
+		
+		return digits;
+	}
+	
 	public long countTwos()
 	{
 		//  counts the number of 2's
@@ -72423,6 +72436,21 @@ class Number implements Comparable<Number>
 		Number diff = this .subtract(product) .abs();
 		
 		return quotient;
+	}
+	
+	
+	
+	public static Number[] divide(Number[] array, Number n)
+	{
+		//  divides an array by a number n
+		
+		Number[] array1 = new Number[array.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    array1[i] = array[i].divide(n);
+		
+		return array1;
 	}
 	
 	
@@ -73606,7 +73634,7 @@ class Number implements Comparable<Number>
 	{
 		//  tests if a number is an nth power
 		
-		Number root = this.root(n).round().toInteger();
+		Number root = this.root(n).round();
 		
 		return root.pow(n).equals(this);
 	}
@@ -74233,6 +74261,22 @@ class Number implements Comparable<Number>
 		
 		return array1;
 	}
+	
+	
+	public static Number[] modDvide(Number[] array, Number n, Number m)
+	{
+		//  divides an array by a number n modulo m
+		
+		Number[] array1 = new Number[array.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    array1[i] = array[i].modDivide(n, m);
+		
+		return array1;
+	}
+	
+	
 	
 	
 	public Number remainder(Number n)
@@ -76931,7 +76975,7 @@ class Number implements Comparable<Number>
 	
 	
 	
-	private Number roundBit()
+	public Number roundBit()
 	{
 		//  adds a 1 to the least significant bit of the array
 		
@@ -77270,6 +77314,38 @@ class Number implements Comparable<Number>
 		Number diff = this.add(subtrahend.negate());
 		
 		return diff;
+	}
+	
+	
+	public static Number[] subtract(Number[] array1, Number[] array2)
+	{
+		//  returns the difference of two number arrays
+		
+		if (array1.length != array2.length)
+		
+		    throw new IllegalArgumentException();
+		
+		Number[] array3 = new Number[array1.length];
+		
+		for (int i = 0; i < array3.length; i++)
+		
+		    array3[i] = array1[i].subtract(array2[i]);
+		
+		return array3;
+	}
+	
+	
+	public static Number[] subtract(Number[] array, Number n)
+	{
+		//  subtracts a number n from an array
+		
+		Number[] array1 = new Number[array.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    array1[i] = array[i].subtract(n);
+		
+		return array1;
 	}
 	
 	
@@ -78642,7 +78718,7 @@ class Number implements Comparable<Number>
 		
 		Number number1 = number .subtract(left) .multiply(multiplier);
 		
-		Number right = number1.round().toInteger();
+		Number right = number1 .round();
 		
 		//  Verify that the left and right numbers are correct
 		
@@ -79588,7 +79664,7 @@ class Matrix
 		
 		    || d.toFraction().equals(zero))
 		
-			d = d.round().toInteger();
+			d = d.round();
 		
 		return d;
 	}
@@ -80498,16 +80574,21 @@ class Matrix
 	
 	public int getPrecision()
 	{
-		//  returns the precision of the numbers
+		//  returns the precision of the elements
 		
 		int precision = 0;
 		
 		for (int i = 0; i < this.matrix   .length; i++)
 		for (int j = 0; j < this.matrix[i].length; j++)
-		
-		    if (this.matrix[i][j].getPrecision() > precision)
-		
-			precision = this.matrix[i][j].getPrecision();
+		{
+			Number n = this.matrix[i][j];
+			
+			if (n == null) continue;
+			
+			if (n.getPrecision() > precision)
+			
+			    precision = n.getPrecision();
+		}
 		
 		return  precision;
 	}
@@ -80694,6 +80775,8 @@ class Matrix
 		for (int i = 0; i < matrix   .rowCount();    i++)
 		for (int j = 0; j < matrix.columnCount() -1; j++)
 		{
+			if (matrix.matrix[i][j] == null) return false;
+			
 			if (!matrix.matrix[i][j] .equals(zero))
 			{
 				if (j <= index) return false;
@@ -80799,7 +80882,7 @@ class Matrix
 		
 		for (Number d : diagonals)
 		
-		    if (!d .equals(one)) return false;
+		    if ((d == null) || !d .equals(one)) return false;
 		
 		//  Verify that the elements above and below
 		//  the diagonal elements are all nonzero
@@ -81466,38 +81549,21 @@ class Matrix
 	}
 	
 	
-	public Number[] multiply(Number[] X)
+	public Number[] multiply(Number[] x)
 	{
 		//  multiplies a matrix by a vector
 		//
-		//  This is used to verify the equation A X == B.
+		//  This is used to verify the equation A x == b.
 		
-		int rows = X.length;
+		Matrix A = this;
 		
-		if (this.matrix[0].length != rows)
-		{
-			String message = "number of columns of first matrix "
-			
-			    + "does not equal rows of second matrix";
-			
-			throw new IllegalArgumentException(message);
-		}
+		Matrix Y = A.multiply(new Matrix(x)
 		
-		//  Multiply each row of A by column X and add the products to calculate B[i]
+		    .transpose()) .transpose();
 		
-		//  The length of the product (or column) equals the number of matrix rows
+		Number[] y = Y.getRow(0);
 		
-		Number[] B = new Number[rows];
-		
-		for (int i = 0; i < rows; i++) B[i] = new Number(0);
-		
-		for (int i = 0; i < rows; i++)
-		
-		    for (int j = 0; j < this.matrix[0].length; j++)
-		
-			B[i] = B[i] .add(this.matrix[i][j].multiply(X[j]));
-		
-		return B;
+		return y;
 	}
 	
 	
@@ -81943,10 +82009,12 @@ class Matrix
 		for (int i = 0; i < this.matrix   .length; i++)
 		for (int j = 0; j < this.matrix[i].length; j++)
 		
-		    matrix.matrix[i][j] =
-		    matrix.matrix[i][j]
+		    if (matrix.matrix[i][j] != null)
 		
-		       .setPrecision(precision);
+			matrix.matrix[i][j] =
+			matrix.matrix[i][j]
+			
+			    .setPrecision(precision);
 		
 		return matrix;
 	}
@@ -82173,7 +82241,7 @@ class Matrix
 		for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++)
 		{
-			if (matrix.get(i, j).equals(0)) continue;
+			if (matrix.get(i, j).equals(zero)) continue;
 			
 			int invp1 = matrix.get(i, j)
 			
@@ -82913,13 +82981,99 @@ class Matrix
 			
 			Number[] diagonals = matrix.getDiagonals();
 			
-			for (Number d : diagonals) if (d.equals(0))
+			Number zero = new Number(0)
 			
-			    isechelonform = false;
+			    .setPrecision(this.getPrecision());
+			
+			for (Number d : diagonals)
+			
+			    if ((d == null) || d.equals(zero))
+			
+				isechelonform = false;
 		}
 		
 		int rows = matrix.rowCount();
 		int cols = matrix.columnCount();
+		
+		
+		//  Reduce the precision to the largest number of significant digits
+		
+		int[] colprecision = new int[cols];
+		
+		for (int j = 0; j < cols; j++)
+		{
+			int precision = 0;
+		
+			for (int i = 0; i < rows; i++)
+			{
+				Number n = matrix.matrix[i][j];
+				
+				if (n == null) continue;
+				
+				int digits1 = n.countSignificantDigits(radix);
+				
+				if (precision < digits1) precision = digits1;
+			}
+			
+			colprecision[j] = precision;
+			
+			//  Set the precision of each column
+			
+			for (int i = 0; i < rows; i++)
+			{
+				if (matrix.matrix[i][j] != null)
+				
+				    matrix.matrix[i][j] = matrix.matrix[i][j]
+				
+					.roundBit().setPrecision(precision);
+			}
+		}
+		
+		
+		//  Make a list of the zero rows and columns
+		
+		boolean[] zerorows = new boolean[rows];
+		boolean[] zerocols = new boolean[cols];
+		
+		zerorows[zerorows.length -1] = false;
+		zerocols[zerocols.length -1] = false;
+		
+		for (int i = 0; i < zerorows.length; i++)
+		{
+			boolean iszero = true;
+			
+			for (int j = 0; j < cols; j++)
+			{
+				Number element = matrix.matrix[i][j];
+				
+				if ((element == null) || !element.equals(new
+				
+				    Number(0).setPrecision(element.getPrecision())))
+				
+					{ iszero = false;  break; }
+			}
+			
+			zerorows[i] = iszero;
+		}
+		
+		for (int j = 0; j < zerocols.length -1; j++)
+		{
+			boolean iszero = true;
+			
+			for (int i = 0; i < rows; i++)
+			{
+				Number element = matrix.matrix[i][j];
+				
+				if ((element == null) || !element.equals(new
+				
+				    Number(0).setPrecision(element.getPrecision())))
+				
+					{ iszero = false; break; }
+			}
+			
+			zerocols[j] = iszero;
+		}
+		
 		
 		int[] mindigits = new int[cols];
 		
@@ -82945,6 +83099,12 @@ class Matrix
 			if (i == rows -1) mindigits[j] = mindigits1;
 		}
 		
+		if (isrowcanonicalform)
+		
+		    for (int i = 0; i < rows; i++)
+		
+			mindigits[i] = 2;
+		
 		StringBuilder sb = new StringBuilder();
 		
 		for (int i = 0; i < rows; i++)
@@ -82967,6 +83127,12 @@ class Matrix
 				
 				else numberstr = "null";
 				
+				
+				if (isrowcanonicalform && (i == j))
+				
+				    numberstr = new Number(1).toString(radix);
+				
+				
 				if (isechelonform      && (i > j)) numberstr = " ";
 				if (isrowcanonicalform && (i < j)
 				
@@ -82975,13 +83141,21 @@ class Matrix
 				
 				//  Prepend spaces to pad the number
 				
-				StringBuilder sbdigit = new StringBuilder(numberstr);
+				StringBuilder sbdigit = new StringBuilder();
+				
+				if (!zerorows[i] && !zerocols[j])
+				
+				    sbdigit.append(numberstr);
+				
+				else sbdigit.append(" ");
+				
 				
 				while (sbdigit.length() < mindigits[j])
 				
 				    sbdigit.insert(0, " ");
 				
 				numberstr = sbdigit.toString();
+				
 				
 				sbdigit = new StringBuilder();
 				
@@ -83008,6 +83182,7 @@ class Matrix
 		
 		return sb.toString().trim();
 	}
+	
 	
 	
 	public Number[][] toNumberArray()
@@ -83062,8 +83237,8 @@ class Matrix
 		
 		    new IllegalArgumentException();
 		
-		int rows = this.rowCount();
-		int cols = this.columnCount();
+		int rows = this.trim().   rowCount();
+		int cols = this.trim().columnCount();
 		
 		int method = (cols <= rows + 1) ? 1 : 2;
 		
@@ -83427,7 +83602,9 @@ class Matrix
 			
 			for (int j = 0; j < this.matrix[i].length; j++)
 			{
-				sb.append(this.matrix[i][j] .toString(digits, radix));
+				Number n = this.matrix[i][j];
+				
+				sb.append((n != null) ? n.toString(digits, radix) : "null");
 				
 				if (j < this.matrix[i].length -1)  sb.append(", ");
 			}
