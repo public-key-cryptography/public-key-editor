@@ -21,9 +21,9 @@
 	modular and non-modular equations are unsolvable.
 	
 	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
-	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
-	sequence of integers, r is a public random matrix, s0, s[], and n are secret keys, e[] is a vector of
-	small random errors, and b is the sender's one-time public key.
+	b = c[] (m[] + e[]) where the vector c is the cipher or static public key; a[] is a superincreasing
+	sequence of integers; r is a public random matrix; s0, s[], and n are secret keys; e[] is a vector of
+	small random errors; and b is the sender's one-time public key.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public key
 	agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate the
@@ -130,28 +130,28 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-22.0.1_linux-x64_bin.tar.gz
+	openjdk-22.0.2_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-22.0.1_linux-x64_bin.tar.gz  from the website jdk.java.net/22.
+	0.  Download the file openjdk-22.0.2_linux-x64_bin.tar.gz  from the website jdk.java.net/22.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -165,17 +165,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-22.0.1_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-22.0.2_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java
 	
-	or for the email client
+	or for the email client only
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -189,20 +189,20 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-22.0.1 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-22.0.2 using the command
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk;
-	cd /usr/jdk; sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22.0.1/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22.0.2/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-22.0.1/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-22.0.1/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-22.0.2/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-22.0.2/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -231,10 +231,10 @@
 	
 	If the Editor.java file is in the Downloads folder, use the commands
 	
-	/usr/jdk/jdk-22.0.1/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-22.0.1/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-22.0.2/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-22.0.2/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-22.0.1/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-22.0.2/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
 	by copying and pasting into the terminal.
@@ -273,21 +273,25 @@
 	doesn't start with a slash /, but it is redundant to use cd if the next command has an
 	absolute path name because then it doesn't do anything.
 	
-	The path name /usr/jdk/jdk-22.0.1/bin/java can be replaced by the file name java if the
+	The path name /usr/jdk/jdk-22.0.2/bin/java can be replaced by the file name java if the
 	terminal knows where to find the java command. The path name is included because some
 	users may be running a live version of Linux.
 	
 	
 	
-	Running the jar file
+	Running a jar file
 	
-	The jar file can be run using the command
+	A jar file can be run using the command
 	
-	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar (text) for the text editor, or
+	/usr/jdk/jdk-.../bin/java -jar programname.jar
 	
-	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar image
+	For the Editor program, the command would be
+	
+	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar for the text editor, or
+	
+	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar image
 	
 	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
@@ -505,8 +509,8 @@
 	standardization and it was being promoted and backed by a few companies, a method was published for
 	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
 	this algorithm would have been standardized and implemented in software programs along with the other
-	broken encryption ciphers, including polynomial factorization, error-correcting code ciphers, the Mc-
-	Eliece cipher, the learning with errors cipher, and other lattice ciphers.
+	broken public key ciphers, including polynomial factorization, error-correcting code ciphers, the Mc-
+	Eliece cipher, the learning with errors cipher, and lattice ciphers.
 	
 	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
 	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
@@ -518,7 +522,8 @@
 	digits because there are tens of mathematicians who can understand the math for breaking supersingular
 	isogeny key exchange. This discovery was of no importance to the field of mathematics because the ci-
 	phers included additional information in the public key to do the key agreement, and this information
-	was used to break the cipher without solving the underlying math problem.
+	was used to break the cipher without solving the underlying math problem, just as RSA was broken with-
+	out solving the factorization problem.
 	
 	Competitions are good for many things but public key cryptography is not one of them because it just
 	selects ciphers, functions, or equations that only a few people in the world know how to break, in-

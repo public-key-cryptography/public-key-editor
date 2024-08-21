@@ -51,9 +51,9 @@
 	modular and non-modular equations are unsolvable.
 	
 	The public keys also include the Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n),
-	b = c[] (m[] + e[]) where the vector c is the cipher or static public key, a[] is a superincreasing
-	sequence of integers, r is a public random matrix, s0, s[], and n are secret keys, e[] is a vector of
-	small random errors, and b is the sender's one-time public key.
+	b = c[] (m[] + e[]) where the vector c is the cipher or static public key; a[] is a superincreasing
+	sequence of integers; r is a public random matrix; s0, s[], and n are secret keys; e[] is a vector of
+	small random errors; and b is the sender's one-time public key.
 	
 	The email encryption program uses a composite key that has multiple public key ciphers. The public key
 	agreements are reduced modulo F8 = 2 ^ 256 + 1 and then the key agreements are xor-ed to generate the
@@ -160,28 +160,28 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-22.0.1_linux-x64_bin.tar.gz
+	openjdk-22.0.2_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-22.0.1_linux-x64_bin.tar.gz  from the website jdk.java.net/22.
+	0.  Download the file openjdk-22.0.2_linux-x64_bin.tar.gz  from the website jdk.java.net/22.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -195,17 +195,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-22.0.1_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-22.0.2_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java
 	
-	or for the email client
+	or for the email client only
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.1/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -219,20 +219,20 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-22.0.1 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-22.0.2 using the command
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.1_linux-x64_bin.tar.gz /usr/jdk;
-	cd /usr/jdk; sudo tar zxvf openjdk-22.0.1_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22.0.1/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22.0.2/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-22.0.1/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-22.0.1/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-22.0.2/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-22.0.2/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -261,10 +261,10 @@
 	
 	If the Editor.java file is in the Downloads folder, use the commands
 	
-	/usr/jdk/jdk-22.0.1/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-22.0.1/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-22.0.2/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-22.0.2/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-22.0.1/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-22.0.2/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
 	by copying and pasting into the terminal.
@@ -303,21 +303,25 @@
 	doesn't start with a slash /, but it is redundant to use cd if the next command has an
 	absolute path name because then it doesn't do anything.
 	
-	The path name /usr/jdk/jdk-22.0.1/bin/java can be replaced by the file name java if the
+	The path name /usr/jdk/jdk-22.0.2/bin/java can be replaced by the file name java if the
 	terminal knows where to find the java command. The path name is included because some
 	users may be running a live version of Linux.
 	
 	
 	
-	Running the jar file
+	Running a jar file
 	
-	The jar file can be run using the command
+	A jar file can be run using the command
 	
-	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar (text) for the text editor, or
+	/usr/jdk/jdk-.../bin/java -jar programname.jar
 	
-	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-22.0.1/bin/java -jar Editor.jar image
+	For the Editor program, the command would be
+	
+	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar for the text editor, or
+	
+	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar image
 	
 	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
@@ -548,7 +552,8 @@
 	digits because there are tens of mathematicians who can understand the math for breaking supersingular
 	isogeny key exchange. This discovery was of no importance to the field of mathematics because the ci-
 	phers included additional information in the public key to do the key agreement, and this information
-	was used to break the cipher without solving the underlying math problem.
+	was used to break the cipher without solving the underlying math problem, just as RSA was broken with-
+	out solving the factorization problem.
 	
 	Competitions are good for many things but public key cryptography is not one of them because it just
 	selects ciphers, functions, or equations that only a few people in the world know how to break, in-
@@ -1098,6 +1103,10 @@ class __
 	
 	del = "del", // delete  or  x
 	
+	DELETE = "DELETE",
+	
+	DELETEfile = "DELETE file",
+	
 	deletefile = "Delete file",
 	
 	deletefileorfolder = "DELETE file or folder",
@@ -1128,6 +1137,8 @@ class __
 	monospaced = "Monospaced",
 	
 	Warning = "Warning",
+	
+	WARNING = "WARNING",
 	
 	
 	clipboardisempty = "Clipboard is empty",
@@ -1703,6 +1714,7 @@ class __
 	red = "red",
 	mediumred = "medium red",
 	darkred = "dark red",
+	palered = "pale red",
 	
 	orange = "orange (red + 1/3 green)",
 	
@@ -1718,19 +1730,19 @@ class __
 	cobaltblue = "cobalt blue (blue + 1/3 green)",
 	paleblue = "pale blue",
 	
-	brightpink = "bright pink (r + 3/4 b)",
+	brightpink = "bright pink (red + 3/4 blue)",
 	pink = "pink (bluish red)",
-	redpink = "red pink (r + 1/2 b)",
-	reddishblue = "blue + 3/4 red",
+	redpink = "red pink (red + 1/2 blue)",
 	
 	magenta = "magenta (red + blue)",
 	darkmagenta = "dark magenta (purplish red)",
-	    crimson = "crimson (red + 2/3 blue)",
+	crimson = "crimson (red + 2/3 blue)",
 	
 	palepurple = "pale purple / lavender blue",
 	brightpurple = "bright purple",
 	purple = "purple (blue + 1/2 red)",
 	darkpurple = "dark purple (blue + 1/2 red)",
+	reddishpurple = "reddish purple (blue + 3/4 red)",
 	
 	purplishblue = "indigo (royal / purplish blue)",
 	violet  = "violet (dark reddish blue)",
@@ -2261,7 +2273,7 @@ class Programs
 		
 		NewListener newlistener;
 		OpenListener openlistener;
-		DeleteFileListener deletefilelistener;
+		DeleteListener deletelistener;
 		SaveListener savelistener;
 		SaveAsListener saveaslistener;
 		PrintListener printlistener;
@@ -2486,7 +2498,7 @@ class Programs
 			newlistener = new NewListener();
 			openlistener = new OpenListener();
 			openlistfilelistener = new OpenListFileListener();
-			deletefilelistener = new DeleteFileListener(frame);
+			deletelistener = new DeleteListener();
 			savelistener = new SaveListener();
 			saveaslistener = new SaveAsListener();
 			printlistener = new PrintListener();
@@ -2638,7 +2650,7 @@ class Programs
 			
 			
 			deletemenuitem = new JMenuItem(__.deletekey, deleteicon);
-			deletemenuitem.addActionListener(deletefilelistener);
+			deletemenuitem.addActionListener(deletelistener);
 			filemenu.add(deletemenuitem);
 			
 			printmenuitem = new JMenuItem(__.printkey, printicon);
@@ -3705,7 +3717,7 @@ class Programs
 				
 				else if (control && (keycode == __.deletekeycode))
 				{
-					deletefilelistener.run();
+					deletelistener.run();
 					
 					control = false;
 				}
@@ -4790,9 +4802,13 @@ class Programs
 		
 		private class DeleteListener implements ActionListener
 		{
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(ActionEvent e) { run(); }
+			
+			public void run()
 			{
-				deletefilelistener.run();
+				new DeleteFile(frame).setFont(font)
+				
+				    .setDirectory(directory) .delete();
 			}
 		}
 		
@@ -6078,9 +6094,7 @@ class Programs
 								
 								    .textarea.getSelectedText();
 								
-								if ((text == null) || !text.
-								
-								    equalsIgnoreCase(text1))
+								if ((text == null) || !text.equalsIgnoreCase(text1))
 								{
 									if (shift == false)
 									
@@ -7613,7 +7627,7 @@ class Programs
 				
 				Font font1 = labelfont.deriveFont(fontsize);
 				
-				font1 = font1.deriveFont((font1.getSize() > 16) ?
+				font1 = font1.deriveFont((font1.getSize() > 19) ?
 				
 				    Font.PLAIN : Font.BOLD);
 				
@@ -8148,10 +8162,46 @@ class Programs
 		
 			private int maxfontsize = 24;
 			
+			private JTextArea textarea;
+			
 			private JTextField textfield1;
 			private JTextField textfield2;
 			
+			private int pos0;
+			
+			//  dir reverses direction for each click
+			//  so the user can see the selected text
+			
+			private boolean dir;
+			
 			private JButton selectrangebutton;
+			
+			public SelectRangeListener()
+			{
+				selectrangebutton = new JButton(__.selectrange);
+				
+				selectrangebutton.addActionListener( new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e) { selectRange(); }
+				} );
+				
+				textfield1 = new JTextField(20);
+				textfield2 = new JTextField(20);
+				
+				textfield1.addFocusListener( new FocusAdapter()
+				{
+					public void focusGained(FocusEvent e)
+					
+					    { textfield1.selectAll(); }
+				} );
+				
+				textfield2.addFocusListener( new FocusAdapter()
+				{
+					public void focusGained(FocusEvent e)
+					
+					    { textfield2.selectAll(); }
+				} );
+			}
 			
 			public void actionPerformed(ActionEvent e)
 			{
@@ -8159,9 +8209,9 @@ class Programs
 				//  has the focus then the range will not be high-
 				//  lighted even if it is selected
 				
-				JTextArea textarea = textareapanel.textarea;
+				textarea = textareapanel.textarea;
 				
-				textarea.requestFocusInWindow();
+				pos0 = textarea.getCaretPosition();
 				
 				float fontsize = font.getSize();
 				
@@ -8169,90 +8219,7 @@ class Programs
 				
 				Font font1 = font.deriveFont(fontsize);
 				
-				selectrangebutton = new JButton(__.selectrange);
-				
 				selectrangebutton .setFont(font1);
-				
-				selectrangebutton.addActionListener(new ActionListener()
-				{
-					//  bool reverses direction for each click so
-					//  the user can see the selected text
-					
-					private boolean bool;
-					
-					int pos1 = textarea.getCaretPosition(), pos2 = pos1;
-					
-					public void actionPerformed(ActionEvent e)
-					{
-						String startstr = textfield1.getText() .toLowerCase();
-						String   endstr = textfield2.getText() .toLowerCase();
-						
-						if (startstr.isEmpty() || endstr.isEmpty()) return;
-						
-						String text = textarea.getText() .toLowerCase();
-						
-						if (Number.isDigitString(startstr, 10) && (startstr.length() < 6)
-						 && Number.isDigitString(  endstr, 10) && (  endstr.length() < 6))
-						{
-							//  Use line numbers instead of strings
-							
-							String[] tokens = text.split("\n");
-							
-							int lines = tokens.length;
-							
-							int int1 = Integer.parseInt(startstr);
-							int int2 = Integer.parseInt(  endstr);
-							
-							if ((int1 < lines) && (int2 < lines))
-							{
-								pos1 = 0;  pos2 = 0;
-								
-								for (int i = 0; i < int1 -2; i++)
-								
-								    pos1 = text.indexOf("\n", pos1+1);
-								
-								for (int i = 0; i < int2 -1; i++)
-								
-								    pos2 = text.indexOf("\n", pos2+1);
-							}
-						}
-						
-						else
-						{	//  Search for the start / end from the caret position
-							
-							pos1 = text.indexOf(startstr, pos1);
-							pos2 = text.indexOf(endstr, pos1 + 1);
-							
-							if ((pos1 < 0) || (pos2 < 0))
-							{
-								//  Search for the start string and end string
-								
-								pos1 = text.indexOf(startstr);
-								pos2 = text.indexOf(endstr, pos1 + 1);
-							}
-						}
-						
-						if ((pos1 < 0) || (pos2 <= pos1)) return;
-						
-						
-						if (bool == false)
-						{
-							textarea . setCaretPosition(pos1);
-							textarea .moveCaretPosition(pos2);
-						}
-						
-						else
-						{	textarea . setCaretPosition(pos2);
-							textarea .moveCaretPosition(pos1);
-						}
-						
-						bool = ! bool;
-					}
-				});
-				
-				
-				textfield1 = new JTextField(20);
-				textfield2 = new JTextField(20);
 				
 				textfield1.setFont(font1);
 				textfield2.setFont(font1);
@@ -8294,11 +8261,75 @@ class Programs
 				    JOptionPane.PLAIN_MESSAGE,
 				
 					null, options, null);
+			}
+			
+			
+			private void selectRange()
+			{
+				int pos1 = pos0, pos2 = pos1;
 				
-				//  Clear the text fields
+				String startstr = textfield1.getText() .toLowerCase();
+				String   endstr = textfield2.getText() .toLowerCase();
 				
-				textfield1.setText("");
-				textfield2.setText("");
+				if (startstr.isEmpty() || endstr.isEmpty()) return;
+				
+				String text = textarea.getText() .toLowerCase();
+				
+				if (Number.isDigitString(startstr, 10) && (startstr.length() < 6)
+				 && Number.isDigitString(  endstr, 10) && (  endstr.length() < 6))
+				{
+					//  Use line numbers instead of strings
+					
+					String[] tokens = text.split("\n");
+					
+					int lines = tokens.length;
+					
+					int int1 = Integer.parseInt(startstr);
+					int int2 = Integer.parseInt(  endstr);
+					
+					if ((int1 < lines) && (int2 < lines))
+					{
+						pos1 = 0;  pos2 = 0;
+						
+						for (int i = 0; i < int1 -2; i++)
+						
+						    pos1 = text.indexOf("\n", pos1+1);
+						
+						for (int i = 0; i < int2 -1; i++)
+						
+						    pos2 = text.indexOf("\n", pos2+1);
+					}
+				}
+				
+				else
+				{	//  Search for the start / end from the caret position
+					
+					pos1 = text.indexOf(startstr, pos1);
+					pos2 = text.indexOf(endstr, pos1 + 1);
+					
+					if ((pos1 < 0) || (pos2 < 0))
+					{
+						//  Search for the start string and end string
+						
+						pos1 = text.indexOf(startstr);
+						pos2 = text.indexOf(endstr, pos1 + 1);
+					}
+				}
+				
+				if ((pos1 < 0) || (pos2 <= pos1)) return;
+				
+				if (dir == false)
+				{
+					textarea. setCaretPosition(pos1);
+					textarea.moveCaretPosition(pos2);
+				}
+				
+				else
+				{	textarea. setCaretPosition(pos2);
+					textarea.moveCaretPosition(pos1);
+				}
+				
+				dir = ! dir;
 			}
 		}
 		
@@ -9290,7 +9321,7 @@ class Programs
 		
 		//  Define the cipher to be used for signatures
 		//
-		//  (The sign document menu item should have an
+		//  (The sign document dialog should have an
 		//  option to select the signature algorithm)
 		
 	////	private final String cipher = Signature.lsd;
@@ -10545,6 +10576,8 @@ class Programs
 				    fe.setFileKey(Cipher.passphraseToKey(SP));
 				
 				
+				boolean confirmkey = true;
+				
 				while (true)
 				{
 					//  Choose a file
@@ -10568,9 +10601,11 @@ class Programs
 					
 					//  Encrypt the file
 					
-					boolean bool = fe.encrypt(file);
+					boolean bool = fe.encrypt(file, confirmkey);
 					
 					if (bool == false) return;
+					
+					confirmkey = false;
 					
 					
 					//  Update the file key
@@ -10716,15 +10751,15 @@ class Programs
 		private class PrivateKeyListener implements ActionListener
 		{
 		
-			//   _________________________________________
-			//  |  Private key encryption + base 64 enc   |
-			//  |  ____________________________  ____  _  |
-			//  | |_Passphrase_________________||_76_||x| |
-			//  |                                         |
-			//  |  0123 4567 89ab cdef                    |
-			//  |          _________   _________          |
-			//  |         |_Encrypt_| |_Decrypt_|         |
-			//  |_________________________________________|
+			//   ______________________________________________
+			//  |  Private key encryption + base 64 encoding   |
+			//  |  _________________________________  ____  _  |
+			//  | |_Passphrase______________________||_76_||x| |
+			//  |                                              |
+			//  |   0123 4567 89ab cdef                        |
+			//  |             _________   _________            |
+			//  |            |_Encrypt_| |_Decrypt_|           |
+			//  |______________________________________________|
 			
 			
 			//  The private key class encrypts the text area without format-
@@ -12210,7 +12245,7 @@ class Programs
 		OpenListener openlistener;
 		SaveListener savelistener;
 		SaveAsListener saveaslistener;
-		DeleteFileListener deletefilelistener;
+		DeleteListener deletelistener;
 		CloseListener closelistener;
 		PrintListener printlistener;
 		ExitListener exitlistener;
@@ -12385,7 +12420,7 @@ class Programs
 			openlistener = new OpenListener();
 			savelistener = new SaveListener();
 			saveaslistener = new SaveAsListener();
-			deletefilelistener = new DeleteFileListener(frame);
+			deletelistener = new DeleteListener();
 			printlistener = new PrintListener();
 			closelistener = new CloseListener();
 			exitlistener = new ExitListener();
@@ -12517,7 +12552,7 @@ class Programs
 			
 			
 			deletemenuitem = new JMenuItem(__.deletekey, deleteicon);
-			deletemenuitem.addActionListener(deletefilelistener);
+			deletemenuitem.addActionListener(deletelistener);
 			deletemenuitem.setFont(menuitemfont);
 			filemenu.add(deletemenuitem);
 			
@@ -13526,7 +13561,7 @@ class Programs
 				
 				else if (control && (keycode == __.deletekeycode))
 				{
-					deletefilelistener.run();
+					deletelistener.run();
 					
 					control = false;
 				}
@@ -14564,12 +14599,15 @@ class Programs
 		
 		
 		
-		
 		private class DeleteListener implements ActionListener
 		{
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(ActionEvent e) { run(); }
+			
+			public void run()
 			{
-				deletefilelistener.run();
+				new DeleteFile(frame).setFont(font)
+				
+				    .setDirectory(directory) .delete();
 			}
 		}
 		
@@ -17548,6 +17586,8 @@ class Programs
 				    fe.setFileKey(Cipher.passphraseToKey(SP));
 				
 				
+				boolean confirmkey = true;
+				
 				while (true)
 				{
 					//  Choose a file
@@ -17578,9 +17618,11 @@ class Programs
 					
 					//  Encrypt the file
 					
-					boolean bool = fe.encrypt(file);
+					boolean bool = fe.encrypt(file, confirmkey);
 					
 					if (bool == false) return;
+					
+					confirmkey = false;
 					
 					//  Update the file key
 					
@@ -18049,7 +18091,7 @@ class Programs
 		NewListener newlistener;
 		OpenListener openlistener;
 		OpenDirectoryListener opendirectorylistener;
-		DeleteFileListener deletefilelistener;
+		DeleteListener deletelistener;
 		CloseListener closelistener;
 		PrintListener printlistener;
 		ExitListener exitlistener;
@@ -18158,7 +18200,7 @@ class Programs
 			newlistener = new NewListener();
 			openlistener = new OpenListener();
 			opendirectorylistener = new OpenDirectoryListener();
-			deletefilelistener = new DeleteFileListener(frame);
+			deletelistener = new DeleteListener();
 			printlistener = new PrintListener();
 			closelistener = new CloseListener();
 			exitlistener = new ExitListener();
@@ -18785,7 +18827,7 @@ class Programs
 				
 				else if (control && (keycode == __.deletekeycode))
 				{
-					deletefilelistener.run();
+					deletelistener.run();
 					
 					control = false;
 				}
@@ -19273,6 +19315,18 @@ class Programs
 		
 		
 		
+		private class DeleteListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e) { run(); }
+			
+			public void run()
+			{
+			
+			}
+		}
+		
+		
+		
 		private void resizeImage()
 		{
 			//  resizes the image to fit the frame size
@@ -19313,7 +19367,9 @@ class Programs
 			if      (fitwidthheight == 1) height = -1;
 			else if (fitwidthheight == 0)  width = -1;
 			
-			image = image.getScaledInstance(width, height, hints);
+			image = image.getScaledInstance(
+			
+			    width, height, hints);
 			
 			return image;
 		}
@@ -19868,7 +19924,7 @@ class Programs
 		
 		NewListener newlistener;
 		OpenListener openlistener;
-		DeleteFileListener deletefilelistener;
+		DeleteListener deletelistener;
 		SaveListener savelistener;
 		SaveAsListener saveaslistener;
 		CloseListener closelistener;
@@ -20007,7 +20063,7 @@ class Programs
 			
 			newlistener = new NewListener();
 			openlistener = new OpenListener();
-			deletefilelistener = new DeleteFileListener(frame);
+			deletelistener = new DeleteListener();
 			savelistener = new SaveListener();
 			saveaslistener = new SaveAsListener();
 			printlistener = new PrintListener();
@@ -20382,7 +20438,7 @@ class Programs
 				
 				else if (control && (keycode == __.deletekeycode))
 				{
-					deletefilelistener.run();
+					deletelistener.run();
 					
 					control = false;
 				}
@@ -20821,7 +20877,7 @@ class Programs
 		
 		
 		
-		private class SaveListener implements ActionListener
+		private class DeleteListener implements ActionListener
 		{
 			public void actionPerformed(ActionEvent e) { run(); }
 			
@@ -20831,6 +20887,16 @@ class Programs
 			}
 		}
 		
+		
+		private class SaveListener implements ActionListener
+		{
+			public void actionPerformed(ActionEvent e) { run(); }
+			
+			public void run()
+			{
+			
+			}
+		}
 		
 		
 		private class SaveAsListener implements ActionListener
@@ -27793,13 +27859,15 @@ class Programs
 					emailpanel.poptextarea  .setVisible(true);
 					emailpanel.popscrollpane.setVisible(true);
 					
-					//  If two or more tabs are open, the pop3window has no
-					//  textarea / scrollpane for the other non-selected tabs.
+					//  If two or more tabs are open, the pop3 window has no
+					//  textarea / scrollpane for the other non-selected tab(s).
+					//  (The pop3 window displays the client/server communication
+					//  for retrieving POP3 mail such as Stat, List, Retr, Quit.)
 					//
-					//  This line corrects for the bug. It sets the pop3window
-					//  to visible even if the window is already visible.
+					//  This line corrects for the bug. It sets the pop3 window to
+					//  visible if the window is already visible which is redundant.
 					
-					if (pop3window.isVisible())
+					if (pop3window. isVisible())
 					    pop3window.setVisible(true);
 					
 					emailpanel.poptextarea  .repaint();
@@ -28908,12 +28976,14 @@ class Programs
 						if (newuserpass.length() > 12)
 						{
 							JOptionPane.showMessageDialog(
+							
 							  frame, __.userpasswarning, "",
+							
 							    JOptionPane.WARNING_MESSAGE);
 							
 							warnings++;
 							
-							if (warnings < 3) continue;
+							if (warnings < 2) continue;
 							
 							else break;
 						}
@@ -40161,6 +40231,7 @@ class Colors
 		
 		//  reds
 		
+		{ 0xb04040, __.palered },
 		{ 0xd00000, __.brightred },
 		{ 0xa00000, __.red },
 		{ 0x600000, __.darkred },
@@ -40195,7 +40266,6 @@ class Colors
 		{ 0xdf38a6, __.brightpink },
 		{ 0xcf339b, __.pink },
 		{ 0xcf1967, __.redpink },
-		{ 0xa800e0, __.reddishblue },
 		
 		//  red + blue
 		
@@ -40203,12 +40273,13 @@ class Colors
 		{ 0x780078, __.darkmagenta },
 		{ 0x800055, __.crimson },
 		
-		//  reddish blues
+		//  reddish blues, reddish purple
 		
 		{ 0x6038c0,  __.palepurple },
 		{ 0x7000e0,  __.brightpurple },
 		{ 0x5000a0,  __.purple },
 		{ 0x380070,  __.darkpurple },
+		{ 0x9000c0,  __.reddishpurple },
 		
 		{ 0x2000A0, __.purplishblue },
 		{ 0x170080, __.violet },
@@ -40286,8 +40357,6 @@ class SaveFile
 	
 	public SaveFile setFont(Font font)
 	{
-		int size = font.getSize();
-		
 		this.font = font;
 		
 		return this;
@@ -40428,8 +40497,8 @@ class FileChooser extends JFileChooser
 	
 	public FileChooser() { super(); }
 	
-	private float minsize =  8;
-	private float maxsize = 21;
+	private int minsize = 10;
+	private int maxsize = 22;
 	
 	public FileChooser(String directory)
 	{
@@ -40442,20 +40511,17 @@ class FileChooser extends JFileChooser
 		
 		if (font1 == null) return;
 		
-		int size = font1.getSize();
+		String name = font1 .getName();
+		  int style = font1 .getStyle();
+		  int size  = font1 .getSize();
 		
-		if (size < minsize) font1 = font.deriveFont(minsize);
-		if (size > maxsize) font1 = font.deriveFont(maxsize);
+		//  Don't allow the file chooser font
+		//  size to exceed the max or min size
 		
-		String name = font .getName();
-		  int style = font .getStyle();
-		  int size1 = font1.getSize();
+		if (size < minsize) size = minsize;
+		if (size > maxsize) size = maxsize;
 		
-		//  < size 17 == bold font, >= 17 == plain font
-		
-		style = (size1 >= 17) ? Font.PLAIN : Font.BOLD;
-		
-		font = new Font(name, style, size1);
+		font = new Font(name, style, size);
 		
 		this.font = font;
 		
@@ -40465,7 +40531,11 @@ class FileChooser extends JFileChooser
 		
 		double x = d.getWidth(), y = d.getHeight();
 		
-		d = new Dimension((int) (0.8*x), (int) (1.2*y));
+		//  If the x dimension is too small the button text
+		//  can get truncated if the text is too long
+		//  (such as the encrypt/decrypt button)
+		
+		d = new Dimension((int) (1.25*x), (int) (1.25*y));
 		
 		super.setPreferredSize(d);
 	}
@@ -40561,7 +40631,7 @@ class Print
 
 
 
-class DeleteFileListener implements ActionListener
+class DeleteFile
 {
 
 	//  Ctrl + D  opens the Delete (file) dialog
@@ -40576,15 +40646,27 @@ class DeleteFileListener implements ActionListener
 	    .getFont() .deriveFont(18.0f);
 	
 	
-	public DeleteFileListener(JFrame frame)
+	public DeleteFile(JFrame frame)
 	{
 		this.frame = frame;
 	}
 	
-	public void actionPerformed(ActionEvent e) { run(); }
+	public DeleteFile setDirectory(String directory)
+	{
+		this.directory = directory;
+		
+		return this;
+	}
+	
+	public DeleteFile setFont(Font font)
+	{
+		this.font = font;
+		
+		return this;
+	}
 	
 	
-	public void run()
+	public void delete()
 	{
 		int warnings = 0;
 		
@@ -40596,6 +40678,17 @@ class DeleteFileListener implements ActionListener
 			
 			if (file == null) return;
 			
+			if (!file.exists())
+			{
+				String message = __.filenotfound;
+				
+				JOptionPane.showMessageDialog(frame,
+				
+				    message, "", JOptionPane.ERROR_MESSAGE);
+				
+				return;
+			}	
+			
 			directory = file.getParent();
 			
 			String filename = file.getName();
@@ -40605,9 +40698,9 @@ class DeleteFileListener implements ActionListener
 			
 			//  String message = __.deletefileorfolder + " ?";
 			
-			String title = __.Warning + " !" + "  " + __.deletefile;
+			String title = __.WARNING + " !" + "  " + __.DELETEfile;
 			
-			String warning = __.Delete + " " + filename + " ?" + "\n\n";
+			String warning = __.DELETE + " " + filename + " ?" + "\n\n";
 			
 			if (file.isFile())      warning += __.  filewillbedeleted + "!\n";
 			if (file.isDirectory()) warning += __.folderwillbedeleted + "!\n";
@@ -40730,7 +40823,7 @@ class DeleteFileListener implements ActionListener
 }
 
 
-//  End class DeleteFileListener
+//  End class DeleteFile
 
 
 
@@ -40740,7 +40833,7 @@ class DeleteFileListener implements ActionListener
 
 
 
-class RenameFileListener implements ActionListener
+class RenameFile
 {
 
 	//  This class is not required because the user can rename
@@ -40768,16 +40861,28 @@ class RenameFileListener implements ActionListener
 	    .getFont() .deriveFont(18.0f);
 	
 	
-	public RenameFileListener(JFrame frame)
+	public RenameFile(JFrame frame)
 	{
 		this.frame = frame;
 	}
 	
 	
-	public void actionPerformed(ActionEvent e) { run(); }
+	public RenameFile setDirectory(String directory)
+	{
+		this.directory = directory;
+		
+		return this;
+	}
+	
+	public RenameFile setFont(Font font)
+	{
+		this.font = font;
+		
+		return this;
+	}
 	
 	
-	public void run()
+	public void rename()
 	{
 	
 		while (true)
@@ -40890,7 +40995,7 @@ class RenameFileListener implements ActionListener
 }
 
 
-//  End class RenameFileListener
+//  End class RenameFile
 
 
 
@@ -41256,23 +41361,26 @@ class EncryptDirectory
 	{
 	
 	
-		//   _____________________________________________________
-		//  |                                                     |
-		//  |               [x] Encrypt file names                |
-		//  |               /home/username/folder                 |
-		//  |              Encrypt directory with key             |
-		//  |                 0123 4567 89ab cdef                 |
-		//  |      _________________________________________      |
-		//  |     |  Encrypting file /home/username/file1   |     |
-		//  |     |  Encrypting file /home/username/file2   |     |
-		//  |     |  Encrypting file /home/username/file3   |     |
-		//  |     |  Encrypting file /home/username/file4   |     |
-		//  |     |_________________________________________|     |
-		//  |      ______   _________   _________   ________      |
-		//  |     |_Test_| |_Encrypt_| |_Decrypt_| |_Cancel_|     |
-		//  |                        ____                         |
-		//  |                       |_OK_|                        |
-		//  |_____________________________________________________|
+		//   _____________________________________________________________
+		//  |                                                             |
+		//  |                   [x] Encrypt file names                    |
+		//  |                    _______________________                  |
+		//  |                   | /home/username/folder |                 |
+		//  |                   ------------------------                  |
+		//  |                  Encrypt directory with key                 |
+		//  |                    _____________________                    |
+		//  |                   | 0123 4567 89ab cdef |                   |
+		//  |          _________________________________________          |
+		//  |         |  Encrypting file /home/username/file1   |         |
+		//  |         |  Encrypting file /home/username/file2   |         |
+		//  |         |  Encrypting file /home/username/file3   |         |
+		//  |         |  Encrypting file /home/username/file4   |         |
+		//  |         |_________________________________________|         |
+		//  |          ______   _________   _________   ________          |
+		//  |         |_Test_| |_Encrypt_| |_Decrypt_| |_Cancel_|         |
+		//  |                            ____                             |
+		//  |                           |_OK_|                            |
+		//  |_____________________________________________________________|
 		
 		
 		//  Create the encrypt / decrypt directory panel
@@ -41305,14 +41413,17 @@ class EncryptDirectory
 		   !checkbox.isSelected()); }});
 		
 		
-		JButton filebutton = new JButton();
-		JButton  keybutton = new JButton();
+		//  Create and disable the file and key hash buttons
+		//  so that they appear as labels that are clickable
 		
-		filebutton.setEnabled(false);
-		 keybutton.setEnabled(false);
+		JButton    filebutton = new JButton();
+		JButton keyhashbutton = new JButton();
 		
-		filebutton.add(label2);
-		 keybutton.add(label4);
+		   filebutton.setEnabled(false);
+		keyhashbutton.setEnabled(false);
+		
+		    filebutton.add(label2);
+		 keyhashbutton.add(label4);
 		
 		
 		Box hbox1, hbox2, hbox3, hbox4;
@@ -41330,7 +41441,7 @@ class EncryptDirectory
 		hbox1.add(label1);
 		hbox2.add(filebutton);
 		hbox3.add(label3);
-		hbox4.add(keybutton);
+		hbox4.add(keyhashbutton);
 		
 		Component strut1 = Box.createVerticalStrut(2);
 		Component strut2 = Box.createVerticalStrut(2);
@@ -41492,6 +41603,7 @@ class EncryptDirectory
 				  .showConfirmDialog(frame, message, title,
 				
 				    JOptionPane.YES_NO_CANCEL_OPTION,
+				
 				    JOptionPane.WARNING_MESSAGE);
 				
 				if ((choice == JOptionPane.CANCEL_OPTION)
@@ -41636,6 +41748,7 @@ class EncryptDirectory
 				  .showConfirmDialog(frame, message, title,
 				
 				    JOptionPane.YES_NO_CANCEL_OPTION,
+				
 				    JOptionPane.WARNING_MESSAGE);
 				
 				if ((choice == JOptionPane.CANCEL_OPTION)
@@ -42192,7 +42305,9 @@ class FileEncryptor
 	private Color foreground = Color.black;
 	private Color background = Color.white;
 	
-	private String title;
+	private JFileChooser fc;
+	
+	private String title = __.encryptfile;
 	
 	private int minlength;
 	
@@ -42201,6 +42316,9 @@ class FileEncryptor
 	    __.encryptfilewithkey;
 	
 	private String SP; // file decryption
+	
+	private String passphrasehash;
+	
 	
 	
 	//  FileEncryptor constructor
@@ -42261,19 +42379,15 @@ class FileEncryptor
 	
 		File file = null;
 		
-		JFileChooser fc;
-		
 		fc = new FileChooser(directory);
 		
 		fc.setFont(font);
 		
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
-		String title = __.encryptfile;
-		
 		if (filekey != null)
 		{
-			String passphrasehash = new Number(filekey).toString(40, 16);
+			passphrasehash = new Number(filekey).toString(40, 16);
 			
 			while ((passphrasehash.length() % 8) != 0)
 			
@@ -42282,13 +42396,9 @@ class FileEncryptor
 			passphrasehash = passphrasehash.substring(0, 16);
 			
 			passphrasehash = Convert.partition(passphrasehash, " ", 4);
-			
-			//  Encrypt file   0123 4567 89ab cdef
-			
-			title += "      " + passphrasehash;
 		}
 		
-		fc.setDialogTitle(title);
+		setTitle();
 		
 		fc.setApproveButtonText(__.encryptfile);
 		
@@ -42309,6 +42419,19 @@ class FileEncryptor
 	}
 	
 	
+	public void setTitle()
+	{
+		//  Encrypt file   0123 4567 89ab cdef
+		
+		String title = this.title;
+		
+		if ((passphrasehash != null)
+		 && !passphrasehash.isEmpty())
+		
+		    title += "      " + passphrasehash;
+		
+		if (fc != null) fc.setDialogTitle(title);
+	}
 	
 	
 	public boolean encrypt(File file)
@@ -42452,6 +42575,8 @@ class FileEncryptor
 			
 			else if (choice == JOptionPane.YES_OPTION)
 			{
+				setTitle();
+				
 				return true;
 			}
 		}
@@ -43758,7 +43883,7 @@ class PopMail
 		//  These file examples can be changed or replaced
 		//  (They are only used to test the mail program)
 		
-		byte[] filedata1 = Convert.base64ToByteArray(Icons.image_example1);
+		byte[] filedata1 = Convert.base64ToByteArray(Icons.color_circle);
 		byte[] filedata2 = Documents.gpl.getBytes();
 		byte[] filedata3 = Documents.table_example.getBytes();
 		
@@ -47363,17 +47488,6 @@ class Icons
 	"iUvj9YYandAHjDHu3yZ+kojELWUd/AJVVx3+pc9AFgAAAABJRU5ErkJggg==";
 	
 	
-	static String network_transmit =
-	
-	"iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAvVBMVEUAAAD///////8AAAABAQEPDw8SEhIWFhYaGhofHx8h" +
-	"ISEqKio3Nzdvb290dHR1dXV5eXl/f3+AgICEhISGhoaHh4eIiIiMjIyOjo6QkJCRkZGWlpaZmZmampqhoaG5ubm6urq7u7u/" +
-	"v7/Dw8PFxcXHx8fJycnKysrLy8vMzMzPz8/Q0NDb29vc3Nzf39/j4+Pk5OTl5eXm5ubn5+fp6ent7e3u7u7w8PDz8/P09PT2" +
-	"9vb5+fn8/Pz+/v7///9LwFWaAAAAA3RSTlMAwcJd/YFNAAAAr0lEQVR42ozOA3pFMRCG4ZxM7bC23V7z3/+uju3v8RvMsB5x" +
-	"AE6VcXWgahya6KjqGO4RHeedI+zX98N15njZpqQTZHxJabuT7I/ltQ3aJ9r5QoLznwmCbKg81j8jHsAY7jZo6zPVoRXyO2BB" +
-	"m6+xMgyMkB8I+n8fJcrHp0Kc3wc9r2L0W5yJtLfcxvep2v+MOe6EuJgijLOSz5wUUr8V4hHesMSKipy2HfbYYiIiVgEf/htu" +
-	"CI71bwAAAABJRU5ErkJggg==";
-	
-	
 	static String mail_send_receive_24x24 =
 	
 	"iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADcElEQVR42mIYNODtWxW+79+15b5+1TH58kXb/dtnnSAgDgfR" +
@@ -47391,6 +47505,17 @@ class Icons
 	"fpt9NjomaZqK1994yqHMIT+7119/2iX6VPzaa0+765ZclqDM0X/XkzRlUBZlrh8DMWAUAACGNBwMF4eXZgAAAABJRU5ErkJg" +
 	"gg==";
 	
+	
+	
+	static String network_transmit =
+	
+	"iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAMAAADzapwJAAAAvVBMVEUAAAD///////8AAAABAQEPDw8SEhIWFhYaGhofHx8h" +
+	"ISEqKio3Nzdvb290dHR1dXV5eXl/f3+AgICEhISGhoaHh4eIiIiMjIyOjo6QkJCRkZGWlpaZmZmampqhoaG5ubm6urq7u7u/" +
+	"v7/Dw8PFxcXHx8fJycnKysrLy8vMzMzPz8/Q0NDb29vc3Nzf39/j4+Pk5OTl5eXm5ubn5+fp6ent7e3u7u7w8PDz8/P09PT2" +
+	"9vb5+fn8/Pz+/v7///9LwFWaAAAAA3RSTlMAwcJd/YFNAAAAr0lEQVR42ozOA3pFMRCG4ZxM7bC23V7z3/+uju3v8RvMsB5x" +
+	"AE6VcXWgahya6KjqGO4RHeedI+zX98N15njZpqQTZHxJabuT7I/ltQ3aJ9r5QoLznwmCbKg81j8jHsAY7jZo6zPVoRXyO2BB" +
+	"m6+xMgyMkB8I+n8fJcrHp0Kc3wc9r2L0W5yJtLfcxvep2v+MOe6EuJgijLOSz5wUUr8V4hHesMSKipy2HfbYYiIiVgEf/htu" +
+	"CI71bwAAAABJRU5ErkJggg==";
 	
 	
 	
@@ -48219,7 +48344,7 @@ class Icons
 	
 	//  These images are included to test file attachments for test mail
 	
-	static String image_example1 = // color circle
+	static String color_circle = // color circle
 	
 	"iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAAAXNSR0IArs4c6QAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAAd0" +
 	"SU1FB9cJDBMdMq3ye0sAAAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAAZiS0dEAP8A/wD/oL2n" +
@@ -48687,7 +48812,8 @@ class Icons
 			
 			//  Calculate the new width
 			
-			int width = this.width, height = this.height;
+			int  width = this.width;
+			int height = this.height;
 			
 			if (m > 0) width = (int) (width * (1 + m1*0.0125f*+m) + 1);
 			if (m < 0) width = (int) (width / (1 + m1*0.0125f*-m) + 1);
@@ -48726,6 +48852,46 @@ class Icons
 			dialog.setSize(dialog
 			
 			    .getPreferredSize());
+		}
+		
+		
+		public void resizeImage()
+		{
+			//  resizes the image to fit the frame size
+			//
+			//  (packing the frame would resize the frame to fit the image size)
+			
+			Image image = imageicon.getImage();
+			
+			if (image == null) return;
+			
+			Image scaledimage = changeImageSize(image);
+			
+			ImageIcon scaledicon = new ImageIcon(scaledimage);
+			
+			label.setIcon(scaledicon);
+		}
+		
+		
+		private Image changeImageSize(Image image)
+		{
+			//  returns a scaled instance of the image
+			
+			//  Read the screen width
+			
+			int width  = dialog.getWidth();
+			int height = dialog.getHeight();
+			
+			this.width  = width;
+			this.height = height;
+			
+			int hints = Image.SCALE_SMOOTH;
+			
+			image = image.getScaledInstance(
+			
+			    width, height, hints);
+			
+			return image;
 		}
 	}
 	
@@ -48809,6 +48975,16 @@ class Icons
 			}
 		});
 		
+		dialog.addComponentListener(new ComponentAdapter()
+		{
+			public void componentResized(ComponentEvent e)
+			{
+				if (e.getSource() instanceof JDialog)
+				{
+					mwl1.resizeImage();
+				}
+			}
+		});
 		
 		dialog.add(new JPanel().add(label));
 		
@@ -48822,9 +48998,11 @@ class Icons
 		
 		dialog.setLocation(xpos, ypos);
 		
-		//  set resizable is set to true or else on some
-		//  versions of Linux the location of the window
-		//  will move down as the user enlarges the image 
+		//  setResizable is set to true or else on some versions of
+		//  Linux the location of the window will keep moving down as
+		//  the user enlarges the image; setting resizable to true
+		//  also allows the user to enlarge the size of the image by
+		//  dragging the lower right corner of the dialog frame.
 		
 		dialog.setResizable(true);
 		
@@ -50370,7 +50548,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		//  the number of rows in the passphrase area
 		
-		int rows = 2;
+		int rows = 3;
 		
 		this.setLayout(new GridBagLayout());
 		
@@ -51382,7 +51560,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		this.setLocation(x2pos, y2pos);
 	}
-		
+	
 	
 	
 	//  The PassphraseDialog KeyboardListener
@@ -52313,6 +52491,183 @@ class PublicKey
 	
 	
 	
+	
+	//  Public Key Cryptography
+	//
+	//
+	//  Public key cryptography is a mathematical scheme for key agreement and message
+	//  authentication. Key agreement is a method for generating a secret key from a
+	//  pair of public and private keys that allows two parties to communicate secret-
+	//  ly over an insecure channel by exchanging public information.
+	//
+	//  Two parties that want to communicate secretly use a mathematical function to
+	//  create a public and private key pair, and then they exchange their public keys
+	//  and use their private keys to generate a shared secret key or number. The
+	//  shared secret key or number generated by the public key agreement is used to
+	//  parameterize or initialize the private key cipher. (See Private Key Cryptog-
+	//  raphy.) Public key cryptography works because the functions are chosen to be
+	//  easy to evaluate or compute using the private key but difficult or impossible
+	//  to invert to solve for the private key.
+	//
+	//  Public key cryptography solves the key distribution problem or the problem of
+	//  distributing secret keys. Without public key cryptography, people who want to
+	//  communicate secretly over a public network would have to meet each other in
+	//  person or use a courier to exchange the secret keys before sending encrypted
+	//  messages.
+	//
+	//  Another problem is that for a group of n people, the number of keys that would
+	//  have to be exchanged is the number of ways of choosing 2 out of n people. The
+	//  number of ways to choose r of n elements is nCr = n! / r! / (n - r)!, so the
+	//  number of ways to choose 2 out of n is nC2 == n! / 2! / (n - 2)! == n (n - 1)
+	//  / 2 == 1/2 (n^2 - n) ~ O(n^2). Public key cryptography solves this problem by
+	//  reducing the number of keys that have to be exchanged from O(n^2) to O(n).
+	//
+	//
+	//  The Diffie-Merkle-Hellman key exchange / key agreement protocol
+	//
+	//  (Whitfield Diffie and Martin Hellman, 1975, Ralph Merkle, 1974)
+	//
+	//  Public key exchange or key agreement is a method or protocol for establishing
+	//  a secret key from a pair of public keys { y, z } and a pair of private keys
+	//  { x, k } using a one-way function.
+	//
+	//  The simplest one-way function is the line y = a x. A person or entity that
+	//  wants to receive encrypted messages computes the public key y = a x where
+	//  a is a public parameter and x is a private key. Then a sender chooses a one-
+	//  time private key k and computes a one-time public key z = a k and the shared
+	//  secret key e = y k == z x == a k x.
+	//
+	//  The sender and the recipient can both compute the same secret key e = y k ==
+	//  z x == a k x without doing division because they each know one of the two pri-
+	//  vate keys. Anyone else can multiply the two public keys y = a x and z = a k to
+	//  get y z == a^2 k x but not the secret key e = a k x because that requires di-
+	//  vision or inversion. Division is easy if a is a number or integer, but inver-
+	//  sion is hard if a is a hypercomplex number such as a vector, quaternion, ma-
+	//  trix, cube, or tesseract of integers or polynomials.
+	//
+	//  If hypercomplex numbers are used, the function y = a x can be replaced by
+	//  the non-linear function y = x a x because hypercomplex numbers are not com-
+	//  mutative. (For integers the function y = x a x reduces to y = a x^2 because
+	//  integer multiplication is commutative.)
+	//
+	//  A redundancy of public key ciphers or one-way functions is required for key
+	//  agreement because there is no proof that any public key function is one-way.
+	//  A public key that contains the values of multiple functions or ciphers is as
+	//  strong as all the ciphers because all the functions would have to be inverted
+	//  to break the public key. A public key that has multiple one-way functions or
+	//  ciphers is called a composite public key.
+	//
+	//  To receive an encrypted message using a composite key, the recipient computes
+	//  the values of the public key functions y[] = f[](a[], x[]); then the sender
+	//  generates a set of matching one-time public keys z[] = f[](a, k[]), computes
+	//  an array of secret keys e[] = f[](y[], k[]), and adds the array of secret keys
+	//  e[] to generate the composite secret key. The sender uses the composite secret
+	//  key to encrypt the message and attaches the one-time public keys to the en-
+	//  crypted message so the recipient can compute the same composite shared secret
+	//  e[] = f[](z[], x[]) == f[](y[], k[]) to decrypt the message.
+	//
+	//  Public key exchange can be synchronous or asynchronous. For email the exchange
+	//  is asynchronous because the recipient publishes his or her static key on an
+	//  email server or website. A sender retrieves the public key, generates a match-
+	//  ing one-time public key, computes the secret key to encrypt the email, and
+	//  then attaches the one-time key public key to the encrypted email. The recipi-
+	//  ent does not have to be online for the sender to encrypt and send a message.
+	//
+	//  For internet telephony, voice or socket communication between two computers
+	//  the public keys are exchanged synchronously. The server sends a set of static
+	//  public keys or a composite key to the client; the client chooses a subset of
+	//  those public keys and returns a one-time public key to the server so the cli-
+	//  ent and server can agree on a shared secret key; and then the client and serv-
+	//  er use the shared secret to send and receive encrypted messages. The same
+	//  secret key or session key is used to encrypt and decrypt messages until the
+	//  client closes the socket or disconnects from the server.
+	//
+	//
+	//  Symmetric and asymmetric public key cryptography
+	//
+	//  Symmetric public key cryptography requires a commutative one-way function
+	//  that cannot be inverted by the recipient because the function has no secret
+	//  parameters. The parameters of symmetric public key ciphers are public con-
+	//  stants.
+	//
+	//  To compute a shared secret key using a symmetrical public key cipher, the
+	//  sender and receiver choose private keys x, k, and compute the static and one-
+	//  time public keys y = f(a, x) and z = f(a, k) where a is a public parameter or
+	//  blank public key. The sender and receiver then compute the shared secret key
+	//  e = f(y, k) == f(z, x).
+	//
+	//  Asymmetric public key cryptography requires a one-way function that can be
+	//  inverted by the recipient. An invertible one-way function allows a sender
+	//  to encrypt a secret number that only the receiver can decrypt.
+	//
+	//  To receive an encrypted message using an asymmetrical public key cipher, the
+	//  recipient chooses a private key x to generate the secret parameter a and the
+	//  static public key b. Then the sender chooses a secret key m and computes the
+	//  one-time public key c = f(m, b). The recipient inverts the function to solve
+	//  for the secret key m = f^-1(b, c).
+	//
+	//
+	//  Commutative one-way functions and invertible one-way functions
+	//
+	//  A one-way function or cipher defines a set of public mappings such as the
+	//  exponential function y[] = { a^0, a^1, a^2, a^3 ... }, and the private key
+	//  k or m determines which of these mappings is used to generate the public key.
+	//
+	//  A one-way function has to be easy to evaluate or compute but hard to invert.
+	//  This means that the function has to be computable in polynomial time (such
+	//  as O(n^2) or O(n^3) where n is the size or number of bits) but invertible in
+	//  exponential time. (Some functions such as the factorial function a! (mod p)
+	//  are neither computable nor invertible in polynomial time.)
+	//
+	//  A non-invertible public key function that has no secret parameters has to be
+	//  commutative and symmetric because the sender and recipient have to be able to
+	//  compute the same secret key.
+	//
+	//  An invertible one-way function is a function that has a private variable cho-
+	//  sen by the recipient that enables the recipient to invert the function. The
+	//  function is invertible for the recipient but one-way for the sender and for
+	//  everyone else who does not know the private key. An invertible one-way func-
+	//  tion is also sometimes called a trapdoor function.
+	//
+	//  One-way functions can use numbers, vectors, matrices, or polynomials. Vectors,
+	//  matrices, cubes, and tesseracts are number-like objects that can be used in
+	//  equations just like real numbers or integers except that multiplication is not
+	//  generally commutative for matrices and higher-dimensional objects.
+	//
+	//  A one-way function that has a single variable or a periodicity is quantum sus-
+	//  ceptible because the function can be inverted by quantum computing. A one-way
+	//  function that has no periodicity is said to be quantum resistant.
+	//
+	//
+	//
+	//  Exponential key exchange / key agreement protocol
+	//
+	//  (Whitfield Diffie and Martin Hellman, 1976, Malcolm J. Williamson / GCHQ, 1974)
+	//
+	//  The commutative one-way function
+	//              x
+	//  f(a, x) = a  (mod p)
+	//
+	//  where a is a public parameter and x is a private key is an implementation
+	//  of the Diffie-Merkle-Hellman key exchange / key agreement protocol.
+	//
+	//
+	//  Public key generation and key agreement
+	//
+	//  The receiver and sender choose private keys x and k and compute the
+	//  static and one-time public keys
+	//
+	//        x                    k
+	//  y = a  (mod p)  and  z = a  (mod p)
+	//
+	//  The sender and receiver then compute the shared secret key
+	//
+	//          k      x      k x
+	//  e  =  y  ==  z  ==  a    (mod p)
+	
+	
+	
+	
 	//  Public key cipher notes
 	
 	
@@ -52347,9 +52702,7 @@ class PublicKey
 	//  The words block and matrix are synonymous because a matrix is a rectangular block of numbers. Before
 	//  they were called matrices, rectangular arrays of numbers were referred to as blocks. A block is a
 	//  quantity, number, or section of things dealt with as a unit, such as a block of plaintext or cipher-
-	//  text. (J.J. Sylvester used the term matrix in 1850 to refer to a rectangular block of numbers because
-	//  a determinant is formed from a matrix, and a matrix is something from which something else origin-
-	//  ates, develops, or takes form.)
+	//  text.
 	//
 	//  All the commutative one-way functions or symmetric public key ciphers used in the public key class
 	//  derive from the general matrix function X1 A^x X2 (or B^x1 A^x B^x2) including A^x, A^x X, A X,
@@ -52389,7 +52742,7 @@ class PublicKey
 	//  which represents the volume of the parallelepiped formed by the product of the public vector Y and
 	//  the private vector K. (The implementation of the vector cross product cipher is asymmetrical because
 	//  it requires different public key generation and public key agreement methods, but unlike the Merkle-
-	//  Hellman cipher it uses two commutative functions instead of an invertible / one-way function.)
+	//  Hellman cipher it uses two commutative functions instead of an invertible one-way function.)
 	//
 	//  A secret matrix, vector, or hypercomplex number can be reduced to a secret key or number by concaten-
 	//  ating the elements or removing the commas or delimiters. For example, the array { 1, 2, 3, 4 } or the
@@ -52436,12 +52789,12 @@ class PublicKey
 	//
 	//  The Merkle-Hellman cipher was the world's first public key cryptosystem and also the first quantum-
 	//  resistant cipher. The cipher was never broken but it has to be implemented correctly or else it
-	//  doesn't work. For example, if r[][] equals zero or no errors are added to the static key, then the
-	//  vector c[] = s0 a[] (mod n) can be solved for the multiplier s0 and modulus n because a[] is a super-
+	//  doesn't work. For example, if r[][] == 0 or no errors are added to the static key, then the vector
+	//  c[] = s0 a[] (mod n) can be solved for the multiplier s0 and modulus n because a[] is a super-
 	//  increasing sequence. If r[][] == 0, a cryptanalyst could find the value of s0 because for one of the
-	//  elements c[0], a[0] == a^0 == 1; then the value of n can be solved from c[1] = a^1 s0 - k n which
+	//  elements c[0], a[0] == a^0 == 1; then the value of n could be solved from c[1] = a^1 s0 - k n which
 	//  only contains two variables k and n, and k can only be a small value such as 0, 1, or 2 if a[1] = 2.
-	//  Since the elements of c[] are permutated, it would require O(n^2) tries where n is the number of ele-
+	//  Since the elements of c[] are permuted, it would require O(n^2) tries where n is the number of ele-
 	//  ments to find the indexes of a[0] and a[1].
 	
 	
@@ -52646,7 +52999,7 @@ class PublicKey
 	
 	//  The vector dot product cipher
 	//
-	//  (asymmetrical or invertible / one-way function)
+	//  (asymmetrical or invertible one-way function)
 	//
 	//  The recipient's static public key A[] is
 	//
@@ -52656,9 +53009,9 @@ class PublicKey
 	//
 	//  of real or complex numbers;
 	//
-	//  the one-time public key b is the dot product
+	//  the one-time public key b is the inner or
 	//
-	//  of A[] and X[] or b = A[] * X[];
+	//  dot product of A[] and X[] or b = A[] * X[];
 	//
 	//  the secret key x is the sum of X[].
 	
@@ -52667,8 +53020,8 @@ class PublicKey
 	
 	//  The vector cross product determinant cipher
 	//
-	//  The static and one-time public keys Y and Z
-	//  are the cross products of the private keys
+	//  The static and one-time public keys Y and Z are
+	//  the outer or cross products of the private keys
 	//  X1, X2, and K1, K2. The secret key agreement
 	//  E is the determinant of the public key Y and
 	//  the private keys K or the public key Z and
@@ -52692,7 +53045,7 @@ class PublicKey
 	
 	//  The vector cross product cipher
 	//
-	//  (Vector, parallelogram, parallelepiped cipher)
+	//  (Vector, parallelogram, or parallelepiped cipher)
 	//
 	//  for vectors of integers, Latin squares, polynomials,
 	//  or powers of a matrix (cube or tesseract) such as
@@ -54434,11 +54787,7 @@ class PublicKey
 		
 		//  Add the secret keys to create the composite secret key
 		
-		Number compositekey = new Number(e[0]);
-		
-		for (int i = 1; i < tarray.length; i++)
-		
-		    compositekey = compositekey .xor(e[i]);
+		Number compositekey = Number.xor(e);
 		
 		
 		//  =============================================
@@ -54638,11 +54987,7 @@ class PublicKey
 		
 		//  Add the secret keys to create the composite secret key
 		
-		Number compositekey = new Number(e[0]);
-		
-		for (int i = 1; i < tarray.length; i++)
-		
-		    compositekey = compositekey .xor(e[i]);
+		Number compositekey = Number.xor(e);
 		
 		
 		//  =============================================
@@ -54915,11 +55260,7 @@ class PublicKey
 		
 		//  Add the secret keys to create the composite secret key
 		
-		Number compositekey = new Number(e[0]);
-		
-		for (int i = 1; i < tarray.length; i++)
-		
-		    compositekey = compositekey .xor(e[i]);
+		Number compositekey = Number.xor(e);
 		
 		
 		//  If the sender's public key is a one-time public key that uses a random
@@ -55126,9 +55467,9 @@ class PublicKey
 	
 		byte[] privatekey, String[] receivedkey)
 	{
-		//  creates a matching one-time, transient or ephemeral
-		//  public key using the ciphers in the static public key,
-		//  even if some of the ciphers are commented or disabled;
+		//  creates a matching one-time, transient or ephemeral public
+		//  key using the ciphers in the static public key, even if
+		//  some of the ciphers are commented or disabled;
 		//
 		//  for public key sizes that are not valid, the method will
 		//  create a public key element that contains the empty string
@@ -55146,7 +55487,7 @@ class PublicKey
 		//  cipher, the Merkle-Hellman / knapsack cipher, and the factor-
 		//  ization cipher. The other public key ciphers ignore the stat-
 		//  ic key because the public keys are symmetrical or use commu-
-		//  tative one-way functions instead of an invertible / one-way
+		//  tative one-way functions instead of an invertible one-way
 		//  function.
 		
 		
@@ -55178,7 +55519,7 @@ class PublicKey
 			{
 				PublicKey publickey = new PublicKey(
 				
-				    privatekey, statickey, size); // static key required
+				    privatekey, statickey, size);
 				
 				publickeys[i1] = publickey;
 			});
@@ -55302,7 +55643,9 @@ class PublicKey
 			
 			tarray[i] = new Thread(() ->
 			{
-				PublicKey publickey = new PublicKey(secretkey, null, size);
+				PublicKey publickey = new
+				
+				    PublicKey(secretkey, null, size);
 				
 				publickeys[i1] = publickey;
 			});
@@ -58658,10 +59001,10 @@ class PublicKey
 			
 			return m3;
 		}
-	
-	
-	
-	
+		
+		
+		
+		
 		//  static methods for polynomials
 		
 		
@@ -58843,7 +59186,7 @@ class PublicKey
 	//  The linear cipher y = a x (mod n) and the quadratic cipher c = m ^ 2 (mod n)
 	//  are proofs of public key cryptography or the existence of trapdoor one-way
 	//  functions. The linear cipher y = a x (mod n) is a commutative one-way function
-	//  and the quadratic cipher c = m^2 (mod n) is an invertible / one-way function.
+	//  and the quadratic cipher c = m^2 (mod n) is an invertible one-way function.
 	//  Just like Merkle's puzzles, these ciphers have no practical use except for
 	//  teaching the introduction to public key cryptography and Diffie-Hellman key
 	//  exchange or key agreement because the key sizes are too large.
@@ -58881,8 +59224,7 @@ class PublicKey
 	//  A cryptanalyst doesn't have to factor or know how to factor the modulus n because the modular in-
 	//  version method can use the extended Euclidean algorithm to invert a instead of Fermat's little
 	//  theorem a^p == a, a^(p-1) == a^0 == 1, a^(p-2) == 1/a (mod p) which requires the factorization of
-	//  the modulus into primes and then the reconstruction of the composite inverse using a least common
-	//  remainder method such as Gauss's remainder algorithm or Garner's formula.
+	//  the modulus into primes.
 	
 	
 	
@@ -58893,26 +59235,26 @@ class PublicKey
 	//
 	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refractory
 	//  problem to be a public key cipher. It only has to be harder to invert than to compute either because of
-	//  the time complexity or because of the space requirements of the algorithm. Some functions such as the
-	//  factorial function a! (mod p) are neither computable nor invertible in polynomial time. If a! (mod n)
-	//  were computable it would solve the factorization problem for n.
+	//  the time complexity or memory space requirements of the algorithm. Some functions such as the factorial
+	//  function a! (mod p) are neither computable nor invertible in polynomial time. If a! (mod n) were comput-
+	//  able it would solve the factorization problem for n.
 	//
 	//  The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
 	//  is equivalent to factorization because there is a many-to-one mapping of m to c. If m1 is chosen and
-	//  c = m1^2 (mod n) is solved for m2 = sqrt(c) (mod n), then the number can be factored using the differ-
-	//  ence of squares m2^2 - m1^2 == 0 (mod n) or (m2 + m1) (m2 - m1) - k n == 0. This implies that f1 =
-	//  (m2 + m1) and f2 = (m2 - m1) each contains a prime or composite factor of n. By dividing n by f1 and
-	//  f2 and then recursively using the factorization algorithm for the reduced modulus, the modulus can be
-	//  completely factored. If the sqrt algorithm returns the same value m2 == m1, then m1 has to be re-chosen
-	//  to be a different value until the algorithm returns a different value for m2, but this will only happen
-	//  once in every 2^k times where k is the number of prime factors in the modulus or number being factored.
+	//  c = m1^2 (mod n) is solved for m2 = sqrt(c) (mod n), then the number can be factored using the difference
+	//  of squares m2^2 - m1^2 == 0 (mod n) or (m2 + m1) (m2 - m1) - k n == 0. This implies that f1 = (m2 + m1)
+	//  and f2 = (m2 - m1) each contains a prime or composite factor of n. By dividing n by f1 and f2 and then
+	//  recursively using the factorization algorithm for the reduced modulus, the modulus can be completely fac-
+	//  tored. If the sqrt algorithm returns the same value m2 == m1, then m1 has to be re-chosen to be a differ-
+	//  ent value until the algorithm returns a different value for m2, but this will only happen once in every
+	//  2^k times where k is the number of prime factors in the modulus or number being factored.
 	//
 	//  Solving the coprime root extraction problem c = m ^ e (mod n) where (e, phi(n)) == 1 is not equivalent
 	//  to factorization because there is no difference of squares for the roots of c = m ^ e (mod n) if the
 	//  sqrt(c) always gives the same value of m. The problem with coprime root extraction is that the function
 	//  is invertible without factoring or unmultiplying the modulus n, and the function can be inverted as fast
-	//  as it can be computed. (Michael Rabin had thought of using coprime root extraction as a public key ci-
-	//  pher but he knew that it wasn't equivalent to factorization.)
+	//  as it can be computed. (Michael Rabin had thought of using coprime root extraction as a public key cipher
+	//  but he knew that it wasn't equivalent to factorization.)
 	//
 	//  The Rabin cipher can use any exponent e > 1 by choosing a prime factor that has the same number in the
 	//  totient whereas the RSA / coprime root extraction cipher can only use exponents e > 2 that are co-prime
@@ -58922,15 +59264,6 @@ class PublicKey
 	//  m ^ e (mod n) still has e ^ k solutions where k is the number of factors (or prime powers) in the mod-
 	//  ulus, but the recipient can extract the message by inverting e modulo phi(n)/e instead of modulo phi be-
 	//  cause the message is a perfect square or cube in addition to a quadratic or cubic residue modulo n.
-	//
-	//  The key generation could be made faster by choosing a large random number for the modulus n and then
-	//  multiplying n by a 512-bit prime. The encryption method was made faster by choosing a secret key m ~
-	//  sqrt(n) and log2(n) = 2^k - 1024; then computing c = m^2 mod n only requires one large multiplication
-	//  but no large division. The modular reduction is several times faster because the divide method calls
-	//  the quadratic divider instead of the inverter if the dividend is only slightly larger than the divisor.
-	//  If the message were chosen such that m ~ n, then the modulus and inverse would have to be stored in a
-	//  static class member to avoid doing inversions for each decryption because division is ten to twenty
-	//  times more expensive than multiplication.
 	//
 	//  Note that the terms Rabin cipher and RSA refer to the ciphers whereas quadratic residue, square root ex-
 	//  traction, and coprime root extraction refer to the math problems on which the ciphers are based. The math
@@ -58953,16 +59286,17 @@ class PublicKey
 	//
 	//  The sub-exponential method for solving the integer discrete log problem (modulo a prime) is called the
 	//  index-calculus algorithm. The Handbook of Applied Cryptography says that "...the basic ideas behind the
-	//  index-calculus algorithm first appeared in the work of Kraitchik (circa 1922-1924) and of Cunningham
-	//  and was rediscovered by several authors ... Pomerance credits the idea of multiplying congruences to
-	//  produce a solution to x^2 == y^2 (mod n) for the purpose of factoring n to some old work of Kraitchik
-	//  circa 1926-1929."
+	//  index-calculus algorithm first appeared in the work of Kraitchik (circa 1922-1924) and of Cunningham and
+	//  was rediscovered by several authors ... Pomerance credits the idea of multiplying congruences to produce
+	//  a solution to x^2 == y^2 (mod n) for the purpose of factoring n to some old work of Kraitchik circa
+	//  1926-1929."
 	//
 	//  Kraitchik's method can only solve the discrete log / factorization problem up to ~ 256 bits because it
-	//  has to find round numbers or numbers that contain only small factors. By using a linear sieve, quadra-
-	//  tic sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's
-	//  method can solve the discrete log / factorization problem up to ~ 512 to ~ 768 bits which is on the or-
-	//  der of a thousand bits. A polynomial-time algorithm can factor numbers up to 1 to 10 M bits.
+	//  has to find round numbers or numbers that contain only small factors. By using a linear sieve, quadratic
+	//  sieve, or number field sieve to reduce the size of the numbers by half to two-thirds, Kraitchik's method
+	//  can solve the discrete log / factorization problem up to ~ 512 to 1 K bits. A polynomial-time algorithm
+	//  that has a running time of O(n^2 log n) could factor integers up to 1 to 10 M bits if the space require-
+	//  ments are quadratic or O(n^2).
 	
 	
 	
@@ -58971,12 +59305,14 @@ class PublicKey
 	
 	//  The Rabin / factorization / co-composite root extraction cipher
 	//
-	//  This cipher works with any exponent 2, 3, 4, 5, 6, ...
-	//  that is co-composite with the totient of the modulus
+	//  The Rabin cipher is the world's only integer cipher
 	//
-	//  the size of the public key is 10^7 or ~ 10 M bits
+	//  The public key size is O(10^7) or ~ 4 to 8 M bits
 	//
-	//  For the exponent 2
+	//  Choose an exponent 2, 3, 4, 5, ... that is
+	//  co-composite with the totient of the modulus;
+	//
+	//  for the exponent 2
 	//
 	//  the static private key p[] is an array of primes congruent to 3 modulo 4;
 	//
@@ -59012,6 +59348,9 @@ class PublicKey
 	
 	
 	//  The Merkle-Hellman / knapsack cipher
+	//
+	//  The knapsack cipher was the world's first quantum-resistant
+	//  public key cipher and the only cipher to use a nonpublic modulus
 	//
 	//  Generating the recipient's static key
 	//
@@ -59100,20 +59439,20 @@ class PublicKey
 	//
 	//  Also the sender would have to include a non-random pattern in the message
 	//  such as non-consecutive repeating digits so the decryptor would know which
-	//  solution is the correct key. For example, for 64 elements, the average num-
-	//  ber of ones for a random base-16, 64-digit number would be 1/16 / element *
-	//  64 elements == 4, but the probability of getting 24 ones would be Poisson(
-	//  u = 4, x = 24) ~ 10^-11 or one in a hundred billion, and 28 ones would be
-	//  P(u = 4, x = 28) ~ 10^15 or 1 in a quadrillion. If the number of elements is
-	//  64, the size of m[i] is four bits or 16, and the lower 20 elements are dis-
-	//  carded because they contain errors, then the number of solutions is 10^15 *
-	//  16 ^ (64-20-28) ~ 2^50 * 2^(4*16) == 2 ^ 114. For 60 elements there would be
-	//  ~ 2 ^ 100 or 1 nonillion solutions.
+	//  solution is the correct key. For example, for 64 elements, the average number
+	//  of ones for a random base-16, 64-digit number would be 1/16 / element * 64
+	//  elements == 4, but the probability of getting 24 ones would be Poisson(u = 4,
+	//  x = 24) ~ 10^-11 or one in a hundred billion, and 28 ones would be P(u = 4,
+	//  x = 28) ~ 10^15 or 1 in a quadrillion. If the number of elements is 64, the
+	//  size of m[i] is four bits or 16, and the lower 20 elements are discarded be-
+	//  cause they contain errors, then the number of solutions is 10^15 * 16 ^ (64
+	//  -20-28) ~ 2^50 * 2^(4*16) == 2 ^ 114. For 60 elements there would be ~ 2^100
+	//  or 1 nonillion solutions.
 	//
 	//  If the knapsack cipher could be shown to be breakable, then the cipher in the
 	//  public key class would have to be modified to include small random errors in
 	//  the static public key. The one-time public key is already unbreakable because
-	//  it include random errors in the message m[].
+	//  it includes random errors in the message m[].
 	
 	
 	
@@ -59237,6 +59576,8 @@ class PublicKey
 			}
 			
 			
+			//  Unpack the vector from the static public key
+			
 			Number[] A = new Number[t];
 			
 			for (int i = 0; i < t; i++)
@@ -59245,6 +59586,8 @@ class PublicKey
 			
 				digits/t * i, digits/t * (i+1)), 16);
 			
+			
+			//  Compute the vector product A[] X[]
 			
 			Number b = new Number(0);
 			
@@ -59674,7 +60017,7 @@ class PublicKey
 			
 			for (int i = rep; i < ones_zeros.length; i++)
 			
-			    ones_zeros[i] = new Number((i < rep) ? digit : 0);
+			    ones_zeros[i] = new Number(i < rep ? digit : 0);
 			
 			Number key = x[1];
 			
@@ -59838,7 +60181,7 @@ class PublicKey
 			//  While the random numbers can be probabilistic
 			//  they should be deterministic so that a program
 			//  can test if a public key is being reused by
-			//  hashing the key and comparing the hashes.
+			//  hashing the key and comparing the hash values.
 			
 			StringBuilder sb = new StringBuilder(ystr);
 			
@@ -59998,11 +60341,7 @@ class PublicKey
 		
 		//  Add the secret keys to create the composite secret key
 		
-		Number compositekey = new Number(e[0]);
-		
-		for (int i = 1; i < tarray.length; i++)
-		
-		    compositekey = compositekey .xor(e[i]);
+		Number compositekey = Number.xor(e);
 		
 		return compositekey;
 	}
@@ -60023,7 +60362,7 @@ class PublicKey
 	
 	//  This is the private, non-static or instance method for generating the secret
 	//  key agreement from the user's static or one-time public key. If the user's
-	//  key is a static public key, then the argument key z is the sender's one-time
+	//  key is a static public key, then the argument z is the sender's one-time
 	//  public key, and if the user's key is a one-time public key, then z is the
 	//  recipient's static public key.
 	
@@ -60044,7 +60383,7 @@ class PublicKey
 		//  if (type == 2    sender / encryption) m is chosen and z is ignored
 		//
 		//  The method knows whether a public key cipher is asymmetric or symmetric
-		//  from the size of z because no two ciphers are allowed to have the same size.
+		//  from the size of z because no two ciphers are allowed to have the same size
 		
 		
 		
@@ -60779,10 +61118,10 @@ class PublicKey
 			
 			Matrix matrix = new Matrix(new Number[][] { Z, X1, X2 });
 			
-			//  Determinant1() and determinant() give the same answer but
+			//  determinant1() and determinant() give the same answer but
 			//  determinant1 uses integers whereas determinant() uses frac-
 			//  tions, inverses and divisions to reduce the matrix to echelon
-			//  form. Determinant() also returns an integer if the fractional
+			//  form; determinant() also returns an integer if the fractional
 			//  part of the result is zero or if the elements of the original
 			//  matrix are all zero. For matrices larger than 3 x 3 or 4 x 4,
 			//  determinant() would have to be used because determinant1() has
@@ -64611,13 +64950,262 @@ class Cipher
 	//  only the encryptor, decryptor, or recipient knows the value of SK to decrypt
 	//  k' and recover the one-time encryption key k.
 	
-	//  An encrypted or secret message can be called a cryptogram or cryptograph, or it
-	//  can be called cipherdata, ciphertext, or cipher. Cipher can refer to the secret
-	//  message or to the algorithm or method used to encipher the message.
+	
+	
+	
+	
+	
+	//  Private Key Cryptography
 	//
-	//  The words encipher and encrypt can be used synonymously because they have similar
-	//  meanings. To encipher means to make empty or zero and to encrypt means to make
-	//  secret or hidden.
+	//
+	//  Private key cryptography is the enciphering and deciphering of messages.
+	//  Enciphering converts a message to cipher in order to conceal its meaning or
+	//  render it unintelligible, and deciphering converts the cipher back to the
+	//  original message.
+	//
+	//  The enciphered or unintelligible form of a message is called the ciphertext,
+	//  cipherdata or cipher, and the message in its intelligible form is called the
+	//  cleartext, plaintext, or plaindata.
+	//
+	//  An encrypted or secret message can also be called a cryptogram or cryptograph
+	//  which means secret writing. The word cipher can refer to the encrypted message
+	//  or to the algorithm or method used to encipher the message.
+	//
+	//  A private key cipher is a method or function for transforming a message from
+	//  plaintext to ciphertext (or plaindata to cipherdata) and from ciphertext to
+	//  plaintext using a secret parameter or number called the private key.
+	//
+	//  The same key that enciphers a message also deciphers the message. Because the
+	//  same key is used for encryption and decryption, private key cryptography is
+	//  sometimes called symmetric key cryptography. (Public key cryptography is called
+	//  asymmetric cryptography because it requires a public key for encryption and a
+	//  private key for decryption.)
+	//
+	//  The words encipher (1577) and encrypt (1944) have similar meanings and are used
+	//  interchangeably. The word encipher means to make empty or zero and the word en-
+	//  crypt means to make secret.
+	//
+	//  An enciphered or encrypted message is unintelligible or has no meaning to any-
+	//  one without the private key because the data is perfectly random or disordered.
+	//  By definition, this means that all values of the cipherdata are equally proba-
+	//  ble or occur with the same frequency, just like the digits of pi. (Cipherdata
+	//  is also incompressible because the digits or characters are perfectly random,
+	//  disordered, or chaotic.)
+	//
+	//  A private key cipher works by mapping or assigning each block of plaintext
+	//  p = p[i] to a corresponding block of ciphertext c = c[i] using an invertible
+	//  function c = E(k, p) where k is a private key.
+	//
+	//  The inverse function p = E^-1(k, c) reverses the encryption and converts the
+	//  ciphertext back to plaintext. If a message is properly encrypted, there is no
+	//  way to reverse the encryption to recover the message or plaintext without the
+	//  private key.
+	//
+	//  The simplest private key cipher is the invertible math function E(k, p) =
+	//  k (+) p. If k is a random number that is used only once, it is impossible to
+	//  solve for the plaintext message p because there are two variables but only one
+	//  equation.
+	//
+	//  To encrypt a message using a one-time cipher, a one-time pad k[] is generated
+	//  using a hash function of the message and private key, and then the cipherdata
+	//  array is computed by xor-ing the key array and the plaindata array. (Xor-ing
+	//  means adding each pair of bits modulo 2 or without the carry bits.) The message
+	//  is also recovered by xor-ing the key array and the cipherdata array because ad-
+	//  dition and subtraction are identical in base 2.
+	//
+	//  The one-time cipher or secret code c = k (+) p is unbreakable even by trying
+	//  all the combinations because all values of the message p == c (+) k are equally
+	//  probable if the key k is perfectly random.
+	
+	
+	
+	
+	//  Cipher block chaining (CBC)
+	//
+	//  Cipher block chaining adds the previous cipher block c[i-1] to the secret
+	//  encryption key (or to the current message block) to generate the cipher
+	//  block c[i] = p[i] (+) H( k (+) c[i-1] )  (or c[i] = E( k, p[i] (+) c[i-1] ).
+	//
+	//  Cipher block chaining is equivalent to adding a public random number to
+	//  each input block because the output value of an encryption function is a
+	//  public random number. This increases the entropy of the plaintext so that
+	//  all ciphertext values are equally probable.
+	//
+	//  Without cipher block chaining, the entropy of the ciphertext would be the
+	//  same as the plaintext because enciphering is a one-to-one mapping of plain-
+	//  text to ciphertext. (The mapping has to be one-to-one because encryption has
+	//  to be reversible.) This is a problem for reusable ciphers because plaintext
+	//  has very little entropy which limits the number of mappings or assignments.
+	//
+	//  The initial value or initialization vector should be different for each
+	//  message or the cipher should be re-keyed so that the same messages do not
+	//  encrypt to the same ciphertext. If the cipher is re-keyed for each message,
+	//  then the iv is redundant because the hash function generates a different
+	//  array of random numbers.
+	
+	
+	
+	
+	//  Hash Encryption
+	//
+	//  For hash ciphers, cipher block chaining is not required because the hash
+	//  function H(k + i) where k = H(m) generates an array of random numbers or
+	//  private keys that are added to the message blocks. (Using a hash function
+	//  of a secret key and indexer to generate random numbers is called counter
+	//  or CTR mode.)
+	//
+	//  Hash ciphers can use cipher block chaining or CBC mode instead of CTR mode
+	//  so that each cipher block c[i] = p[i] + H( k (+) c[i-1] ) does not depend
+	//  directly on the indexer i; each message block p[i] depends only on the
+	//  current and previous cipher block c[i-1]. This enables the receiver to
+	//  recover from missing cipher blocks, but the dependency on the previous
+	//  cipher block means that encryption in CBC mode is not parallelizable.
+	
+	
+	
+	
+	//  Encoding and decoding
+	//
+	//  Encoding converts a message to code by substituting one value for another
+	//  value using a dictionary or conversion table of integers to characters.
+	//
+	//  Encoding is used to display or transmit encrypted data because cipherdata is
+	//  perfectly random, and random data contains special characters that cannot be
+	//  printed or displayed properly or transmitted over a network using internet or
+	//  mail transport protocols that only work with text characters.
+	//
+	//  Encoding hides characters such as newlines that are interpreted as delimiters,
+	//  separators, or line terminators by mapping the group of bits to a smaller set
+	//  of characters such as the hexadecimal (base 16) or alphanumeric and + / (base
+	//  64) characters.
+	//
+	//  If encoding is used to convert cipherdata to ciphertext, it will expand the
+	//  size of the data because every four bits (16 values) of cipherdata will be re-
+	//  placed by eight-bit hex chars (in base 16), or every six bits of ciphertext
+	//  will be replaced by eight-bit ASCII chars (in base 64).
+	//
+	//  Base-64 encoding is more space efficient because it only expands the message to
+	//  8 bits / 6 bits == 4/3 == 1 + 1/3 times the size, which is an expansion of 1/3,
+	//  whereas base-16 encoding expands the message to 8/4 == 1 + 1 times the size
+	//  which is an expansion of 1 or a doubling of the message size. If a message has
+	//  to be encoded three or four times to package the text with a reply key and file
+	//  attachments, then base-64 encoding is much more space efficient than base-16
+	//  because 2^4 == 16 while (4/3)^4 ~ 3.2 which is 5 times smaller.
+	//
+	//  For file encryption there is no need to encode and decode the cipherdata unless
+	//  the encrypted file has to be printed or sent to another computer over a network.
+	
+	
+	
+	
+	//  Cryptographic hash functions
+	//
+	//  A one-way hash function m = H(M) is a method of transforming a message, docu-
+	//  ment, file or program of any length to a fixed-length number called a hash
+	//  value or hash.
+	//
+	//  The hash should be easily computable, non-invertible, collision-free, and per-
+	//  fectly random. This means that for any hash m it should be impossible to find
+	//  a pre-image M such that m = H(M), or to find two messages M1 and M2 that hash
+	//  to the same value. All digits of the hash should change randomly as the input
+	//  M changes by any value.
+	//
+	//  A hash value can be used to verify the integrity or authenticity of a message,
+	//  document, file or program by comparing the computed hash value to a published
+	//  hash value. The hash value can also be signed using a digital signature algo-
+	//  rithm and signature key.
+	
+	
+	
+	
+	//  Padding and unpadding binary data for encryption
+	//
+	//  To pad an int array, append a 32-bit int such as 0x00000000 and then append
+	//  at least a few more 32-bit ints adding the same increment to each integer
+	//  modulo 2^32. The increment could be 0, 1, or any random integer.
+	//
+	//  To unpad an int array, read the last three integers and calculate the differ-
+	//  ence modulo 2^32. Then keep removing integers until the integer equals zero
+	//  or the difference modulo 2^32 changes between two consecutive integers.
+	//
+	//  (If the last three integers do not increase or decrease by the same value
+	//  modulo 2^32, then the message did not decrypt correctly or the ciphertext is
+	//  defective.)
+	//
+	//
+	//  Padding and unpadding text messages for encryption
+	//
+	//  For text messages that use ASCII or Unicode characters, the cipher class pads
+	//  messages by appending a single white space character followed by several re-
+	//  peating characters, such as a space character followed by several newline
+	//  characters.
+	//
+	//  The private key / cipher class unpads messages by reading the last few char-
+	//  acters to identify the repeating character and then removing the same chars
+	//  until the repeating character changes. It also removes a single white space
+	//  character.
+	//
+	//  Messages should be padded to a random multiple of their size before encipher-
+	//  ing so the same messages do not encrypt to the same length.
+	
+	
+	
+	
+	//  Private encryption key generation
+	//
+	//  The encryption key can be generated from a secret passphrase, the hash of
+	//  the message, a random number generator, and a time source which provides an
+	//  initial value for the random number algorithm. Private key generation should
+	//  always use as many sources of entropy as possible. The values of these sources
+	//  can be xor-ed and then hashed to create a private key.
+	//
+	//  A one-time public key, encryption key, or signature key should be a function
+	//  of the message even if it uses a random number generator because the message
+	//  provides an additional source of entropy.
+	//
+	//  For synchronous public key agreement or socket communication, the client's
+	//  one-time private key is only a function of a random number because there is
+	//  no message until after the public keys are exchanged and there is no client
+	//  static public key.
+	
+	
+	
+	
+	//  Generating perfectly random permutations
+	//
+	//  To generate a permutation of the integers or indexes 1, 2, 3, ..., n that is
+	//  equally likely to be any of the n! permutations, generate an array of random
+	//  numbers rand[] modulo the decreasing modulus n-0, n-1, n-2,..., 0, and then for
+	//  each index i = 1 to n swap or interchange element[n -i] and element[rand[i]].
+	//
+	//  for (int i = 0; i < elements; i++) swap(element[n-1 -i], element[rand(n-1 -i)]);
+	//
+	//  This swaps the elements in the array in reverse order starting from element n.
+	//  Each highest element n, n-1, n-2, n-3, ... can only be swapped once because the
+	//  modulus (n - i) of the random number generator decreases for each iteration.
+	
+	
+	
+	
+	//  Digital coin flipping
+	//
+	//  Two parties choose and encrypt a large random number using a private key cipher
+	//  or hash function. They exchange the encrypted random numbers or hash values, and
+	//  then they exchange the private keys or pre-images to verify the hash values and
+	//  add them modulo n. If the number is less than n/2, one party wins, and if the
+	//  number is greater than or equal to n/2, the other party wins.
+	//
+	//  To encrypt a random number, both parties use the same private key cipher or hash
+	//  function. If a one-way hash function is used, then the pre-image is the secret
+	//  random number and the hash is the public key to be exchanged. The pre-image and
+	//  hash values could be 256-bit numbers for verifying the hash but the modulus n
+	//  could be a small number such as 256 or 100.
+	//
+	//  Neither party can cheat because the hashes of the private keys are exchanged
+	//  before the private keys or pre-images. This means that they cannot change the
+	//  value of the private key or pre-image after receiving the other party's public
+	//  key since the hash value of the new private key or pre-image would not corre-
+	//  spond to the previous hash or public key that was exchanged.
 	
 	
 	
@@ -64772,22 +65360,22 @@ class Cipher
 	//
 	//  No padding scheme is perfect because if the user intentionally creates a document that
 	//  uses the padding scheme, then the test will return true even though the padding is part
-	//  of the document. A user would have to repeat the last char and then append at least
-	//  32 + 1 consecutive chars from the ASCII set ... !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFG
-	//  HIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ... to create a padded document
-	//  which couldn't happen accidentally.
+	//  of the document. A user would have to repeat the last char and then append at least 32+1
+	//  consecutive chars from the ASCII set ... !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO
+	//  PQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ... to create a padded document which
+	//  couldn't happen accidentally.
 	//
 	//  For example, if the user types a document, appends an 'A' and then the Latin alphabet
 	//  A to Z followed by the seven chars [\]^_`a, or the user types 00123456789:;<=>?@ABCDEFG
 	//  HIJKLMNOP the isPadded method will return true. If the chars are reversed it will also
-	//  return true because the front of the array will be padded. But it wouldn't matter be-
-	//  cause if the encrypt and decrypt methods pad and remove from the same end of the array,
-	//  then only the encrypt padding would get removed, unless the encrypt method does an is-
-	//  Padded test (which it does so the plaindata doesn't get padded twice by the PublicKey
-	//  and the Private Key / Cipher encrypt methods). And even if it does get removed it
-	//  wouldn't matter if the user is padding the document intentionally, and if the padding
-	//  is unintentional then the recipient will only be missing an increasing sequence of bytes
-	//  (or a sequence of Fibonacci numbers modulo 256).
+	//  return true because the front of the array will be padded. But it wouldn't matter because
+	//  if the encrypt and decrypt methods pad and remove from the same end of the array, then
+	//  only the encrypt padding would get removed, unless the encrypt method does an isPadded
+	//  test (which it does so the plaindata doesn't get padded twice by the PublicKey and the
+	//  Private Key / Cipher encrypt methods). And even if it does get removed it wouldn't matter
+	//  if the user is padding the document intentionally, and if the padding is unintentional
+	//  then the recipient will only be missing an increasing sequence of bytes (or a sequence of
+	//  Fibonacci numbers modulo 256).
 	//
 	//  For email encryption the front of the array should be padded so the recipient can down-
 	//  load the tops of the messages and decrypt the partial ciphertexts to read the subject
@@ -66319,16 +66907,13 @@ class Cipher
 			
 			//  Permutate the elements in a[] and b[]
 			
-			//  This code was added to make the cipher
-			//  even more complicated
+			//  This code was added to make the cipher even more complicated
 			
-			//  For 64 elements there are 64! possible
-			//  permutations or 64*63*62*...*4*3*2*1
-			//  ~ (64 / e) ^ 64 ~ 24 ^ 64 ~ 10 ^ 88.
+			//  For 64 elements there are 64! possible permutations or
+			//  64*63*62*...*4*3*2*1 ~ (64 / e) ^ 64 ~ 24 ^ 64 ~ 10 ^ 88.
 			//
-			//  For two arrays there are (10 ^ 88) ^ 2
-			//  == 10 ^ 176 permutations which is more
-			//  than 2 ^ 512 or 512 bits of entropy,
+			//  For two arrays there are (10 ^ 88) ^ 2 == 10 ^ 176 permu-
+			//  tations which is more than 2 ^ 512 or 512 bits of entropy,
 			//  randomness or disorder.
 			
 			
@@ -67081,8 +67666,9 @@ class Math
 	
 	
 	//  The number of threads variable is public. If the number
-	//  of threads is changed to private, then a get and set
-	//  method will be required to change the number of threads.
+	//  of threads is changed to private, then a get and set or
+	//  accessor and mutator method will be required to change
+	//  the number of threads.
 	
 	
 	
@@ -68261,12 +68847,12 @@ class Math
 		//  was unknown before Fermat's little theorem a^(p-1) == 1 (mod p) was pub-
 		//  lished in the seventeenth century. (This theorem says that a^(p-1) == 1 ==
 		//  a^0 (mod p) for a != 0 (mod p) which implies that the inverse of a or 1/a
-		//  is a^(p-1) / a == a ^ (p-2) (mod p))
+		//  is a^(p-1) / a == a^(p-2) (mod p))
 		//
-		//  In the first century A.D., Nicomachus mentioned the problem of computing
-		//  the composite residue from a set of reduced residues and moduli but he did
-		//  not provide a method for solving the problem. One of two treatises by
-		//  Nicomachus that has survived is called Introductio Arithmetica.
+		//  In the first century A.D., Nicomachus mentioned the problem of computing the
+		//  composite residue from a set of reduced residues and moduli but he did not
+		//  provide a method for solving the problem. One of two treatises by Nicomachus
+		//  that has survived is called Introductio Arithmetica.
 		//
 		//  The name crt is still correctly used to refer to the Chinese remainder the-
 		//  orem, just as fta is used to refer to the fundamental theorem of arithmetic.
@@ -68316,7 +68902,7 @@ class Math
 		
 		for (int i = 0; i < r.length; i++)
 		
-		    r[i] = r[i] .mod(n[i]) .add(n[i]) .mod(n[i]);
+		    r[i] = r[i] .mod(n[i]);
 		
 		//  t = the number of coprime moduli
 		
@@ -68326,11 +68912,7 @@ class Math
 		
 		Number[] m = new Number[t];
 		
-		Number N = new Number(1);
-		
-		for (int j = 0; j < t; j++)
-		
-		    N = N .multiply(n[j]);
+		Number N = Number.multiply(n);
 		
 		
 		//  this is a slow loop because
@@ -68372,11 +68954,7 @@ class Math
 		
 		//  Compute the composite modulus N
 		
-		N = new Number(1);
-		
-		for (int i = 0; i < t; i++)
-		
-		    N = N .multiply(n[i]);
+		N = Number.multiply(n);
 		
 		
 		//  Reduce the common residue modulo N
@@ -68448,19 +69026,16 @@ class Math
 		if (r.length != n.length)
 		{
 			String message = "number of residues"
-			
 			    + " does not equal number of moduli";
 			
 			throw new IllegalArgumentException(message);
 		}
 		
-		//  t = the number of coprime moduli
-		
 		int t = n.length;
 		
 		Number[] C = new Number[t];
 		
-		for (int i = 0; i < t; i++)
+		for (int i = 1; i < t; i++)
 		{
 			C[i] = new Number(1);
 			
@@ -68476,7 +69051,7 @@ class Math
 		
 		Number M = new Number(1);
 		
-		for (int i = 0; i < t; i++)
+		for (int i = 1; i < t; i++)
 		{
 			u = r[i].subtract(R) .multiply(C[i]) .mod(n[i]);
 			
@@ -70536,7 +71111,7 @@ class Number implements Comparable<Number>
 	//
 	//  if the digit modulus were 2 instead of 2^32, then the
 	//  integer / fraction point would also be called a binary
-	//  point; for a digit size or modulus 16, it would be
+	//  point; for a 4-bit digit or modulus 16, it would be
 	//  called a hexadecimal point; and for a digit modulus 10,
 	//  the integer / fraction point would be called a decimal
 	//  point. The toString(digits, radix) method can convert a
@@ -71254,7 +71829,7 @@ class Number implements Comparable<Number>
 	
 	public static Number add(Number[] array)
 	{
-		//  returns the sum of array[]
+		//  returns the sum of an array
 		
 		Number sum = new Number(0);
 		
@@ -71504,8 +72079,11 @@ class Number implements Comparable<Number>
 	{
 		//  compares two numbers and returns 1, 0, -1
 		
-		Number a = new Number(this) .roundBit();
-		Number b = new Number(val)  .roundBit();
+		Number a = new Number(this);
+		Number b = new Number(val);
+		
+		if (a.precision != 0) a = a.roundBit();
+		if (b.precision != 0) b = b.roundBit();
 		
 		int[] array1 = a.intarray;
 		int[] array2 = b.intarray;
@@ -71748,6 +72326,64 @@ class Number implements Comparable<Number>
 	
 	
 	
+	//  Trigonometric relations, formulas, identities,
+	//
+	//  or properties of triangles
+	//
+	//
+	//  The sum of two angle formulas
+	//
+	//  cos(a + b) == cos(a) cos(b) - sin(a) sin(b),
+	//  sin(a + b) == sin(a) cos(b) + cos(a) sin(b),
+	//
+	//  The double angle formulas
+	//
+	//  cos(2a) == cos(a + a) == cos(a) cos(a) - sin(a) sin(a) == cos^2(a) - sin^2(a)
+	//  sin(2a) == sin(a + a) == sin(a) cos(a) + cos(a) sin(a) == 2 sin(a) cos(a)
+	//
+	//  sin(A) / a  ==  sin(B) / b  ==  sin(C) / c  (the law of sines)
+	//
+	//  c^2 == a^2 + b^2 - 2 a b cos C  (the law of cosines)
+	//
+	//  c^2 == a^2 + b^2  (the right-triangle formula / Pythagorean theorem)
+	//
+	//  sin^2 (A) + cos^2 (A) == 1  (the right-angle formula for the unit circle)
+	//
+	//
+	//  The series for cosine and sine
+	//
+	//                n  2 n + 0
+	//  cos(x) == (-1)  x       / (2 n + 0)!
+	//
+	//                n  2 n + 1
+	//  sin(x) == (-1)  x       / (2 n + 1)!
+	//
+	//
+	//  The law of sines
+	//
+	//  sin(A) / a  ==  sin(B) / b  ==  sin(C) / c  where A, B, C
+	//
+	//  are the three angles subtended by sides a, b, and c.
+	//
+	//
+	//  The law of cosines
+	//
+	//  c^2 == a^2 + b^2 - 2 a b cos C
+	//
+	//
+	//  The sine and cosine for the angles [ 0, 30, 45, 60, 90 ]
+	//  can be remembered from the mnemonic
+	//  ____________________________________________
+	//
+	//           0       30      45      60      90
+	//           _       _       _       _       _
+	//   sin   \/0/2   \/1/2   \/2/2   \/3/2   \/4/2
+	//           _       _       _       _       _
+	//   cos   \/4/2   \/3/2   \/2/2   \/1/2   \/0/2
+	//   ___________________________________________
+	
+	
+	
 	private Number[] cos_sin()
 	{
 	
@@ -71760,18 +72396,6 @@ class Number implements Comparable<Number>
 		//
 		//                n  2 n + 1
 		//  sin(x) == (-1)  x    /  (2 n + 1)!
-		
-		
-		//  The sine and cosine for the angles [ 0, 30, 45, 60, 90 ]
-		//  can be remembered from the mnemonic
-		//  ____________________________________________
-		//
-		//           0       30      45      60      90
-		//           _       _       _       _       _
-		//   sin   \/0/2   \/1/2   \/2/2   \/3/2   \/4/2
-		//           _       _       _       _       _
-		//   cos   \/4/2   \/3/2   \/2/2   \/1/2   \/0/2
-		//   ___________________________________________
 		
 		
 		final int bits = 16;
@@ -71826,9 +72450,11 @@ class Number implements Comparable<Number>
 		//
 		//  where i is the imaginary unit = sqrt(-1)
 		
-		int p = (this.precision > 0) ? this.precision : 16;
+		int p = this.precision > 0 ? this.precision : 16;
 		
-		return  e(p).pow(this) .subtract(e(p).pow(this.negate())) .divide(2);
+		return  e(p) .pow(this) .subtract(
+		
+		    e(p) .pow(this.negate())) .divide(2);
 	}
 	
 	
@@ -71851,9 +72477,11 @@ class Number implements Comparable<Number>
 		
 		int len = substr.length(), zeros = 0;
 		
-		for (int i = 0; i < len; i++) if (substr
+		for (int i = 0; i < len; i++)
 		
-		    .charAt(len -1 - i) == '0') zeros++;
+		   if (substr.charAt(len -1 - i) == '0') zeros++;
+		
+		   else break;
 		
 		int digits = len - zeros;
 		
@@ -72440,19 +73068,32 @@ class Number implements Comparable<Number>
 	
 	
 	
-	public static Number[] divide(Number[] array, Number n)
+	public static Number[] divide(Number[] array, Number divisor)
 	{
-		//  divides an array by a number n
+		//  divides an array by a divisor
 		
-		Number[] array1 = new Number[array.length];
+		Number[] quotients = new Number[array.length];
 		
 		for (int i = 0; i < array.length; i++)
 		
-		    array1[i] = array[i].divide(n);
+		    quotients[i] = array[i].divide(divisor);
 		
-		return array1;
+		return quotients;
 	}
 	
+	
+	public static Number[] divide(Number a, Number[] divisors)
+	{
+		//  divides a number by an array of divisors
+		
+		Number[] quotients = new Number[divisors.length];
+		
+		for (int i = 0; i < divisors.length; i++)
+		
+		    quotients[i] = a.divide(divisors[i]);
+		
+		return quotients;
+	}
 	
 	
 	
@@ -73858,6 +74499,56 @@ class Number implements Comparable<Number>
 	}
 	
 	
+	
+	//  Logarithmic identities or properties of logarithms
+	//
+	//  log (a ^ b) ==  b log (a)
+	//
+	//  (the exponent of the argument commutes
+	//   with the coefficient of the logarithm)
+	//
+	//
+	//  Adding and subtracting logarithms
+	//
+	//  log (a * b) == log (a) + log (b)
+	//  log (a / b) == log (a) - log (b)
+	//
+	//
+	//  Multiplying logarithms
+	//
+	//  (the repeating term b disappears in the product)
+	//
+	//  log (b) log (c) == log (c)
+	//     a       b          a
+	//
+	//  log (b) log (c) log (d) log (e) ... log (z)  ==  log (z)
+	//     a       b       c       d           y            a
+	//
+	//
+	//  Inverting logarithms
+	//
+	//  (the reciprocal of a logarithm swaps
+	//  the base and the argument)
+	//
+	//  log (b) == 1 / log (a)
+	//     a              b
+	//
+	//
+	//  Dividing logarithms
+	//
+	//  (If the bases are the same, the bases disappear)
+	//
+	//  log (b) / log (a)  ==  log (c) log (b)  ==  log (b)
+	//     c         c            a       c            a
+	//
+	//  (if the arguments are the same, the arguments
+	//  disappear and the bases are swapped)
+	//
+	//  log (c) / log (c)  ==  log (c) log (b) == log (b)
+	//     a         b            a       c          a
+	
+	
+	
 	public Number ln()
 	{
 		//  computes the natural logarithm
@@ -74060,15 +74751,15 @@ class Number implements Comparable<Number>
 			//                    n+1  n
 			//  log(1 + x) == (-1)   x  / n  for 0 < (1 + x) < 2
 			//
-			//  log = log.add( x.pow(n) .divide(n)
+			//  log = log .add( x.pow(n) .divide(n)
 			//
-			//      .multiply(((n % 2) == 1) ? 1 : -1));
+			//      .multiply((n % 2) == 1 ? 1 : -1) );
 			
 			powerofx = powerofx .multiply(x);
 			
 			Number log1 = powerofx .divide(n)
 			
-			    .multiply(((n % 2) == 1) ? 1 : -1 );
+			    .multiply((n % 2) == 1 ? 1 : -1);
 			
 			log = log .add(log1);
 			
@@ -74129,26 +74820,26 @@ class Number implements Comparable<Number>
 	{
 		//  returns the largest element
 		
-		Number max = new Number(array[0]);
+		Number m = new Number(array[0]);
 		
-		for (Number n : array) if (n
+		for (Number n : array)
 		
-		   .isGreaterThan(max)) max = n;
+		   m = n.isGreaterThan(m) ? n : m;
 		
-		return max;
+		return m;
 	}
 	
 	public static Number min(Number[] array)
 	{
 		//  returns the smallest element
 		
-		Number min = new Number(array[0]);
+		Number m = new Number(array[0]);
 		
-		for (Number n : array) if (n
+		for (Number n : array)
 		
-		   .isLessThan(min)) min = n;
+		   m = n.isLessThan(m) ? n : m;
 		
-		return min;
+		return m;
 	}
 	
 	
@@ -74249,6 +74940,20 @@ class Number implements Comparable<Number>
 	}
 	
 	
+	public static Number[] mod(Number a, Number[] n)
+	{
+		//  reduces a number modulo an array of n
+		
+		Number[] array = new Number[n.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    array[i] = a .mod(n[i]);
+		
+		return array;
+	}
+	
+	
 	public static Number[] mod(Number[] array, Number n)
 	{
 		//  reduces an array modulo n
@@ -74257,7 +74962,21 @@ class Number implements Comparable<Number>
 		
 		for (int i = 0; i < array.length; i++)
 		
-		    array1[i] = array[i].mod(n);
+		    array1[i] = array[i] .mod(n);
+		
+		return array1;
+	}
+	
+	
+	public static Number[] mod(Number[] array, Number n, Number invn)
+	{
+		//  reduces an array modulo n
+		
+		Number[] array1 = new Number[array.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    array1[i] = array[i].mod(n, invn);
 		
 		return array1;
 	}
@@ -74336,6 +75055,7 @@ class Number implements Comparable<Number>
 		if (!r.add(q.multiply(n)).equals(a))
 		{
 			System.out.println("a == " + this.toString(16));
+			System.out.println("n == " +    n.toString(16));
 			System.out.println("r == " +    r.toString(16));
 			
 			throw new ArithmeticException();
@@ -74399,9 +75119,10 @@ class Number implements Comparable<Number>
 		if (!r.isLessThan(n))
 		{
 			System.out.println("mod(n, invn) error");
-			System.out.println("a == " + this);
-			System.out.println("r == " + r);
-			System.out.println("n == " + n);
+			
+			System.out.println("a == " + this.toString(16));
+			System.out.println("n == " +    n.toString(16));
+			System.out.println("r == " +    r.toString(16));
 			
 			throw new ArithmeticException();
 		}
@@ -75457,7 +76178,23 @@ class Number implements Comparable<Number>
 	
 	public static Number multiply(int[] n)
 	{
-		//  returns the product of n[] by multiplying
+		//  returns the product of n[]
+		
+		if (n.length < 1024)
+		{
+			Number[] array = new Number[n.length];
+			
+			for (int i = 0; i < array.length; i++)
+			
+			    array[i] = new Number(n[i]);
+			
+			return multiply(array);
+		}
+		
+		//  Multiplying in pairs reduces the compute time
+		//  from O(n^2) to O(n log n) or O(n (log n)^2)
+		
+		//  Compute the product of n[] by multiplying
 		//  iteratively in pairs until the array size == 1
 		
 		//  Copy and expand the array to a power of 2
@@ -75516,6 +76253,12 @@ class Number implements Comparable<Number>
 			return product;
 		}
 		
+		//  Multiplying in pairs reduces the compute time
+		//  from O(n^2) to O(n log n) or O(n (log n)^2)
+		
+		//  Compute the product of n[] by multiplying
+		//  iteratively in pairs until the array size == 1
+		
 		//  Copy and expand the array to a power of 2
 		
 		int size = n.length;
@@ -75559,13 +76302,13 @@ class Number implements Comparable<Number>
 	{
 		//  multiplies an array by n
 		
-		Number[] array1 = new Number[array.length];
+		Number[] products = new Number[array.length];
 		
 		for (int i = 0; i < array.length; i++)
 		
-		    array1[i] = array[i].multiply(n);
+		    products[i] = array[i].multiply(n);
 		
-		return array1;
+		return products;
 	}
 	
 	
@@ -75667,19 +76410,19 @@ class Number implements Comparable<Number>
 	
 		//  Karatsuba Multiplication (Karatsuba and Ofman, Soviet Physics, 1963)
 		//
-		//  Karatsuba multiplication uses only three multiplications instead of four.
+		//  Karatsuba multiplication uses only three multiplications instead of four
 		//
-		//  Let N1 and N2 be two-digit numbers where N1 = a1 a0  and  N2 = b1 b0.
+		//  Let N1 and N2 be two-digit numbers where N1 = a1 a0  and  N2 = b1 b0;
 		//
-		//  Instead of computing the product N1 * N2 as the sum of four single-digit products
+		//  instead of computing the product N1 * N2 as the sum of four single-digit products
 		//
 		//      a1 * b1 << 2  +  [ (a1 * b0 + a0 * b1) ] << 1  +  a0 * b0 << 0
 		//
 		//  compute the product N1 * N2 as the sum of three single-digit products
 		//
-		//      a1 * b1 << 2  +  [ ( (a0 + a1) * (b0 + b1) - a0 * b0 - a1 * b1 ) ] << 1  +  a0 * b0 << 0
+		//      a1 * b1 << 2  +  [ ( (a0 + a1) * (b0 + b1) - a0 * b0 - a1 * b1 ) ] << 1  +  a0 * b0 << 0;
 		//
-		//  Only one cross product (a0 + a1) * (b0 + b1) is computed instead of two cross products a1 * b0 and a0 * b1.
+		//  only one cross product (a0 + a1) * (b0 + b1) is computed instead of two cross products a1 * b0 and a0 * b1.
 		//
 		//
 		//  Example  1234 * 5678 = [12][34] * [56][78]  (the "digit" size for this example is 10^2 or 100)
@@ -76652,17 +77395,30 @@ class Number implements Comparable<Number>
 		    quotient = quotient .add(1);
 		
 		
-		//  Verify the quotient
+		Number remainder;
 		
-		Number remainder = this.subtract(quotient.multiply(divisor));
+		remainder = this.subtract(quotient.multiply(divisor));
+		
+		if (remainder.signum() == -1)
+		{
+			quotient = quotient .subtract(1);
+			
+			remainder = dividend.subtract(quotient.multiply(divisor));
+		}
+		
+		
+		//  Verify the quotient
 		
 		if ( (remainder.signum() == -1) || ( ! remainder.isLessThan(divisor)) )
 		{
 			System.out.println("dividend - quotient x divisor == " + remainder.toString(16));
 			
-			System.out.println("dividend == " +     this.toString(16));
-			System.out.println(" divisor == " +  divisor.toString(16));
-			System.out.println("quotient == " + quotient.toString(16));
+			System.out.println(" dividend == " +      this.toString(16));
+			System.out.println("  divisor == " +   divisor.toString(16));
+			System.out.println(" quotient == " +  quotient.toString(16));
+			System.out.println("remainder == " + remainder.toString(16));
+			System.out.println("remainder < divisor == " + remainder.isLessThan(divisor));
+			System.out.println("divisor - remainder == " + divisor.subtract(remainder).toString(16));
 			
 			String message = "quadratic division error";
 			
@@ -76714,6 +77470,20 @@ class Number implements Comparable<Number>
 		return rand;
 	}
 	
+	
+	public static Number[] reverse(Number[] array)
+	{
+		Number[] array1 = new Number[array.length];
+		
+		for (int i = 0; i < (array.length + 1)/2; i++)
+		{
+			array1[i] = array[array.length-1 -i];
+			
+			array1[array.length-1 -i] = array[i];
+		}
+		
+		return array1;
+	}
 	
 	
 	public Number root(int k)
@@ -76977,7 +77747,7 @@ class Number implements Comparable<Number>
 	
 	public Number roundBit()
 	{
-		//  adds a 1 to the least significant bit of the array
+		//  rounds the least significant bit
 		
 		int p = this.precision;
 		
@@ -76990,6 +77760,8 @@ class Number implements Comparable<Number>
 		int d = n.intpoint - p / 8;
 		
 		int index = n.intarray.length -1 -d;
+		
+		if (index < 0) return this;
 		
 		int[] intarray1 = new int[n.intarray.length];
 		
@@ -77247,7 +78019,9 @@ class Number implements Comparable<Number>
 		
 		int p =  this.precision > 0 ? this.precision : 16;
 		
-		return  e(p).pow(this) .add(e(p).pow(this.negate())) .divide(2);
+		return  e(p) .pow(this) .add(
+		
+		    e(p) .pow(this.negate())) .divide(2);
 	}
 	
 	
@@ -77325,13 +78099,13 @@ class Number implements Comparable<Number>
 		
 		    throw new IllegalArgumentException();
 		
-		Number[] array3 = new Number[array1.length];
+		Number[] diff = new Number[array1.length];
 		
-		for (int i = 0; i < array3.length; i++)
+		for (int i = 0; i < diff.length; i++)
 		
-		    array3[i] = array1[i].subtract(array2[i]);
+		    diff[i] = array1[i].subtract(array2[i]);
 		
-		return array3;
+		return diff;
 	}
 	
 	
@@ -77339,13 +78113,13 @@ class Number implements Comparable<Number>
 	{
 		//  subtracts a number n from an array
 		
-		Number[] array1 = new Number[array.length];
+		Number[] diff = new Number[array.length];
 		
 		for (int i = 0; i < array.length; i++)
 		
-		    array1[i] = array[i].subtract(n);
+		    diff[i] = array[i].subtract(n);
 		
-		return array1;
+		return diff;
 	}
 	
 	
@@ -78079,7 +78853,7 @@ class Number implements Comparable<Number>
 	public String toString(int digits, int radix)
 	{
 	
-		//  converts a number to a string in any base or radix <= 16
+		//  converts a number to string in any base or radix <= 16
 		
 		//  The base of a number is the digit modulus or the size of a digit.
 		
@@ -78503,7 +79277,7 @@ class Number implements Comparable<Number>
 		
 		if ((radix <= 16) && (this.precision > 0) &&
 		
-		    (this.intarray[this.intarray.length -1] != 0) )
+		    ((this.intarray[this.intarray.length -1] & 0x7fffffff) == 0x7fffffff) )
 		{
 			StringBuilder sb = new StringBuilder(str);
 			
@@ -78519,8 +79293,8 @@ class Number implements Comparable<Number>
 				
 				//  Roll the digit over to 0 or add 1 and break
 				
-				if ( ((c +  0 - '0') == (radix -1))
-				  || ((c + 10 - 'a') == (radix -1)) )
+				if ( (c - '0' +  0 == radix-1)
+				  || (c - 'a' + 10 == radix-1) )
 				
 				     { sb.setCharAt(i, '0');  carry = true; }
 				
@@ -78792,6 +79566,17 @@ class Number implements Comparable<Number>
 		
 		return new Number(Math.xor(this.intarray, val.intarray));
 	}
+	
+	public static Number xor(Number[] array)
+	{
+		Number xor = new Number(array[0]);
+		
+		for (int i = 1; i < array.length; i++)
+		
+		    xor = xor .xor(array[i]);
+		
+		return xor;
+	}
 }
 
 
@@ -78820,6 +79605,448 @@ class Matrix
 
 
 
+	//  A matrix is a rectangular array of elements or numbers. (J.J. Sylvester used
+	//  the term matrix (1850) to refer to a rectangular block of numbers because a
+	//  determinant is formed from a matrix, and a matrix is something from which
+	//  something else originates, develops, or takes form.) Before they were called
+	//  matrices, rectangular arrays were referred to as blocks of numbers. The words
+	//  block and matrix are still used synonymously, and the term block matrix is
+	//  used to refer to a matrix of matrices or a partitioned matrix.
+	//
+	//  Matrices are useful for solving systems of simultaneous linear equations.
+	//  Matrices are also employed in public key cryptography to create unsolvable
+	//  systems or one-way functions such as A1^x1 A^2 x2 (mod p) for key agreement
+	//  and message authentication.
+	//
+	//  A matrix that has m rows and n columns is usually written or represented
+	//  in the form
+	//
+	//
+	//              | a11  a12  a13  a14  ...  a1n |
+	//              |                              |
+	//              | a21  a22  a23  a24  ...  a2n |
+	//         __   |                              |
+	//     A   __   | a31  a32  a33  a34  ...  a3n |
+	//              |                              |
+	//              | ...  ...  ...  ...  ...  ... |
+	//              |                              |
+	//              | am1  am2  am3  am4  ...  amn |
+	//
+	//
+	//  The elements a[i][j] of the matrix A represent the coefficients of a system
+	//  of m linear equations in n variables.
+	//
+	//  A matrix A is sometimes denoted by the symbol [Aij].
+	//
+	//  A matrix in which each row and column contains a permutation of the same array
+	//  of elements is called a Latin square. If the permutation of the elements is a
+	//  rotation, then the Latin square is also a circulant matrix.
+	//
+	//
+	//  Array / vector addition and multiplication
+	//
+	//  The sum of two arrays or vectors a and b is the vector c[i] = a[i] + b[i].
+	//
+	//  The inner or dot product of any two vectors a * b is the number c = a[i] b[i]
+	//  where summation is implied by the repeating index.
+	//
+	//
+	//  Matrix addition
+	//
+	//  The sum of two matrices C = A + B is defined by c[i][j] == a[i][j] + b[i][j].
+	//  Each element of A is added to each element of B.
+	//
+	//  The two repeating indexes i and j require that the matrices have the same di-
+	//  mensions. The sum of two matrices requires two iterations because there are
+	//  two indexes or subscripts.
+	//
+	//  Matrix addition is associative and commutative.
+	//
+	//
+	//  Matrix multiplication
+	//
+	//  The product of two matrices C = A B is defined by c[i][j] == a[i][k] b[k][j].
+	//  Matrix multiplication is the product of the row vectors of the first matrix
+	//  and the column vectors of the second matrix.
+	//
+	//  The summation sign is omitted because the sum is implied by the repeating
+	//  index or subscript k. Each element c[i][j] in the product matrix C is the
+	//  inner product of a row vector in matrix A and a column vector in matrix B.
+	//
+	//  The repeating index k requires that the number of columns of A equal the num-
+	//  ber of rows of B, or the width of the first matrix A has to equal the height
+	//  of the second matrix B in order to multiply them. If the width of matrix A
+	//  does not equal the height of matrix B, the multiplication is illegal or un-
+	//  defined because the row vectors of A do not have the same length as the col-
+	//  umn vectors of B.
+	//
+	//  Matrix multiplication is associative and distributive, but multiplication of
+	//  matrices is not generally commutative. Multiplication is commutative if two
+	//  matrices are circulant in the right (positive or diagonal) direction. A cir-
+	//  culant matrix is commutative iff (if and only if) the diagonal elements are
+	//  all equal.
+	//
+	//  A commutative circulant matrix or Latin square is a matrix in which a[i][j] =
+	//  a[(i-1) % n][(j-1) % n]. A boustrophedonic 2n x 2n Latin square or an alter-
+	//  nating circulant matrix is also commutative if the diagonal elements are all
+	//  equal.
+	//
+	//  Because matrix addition and multiplication are associative, matrices can be
+	//  added or multiplied in any order. For example, the product A B C can be com-
+	//  puted as (A B) C or as A (B C).
+	//
+	//
+	//  Matrix transposition
+	//
+	//  The transpose of a matrix A^T is defined by a^T[i][j] = a[j][i]. The trans-
+	//  posed matrix is formed by writing the rows as columns or by swapping the two
+	//  subscripts. For a non-square matrix this changes the dimensions of the matrix
+	//  from m x n to n x m.
+	//
+	//
+	//  Identity matrix / unit matrix
+	//
+	//  A square matrix that has 1's on the diagonal and 0's elsewhere is called the
+	//  identity matrix or unit matrix and is usually designated by the letter I.
+	//
+	//  The unit matrix is analogous to the number 1 for integers because multiplying
+	//  any matrix by I equals itself. The unit matrix I commutes with any matrix be-
+	//  cause I is a circulant matrix and the diagonal elements are all equal. (The
+	//  letter I is also the Roman numeral for the cardinal number 1.)
+	//
+	//
+	//
+	//  Solving systems of simultaneous linear equations
+	//
+	//  A system of linear equations A X == B is solved by forming the augmented
+	//  matrix [ A | B ] and then reducing the matrix to echelon and row canonical
+	//  form. An augmented matrix in echelon form is the upper triangular matrix 
+	//
+	//
+	//  | a11  a12  a13  a14  ...  a1n   b1 |
+	//  |                                   |
+	//  |      a22  a23  a24  ...  a2n   b2 |
+	//  |                                   |
+	//  |           a33  a34  ...  a3n   b3 |
+	//  |                                   |
+	//  |                a44  ...  a4n   b4 |
+	//  |                                   |
+	//  |                     ...  ...   .. |
+	//  |                                   |
+	//  |                          amn   bm |
+	//
+	//
+	//  A matrix is in echelon form if the first non-zero element of each row is to the
+	//  right of the preceding row.
+	//
+	//  A matrix is reduced to echelon form by forward elimination. Forward elimination
+	//  uses multiplication and addition of rows (equations) to eliminate the first non-
+	//  zero element of each row below the diagonal element. If a diagonal element is zero,
+	//  then the row (equation) is swapped with the next row that has a non-zero element
+	//  in the diagonal column before eliminating the column below that row. (If there is no
+	//  non-zero element for that column then the system is not reducible to echelon form.)
+	//
+	//  For each row i = 1 to m, and for each row r = i+1 to m, the multipliers are m1 =
+	//  - a[i][j]  and  m2 = a[r][j]. m1 is the first non-zero coefficient of the row i
+	//  which is being used to eliminate the first non-zero coefficient m2 for each row r
+	//  below i. Each row operation has to be performed for each column j = i to m because
+	//  of the repeating index j.
+	//
+	//  If the row i has a diagonal element a[i][i] that has a zero coefficient, then the
+	//  row i is interchanged or swapped with any row r > i that has a non-zero coefficient
+	//  a[r][i] before iterating over r = i+1 to m.
+	//
+	//  The equations have to be linearly independent for the system to have a unique solu-
+	//  tion. If any row r is a linear multiple of row i, then all the coefficients of r
+	//  will become zero when any coefficient is zeroed out because the equations are ident-
+	//  ical except for a multiplier. Because the method swaps rows to find a non-zero coef-
+	//  ficient, the zero rows will appear at the bottom of the matrix after the matrix is
+	//  reduced to echelon form.
+	//
+	//  If B is a column vector or an array of numbers, then a matrix in echelon or upper
+	//  triangular form can be solved by back substitution. Working backwards from i = m to
+	//  i = 1, and from j = m to i = 1, the values of x are solved by iterating the equation
+	//  x[i] = b[i] - (a[i][j] x[j]) / a[i][i].
+	//
+	//  If B is a matrix instead of a column vector, then a matrix in echelon from is solved
+	//  by back elimination which reduces the matrix to row canonical form.
+	//
+	//  Back elimination is similar to forward elimination except that the iteration is re-
+	//  versed. A matrix in row canonical form is the identity or unit matrix augmented with
+	//  the matrix (or column vector) A^-1 B.
+	//
+	//  This works because the matrix equation A X == B is solved by pre-multiplying by A^-1
+	//  to get  A^-1 A X == A^-1 B,  I X == A^-1 B,  or X == A^-1 B. This shows that if the
+	//  left side of the matrix is reduced to the identity or unit matrix I, then the right
+	//  side is reduced to the solution X. (Note that if B is defined to be the unit matrix,
+	//  then X == A^-1 B == A^-1 I == A^-1 == the inverse of A.)
+	//
+	//
+	//
+	//
+	//  Matrix inversion
+	//
+	//  A matrix is inverted by solving the equation A X == I for X because A X == A A^-1
+	//  == the identity matrix I. This equation is solved by forming the augmented matrix
+	//  M = [ A , I ] and then reducing M to echelon form and row canonical form. This
+	//  gives the reduced matrix M == [ A^-1 A, A^-1 I ] == [ I, A^-1 ]. The right half
+	//  of the matrix is the inverse of A.
+	//
+	//  A matrix is invertible if the matrix is non-singular, that is, if the determinant
+	//  of the matrix is non-zero.
+	//
+	//
+	//
+	//  Block matrices
+	//
+	//  A matrix can be partitioned into sub-matrices using horizontal and vertical dashed
+	//  lines. Each partitioned group of elements is called a block and the blocks are
+	//  usually denoted by capital letters. A block is another word for a matrix which
+	//  makes a block matrix a "matrix matrix" or a matrix of matrices.
+	//
+	//  Block matrices can be added or multiplied just like regular matrices that are not
+	//  partitioned, but the order of the block multiplication is important because unlike
+	//  numbers matrix multiplication is not commutative. For example,
+	//
+	//  | A1 | B1 | | A2 | B2 | __  | A1 A2 + B1 C2 | A1 B2 + B1 D2 |
+	//  | ---+--- | | ---+--- | __  | --------------+-------------- |
+	//  | C1 | D1 | | C2 | D2 |     | C1 A2 + D1 C2 | C1 B2 + D1 D2 |
+	//
+	//
+	//  Matrices can also be partitioned into horizontal and vertical arrays to illustrate
+	//  that the row vectors of the first matrix are multiplied by the column vectors of
+	//  the second matrix. This can be used as a mnemonic to remind readers how to multiply
+	//  two matrices. For example,
+	//
+	//  | a1  b1 | | a2 | b2 | __  | [ a1, b1 ] [ a2, c2 ] | [ a1, b1 ] [ b2, d2 ] |
+	//  | ------ | |    |    | __  | ----------------------+---------------------- |
+	//  | c1  d1 | | c2 | d2 |     | [ c1, d1 ] [ a2, c2 ] | [ c1, d1 ] [ b2, d2 ] |
+	//
+	//                             __  |  a1 a2  +  b1 c2  |  a1 b2  +  b1 d2  |
+	//                             __  |  -----------------+-----------------  |
+	//                                 |  c1 a2  +  d1 c2  |  c1 b2  +  d1 d2  |
+	//
+	//  Block arrays
+	//
+	//  A block array is an array of matrices or blocks.
+	//
+	//  Block array arithmetic is the same as number array arithmetic except that
+	//  multiplication is not commutative because the elements are matrices.
+	//
+	//  The product of two block arrays A and B is defined by C[i] = A[i] B[i].
+	
+	
+	
+	
+	
+	//  Properties / definitions of real matrices
+	//
+	//                            T
+	//  Symmetric matrix        A  ==  A
+	//
+	//  (a[i][j] == a[j][i])
+	//
+	//  (symmetric matrix equals its transpose)
+	//
+	//                            T
+	//  Skew-symmetric matrix   A  == - A
+	//
+	//  (a[i][j] == - a[j][i])
+	//
+	//  (skew-symmetric matrix equals its negative transpose)
+	//
+	//                            T    -1
+	//  Orthogonal matrix       A  == A
+	//
+	//              T             T 
+	//  therefore A   A  ==  A  A   ==  I
+	//
+	//  (orthogonal matrix transpose equals its inverse)
+	//
+	//
+	//                      T          T
+	//  Normal matrix     A  A == A  A
+	//
+	//  (normal matrix commutes with its transpose)
+	
+	
+	
+	
+	
+	//  Properties / definitions of complex Matrices
+	//
+	//                            H
+	//  Hermitian matrix        A  ==  A
+	//                                   _
+	//  (conjugate symmetric, a[i][j] == a[j][i]
+	//        _
+	//  where   is the conjugation operator)
+	//                            H
+	//  Skew-Hermitian matrix   A  == - A
+	//                                          _
+	//  (conjugate skew-symmetric, a[i][j] == - a[j][i])
+	//
+	//  where H or * is the complex conjugation
+	//  operator and the transposition operator
+	//                    _
+	//    H    *   _ T    T
+	//  A  = A  =  A ==  A 
+	//
+	//                     H     -1
+	//  Unitary matrix   A  ==  A
+	//
+	//  (complex orthogonal)
+	//
+	//                     H          H
+	//  Normal matrix    A  A  == A A
+	//
+	//  (complex normal)
+	
+	
+	
+	
+	
+	//  Determinants
+	//
+	//  Every square matrix is associated with a number called the determinant.
+	//  The determinant of a matrix A is designated by the symbol | A | or |Aij|
+	//  using vertical lines instead of rectangular brackets.
+	//
+	//  Determinants are a branch of matrix theory and the theory of equations.
+	//  The determinant determines whether a system of linear equations has a
+	//  unique solution. A system has a unique solution iff (if and only if) the
+	//  determinant of its coefficients is non-zero.
+	//
+	//  If the determinant of the coefficients is non-zero, then the linear system
+	//  A X == B has a unique solution because the matrix A can be inverted to
+	//  solve for X = A^-1 B.
+	//
+	//  If all the numbers in the B column vector are equal to zero, then the sys-
+	//  tem is said to be homogeneous. A homogeneous system has non-trivial or non-
+	//  zero solutions iff the determinant of its coefficients equals zero or the
+	//  determinant is non-invertible. (For example, for the 1x1 system a x == 0,
+	//  x can have non-trivial solutions if and only if the determinant of a == 0
+	//  which implies that a would have to equal zero for x to be non-zero. If a
+	//  is non-zero in a x == 0, then x can only equal zero which is a trivial,
+	//  unimportant or uninteresting solution.)
+	//
+	//  The determinant of a 1x1 matrix equals itself and is written as | a11 |
+	//  == a11. The determinant of a 2x2 matrix is the difference of two cross
+	//  products and is written
+	//
+	//  | a11   a12 |
+	//  |           | == a11 a22 - a12 a21.
+	//  | a21   a22 |
+	//
+	//  The determinant of a square matrix larger than 2x2 can be evaluated recur-
+	//  sively by expanding the matrix into minors and cofactors.
+	//
+	//  The minor of a matrix A[i][j] is the sub-matrix denoted by |M[i][j]| which
+	//  is formed by deleting the ith row and the jth column from A. This determin-
+	//  ant is called the minor of a[i][j] whose row i and column j were deleted
+	//  from the matrix. The cofactor is defined as A[i][j] = (-1)^(i+j) |M[i][j]|.
+	//
+	//  By evaluating the minors recursively and adding the cofactors, the deter-
+	//  minant of a matrix can be evaluated in O(n!) steps or operations where n is
+	//  the dimension of the matrix.
+	//
+	//  A faster method for evaluating the determinant of a large matrix A is to
+	//  reduce the matrix to echelon (upper triangular) form and then calculate the
+	//  product of the diagonal elements a[i][i].
+	
+	
+	
+	
+	//  Properties of determinants
+	//
+	//  The determinant of the product of two matrices A and B is the product of the
+	//  determinants of A and B, or | A B | == | A || B |. (The determinant of the
+	//  product equals the product of the determinants.)
+	//
+	//  If the rows and columns of a matrix are transposed, the determinant is un-
+	//  changed. (| A | == | A^T |)
+	//
+	//  If any two rows (columns) of a matrix are interchanged then the value of the
+	//  determinant is negated. (For a 2x2 matrix { { a, b }, { c, d } } the deter-
+	//  minant is a d - b c, therefore swapping the two rows gives the determinant
+	//  c b - d a  or  b c - a d  which is the negative of  a d - b c.)
+	//
+	//  If any row (column) of a matrix is multiplied by a number k, then the value
+	//  of the determinant is also multiplied by k. (For a 1x1 matrix { a } the de-
+	//  terminant is | a | == a, therefore | k a | == k a.)
+	//
+	//  If any row (column) of a matrix is multiplied and added to another row (col-
+	//  umn), the determinant is unchanged. (For a 2x2 matrix { { a, b }, { c, d } }
+	//  the determinant is  a d - b c, therefore a (d + b) - b (c + a) == a d - b c
+	//  + (a b - a b) == a d - b c.)
+	//
+	//  If all elements of any row (column) of a matrix equal zero, then the value
+	//  of the determinant is zero. (Multiplying a row by zero multiplies the deter-
+	//  minant by zero because for a 1x1 matrix | k a | == k a; similarly, for a 2x2
+	//  matrix { { a, b }, { c, d } }, the determinant  a d - b c  is  0 d - 0 c  or
+	//  a 0 - b 0  which is 0 if either row { a, b } or { c, d } == { 0, 0 })
+	//
+	//  If any two rows (columns) of a matrix are identical, then the value of the
+	//  determinant is zero. (All rows or equations have to be linearly independent
+	//  for a matrix to be reducible, solvable, or invertible.)
+	//
+	//  If the determinant of a matrix is zero, then the matrix is singular or non-
+	//  invertible. Conversely, if a matrix is singular or non-invertible, then the
+	//  determinant of the matrix is zero.
+	//
+	//  If a matrix is in echelon (upper or lower triangular) form, then the deter-
+	//  minant equals the product of the diagonal elements. For the 2x2 matrix
+	//  { { a, b }, { c = 0, d } } in echelon form, the determinant is a d - b c ==
+	//  a d - 0 b == a d which is the product of the diagonal elements. For the 1x1
+	//  matrix { a } which is always in echelon form, the product of the diagonal
+	//  elements equals a because there is only one element.
+	//
+	//  If a matrix is reduced to echelon form and any of the diagonal elements is
+	//  missing or zero, then the determinant is zero because the product of the
+	//  diagonal elements equals zero.
+	//
+	//  If the determinant of a matrix is non-zero, then there is a unique solution
+	//  to the equation A X == B. (For the 1x1 equation a x == b, x == b / a.)
+	//
+	//  If the determinant of a matrix A is zero, then there is no solution or there
+	//  are multiple solutions to the equation A X == B, and there are non-trivial or
+	//  non-zero solutions for A X == 0. (For the 1x1 equation a x == 0 where a == 0
+	//  because the determinant is zero, x == 0 / 0 which is undefined.)
+	
+	
+	
+	
+	//  Properties of vector cross products
+	//
+	//  (the self product)
+	//
+	//  a x a == 0;
+	//
+	//  (the commutative property)
+	//
+	//  a x b == - (b x a);
+	//
+	//  (the associative property)
+	//
+	//  (k a) x b == a x (k b) == k (a x b)
+	//
+	//  where k is a scalar or number;
+	//
+	//  (the distributive property)
+	//
+	//  a x (b + c) == a x b + a x c;
+	//  (a + b) x c == a x c + b x c;
+	//
+	//  (a x b) x c == (a * c) b - (b * c) a
+	//
+	//  == k1 b - k2 a  where the scalars
+	//
+	//  k1 = a * c  and  k2 = b * c.
+	
+	
+	
+	
+	
 	//  Instance member
 	
 	private Number[][] matrix;
@@ -79322,12 +80549,12 @@ class Matrix
 	
 	public Matrix deleteColumn(int column)
 	{
-		//  deletes a column and reduces the column count
+		//  deletes a column and decrements the column count
 		
 		int rows = this.matrix   .length;
 		int cols = this.matrix[0].length;
 		
-		Matrix matrix = new Matrix(rows, cols -1);
+		Matrix matrix = new Matrix(rows, cols-1);
 		
 		for (int i = 0;        i < rows;    i++)
 		for (int j = 0, k = 0; j < cols -1; j++, k++)
@@ -79343,13 +80570,11 @@ class Matrix
 	
 	public Matrix deleteRow(int row)
 	{
-		//  deletes a row and reduces the row count
-		
-		//  Delete row is used by the determinant and trim methods
+		//  deletes a row and decrements the row count
 		
 		int rows = this.matrix.length;
 		
-		Number[][] arrays = new Number[rows - 1][];
+		Number[][] arrays = new Number[rows-1][];
 		
 		for (int i = 0, j = 0; i < rows-1; i++, j++)
 		{
@@ -79418,63 +80643,6 @@ class Matrix
 	
 	
 	
-	//  Properties of determinants
-	//
-	//  The determinant of the product of two matrices A and B is the product of the
-	//  determinants of A and B, or | A B | == | A || B |. (The determinant of the
-	//  product equals the product of the determinants.)
-	//
-	//  If the rows and columns of a matrix are transposed, the determinant is un-
-	//  changed. (| A | == | A^T |)
-	//
-	//  If any two rows (columns) of a matrix are interchanged then the value of the
-	//  determinant is negated. (For a 2x2 matrix { { a, b }, { c, d } } the deter-
-	//  minant is a d - b c, therefore swapping the two rows gives the determinant
-	//  c b - d a  or  b c - a d  which is the negative of  a d - b c.)
-	//
-	//  If any row (column) of a matrix is multiplied by a number k, then the value
-	//  of the determinant is also multiplied by k. (For a 1x1 matrix { a } the de-
-	//  terminant is | a | == a, therefore | k a | == k a.)
-	//
-	//  If any row (column) of a matrix is multiplied and added to another row (col-
-	//  umn), the determinant is unchanged. (For a 2x2 matrix { { a, b }, { c, d } }
-	//  the determinant is  a d - b c, therefore a (d + b) - b (c + a) == a d - b c
-	//  + (a b - a b) == a d - b c.)
-	//
-	//  If all elements of any row (column) of a matrix equal zero, then the value
-	//  of the determinant is zero. (Multiplying a row by zero multiplies the deter-
-	//  minant by zero because for a 1x1 matrix | k a | == k a; similarly, for a 2x2
-	//  matrix { { a, b }, { c, d } }, the determinant  a d - b c  is  0 d - 0 c  or
-	//  a 0 - b 0  which is 0 if either row { a, b } or { c, d } == { 0, 0 })
-	//
-	//  If any two rows (columns) of a matrix are identical, then the value of the
-	//  determinant is zero. (All rows or equations have to be linearly independent
-	//  for a matrix to be reducible, solvable, or invertible.)
-	//
-	//  If the determinant of a matrix is zero, then the matrix is singular or non-
-	//  invertible. Conversely, if a matrix is singular or non-invertible, then the
-	//  determinant of the matrix is zero.
-	//
-	//  If a matrix is in echelon (upper or lower triangular) form, then the deter-
-	//  minant equals the product of the diagonal elements. For the 2x2 matrix
-	//  { { a, b }, { c = 0, d } } in echelon form, the determinant is a d - b c ==
-	//  a d - 0 b == a d which is the product of the diagonal elements. For the 1x1
-	//  matrix { a } which is always in echelon form, the product of the diagonal
-	//  elements equals a because there is only one element.
-	//
-	//  If a matrix is reduced to echelon form and any of the diagonal elements is
-	//  missing or zero, then the determinant is zero because the product of the
-	//  diagonal elements equals zero.
-	//
-	//  If the determinant of a matrix is non-zero, then there is a unique solution
-	//  to the equation A X == B. (For the 1x1 equation a x == b, x == b / a.)
-	//
-	//  If the determinant of a matrix A is zero, then there is no solution or there
-	//  are multiple solutions to the equation A X == B, and there are non-trivial or
-	//  non-zero solutions for A X == 0. (For the 1x1 equation a x == 0 where a == 0
-	//  because the determinant is zero, x == 0 / 0 which is undefined.)
-	
-	
 	public Number determinant()
 	{
 		//  returns the determinant of a matrix
@@ -79503,6 +80671,11 @@ class Matrix
 		if (p == 0) p = 8;
 		
 		
+		//  Define the precision of zero
+		
+		Number zero = new Number(0).setPrecision(p);
+		
+		
 		//  Set the inverse precision
 		
 		int invp = 0;
@@ -79510,16 +80683,12 @@ class Matrix
 		for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++)
 		{
-			int invp1 = matrix.get(i,j)
+			if (matrix.get(i, j).equals(zero)) continue;
 			
-			    .inverse().getPrecision();
+			int invp1 = matrix.get(i, j).inverse().getPrecision();
 			
 			if (invp1 > invp) invp = invp1;
 		} 
-		
-		//  Define the precision of zero
-		
-		Number zero = new Number(0).setPrecision(p);
 		
 		if (matrix.matrix.length != matrix.matrix[0].length)
 		{
@@ -79741,9 +80910,11 @@ class Matrix
 		Number m1_product = new Number(1);
 		
 		
+		boolean isprimepower = n.isPrimePower();
+		
 		int base = 1, exp = 0;
 		
-		if (n.isPrimePower())
+		if (isprimepower)
 		
 		    for (int i = 2; i < 1024*1024; i++)
 		
@@ -79823,24 +80994,19 @@ class Matrix
 				m1 = m1.divide(gcd);
 				m2 = m2.divide(gcd);
 				
-				//  Negate the value of m1
-				
-				m1 = m1 .negate();
-				
-				
-				//  Multiply row r by m2, and add to row i multiplied by m1
-				
 				//  For prime power moduli, the method uses the modulus squared
 				//  instead of the modulus to reduce the elements of the matrix.
 				
-				Number    n1 = (base <= 1) ?    n :    n2;
-				Number invn1 = (base <= 1) ? invn : invn2;
+				Number    n1 = ! isprimepower ?    n :    n2;
+				Number invn1 = ! isprimepower ? invn : invn2;
+				
+				//  Multiply row r by m2, and subtract from row i multiplied by m1
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
-				    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m1)
+				    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m1) .subtract(
 				
-					.add( matrix.matrix[r][k] .multiply(m2) ) .mod(n1, invn1);
+				    matrix.matrix[r][k] .multiply(m2) ) .mod(n1, invn1);
 				
 				
 				//  Accumulate the product of m1 and remove the base
@@ -80167,7 +81333,7 @@ class Matrix
 			//           | a22  a23 |              | a11  a13 |              | a11  a12 |
 			//  A11  ==  |          |     A22  ==  |          |     A33  ==  |          |
 			//           | a32  a33 |              | a31  a33 |              | a21  a22 |
-			//
+			
 			
 			//  Set C1 = - trace(A);  C2 = (A11 + A22 + A33);  C3 = - | A |;
 			//
@@ -80640,6 +81806,52 @@ class Matrix
 	
 	
 	
+	public Matrix insertColumn(Number[] array, int column)
+	{
+		//  inserts a column and increments the column count
+		
+		int rows = this.matrix   .length;
+		int cols = this.matrix[0].length;
+		
+		Matrix matrix = new Matrix(rows, cols+1);
+		
+		for (int i = 0;        i < rows;   i++)
+		for (int j = 0, k = 0; j < cols+1; j++, k++)
+		{
+			if (j == column)
+			{
+				matrix.matrix[i][j] = array[i];
+				
+				k--;  continue;
+			}
+			
+			matrix.matrix[i][j] = this.matrix[i][k];
+		}
+		
+		return matrix;
+	}
+	
+	
+	public Matrix insertRow(Number[] array, int row)
+	{
+		//  inserts a row and increments the row count
+		
+		int rows = this.matrix.length;
+		
+		Number[][] arrays = new Number[rows+1][];
+		
+		for (int i = 0, j = 0; i < rows+1; i++, j++)
+		{
+			if (i == row) { arrays[i] = array; j--; continue; }
+			
+			arrays[i] = this.matrix[j];
+		}
+		
+		return new Matrix(arrays);
+	}
+	
+	
+	
 	public Matrix inverse()
 	{
 	
@@ -80764,6 +81976,11 @@ class Matrix
 		
 		Matrix matrix = this;
 		
+		int rows = matrix.rowCount();
+		int cols = matrix.columnCount();
+		
+		if (cols == 1) return false;
+		
 		Number zero = new Number(0);
 		
 		int p = matrix.getPrecision();
@@ -80772,8 +81989,8 @@ class Matrix
 		
 		int index = -1;
 		
-		for (int i = 0; i < matrix   .rowCount();    i++)
-		for (int j = 0; j < matrix.columnCount() -1; j++)
+		for (int i = 0; i < rows   ; i++)
+		for (int j = 0; j < cols -1; j++)
 		{
 			if (matrix.matrix[i][j] == null) return false;
 			
@@ -80861,9 +82078,9 @@ class Matrix
 		//  tests if a matrix is in row canonical form
 		
 		//  If a matrix is in row canonical form, the diagonal elements
-		//  equal 1 and the non-diagonal elements equal 0 except for the
-		//  last column (for an n, n + 1 matrix) or the right half of
-		//  the matrix (for an n, 2 n matrix).
+		//  are non-zero and the non-diagonal elements are all zero ex-
+		//  cept for the last column (for an n, n + 1 matrix) or the
+		//  right half of the matrix (for an n, 2 n matrix).
 		
 		Matrix matrix = this;
 		
@@ -80882,7 +82099,7 @@ class Matrix
 		
 		for (Number d : diagonals)
 		
-		    if ((d == null) || !d .equals(one)) return false;
+		    if ((d == null) || d .equals(zero)) return false;
 		
 		//  Verify that the elements above and below
 		//  the diagonal elements are all nonzero
@@ -81549,23 +82766,25 @@ class Matrix
 	}
 	
 	
-	public Number[] multiply(Number[] x)
+	public Matrix multiply(int[] x)
 	{
 		//  multiplies a matrix by a vector
-		//
-		//  This is used to verify the equation A x == b.
 		
-		Matrix A = this;
+		Number[] X = new Number[x.length];
 		
-		Matrix Y = A.multiply(new Matrix(x)
+		for (int i = 0; i < x.length; i++)
 		
-		    .transpose()) .transpose();
+		    X[i] = new Number(x[i]);
 		
-		Number[] y = Y.getRow(0);
-		
-		return y;
+		return this.multiply(X);
 	}
 	
+	public Matrix multiply(Number[] x)
+	{
+		//  multiplies a matrix by a vector
+		
+		return this.multiply(new Matrix(x).transpose());
+	}
 	
 	
 	public Matrix multiply(Matrix matrix, int r)
@@ -82243,9 +83462,7 @@ class Matrix
 		{
 			if (matrix.get(i, j).equals(zero)) continue;
 			
-			int invp1 = matrix.get(i, j)
-			
-			    .inverse().getPrecision();
+			int invp1 = matrix.get(i, j).inverse().getPrecision();
 			
 			if (invp1 > invp) invp = invp1;
 		} 
@@ -82368,7 +83585,11 @@ class Matrix
 		
 		int base = 1, exp = 0;
 		
-		if (new Number(n).isPrimePower())
+		boolean isprimepower = new
+		
+		    Number(n).isPrimePower();
+		
+		if (isprimepower)
 		
 		    for (int i = 2; i < 1024*1024; i++)
 		
@@ -82443,25 +83664,21 @@ class Matrix
 				m1 = m1.divide(gcd);
 				m2 = m2.divide(gcd);
 				
-				//  Negate the value of m1
+				//  For prime power moduli, the method uses the modulus squared
+				//  instead of the modulus to reduce the elements of the matrix.
 				
-				m1 = m1 .negate(n);
+				long n1 = ! isprimepower ? n : n2;
 				
 				int m1int = m1.intValue();
 				int m2int = m2.intValue();
 				
-				//  Multiply row r by m2, and add to row i multiplied by m1
-				
-				//  For prime power moduli, the method uses the modulus squared
-				//  instead of the modulus to reduce the elements of the matrix.
-				
-				long n1 = (base <= 1) ? n : n2;
+				//  Multiply row r by m2, and subtract from row i multiplied by m1
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
 				    matrix.matrix[i][k] = new Number(
 				
-					( 1L*matrix.matrix[r][k] .intValue() * (m2int) +
+					( 1L*matrix.matrix[r][k] .intValue() * (m2int) -
 					( 1L*matrix.matrix[i][k] .intValue() * (m1int) ) ) % n1 );
 			}
 		}
@@ -82472,7 +83689,7 @@ class Matrix
 		{
 			Number m = matrix.matrix[i][i];
 			
-			if (m.equals(0)) continue;
+			if (m.equals(0) || !m.isCoprimeWith(n)) continue;
 			
 			m = m.modInverse(n);
 			
@@ -82520,7 +83737,9 @@ class Matrix
 		
 		int base = 1, exp = 0;
 		
-		if (n.isPrimePower())
+		boolean isprimepower = n.isPrimePower();
+		
+		if (isprimepower)
 		
 		    for (int i = 2; i < 1024*1024; i++)
 		
@@ -82600,24 +83819,19 @@ class Matrix
 				m1 = m1.divide(gcd);
 				m2 = m2.divide(gcd);
 				
-				//  Negate the value of m1
-				
-				m1 = m1 .negate(n);
-				
-				
-				//  Multiply row r by m2, and add to row i multiplied by m1
-				
 				//  For prime power moduli, the method uses the modulus squared
 				//  instead of the modulus to reduce the elements of the matrix.
 				
-				Number    n1 = (base <= 1) ?    n :    n2;
-				Number invn1 = (base <= 1) ? invn : invn2;
+				Number    n1 = ! isprimepower ?    n :    n2;
+				Number invn1 = ! isprimepower ? invn : invn2;
+				
+				//  Multiply row r by m2, and subtract from row i multiplied by m1
 				
 				for (int k = j; k < matrix.matrix[i].length; k++)
 				
 				    matrix.matrix[i][k] = matrix.matrix[i][k] .multiply(m1)
 				
-					.add( matrix.matrix[r][k] .multiply(m2) ) .mod(n1, invn1);
+					.subtract( matrix.matrix[r][k] .multiply(m2) ) .mod(n1, invn1);
 			}
 		}
 		
@@ -82627,7 +83841,7 @@ class Matrix
 		{
 			Number m = matrix.matrix[i][i];
 			
-			if (m.equals(0)) continue;
+			if (m.equals(0) || !m.isCoprimeWith(n)) continue;
 			
 			m = m.modInverse(n);
 			
@@ -82668,7 +83882,9 @@ class Matrix
 		
 		int base1 = 1, exp = 0;
 		
-		if (n.isPrimePower())
+		boolean isprimepower = n.isPrimePower();
+		
+		if (isprimepower)
 		
 		    for (int i = 2; i < 1024*1024; i++)
 		
@@ -82758,8 +83974,8 @@ class Matrix
 					{
 						//  Compute the multipliers to avoid the modular inversion
 						
-						Number m1 = matrix.matrix[i1][j1] .negate(n);
-						Number m2 = matrix.matrix[r1][j1];
+						Number m1 = matrix.matrix[r1][j1];
+						Number m2 = matrix.matrix[i1][j1];
 						
 						//  Remove the greatest common factor from the multipliers
 						//  because the gcd is not subtracted
@@ -82768,18 +83984,18 @@ class Matrix
 						//  For a composite modulus the matrix can be solved modulo the prime factors
 						//  and then the composite matrix can be computed using a remainder algorithm.
 						
-						//  Number gcd = m1.gcd(m2); m1 = m1.divide(gcd); m2 = m2.divide(gcd);
+						Number gcd = m1.gcd(m2); m1 = m1.divide(gcd); m2 = m2.divide(gcd);
 						
-						//  Multiply row r by m1, and add to row i multiplied by m2
+						Number    n1 = ! isprimepower ?    n :    n2;
+						Number invn1 = ! isprimepower ? invn : invn2;
 						
-						Number    n1 = (base <= 1) ?    n :    n2;
-						Number invn1 = (base <= 1) ? invn : invn2;
+						//  Multiply row r by m2, and subtract from row i multiplied by m1
 						
 						for (int k = j1; k < matrix.matrix[i1].length; k++)
 						
-						    matrix.matrix[i1][k] = matrix.matrix[i1][k] .multiply(m2)
+						    matrix.matrix[i1][k] = matrix.matrix[i1][k] .multiply(m1) .subtract(
 						
-							.add( matrix.matrix[r1][k] .multiply(m1) ) .mod(n1, invn1);
+							matrix.matrix[r1][k] .multiply(m2) ) .mod(n1, invn1);
 					}
 				});
 				
@@ -82816,7 +84032,7 @@ class Matrix
 		{
 			Number m = matrix.matrix[i][i];
 			
-			if (m.equals(0)) continue;
+			if (m.equals(0) || !m.isCoprimeWith(n)) continue;
 			
 			m = m.modInverse(n);
 			
@@ -82953,7 +84169,7 @@ class Matrix
 	
 	public String toMatrixString(int digits, int radix)
 	{
-		//  converts a matrix to a string that can be
+		//  converts a matrix to string that can be
 		//  displayed as a rectangular matrix
 		//
 		//      | a11  a12  a13  a14  ... |
@@ -82995,24 +84211,32 @@ class Matrix
 		int rows = matrix.rowCount();
 		int cols = matrix.columnCount();
 		
+		int p0 = this.getPrecision();
 		
-		//  Reduce the precision to the largest number of significant digits
+		
+		//  Reduce the precision to the largest num-
+		//  ber of significant digits in each column
 		
 		int[] colprecision = new int[cols];
 		
 		for (int j = 0; j < cols; j++)
 		{
 			int precision = 0;
-		
+			
 			for (int i = 0; i < rows; i++)
 			{
 				Number n = matrix.matrix[i][j];
 				
 				if (n == null) continue;
 				
-				int digits1 = n.countSignificantDigits(radix);
+				int digits1 = n .setPrecision(p0 >= 8 ? p0-1 : p0)
 				
-				if (precision < digits1) precision = digits1;
+				    .roundBit() .setPrecision(p0)
+				
+					.countSignificantDigits(radix);
+				
+				if (precision < digits1)
+				    precision = digits1;
 			}
 			
 			colprecision[j] = precision;
@@ -83025,7 +84249,7 @@ class Matrix
 				
 				    matrix.matrix[i][j] = matrix.matrix[i][j]
 				
-					.roundBit().setPrecision(precision);
+					.roundBit() .setPrecision(precision);
 			}
 		}
 		
@@ -83038,7 +84262,7 @@ class Matrix
 		zerorows[zerorows.length -1] = false;
 		zerocols[zerocols.length -1] = false;
 		
-		for (int i = 0; i < zerorows.length; i++)
+		if (cols > 1) for (int i = 0; i < zerorows.length; i++)
 		{
 			boolean iszero = true;
 			
@@ -83048,7 +84272,7 @@ class Matrix
 				
 				if ((element == null) || !element.equals(new
 				
-				    Number(0).setPrecision(element.getPrecision())))
+				    Number(0).setPrecision(p0)))
 				
 					{ iszero = false;  break; }
 			}
@@ -83056,7 +84280,7 @@ class Matrix
 			zerorows[i] = iszero;
 		}
 		
-		for (int j = 0; j < zerocols.length -1; j++)
+		if (rows > 1) for (int j = 0; j < zerocols.length -1; j++)
 		{
 			boolean iszero = true;
 			
@@ -83064,16 +84288,15 @@ class Matrix
 			{
 				Number element = matrix.matrix[i][j];
 				
-				if ((element == null) || !element.equals(new
+				if ((element == null) || !element.equals(
 				
-				    Number(0).setPrecision(element.getPrecision())))
+				    new Number(0).setPrecision(p0)))
 				
 					{ iszero = false; break; }
 			}
 			
 			zerocols[j] = iszero;
 		}
-		
 		
 		int[] mindigits = new int[cols];
 		
@@ -83088,9 +84311,9 @@ class Matrix
 			
 			    { if (mindigits1 < 4) mindigits1 = 4; continue; }
 			
-			digitsize = matrix.matrix[i][j] .toString(radix).length()
+			digitsize = matrix.matrix[i][j] .toString(radix) .length()
 			
-			    + ((matrix.matrix[i][j].signum() == -1) ? 1 : 0);
+			    + matrix.matrix[i][j].signum() == 1 ? 1 : 0;
 			
 			//  Set mindigits1 to the largest element digit size
 			
@@ -83104,6 +84327,7 @@ class Matrix
 		    for (int i = 0; i < rows; i++)
 		
 			mindigits[i] = 2;
+		
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -83147,12 +84371,15 @@ class Matrix
 				
 				    sbdigit.append(numberstr);
 				
-				else sbdigit.append(" ");
+				else sbdigit.append("");
 				
 				
 				while (sbdigit.length() < mindigits[j])
 				
 				    sbdigit.insert(0, " ");
+				
+				
+				//  Convert the stringbuilder to string
 				
 				numberstr = sbdigit.toString();
 				
@@ -83240,10 +84467,14 @@ class Matrix
 		int rows = this.trim().   rowCount();
 		int cols = this.trim().columnCount();
 		
-		int method = (cols <= rows + 1) ? 1 : 2;
+		int method = cols <= rows + 1 ? 1 : 2;
 		
-		if   (method == 1) return toRowCanonicalForm1(n);
-		else               return toRowCanonicalForm2(n);
+		if ((n != null) && !n.isPrime()) method = 2;
+		
+		return (method == 1) ?
+		
+		    toRowCanonicalForm1(n):
+		    toRowCanonicalForm2(n);
 	}
 	
 	
@@ -83278,7 +84509,7 @@ class Matrix
 		
 		//  Back Substitution
 		
-		//  Working backward from i = (rows -1) to i = 1
+		//  Working backward from i = (rows -1) to i = 0
 		//
 		//  x[i] = b[i] - (a[i][j] x[j]) / a[i][i].
 		
@@ -83290,6 +84521,8 @@ class Matrix
 		for (int i = 0; i < B.length; i++) B[i] = temp[i];
 		for (int i = 0; i < x.length; i++) x[i] = new Number(0);
 		
+		Number n1 = new Number(n);
+		
 		for (int i = x.length - 1; i >= 0; i--)
 		{
 			Number sum = new Number(0);
@@ -83298,47 +84531,32 @@ class Matrix
 			{
 				sum = sum .add(matrix.matrix[i][j] .multiply(x[j]));
 				
-				if (n != null)  sum = sum .mod(n);
+				if (n != null)  sum = sum .mod(n1);
 			}
 			
 			Number B1 = B[i] .subtract(sum);
 			
-			if (n != null) B1 = B1 .mod(n);
+			if (n != null) B1 = B1 .mod(n1);
 			
 			try
-			{	Number inverse = null, n1 = null;
+			{	Number inverse = null;
 				
 				//  Test for zeros on the diagonal
 				
 				if (matrix.matrix[i][i].equals(0)) continue;
 				
-				if (n != null)
-				{
-					//  Remove the common factor from m[i][i], B[i], n
-					
-					Number gcd = matrix.matrix[i][i] .gcd(n);
-					
-					if (!B1.equals(0) && !B1.isDivisibleBy(gcd))
-					
-					    throw new ArithmeticException();
-					
-					matrix.matrix[i][i] = matrix.matrix[i][i] .divide(gcd);
-					
-					n1 = n.divide(gcd);  B1 = B1 .divide(gcd);
-				}
-				
 				try
-				{	if (n != null)  inverse = matrix.matrix[i][i] .modInverse(n1);
+				{	if (n != null)  inverse = matrix.matrix[i][i] .modInverse(n);
 					else            inverse = matrix.matrix[i][i]    .inverse();
 				}
 				
 				catch (NullPointerException ex) { return null; }
 				
 				
-				if (n != null)  x[i] = B1 .multiply(inverse) .mod(n1);
+				if (n != null)  x[i] = B1 .multiply(inverse) .mod(n);
 				else            x[i] = B1 .multiply(inverse);
 				
-				if (n != null)  x[i] = x[i] .mod(n1) .add(n1) .mod(n1);
+				if (n != null)  x[i] = x[i] .mod(n1);
 			}
 			
 			catch (NullPointerException ex)
@@ -83364,217 +84582,132 @@ class Matrix
 	
 	
 	
-	private Matrix toRowCanonicalForm2(int n)
-	{
-	
-		//  reduces a matrix to row canonical form using back elimination
-		
-		//  Back elimination is required if A X == B is a square matrix
-		//  instead of a column or vector.
-		
-		
-		Matrix matrix = new Matrix(this).trim().mod(n);
-		
-		//  if (!matrix.isEchelonForm()) throw new IllegalArgumentException();
-		
-		if (matrix.columnCount() != matrix.rowCount() + 1)
-		
-		    throw new IllegalArgumentException(); // wrong method
-		
-		
-		Number zero = new Number(0);
-		
-		Matrix temp = matrix .get(0, 0,
-		
-		     matrix.rowCount(), matrix.rowCount());
-		
-		
-		//  Divide each row so the first non-zero element equals one
-		
-		for (int r = matrix.matrix.length -1, j = 0; r >= 0; r--)
-		{
-			//  Find the column of the first non-zero element
-			
-			for (j = 0; j < matrix.matrix[r].length -1; j++)
-			
-			    if (!matrix.matrix[r][j].equals(zero))  break;
-			
-			if (j >= matrix.matrix[r].length -1)  continue;
-			
-			
-			if (matrix.matrix[r][j] .mod(n) .equals(zero)) continue;
-			
-			
-			//  Compute the multiplier m = 1 / pivot
-			
-			Number inv = null;
-			
-			try { inv = matrix.matrix[r][j] .modInverse(n); }
-			
-			catch (NullPointerException ex) { return null; }
-			
-			
-			//  Multiply row r by the multiplier so the pivot equals one
-			
-			for (int k = 0; k < matrix.matrix[r].length; k++)
-			
-			    matrix.matrix[r][k] = matrix.matrix[r][k].multiply(inv).mod(n);
-			
-			
-			//  Put zeros above the pivot for each row above r
-			
-			for (int i = r-1; i >= 0; i--)
-			{
-				//  For each row i compute the multipliers
-				//
-				//  m1 = - [i][j],  m2 = [r][j]
-				//
-				//  instead of  m = -[i][j] / [r][j]
-				//
-				//  to avoid the modular inversion.
-				//
-				//  [i][j] m2 + [r][j] m1 == [i][j][r][j] - [i][j][r][j] == 0
-				
-				
-				int m1 = matrix.matrix[i][j] .intValue();
-				int m2 = matrix.matrix[r][j] .intValue();
-				
-				m1 = n - m1;
-				
-				
-				//  Multiply row r by m1, and add to row i multiplied by m2
-				
-				for (int k = j; k < matrix.matrix[i].length; k++)
-				{
-					matrix.matrix[i][k] = new Number(
-					
-					    1L*matrix.matrix[i][k] .intValue() * m2
-					
-					      + ( 1L*matrix.matrix[r][k] .intValue() * m1 ) );
-					
-					matrix.matrix[i][k] = matrix.matrix[i][k] .mod(n);
-				}
-			}
-		}
-		
-		matrix = matrix .mod(n);
-		
-		return matrix;
-	}
-	
-	
-	
 	private Matrix toRowCanonicalForm2(Number n)
 	{
 	
 		//  reduces a matrix to row canonical form using back elimination
 		
-		//  Back elimination is required if A X == B is a square matrix
-		//  instead of a column vector.
+		//  Back elimination is required if A X == B is a
+		//  square matrix instead of a column vector A x == b
 		
-		final int minprecision = 8;
+		//  This method uses the toEchelonForm() method
+		//  to avoid replication of code
+		
+		
+		//  Matrices in echelon form
+		
+		//  | 3  1  4  1  5  9  2  6  5  3 | 5 |
+		//  |    8  9  7  9  3  2  3  8  4 | 6 |
+		//  |       2  6  4  3  3  8  3  2 | 7 |
+		//  |          9  5  0  2  8  8  4 | 1 |
+		//  |             9  7  1  6  9  3 | 9 |
+		//  |                9  3  7  5  1 | 0 |
+		//  |                   5  8  2  0 | 9 |
+		//  |                      7  4  9 | 4 |
+		//  |                         4  5 | 9 |
+		//  |                            2 | 3 |
+		
+		//  | 3  1  4  1  5  9 | 2  6  5  3  5  8 |
+		//  |    9  7  9  3  2 | 3  8  4  6  2  6 |
+		//  |       4  3  3  8 | 3  2  7  9  5  0 |
+		//  |          2  8  8 | 4  1  9  7  1  6 |
+		//  |             9  3 | 9  9  3  7  5  1 |
+		//  |                5 | 8  2  0  9  7  4 |
+		
 		
 		Matrix matrix = new Matrix(this);
 		
-		if (n != null) matrix = matrix.mod(n);
+		int rows = matrix.rowCount();
+		int cols = matrix.columnCount();
 		
-		int p = matrix.getPrecision();
-		
-		if (p < minprecision)
-		    p = minprecision;
-		
-		if (n == null) matrix = matrix.setPrecision(p);
-		
-		Number zero = new Number(0);
-		
-		int precision = matrix.getPrecision();
-		
-		if (precision > 0) zero = zero .setPrecision(precision);
+		Matrix left, right, matrix1;
 		
 		
-		//  Divide each row so the first non-zero element equals one
+		//    x1 x2 x3 x4
+		//
+		//  | x  x  x  x |            |
+		//  |    x  x  x |            |
+		//  |       x  x |            |
+		//  |          x |            |
 		
-		for (int r = matrix.matrix.length -1, j = 0; r >= 0; r--)
-		{
-			//  Find the column of the first non-zero element
-			
-			for (j = 0; j < matrix.matrix[r].length -1; j++)
-			
-			    if (!matrix.matrix[r][j].equals(zero))  break;
-			
-			if (j >= matrix.matrix[r].length -1)  continue;
-			
-			
-			if ((n != null) && matrix.matrix[r][j] .mod(n) .equals(zero)) continue;
-			if ((n == null) && matrix.matrix[r][j]         .equals(zero)) continue;
-			
-			//  Compute the multiplier m = 1 / pivot
-			
-			Number inv = null;
-			
-			try
-			{	if (n != null) inv = matrix.matrix[r][j] .modInverse(n);
-				if (n == null) inv = matrix.matrix[r][j]    .inverse();
-			}
-			
-			catch (Exception ex)
-			{
-				return null;
-			}
-			
-			
-			//  Multiply row r by the multiplier so the pivot equals one
-			
-			for (int k = 0; k < matrix.matrix[r].length; k++)
-			{
-				matrix.matrix[r][k] = matrix.matrix[r][k].multiply(inv);
-				
-				if (n != null) matrix.matrix[r][k] = matrix.matrix[r][k].mod(n);
-			}
-			
-			
-			//  Put zeros above the pivot for each row above r
-			
-			for (int i = r-1; i >= 0; i--)
-			{
-				//  For each row i compute the multipliers
-				//
-				//  m1 = - [i][j],  m2 = [r][j]
-				//
-				//  instead of  m = -[i][j] / [r][j]
-				//
-				//  to avoid the modular inversion.
-				//
-				//  [i][j] m2 + [r][j] m1 == [i][j][r][j] - [i][j][r][j] == 0
-				
-				
-				Number m1, m2;
-				
-				m1 = matrix.matrix[i][j];
-				m2 = matrix.matrix[r][j];
-				
-				if (n != null) m1 = m1 .negate(n);
-				if (n == null) m1 = m1 .negate();
-				
-				
-				//  Multiply row r by m1, and add to row i multiplied by m2
-				
-				for (int k = j; k < matrix.matrix[i].length; k++)
-				{
-					matrix.matrix[i][k] =
-					
-					      matrix.matrix[i][k] .multiply(m2)
-					.add( matrix.matrix[r][k] .multiply(m1) );
-					
-					if (n != null) matrix.matrix[i][k]
-					             = matrix.matrix[i][k] .mod(n);
-				}
-			}
-		}
 		
-		if (n != null) matrix = matrix.mod(n);
+		//  Move the left rows columns to the right side
 		
-		if (n == null) matrix = matrix.setPrecision(p);
+		              //  row0  col0  rows  cols
+		 left = matrix.get(0, 0*rows, rows, rows);
+		right = matrix.get(0, 1*rows, rows, cols-rows);
+		
+		matrix1 = right.augment(left);
+		
+		matrix = matrix1;
+		
+		//                    x1 x2 x3 x4
+		//
+		//  |              |  x  x  x  x  |
+		//  |              |     x  x  x  |
+		//  |              |        x  x  |
+		//  |              |           x  |
+		
+		
+		//  Rotate the matrix twice
+		
+		matrix = matrix.rotate().rotate();
+		
+		
+		//     x4 x3 x2 x1
+		//
+		//  |  x           |              |
+		//  |  x  x        |              |
+		//  |  x  x  x     |              |
+		//  |  x  x  x  x  |              |
+		
+		
+		//  Reduce the matrix to echelon form
+		
+		if ( (n != null) && n.equals(n.intValue()) && (n.intValue() > 0) )
+		
+		     matrix = matrix .toEchelonForm(n.intValue());
+		else matrix = matrix .toEchelonForm(n);
+		
+		
+		//     x4 x3 x2 x1
+		//
+		//  |  1           |              |
+		//  |     1        |              |
+		//  |        1     |              |
+		//  |           1  |              |
+		
+		
+		//  Move the left rows columns to the right side
+		
+		              //  row0  col0  rows  cols
+		 left = matrix.get(0, 0*rows, rows, rows);
+		right = matrix.get(0, 1*rows, rows, cols-rows);
+		
+		matrix1 = right.augment(left);
+		
+		matrix = matrix1;
+		
+		//                  x4 x3 x2 x1
+		//
+		//  |              |  1           |
+		//  |              |     1        |
+		//  |              |        1     |
+		//  |              |           1  |
+		
+		
+		//  Rotate the matrix twice
+		
+		matrix = matrix.rotate().rotate();
+		
+		
+		//     x1 x2 x3 x4
+		//
+		//  |  1           |              |
+		//  |     1        |              |
+		//  |        1     |              |
+		//  |           1  |              |
+		
 		
 		return matrix;
 	}
@@ -83604,7 +84737,7 @@ class Matrix
 			{
 				Number n = this.matrix[i][j];
 				
-				sb.append((n != null) ? n.toString(digits, radix) : "null");
+				sb.append(n != null ? n.toString(digits, radix) : "null");
 				
 				if (j < this.matrix[i].length -1)  sb.append(", ");
 			}
@@ -84757,7 +85890,7 @@ class Fourier
 		{
 			int length = Math.max(x.length, y.length);
 			
-			int[] array = (x.length <= y.length) ? x : y;
+			int[] array = x.length <= y.length ? x : y;
 			
 			int[] temp = new int[length];
 			
