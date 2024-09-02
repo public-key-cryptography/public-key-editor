@@ -132,8 +132,10 @@
 	in one of the public key ciphers but messages saved on users' computers will still be decryptable be-
 	cause file encryption uses private key cryptography. Also, an error was corrected in the passphrase
 	dialog that caused problems on some versions of Linux; an error in the Save As menu item was corrected
-	that caused files to be encrypted twice; and an error in the save mail settings method was corrected
-	so that the method saves the font size, frame size, number of ciphers, and other mail settings.
+	that caused files to be encrypted twice; an error in the save mail settings method was corrected so
+	that the method saves the font size, frame size, number of ciphers, and other mail settings; and an
+	error in the SavedEmails class was corrected that caused the view saved emails dialog to not detach
+	the appended file text from the saved messages and to not display the view, save, and delete buttons.
 	
 	
 	
@@ -468,9 +470,9 @@
 	to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional algebra
 	by using points on a plane a0 + a1 i instead of points on a line, points in a cube a0 + a1 i + a2 j,
 	points in a tesseract a0 + a1 i + a2 j + a3 k, or points in any-dimensional space or hyperspace by
-	defining i^2 == j^2 == k^2 == 1 and i j == k, j k == i, k i == j, ... Matrices of multi-dimensional
-	points such as quaternions can also use multi-dimensional arithmetic in addition to multi-dimensional
-	algebra.
+	defining orthogonal unit vectors or an orthonormal basis i, j, k, ... such that i^2 == j^2 == k^2 ==
+	== 1 and i j == k, j k == i, k i == j, ... Matrices of multi-dimensional points such as quaternions
+	can also use multi-dimensional arithmetic in addition to multi-dimensional algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices such as the 2x2 block matrix
 	A[][] = { { A1, A2 }, { A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1 block
@@ -2070,7 +2072,7 @@ class Programs
 	//  in the directory variable so the user doesn't have to
 	//  keep changing directories
 	
-	private String directory;
+	private String directorypath;
 	
 	
 	//  the number of files in the file list
@@ -4169,11 +4171,11 @@ class Programs
 			
 				//  Choose a file
 				
-				File file = chooseFile(directory);
+				File file = chooseFile(directorypath);
 				
 				if (file == null) return;
 				
-				directory = file.getParent();
+				directorypath = file.getParent();
 				
 				String filename = file.getName();
 				
@@ -4492,7 +4494,7 @@ class Programs
 				
 				File file = new File(filename);
 				
-				directory = file.getParent();
+				directorypath = file.getParent();
 				
 				
 				//  Open and decrypt the file
@@ -4605,7 +4607,7 @@ class Programs
 				
 				int result = new SaveFile(frame, __.save)
 				
-				    .setDirectory(directory) .setFont(font)
+				    .setDirectory(directorypath) .setFont(font)
 				
 					.save(data, file, false);
 				
@@ -4677,14 +4679,14 @@ class Programs
 				
 				File newfile = new SaveFile(frame, __.saveas)
 				
-				    .setDirectory(directory) .setFont(font)
+				    .setDirectory(directorypath) .setFont(font)
 				
 					.chooseFile();
 				
 				if (newfile == null) return;
 				
 				
-				directory = newfile.getParent();
+				directorypath = newfile.getParent();
 				
 				byte[] data = textarea.getText() .getBytes();
 				
@@ -4721,6 +4723,7 @@ class Programs
 						FileEncryptor fe = new FileEncryptor(frame);
 						
 						fe.setFont(textarea.getFont());
+						
 						fe.setForeground(foreground);
 						fe.setBackground(background);
 						
@@ -4748,7 +4751,7 @@ class Programs
 				
 				int result = new SaveFile(frame, __.save)
 				
-				    .setDirectory(directory) .setFont(font)
+				    .setDirectory(directorypath) .setFont(font)
 				
 					.save(data, newfile, true);
 				
@@ -4808,7 +4811,7 @@ class Programs
 			{
 				new DeleteFile(frame).setFont(font)
 				
-				    .setDirectory(directory) .delete();
+				    .setDirectory(directorypath) .delete();
 			}
 		}
 		
@@ -5150,17 +5153,17 @@ class Programs
 				{
 					public void actionPerformed(ActionEvent e)
 					{
+						File selectedfile = null;
+						
+						String title = __.addfilename;
+						
 						JFileChooser fc;
 						
-						fc = new FileChooser(directory);
+						fc = new FileChooser(directorypath);
 						
 						fc.setFont(font);
 						
-						File selectedfile = null;
-						
 						fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-						
-						String title = __.addfilename;
 						
 						fc.setDialogTitle(title);
 						
@@ -5178,7 +5181,7 @@ class Programs
 						
 						if (selectedfile == null) return;
 						
-						directory = selectedfile.getParent();
+						directorypath = selectedfile.getParent();
 						
 						String filepath = selectedfile.getPath();
 						
@@ -7907,9 +7910,11 @@ class Programs
 				
 				JFileChooser fc;
 				
-				fc = new FileChooser();
-				fc.setFont(font);
-				fc.setDialogTitle(__.hashfile);
+				fc = new FileChooser(directorypath);
+				
+				fc .setFont(font);
+				
+				fc .setDialogTitle(__.hashfile);
 				
 				int choice = fc.showOpenDialog(frame);
 				
@@ -8817,8 +8822,7 @@ class Programs
 				dialog.setTitle(title);
 				
 				
-				//  Clicking ok or cancel or pressing
-				//  the escape key closes the dialog
+				//  Clicking ok closes the dialog
 				
 				okbutton .addActionListener( new ActionListener()
 				{
@@ -8841,6 +8845,7 @@ class Programs
 					dialog.dispose();
 				} } );
 				
+				//  Clicking the cancel button or escape key disposes the dialog
 				
 				cancelbutton .addActionListener( new ActionListener()
 				{ public void actionPerformed(ActionEvent e)
@@ -10496,7 +10501,8 @@ class Programs
 				{
 					JTextArea textarea = textareapanel.textarea;
 					
-					ed.setFont      (textarea.getFont());
+					ed.setFont(textarea.getFont());
+					
 					ed.setForeground(textarea.getForeground());
 					ed.setBackground(textarea.getBackground());
 				}
@@ -10526,7 +10532,8 @@ class Programs
 				{
 					JTextArea textarea = textareapanel.textarea;
 					
-					dd.setFont      (textarea.getFont());
+					dd.setFont(textarea.getFont());
+					
 					dd.setForeground(textarea.getForeground());
 					dd.setBackground(textarea.getBackground());
 				}
@@ -10561,7 +10568,8 @@ class Programs
 				{
 					JTextArea textarea = textareapanel.textarea;
 					
-					fe.setFont      (textarea.getFont());
+					fe.setFont(textarea.getFont());
+					
 					fe.setForeground(textarea.getForeground());
 					fe.setBackground(textarea.getBackground());
 				}
@@ -10582,11 +10590,11 @@ class Programs
 				{
 					//  Choose a file
 					
-					File file = fe.chooseFile(directory);
+					File file = fe.chooseFile();
 					
 					if (file == null) return;
 					
-					directory = file.getParent();
+					directorypath = file.getParent();
 					
 					
 					if (Cipher.isEncrypted(file))
@@ -10667,7 +10675,8 @@ class Programs
 					{
 						JTextArea textarea = textareapanel.textarea;
 						
-						fd.setFont      (textarea.getFont());
+						fd.setFont(textarea.getFont());
+						
 						fd.setForeground(textarea.getForeground());
 						fd.setBackground(textarea.getBackground());
 					}
@@ -10681,11 +10690,11 @@ class Programs
 					
 					    fd.setFileKey(Cipher.passphraseToKey(SP));
 					
-					File file = fd.chooseFile(directory);
+					File file = fd.chooseFile(directorypath);
 					
 					if (file == null) return;
 					
-					directory = file.getParent();
+					directorypath = file.getParent();
 					
 					if (!Cipher.isEncrypted(file))
 					{
@@ -13756,11 +13765,11 @@ class Programs
 			{
 				//  Choose a file
 				
-				File file = chooseFile(directory);
+				File file = chooseFile(directorypath);
 				
 				if (file == null) return;
 				
-				directory = file.getParent();
+				directorypath = file.getParent();
 				
 				String filename = file.getName();
 				
@@ -14135,7 +14144,7 @@ class Programs
 				
 				int result = new SaveFile(frame, __.save)
 				
-				    .setDirectory(directory) .setFont(font)
+				    .setDirectory(directorypath) .setFont(font)
 				
 					.save(data, file, false);
 				
@@ -14205,11 +14214,11 @@ class Programs
 				
 				File file = new SaveFile(frame, __.saveas)
 				
-				  .setDirectory(directory) .setFont(font) .chooseFile();
+				  .setDirectory(directorypath) .setFont(font) .chooseFile();
 				
 				if (file == null) return;
 				
-				directory = file.getParent();
+				directorypath = file.getParent();
 				
 				
 				byte[] data = getData().getBytes();
@@ -14285,7 +14294,7 @@ class Programs
 				
 				int result = new SaveFile(frame, __.save)
 				
-				    .setDirectory(directory) .setFont(font)
+				    .setDirectory(directorypath) .setFont(font)
 				
 					.save(data, file, true);
 				
@@ -14607,7 +14616,7 @@ class Programs
 			{
 				new DeleteFile(frame).setFont(font)
 				
-				    .setDirectory(directory) .delete();
+				    .setDirectory(directorypath) .delete();
 			}
 		}
 		
@@ -17507,7 +17516,8 @@ class Programs
 				{
 					JTable table = tablepanel.table;
 					
-					ed.setFont      (table.getFont());
+					ed.setFont(table.getFont());
+					
 					ed.setForeground(table.getForeground());
 					ed.setBackground(table.getBackground());
 				}
@@ -17537,7 +17547,8 @@ class Programs
 				{
 					JTable table = tablepanel.table;
 					
-					dd.setFont      (table.getFont());
+					dd.setFont(table.getFont());
+					
 					dd.setForeground(table.getForeground());
 					dd.setBackground(table.getBackground());
 				}
@@ -17571,7 +17582,8 @@ class Programs
 				{
 					JTable table = tablepanel.table;
 					
-					fe.setFont      (table.getFont());
+					fe.setFont(table.getFont());
+					
 					fe.setForeground(table.getForeground());
 					fe.setBackground(table.getBackground());
 				}
@@ -17592,11 +17604,11 @@ class Programs
 				{
 					//  Choose a file
 					
-					File file = fe.chooseFile(directory);
+					File file = fe.chooseFile();
 					
 					if (file == null) return;
 					
-					directory = file.getParent();
+					directorypath = file.getParent();
 					
 					
 					//  File sizes > 32 bits should use FileChannelReader and Writer
@@ -17684,7 +17696,8 @@ class Programs
 					{
 						JTable table = tablepanel.table;
 						
-						fd.setFont      (table.getFont());
+						fd.setFont(table.getFont());
+						
 						fd.setForeground(table.getForeground());
 						fd.setBackground(table.getBackground());
 					}
@@ -17698,11 +17711,11 @@ class Programs
 					
 					    fd.setFileKey(Cipher.passphraseToKey(SP));
 					
-					File file = fd.chooseFile(directory);
+					File file = fd.chooseFile(directorypath);
 					
 					if (file == null) return;
 					
-					directory = file.getParent();
+					directorypath = file.getParent();
 					
 					if (!Cipher.isEncrypted(file))
 					{
@@ -18056,6 +18069,7 @@ class Programs
 		
 		private String filename; // the current title
 		
+		private File directory;
 		
 		
 		private String fontname = __.monospaced;
@@ -20632,11 +20646,11 @@ class Programs
 				
 				//  Choose a file
 				
-				File file = chooseFile(directory);
+				File file = chooseFile(directorypath);
 				
 				if (file == null) return;
 				
-				directory = file.getParent();
+				directorypath = file.getParent();
 				
 				String filename = file.getName();
 				
@@ -23500,7 +23514,7 @@ class Programs
 								
 								if (selectedfile == null) continue;
 								
-								else directory = selectedfile.getParent();
+								else directorypath = selectedfile.getParent();
 								
 								
 								//  List the files
@@ -23524,7 +23538,7 @@ class Programs
 									
 									label.setFont(labelfont);
 									
-									if (directory != null)
+									if (directorypath != null)
 									
 									    message = "Directory > " +
 									
@@ -23851,7 +23865,9 @@ class Programs
 							String filedesc = Convert   .stringToBase64(filedesclist.remove(0));
 							String filetext = Convert.byteArrayToBase64(filedatalist.remove(0));
 							
-							if (filedesc.isBlank()) filedesc = Convert.stringToBase64("    ");
+							if (filedesc.isBlank()) filedesc =
+							
+							    Convert.stringToBase64("    ");
 							
 							if (encrypt == false) filetext = Convert
 							
@@ -24613,7 +24629,9 @@ class Programs
 					fc = new FileChooser(directory);
 					
 					fc.setFileSelectionMode(mode);
+					
 					fc.setDialogTitle(title);
+					
 					fc.setFont(font);
 					
 					int choice = fc.showOpenDialog(frame);
@@ -24736,7 +24754,9 @@ class Programs
 					
 					File file = new SaveFile(frame, __.saveas)
 					
-					   .setDirectory(directory) .setFont(font) .chooseFile();
+					   .setDirectory(directorypath)
+					
+						.setFont(font) .chooseFile();
 					
 					if (file == null) return;
 					
@@ -24745,7 +24765,7 @@ class Programs
 					
 					int result = new SaveFile(frame, __.save)
 					
-					    .setDirectory(directory) .setFont(font)
+					    .setDirectory(directorypath) .setFont(font)
 					
 						.save(filedata, file, true);
 					
@@ -24760,13 +24780,17 @@ class Programs
 					
 					if (!Cipher.isEncrypted(file))
 					{
-						String question = __.encryptfile + "?";
+						String message = __.encryptfile + "?";
 						
 						Object[] options = new Object[] { __.Yes, __.No };
 						
+						JLabel label = new JLabel(message);
+						
+						label.setFont(labelfont);
+						
 						int choice = JOptionPane.showOptionDialog(
 						
-						    frame, question, null,
+						    frame, label, null,
 						
 							JOptionPane.DEFAULT_OPTION,
 							JOptionPane.QUESTION_MESSAGE,
@@ -30840,9 +30864,7 @@ class Programs
 						//  the user sets icon / str == save, then save the message as
 						//  a file in the mail directory.
 						
-						//  Saving the email could be the same as starring the email except
-						//  that it also saves the message to disk; the next time the user
-						//  logs in, the program could display a star next to the message.
+						//  Save the email message
 						
 						if (str.equalsIgnoreCase(__.save))
 						{
@@ -30869,10 +30891,13 @@ class Programs
 								
 								try
 								{	if (numberoffiles == 0)
-									
-									    emailpanel.savedemails.saveMessage(
-									
-										message, null, from, subj);
+									{
+										//  save the message only
+										
+										emailpanel.savedemails.saveMessage(
+										
+										    message, null, from, subj);
+									}
 									
 									else // save the message and files (file text)
 									{
@@ -31416,7 +31441,7 @@ class Programs
 									{
 										//  Save the attached file(s)
 										
-										saveAttachedFile(emailpanel.msno, i);
+										saveAttachedFile(frame, emailpanel.msno, i);
 								        }
 								}
 							}
@@ -31563,7 +31588,7 @@ class Programs
 								{
 									//  Save the attached file(s)
 									
-									saveAttachedFile(emailpanel.msno, i);
+									saveAttachedFile(frame, emailpanel.msno, i);
 								}
 							}
 						}
@@ -31710,8 +31735,8 @@ class Programs
 				public void keyPressed(KeyEvent e)
 				{
 				
-					//  The backspace key returns the user to the list screen
-					//  from the message screen.
+					//  The backspace key returns the user to
+					//  the list screen from the message screen.
 					
 					int keychar = e.getKeyChar();
 					int keycode = e.getKeyCode();
@@ -31776,7 +31801,7 @@ class Programs
 						
 						if (e.getSource() instanceof JTextArea)
 						
-						if (Character.isDigit(keychar))
+						if (Character.isDigit(keychar) && (emailpanel.list1 != null))
 						{
 							int number = Integer.valueOf(keychar)
 							           - Integer.valueOf('0');
@@ -31789,14 +31814,14 @@ class Programs
 							
 							if ((number > 0) && (number <= numberoffiles))
 							{
-								if (!control) viewAttachedFile(msno, number-1);
-								else          saveAttachedFile(msno, number-1);
+								if (!control) viewAttachedFile(       msno, number-1);
+								else          saveAttachedFile(frame, msno, number-1);
 							}
 							
 							if ((number == 0) && (numberoffiles == 10))
 							{
-								if (!control) viewAttachedFile(msno, 10);
-								else          saveAttachedFile(msno, 10);
+								if (!control) viewAttachedFile(       msno, 10);
+								else          saveAttachedFile(frame, msno, 10);
 							}
 							
 							control = false;
@@ -32085,19 +32110,6 @@ class Programs
 			}
 			
 			
-			private void saveAttachedFile(int msno, int fileno)
-			{
-				//  Saves an image, text, or html document
-				
-				String filedesc = emailpanel.list1.getFileDesc(msno, fileno);
-				byte[] filedata = emailpanel.list1.getFileData(msno, fileno);
-				
-				saveAttachedFile(filedesc, filedata);
-			}
-			
-			
-			
-			
 			private void viewAttachedFile(String filedesc, byte[] filedata)
 			{
 			
@@ -32224,7 +32236,19 @@ class Programs
 			
 			
 			
-			private void saveAttachedFile(String filedesc, byte[] filedata)
+			private void saveAttachedFile(Window parent, int msno, int fileno)
+			{
+				//  Saves an image, text, or html document
+				
+				String filedesc = emailpanel.list1.getFileDesc(msno, fileno);
+				byte[] filedata = emailpanel.list1.getFileData(msno, fileno);
+				
+				saveAttachedFile(parent, filedesc, filedata);
+			}
+			
+			
+			
+			private void saveAttachedFile(Window parent, String filedesc, byte[] filedata)
 			{
 			
 				//  Saves an image, text, table, or html document
@@ -32233,15 +32257,17 @@ class Programs
 				
 				//  Prompt the user to choose a file name
 				
-				File file = new SaveFile(frame, __.save + " "
+				File file = new SaveFile(parent, __.save + " "
 				
-				    + filedesc) .setFont(font) .chooseFile();
+				    + filedesc) .setDirectory(directorypath)
+				
+					.setFont(font) .chooseFile();
 				
 				if (file == null) return;
 				
-				directory = file.getParent();
+				directorypath = file.getParent();
 				
-				int result = new SaveFile(frame, __.save)
+				int result = new SaveFile(parent, __.save)
 				
 				    .setFont(font) .save(filedata, file, true);
 				
@@ -32256,13 +32282,17 @@ class Programs
 				
 				if (!Cipher.isEncrypted(file))
 				{
-					String question = __.encryptfile + "?";
+					String message = __.encryptfile + "?";
 					
 					Object[] options = new Object[] { __.Yes, __.No };
 					
+					JLabel label = new JLabel(message);
+					
+					label.setFont(labelfont);
+					
 					int choice = JOptionPane.showOptionDialog(
 					
-					    frame, question, null,
+					    parent, label, null,
 					
 						JOptionPane.DEFAULT_OPTION,
 						JOptionPane.QUESTION_MESSAGE,
@@ -32276,9 +32306,8 @@ class Programs
 						//  Display a dialog to encrypt and
 						//  save the attached file to disk
 						
-						FileEncryptor fe;
+						FileEncryptor fe = new FileEncryptor(parent);
 						
-						fe = new FileEncryptor(frame);
 						fe.setFont(emailpanel.textarea.getFont());
 						
 						if (filekey != null) fe.setFileKey(filekey);
@@ -32672,8 +32701,8 @@ class Programs
 						
 						  && ((i+1) < tokens.length))
 						{
-							// token[i+0] is the filedesc;
-							// token[i+1] is the filetext
+							//  token[i+0] is the filedesc;
+							//  token[i+1] is the filetext
 							
 							filedesc = tokens[i];
 							filetext = tokens[i+++1];
@@ -32681,8 +32710,8 @@ class Programs
 						
 						else if ((tokens[i].length() > maxlen))
 						{
-							// no file desc or title
-							// token[i] is the filetext
+							//  no file desc or title
+							//  token[i] is the filetext
 							
 							filedesc = "";
 							filetext = tokens[i];
@@ -32695,14 +32724,12 @@ class Programs
 					{
 						//  unencrypted files may be partitioned
 						
-						if ((tokens[i].length() <= maxlen)
-						
-						  && ((i+1) < tokens.length)
+						if ((tokens[i].length() <= maxlen) && ((i+1) < tokens.length)
 						
 						  && Number.isBase64(tokens[i+1].replaceAll("\n", "")))
 						{
-							// token[i+0] is the filedesc;
-							// token[i+1] is the filetext
+							//  token[i+0] is the filedesc;
+							//  token[i+1] is the filetext
 							
 							filedesc = tokens[i];
 							filetext = tokens[i+1];
@@ -32717,8 +32744,8 @@ class Programs
 						
 						  && Number.isBase64(tokens[i].replaceAll("\n", "")))
 						{
-							// no file desc or title
-							// token[i] is the filetext
+							//  no file desc or title
+							//  token[i] is the filetext
 							
 							filedesc = "";
 							filetext = tokens[i];
@@ -32733,6 +32760,13 @@ class Programs
 					if (!encrypted && filetext.contains("\n"))
 					
 					    filetext = filetext .replaceAll("\n", "");
+					
+					//  Remove the base-64 encoding from the file descs
+					//  (Note that the filedesc might have a prepended newline)
+					
+					if (Number.isBase64(filedesc.trim()))
+					
+					    filedesc = Convert.base64ToString(filedesc.trim());
 					
 					//  This line is redundant because the file
 					//  text should already be encoded in base 64
@@ -33024,6 +33058,7 @@ class Programs
 			
 			
 			//  End readMessage method
+			
 			
 			
 			
@@ -33517,6 +33552,7 @@ class Programs
 					if (i == 0) sb.append("\n");
 					
 					if (i < 10) sb.append(String.valueOf(
+					
 					   (i < 9) ? i + 1 : 0) + ". ");
 					
 					sb.append(__.AttachedFile + "  ");
@@ -33862,10 +33898,9 @@ class Programs
 				
 				String separator32 = "_".repeat(32);
 				
+				str += "\n\n\n" + separator32 +"\n\n";
 				
-				str += "\n\n\n";
-				str += separator32 +"\n\n";
-				str += (message + "\n");
+				str += message + "\n";
 				
 				final String str1 = str;
 				
@@ -34674,31 +34709,31 @@ class Programs
 			private class SavedEmails
 			{
 			
-				//   __________________________________________
-				//  | |       ________________________       | |
-				//  | |      |________________________|      | |
-				//  | |______________________________________| |
-				//  | |_[][__]__day month year_______________| |
-				//  | |                                      | |
-				//  | |           message text 1             | |
-				//  | |                                      | |
-				//  | |______________________________________| |
-				//  | |_[][__]__day month year_______________| |
-				//  | |                                      | |
-				//  | |           message text 2             | |
-				//  | |                                      | |
-				//  | |______________________________________| |
-				//  | |_[][__]__day month year_______________| |
-				//  | |                                      | |
-				//  | |           message text 3             | |
-				//  | |                                      | |
-				//  | |______________________________________| |
-				//  | |_[][__]__day month year_______________| |
-				//  | |                                      | |
-				//  | |           message text 4             | |
-				//  | |                                      | |
-				//  | |______________________________________|_|
-				//  |_|_____________Close button_____________|_|
+				//   ______________________________________________
+				//  | |         __________________________       | |
+				//  | |        |__________________________|      | |
+				//  | |__________________________________________| |
+				//  | |_[][__]__day month year___________________| |
+				//  | |                                          | |
+				//  | |              message text 1              | |
+				//  | |                                          | |
+				//  | |__________________________________________| |
+				//  | |_[][__]__day month year___________________| |
+				//  | |                                          | |
+				//  | |              message text 2              | |
+				//  | |                                          | |
+				//  | |__________________________________________| |
+				//  | |_[][__]__day month year___________________| |
+				//  | |                                          | |
+				//  | |              message text 3              | |
+				//  | |                                          | |
+				//  | |__________________________________________| |
+				//  | |_[][__]__day month year___________________| |
+				//  | |                                          | |
+				//  | |              message text 4              | |
+				//  | |                                          | |
+				//  | |__________________________________________|_|
+				//  |_|_______________Close button_______________|_|
 				
 				
 				private JDialog dialog;
@@ -34717,6 +34752,8 @@ class Programs
 				private String[] messages;
 				private String[][] filedescs;
 				private byte[][][] filedatas;
+				
+				private String[] filetext;
 				
 				private int[] numberoffiles;
 				private int[][] viewpos;
@@ -35043,6 +35080,7 @@ class Programs
 				}
 				
 				
+				//  this is the SavedEmails readMessage method
 				
 				private void readMessage(String plaintext, int index)
 				{
@@ -35052,56 +35090,170 @@ class Programs
 					
 					String[] tokens = plaintext.split("\n\n");
 					
-					boolean attachedfiles = tokens.length > 1;
 					
-					for (String token : tokens)
+					//  Read the attached file(s)
 					
-					    if (!Number.isBase64(token.trim()))
+					//  file title / desc and file text
 					
-						{ attachedfiles = false;  break; }
+					ArrayList<String> filedesclist = new ArrayList<String>();
+					ArrayList<String> filetextlist = new ArrayList<String>();
 					
-					if (!attachedfiles)
-					
-					    messages[index] = plaintext;
-					
-					else // if (attachedfiles)
+					for (int i = 1; i < tokens.length; i++)
 					{
-						String message = tokens[0];
+						// the max title / desc length
 						
-						if (Number.isBase64(message))
+						final int maxlen = 128;
 						
-						    message = Convert.base64ToString(message);
+						String filedesc, filetext;
 						
-						messages[index] = message;
+						//  unencrypted files may be partitioned
 						
-						ArrayList<String> filedesclist = new ArrayList<String>();
-						ArrayList<byte[]> filedatalist = new ArrayList<byte[]>();
+						if ((tokens[i].length() <= maxlen) && ((i+1) < tokens.length)
 						
-						for (int i = 1; i < tokens.length; i+=2)
+						  && Number.isBase64(tokens[i+1].replaceAll("\n", "")))
 						{
-							if (i+1 == tokens.length) return;
+							//  token[i+0] is the filedesc;
+							//  token[i+1] is the filetext
 							
-							String filedesc = Convert.base64ToString(tokens[i]);
-							byte[] filedata = Convert.base64ToByteArray(tokens[i+1]);
+							filedesc = tokens[i];
+							filetext = tokens[i+1];
 							
-							filedesclist.add(filedesc);
-							filedatalist.add(filedata);
+							tokens[i]   = "";
+							tokens[i+1] = "";
+							
+							i += 1;
 						}
 						
-						int numberoffiles = filedesclist.size();
+						else if ((tokens[i].length() > maxlen)
 						
-						this.numberoffiles[index] = numberoffiles;
-						
-						filedescs[index] = new String[numberoffiles];
-						filedatas[index] = new   byte[numberoffiles][];
-						
-						for (int i = 0; i < numberoffiles; i++)
+						  && Number.isBase64(tokens[i].replaceAll("\n", "")))
 						{
-							filedescs[index][i] = filedesclist.get(i);
-							filedatas[index][i] = filedatalist.get(i);
+							//  no file desc or title
+							//  token[i] is the filetext
+							
+							filedesc = "";
+							filetext = tokens[i];
+							
+							tokens[i] = "";
 						}
+						
+						else continue;
+						
+						
+						//  Remove the partitions / new lines from unencrypted files
+						
+						if (filetext.contains("\n"))
+						
+						    filetext = filetext .replaceAll("\n", "");
+						
+						//  Remove the base-64 encoding from the file descs
+						//  (Note that the filedesc might have a prepended newline)
+						
+						if (Number.isBase64(filedesc.trim()))
+						
+						    filedesc = Convert.base64ToString(filedesc.trim());
+						
+						//  This line is redundant because the file
+						//  text should already be encoded in base 64
+						
+						if (!Number.isBase64(filetext))
+						
+						    filetext = Convert.stringToBase64(filetext);
+						
+						//  Add the file desc and file text to the lists
+						
+						filedesclist.add(filedesc);
+						filetextlist.add(filetext);
 					}
+					
+					
+					int numberoffiles = filetextlist.size();
+					
+					this.numberoffiles[index] = numberoffiles;
+					
+					ArrayList<byte[]> filedatalist = new ArrayList<byte[]>();
+					
+					for (int i = 0; i < numberoffiles; i++)
+					
+					    filedatalist.add(new byte[0]);
+					
+					
+					//  Read and decompress the file attachment(s)
+					
+					for (int i = 0; i < numberoffiles; i++)
+					{
+						String filetext = filetextlist.get(i).trim();
+						
+						//  Convert the file text to file data and store
+						//  the data because the file might not be compressed
+						
+						if (Number.isBase64(filetext))
+						
+						    filedatalist.set(i, Convert
+						
+							.base64ToByteArray(filetext));
+						
+						else { System.out.println("Attached file error"); break; }
+						
+						try
+						{	byte[] filedata = Convert.base64ToByteArray(filetext);
+							
+							byte[] decompresseddata = decompress(filedata);
+							
+							byte[] compresseddata = compress(decompresseddata);
+							
+							//  If the file was compressed then re-save the new data
+							
+							if (Arrays.equals(filedata, compresseddata))
+							{
+								filedatalist.set(i, decompresseddata);
+								
+								//  System.out.println("file sizes == " +
+								//
+								//    decompresseddata.length + " : " +
+								//      compresseddata.length);
+								//
+								//    26769 : 26660  color circle
+								//    34770 : 11656  text document
+								//     5518 :  2399  table document
+							}
+						}
+						
+						//  if the file wasn't compressed or deflated then
+						//  decompressing just throws a data format exception
+						
+						catch (DataFormatException ex) {  }
+					}
+					
+					
+					this.filedescs[index] = new String[numberoffiles];
+					this.filedatas[index] = new   byte[numberoffiles][];
+					
+					for (int i = 0; i < filedesclist.size(); i++)
+					{
+						this.filedescs[index][i] = filedesclist.get(i);
+						this.filedatas[index][i] = filedatalist.get(i);
+					}
+					
+					
+					//  Reconstruct the plaintext message from the tokens
+					
+					StringBuilder sb = new StringBuilder("");
+					
+					for (int i = 0; i < tokens.length; i++)
+					{
+						String token = tokens[i];
+						
+						if ((token != null) && !token.isEmpty())
+						
+						    sb.append(token + "\n\n");
+					}
+					
+					String message = sb.toString();
+					
+					messages[index] = message.trim();
 				}
+				
 				
 				
 				private void displayMessage(int index)
@@ -35128,6 +35280,7 @@ class Programs
 						if (i == 0) sb.append("\n");
 						
 						if (i < 10) sb.append(String.valueOf(
+						
 						   (i < 9) ? i + 1 : 0) + ". ");
 						
 						sb.append(__.AttachedFile + "  ");
@@ -35150,6 +35303,7 @@ class Programs
 					String text = sb.toString();
 					
 					JTextArea textarea = textareas[index];
+					
 					textarea.setText(text);
 					textarea.setCaretPosition(0);
 					
@@ -35364,10 +35518,14 @@ class Programs
 				 	dialog = new JDialog(frame);
 					
 					dialog.add(panel);
+					
 					dialog.setLocationRelativeTo(frame);
+					
 					dialog.setResizable(true);
 					
 					dialog.addWindowListener(new WindowListener1());
+					
+					dialog.pack();
 				}
 				
 				
@@ -35519,6 +35677,7 @@ class Programs
 					numberoffiles = new int[t];
 					filedescs = new String[t][];
 					filedatas = new   byte[t][][];
+					filetext  = new String[t];
 					
 					components = new Component[t][];
 					
@@ -35630,22 +35789,22 @@ class Programs
 						
 						
 						
-						//  Add a large inset to the left and right margin of
-						//  each text area's scrollpane so the user can scroll
-						//  through all the messages using the mouse without
-						//  widening the window.
+						//  Add a large inset to the left and right margin of each
+						//  text area's scrollpane so the user can scroll through
+						//  all the saved messages using the mouse without widening
+						//  the window.
 						//
-						//  Also, set the x weight to 100 so the user can widen
-						//  and narrow the text areas by widening and narrowing
-						//  the window frame;
+						//  Also, set the x weight to 100 so the user can widen and
+						//  narrow the text areas by widening and narrowing the
+						//  window frame;
 						//
-						//  and set the y size so the user notices that the mes-
-						//  sage buttons and labels expand if the user types and
-						//  enters a search string and then contract as the user
-						//  deletes the search string; otherwise the user might
-						//  not notice or realize that the message panes disap-
-						//  pear whenever a search string is entered and then
-						//  reappear when the search string is deleted.
+						//  and set the y size so the user notices that the message
+						//  buttons and labels expand if the user types and enters
+						//  a search string and then contract as the user deletes
+						//  the search string; otherwise the user might not notice
+						//  or realize that the message panes disappear whenever a
+						//  search string is entered and then reappear when the
+						//  search string is deleted.
 						
 						
 						int y_size = 20;
@@ -35792,7 +35951,7 @@ class Programs
 								{
 									//  Save the attached file(s)
 									
-									saveAttachedFile(filedescs[index][i], filedatas[index][i]);
+									saveAttachedFile(dialog, filedescs[index][i], filedatas[index][i]);
 							        }
 								
 								else if ( (cp >= delepos[index][i]) && (cp < delepos[index][i] + delewidth -1) )
@@ -35895,10 +36054,9 @@ class Programs
 					
 					findfield.setFont(font);
 					
-					
-					//  Set the font for the Documents dialogs
-					
 					Documents.setFont(font);
+					
+					dialog.pack();
 				}
 				
 				
@@ -38253,11 +38411,13 @@ class Programs
 			//  for the attached files and file descriptions or titles
 			
 			//  a double iterator is required for the msno and file no
+			
 			private ArrayList<ArrayList<String>> filedesc;
 			private ArrayList<ArrayList<byte[]>> filedata;
 			
 			//  a single iterator is required for the msno because
 			//  the files are concatenated into a single filetext
+			
 			private ArrayList<String> filetext;
 			
 			private ArrayList<Integer> numberoffiles;
@@ -38743,10 +38903,14 @@ class Programs
 				
 				//  Encode the byte arrays and titles in base 64
 				
-				String filedesc = Convert   .stringToBase64(filedesc1);
+				if (filedesc1.isBlank()) filedesc1 = ("    ");
+				
+				String filedesc = filedesc1;
 				String filetext = Convert.byteArrayToBase64(filedata1);
 				
-				if (filedesc.isBlank()) filedesc = Convert.stringToBase64("    ");
+				if (!Number.isBase64(filedesc))
+				
+				    filedesc = Convert.stringToBase64(filedesc);
 				
 				//  Concatenate the file description and the file text
 				
@@ -38788,8 +38952,12 @@ class Programs
 				//  Read the file title and text
 				//  and remove the base-64 encoding
 				
-				String filedesc = Convert.base64ToString(tokens[0]);
+				String filedesc = tokens[0];
 				byte[] filedata = Convert.base64ToByteArray(tokens[1]);
+				
+				if (Number.isBase64(filedesc))
+				
+				    filedesc = Convert.base64ToString(filedesc);
 				
 				filedesclist.add(filedesc);
 				filedatalist.add(filedata);
@@ -40452,9 +40620,9 @@ class SaveFile
 	{
 		File selectedfile = null;
 		
-		JFileChooser fc;
+		FileChooser fc = new
 		
-		fc = new FileChooser(directory);
+		    FileChooser(directory);
 		
 		fc.setFont(font);
 		
@@ -40500,9 +40668,16 @@ class FileChooser extends JFileChooser
 	private int minsize = 10;
 	private int maxsize = 22;
 	
-	public FileChooser(String directory)
+	public FileChooser(Window parent, File directory)
 	{
-		super(directory);
+		super.createDialog(parent);
+		
+		super.setCurrentDirectory(directory);
+	}
+	
+	public FileChooser(String directorypath)
+	{
+		super(directorypath);
 	}
 	
 	public void setFont(Font font1)
@@ -40535,9 +40710,9 @@ class FileChooser extends JFileChooser
 		//  can get truncated if the text is too long
 		//  (such as the encrypt/decrypt button)
 		
-		d = new Dimension((int) (1.25*x), (int) (1.25*y));
+		d = new Dimension((int) (1.2*x), (int) (1.2*y));
 		
-		super.setPreferredSize(d);
+		this.setPreferredSize(d);
 	}
 	
 	
@@ -40570,6 +40745,8 @@ class FileChooser extends JFileChooser
 	}
 }
 
+
+//  End class FileChooser
 
 
 
@@ -42292,11 +42469,13 @@ class PublicKeyRing
 class FileEncryptor
 {
 
-	//  The FileEncryptor class displays the JFileChooser
+	//  The FileEncryptor class displays the FileChooser
 	//  Dialog and the select and confirm file key dialog
 	
 	
 	private Window window;
+	
+	private FileChooser fc;
 	
 	private byte[] filekey;
 	
@@ -42304,8 +42483,6 @@ class FileEncryptor
 	
 	private Color foreground = Color.black;
 	private Color background = Color.white;
-	
-	private JFileChooser fc;
 	
 	private String title = __.encryptfile;
 	
@@ -42325,6 +42502,8 @@ class FileEncryptor
 	
 	public FileEncryptor(Window window)
 	{
+		//  window parent can be a frame or a dialog
+		
 		this.window = window;
 	}
 	
@@ -42374,16 +42553,18 @@ class FileEncryptor
 		this.title = title;
 	}
 	
-	public File chooseFile(String directory)
+	public File chooseFile()
 	{
 	
 		File file = null;
 		
-		fc = new FileChooser(directory);
+		fc = new FileChooser(window, null);
 		
 		fc.setFont(font);
 		
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setFileSelectionMode(
+		
+		    JFileChooser.FILES_ONLY);
 		
 		if (filekey != null)
 		{
@@ -42554,8 +42735,7 @@ class FileEncryptor
 				pd.setForeground1(foreground);
 				pd.setBackground1(background);
 				
-				pd.setFont1(font != null ?
-				    font : window.getFont());
+				pd.setFont1(font != null ? font : window.getFont());
 				
 				String passphrase = pd.readPassphrase();
 				
@@ -42706,7 +42886,7 @@ class FileDecryptor
 {
 
 
-	//  The FileDecryptor class displays the JFileChooser Dialog
+	//  The FileDecryptor class displays the FileChooser Dialog
 	//  and the passphrase dialog
 	//
 	//  (The FileDecryptor class doesn't do passphrase confirmation
@@ -42735,6 +42915,8 @@ class FileDecryptor
 	
 	public FileDecryptor(Window window)
 	{
+		//  window parent can be a frame or a dialog
+		
 		this.window = window;
 	}
 	
@@ -42794,13 +42976,15 @@ class FileDecryptor
 	{
 		File file = null;
 		
-		JFileChooser fc;
+		FileChooser fc;
 		
-		fc = new FileChooser(directory);
+		fc = new FileChooser(window, null);
 		
 		fc.setFont(font);
 		
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setFileSelectionMode(
+		
+		    JFileChooser.FILES_ONLY);
 		
 		String title = __.decryptfile;
 		
@@ -42915,6 +43099,19 @@ class FileDecryptor
 			}
 			
 			
+			//  Create a passphrase dialog
+			
+			PassphraseDialog pd = new PassphraseDialog(
+			
+			   window, PassphraseDialog.passphrase_only);
+			
+			pd.setTitle(title);
+			pd.setMinimumLength(minlength);
+			pd.setForeground1(foreground);
+			pd.setBackground1(background);
+			pd.setFont1(font != null ?
+			    font : window.getFont());
+			
 			while (true)
 			{
 				if (filekey != null)
@@ -42931,19 +43128,6 @@ class FileDecryptor
 				}
 				
 				//  Request a passphrase from the user
-				
-				//  Create a passphrase dialog
-				
-				PassphraseDialog pd = new PassphraseDialog(
-				
-				   window, PassphraseDialog.passphrase_only);
-				
-				pd.setTitle(title);
-				pd.setMinimumLength(minlength);
-				pd.setForeground1(foreground);
-				pd.setBackground1(background);
-				pd.setFont1(font != null ?
-				    font : window.getFont());
 				
 				String passphrase = pd.readPassphrase();
 				
@@ -43006,6 +43190,7 @@ class FileDecryptor
 			
 			return plaindata;
 		}
+		
 		
 		//  Create a passphrase dialog
 		
@@ -50455,7 +50640,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	public PassphraseDialog(Window window, int dialogtype)
 	{
-	
+		//	window parent can be a frame or a dialog
+		
+		
 		//	passphrase_only
 		//	
 		//	passphrase_email_encrypt
@@ -50466,15 +50653,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		
 		
-		//           ______________________________
-		//          |______________________________|
-		//          |                              |
-		//          |                              |
-		//          |______________________________|
-		//          | 0123 4567 89ab cdef          |
-		//          |______________________________|
-		//          |            O K               |
-		//          |______________________________|
+		//    ___________________________________
+		//   |___________________________________|
+		//   |                                   |
+		//   |                                   |
+		//   |___________________________________|
+		//   |  0123 4567 89ab cdef              |
+		//   |___________________________________|
+		//   |                O K                |
+		//   |___________________________________|
 		
 		
 		
@@ -50555,15 +50742,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		if (dialogtype == PASSPHRASE_ONLY)
 		{
-			//   ________________________________
-			//  |________________________________|
-			//  |                                |
-			//  |                                |
-			//  |________________________________|
-			//  |      0123 4567 89ab cdef       |
-			//  |________________________________|
-			//  |              O K               |
-			//  |________________________________|
+			//    ___________________________________
+			//   |___________________________________|
+			//   |                                   |
+			//   |                                   |
+			//   |___________________________________|
+			//   |  0123 4567 89ab cdef              |
+			//   |___________________________________|
+			//   |                O K                |
+			//   |___________________________________|
 			
 			
 			passphrasehashlabel = new JLabel("");
@@ -51310,7 +51497,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 					
 					fc.setDialogTitle(__.setmaildirectory);
 					
-					int choice = fc.showOpenDialog(window);
+					int choice = fc.showOpenDialog(dialog);
 					
 					if (choice == JFileChooser.APPROVE_OPTION)
 					
@@ -52029,9 +52216,14 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	public String readPassphrase()
 	{
-		//  Set modal to true so that the setVisible method
-		//  will block until the user enters a passphrase
-		//  and the okbutton listener sets visible to false
+		//  Set modal to true so that the setVisible method will block
+		//  until the user enters a passphrase and the okbutton listener
+		//  sets visible to false if the passphrase is valid.
+		//
+		//  (On some versions of Linux, entering a wrong or incomplete
+		//  passphrase and then clicking several times on the ok button
+		//  can cause the dialog box to reappear in the upper left corner
+		//  of the screen instead of in the center of the frame.)
 		
 		this.setModal(true);
 		
@@ -52039,10 +52231,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 		
 		     passphrasearea.requestFocusInWindow();
 		
-		//  The frame visibility has to be set to false
-		//  and then to true to force the method to block
+		//  The frame visibility has to be set
+		//  to true to force the method to block
 		
-		this.setVisible(false);
 		this.setVisible(true);
 		
 		if (!validpassphrase || closed)  return null;
@@ -52064,16 +52255,15 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	public String[] readDialogInput()
 	{
-		//  Set modal to true so that the setVisible method
-		//  will block until the user enters a passphrase
-		//  and the okbutton listener sets visible to false
+		//  Set modal to true so that the setVisible method will block
+		//  until the user enters a passphrase and the okbutton listener
+		//  sets visible to false if the passphrase is valid
 		
 		this.setModal(true);
 		
-		//  The frame visibility has to be set to false
-		//  and then to true to force the method to block
+		//  The frame visibility has to be set
+		//  to true to force the method to block
 		
-		this.setVisible(false);
 		this.setVisible(true);
 		
 		if (!validpassphrase || closed) return null;
@@ -52576,11 +52766,11 @@ class PublicKey
 	//  For internet telephony, voice or socket communication between two computers
 	//  the public keys are exchanged synchronously. The server sends a set of static
 	//  public keys or a composite key to the client; the client chooses a subset of
-	//  those public keys and returns a one-time public key to the server so the cli-
-	//  ent and server can agree on a shared secret key; and then the client and serv-
-	//  er use the shared secret to send and receive encrypted messages. The same
-	//  secret key or session key is used to encrypt and decrypt messages until the
-	//  client closes the socket or disconnects from the server.
+	//  those public keys and returns a matching one-time public key to the server so
+	//  the client and server can agree on a shared secret key; and then the client
+	//  and server use the shared secret to send and receive encrypted messages. The
+	//  same secret key or session key is used to encrypt and decrypt messages until
+	//  the client closes the socket or disconnects from the server.
 	//
 	//
 	//  Symmetric and asymmetric public key cryptography
@@ -52768,10 +52958,6 @@ class PublicKey
 	//  least common remainder x = lcr(x mod q[], q[]) where x mod q[] is the set of solutions to the re-
 	//  duced discrete log problems.
 	//
-	//  Elliptic curves, lattices, polynomial factorization, and error-correcting codes are not used in the
-	//  public key class because ciphers based on these math problems are susceptible to classical and quan-
-	//  tum computing and are completely broken for all key sizes and parameters.
-	//
 	//
 	//
 	//  The Merkle-Hellman / knapsack cipher
@@ -52840,7 +53026,7 @@ class PublicKey
 	//  Y2  =  B    C      |   E2  =  B       C
 	//
 	//  where A, B, C, X, X1, and X2 are matrices, Latin squares,
-	//  quaternions, cubes, tesseracts, or polynomials
+	//  quaternions, cubes, tesseracts, or polynomials.
 	//
 	//  The vector ciphers are based on the vector dot product,
 	//  the vector cross product, and the cross product determinant
@@ -53001,19 +53187,23 @@ class PublicKey
 	//
 	//  (asymmetrical or invertible one-way function)
 	//
-	//  The recipient's static public key A[] is
+	//  The recipient's static public key A[] is a vector
 	//
-	//  an array of real or complex numbers;
+	//  or linear array of real or complex numbers;
 	//
-	//  the sender's private key X[] is an array
+	//  the sender's private key X[] is a vector or
 	//
-	//  of real or complex numbers;
+	//  linear array of real or complex numbers;
 	//
-	//  the one-time public key b is the inner or
+	//  the one-time public key b is the inner product,
 	//
-	//  dot product of A[] and X[] or b = A[] * X[];
+	//  dot product, or scalar product of A[] and X[]
 	//
-	//  the secret key x is the sum of X[].
+	//  or b = A[] * X[] which is a number; and
+	//
+	//  the secret key x is the sum or a hash of the
+	//
+	//  sender's private key X[].
 	
 	
 	
@@ -65026,10 +65216,10 @@ class Cipher
 	//  encryption key (or to the current message block) to generate the cipher
 	//  block c[i] = p[i] (+) H( k (+) c[i-1] )  (or c[i] = E( k, p[i] (+) c[i-1] ).
 	//
-	//  Cipher block chaining is equivalent to adding a public random number to
-	//  each input block because the output value of an encryption function is a
-	//  public random number. This increases the entropy of the plaintext so that
-	//  all ciphertext values are equally probable.
+	//  Cipher block chaining is equivalent to adding a public random number to each
+	//  input block because the output value of an encryption function is a public
+	//  random number. This increases the entropy of the plaintext so that all cipher-
+	//  text values are equally probable.
 	//
 	//  Without cipher block chaining, the entropy of the ciphertext would be the
 	//  same as the plaintext because enciphering is a one-to-one mapping of plain-
@@ -65056,10 +65246,10 @@ class Cipher
 	//
 	//  Hash ciphers can use cipher block chaining or CBC mode instead of CTR mode
 	//  so that each cipher block c[i] = p[i] + H( k (+) c[i-1] ) does not depend
-	//  directly on the indexer i; each message block p[i] depends only on the
-	//  current and previous cipher block c[i-1]. This enables the receiver to
-	//  recover from missing cipher blocks, but the dependency on the previous
-	//  cipher block means that encryption in CBC mode is not parallelizable.
+	//  directly on the indexer i; each message block p[i] depends only on the cur-
+	//  rent and previous cipher block c[i-1]. This enables the receiver to recover
+	//  from missing cipher blocks, but the dependency on the previous cipher block
+	//  means that encryption in CBC mode is not parallelizable.
 	
 	
 	
@@ -65257,13 +65447,17 @@ class Cipher
 	//  The only reason to use an (invertible) encryption cipher instead of a hash cipher or one-time pad
 	//  is to be able to reuse the same encryption key so the message or file does not have to expand to
 	//  include the one-time secret key. However, an encryption cipher may also require an initialization
-	//  vector because files that start with the same plaintext will also start with the same ciphertext
-	//  unless a different iv is used. The initialization vector or initial value negates the benefit of
-	//  using an encryption cipher because a one-time iv has to be stored instead of a one-time encrypted
-	//  encryption key.
+	//  vector because files or messages that start with the same plaintext will also start with the same
+	//  ciphertext unless a different iv is used. The use of an initialization vector or initial value ne-
+	//  gates the benefit of using an encryption cipher because a one-time iv has to be stored in addition
+	//  to a one-time encrypted encryption key.
+	//  
+	//  The one-time encrypted encryption key is a random number (+) the passphrase hash where the random
+	//  number or one-time encryption key is a hash of different entropy sources including the message,
+	//  the nanotime or current time in nanoseconds, and the passphrase.
 	//
-	//  The use of invertible private key ciphers violates a principle of cryptography that private keys
-	//  are not supposed to be reused for each block of data. Encryption ciphers also have a one-to-one
+	//  The use of invertible private key ciphers also violates a principle of cryptography that private
+	//  keys are not supposed to be reused for each block of data. Encryption ciphers have a one-to-one
 	//  mapping of plaindata to cipherdata because the functions have to be invertible which makes them
 	//  vulnerable to cryptanalysis or susceptible to Fourier analysis.
 	//
@@ -65285,8 +65479,8 @@ class Cipher
 	//  crypted by xor-ing it with a static or shared secret key so the key can be attached (prepended or
 	//  appended) to the encrypted file. (The encrypted encryption key could be stored with the file name
 	//  if the operating system or file system allows programs to set a file key for each file just as it
-	//  allows programs to store metadata such as access permissions, content type, last-modification
-	//  time, and other information about the file.)
+	//  allows programs to store metadata such as access permissions, content type, last-modification time,
+	//  and other information about the file.)
 	//
 	//  For email or asynchronous communication messages are converted to base 64 after encryption because
 	//  encrypted data or cipherdata contains random characters. If there are any missing data blocks the
@@ -71242,11 +71436,18 @@ class Number implements Comparable<Number>
 	
 	public Number(String digits)
 	{
-		//  radix == 10
+		int radix = 10;
 		
-		Number number;
+		digits = digits .replaceAll(" ", "");
 		
-		number = stringToNumber(digits, 10);
+		if (!isNumberString(digits, radix))
+		{
+			String message = "Number is not in base " + String.valueOf(radix);
+			
+			throw new IllegalArgumentException(message);
+		}
+		
+		Number number = stringToNumber(digits, 10);
 		
 		this.intarray  = number.intarray;
 		this.intpoint  = number.intpoint;
@@ -71258,9 +71459,14 @@ class Number implements Comparable<Number>
 	
 	public Number(String digits, int radix)
 	{
-		if (!isNumberString(digits, radix))
+		digits = digits .replaceAll(" ", "");
 		
-		    throw new IllegalArgumentException();
+		if (!isNumberString(digits, radix))
+		{
+			String message = "Number is not in base " + String.valueOf(radix);
+			
+			throw new IllegalArgumentException(message);
+		}
 		
 		Number number = stringToNumber(digits, radix);
 		
@@ -71738,6 +71944,20 @@ class Number implements Comparable<Number>
 		    number.sign = '+';
 		
 		return number;
+	}
+	
+	
+	public static Number[] abs(Number[] array)
+	{
+		//  returns the absolute value of an array
+		
+		Number[] narray = new Number[array.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    narray[i] = array[i].abs();
+		
+		return narray;
 	}
 	
 	
@@ -74500,7 +74720,7 @@ class Number implements Comparable<Number>
 	
 	
 	
-	//  Logarithmic identities or properties of logarithms
+	//  Logarithmic identities or properties of exponents
 	//
 	//  log (a ^ b) ==  b log (a)
 	//
@@ -78825,6 +79045,19 @@ class Number implements Comparable<Number>
 	}
 	
 	
+	public static Number[] toInteger(Number[] array)
+	{
+		//  converts an array of real numbers to integers
+		
+		Number[] narray = new Number[array.length];
+		
+		for (int i = 0; i < array.length; i++)
+		
+		    narray[i] = array[i].toInteger();
+		
+		return narray;
+	}
+	
 	
 	public Number toReal()
 	{
@@ -79841,8 +80074,8 @@ class Matrix
 	
 	//  Properties / definitions of real matrices
 	//
-	//                            T
-	//  Symmetric matrix        A  ==  A
+	//                       T
+	//  Symmetric matrix   A  ==  A
 	//
 	//  (a[i][j] == a[j][i])
 	//
@@ -79855,8 +80088,8 @@ class Matrix
 	//
 	//  (skew-symmetric matrix equals its negative transpose)
 	//
-	//                            T    -1
-	//  Orthogonal matrix       A  == A
+	//                        T    -1
+	//  Orthogonal matrix   A  == A
 	//
 	//              T             T 
 	//  therefore A   A  ==  A  A   ==  I
@@ -79864,8 +80097,8 @@ class Matrix
 	//  (orthogonal matrix transpose equals its inverse)
 	//
 	//
-	//                      T          T
-	//  Normal matrix     A  A == A  A
+	//                    T          T
+	//  Normal matrix   A  A == A  A
 	//
 	//  (normal matrix commutes with its transpose)
 	
@@ -79873,10 +80106,10 @@ class Matrix
 	
 	
 	
-	//  Properties / definitions of complex Matrices
+	//  Properties / definitions of complex matrices
 	//
-	//                            H
-	//  Hermitian matrix        A  ==  A
+	//                       H
+	//  Hermitian matrix   A  ==  A
 	//                                   _
 	//  (conjugate symmetric, a[i][j] == a[j][i]
 	//        _
@@ -79897,8 +80130,8 @@ class Matrix
 	//
 	//  (complex orthogonal)
 	//
-	//                     H          H
-	//  Normal matrix    A  A  == A A
+	//                    H          H
+	//  Normal matrix   A  A  == A A
 	//
 	//  (complex normal)
 	
@@ -83257,13 +83490,13 @@ class Matrix
 	{
 		//  sets a row
 		
-		Number[] temp = new Number[array.length];
+		Number[] narray = new Number[array.length];
 		
 		for (int i = 0; i < array.length; i++)
 		
-		    temp[i] = array[i];
+		    narray[i] = array[i];
 		
-		this.matrix[row] = temp;
+		this.matrix[row] = narray;
 	}
 	
 	
@@ -84229,9 +84462,7 @@ class Matrix
 				
 				if (n == null) continue;
 				
-				int digits1 = n .setPrecision(p0 >= 8 ? p0-1 : p0)
-				
-				    .roundBit() .setPrecision(p0)
+				int digits1 = n .roundBit() .setPrecision(p0)
 				
 					.countSignificantDigits(radix);
 				
@@ -84249,7 +84480,7 @@ class Matrix
 				
 				    matrix.matrix[i][j] = matrix.matrix[i][j]
 				
-					.roundBit() .setPrecision(precision);
+					.setPrecision(precision);
 			}
 		}
 		
@@ -84313,7 +84544,7 @@ class Matrix
 			
 			digitsize = matrix.matrix[i][j] .toString(radix) .length()
 			
-			    + matrix.matrix[i][j].signum() == 1 ? 1 : 0;
+			    + (matrix.matrix[i][j].signum() == 1 ? 1 : 0);
 			
 			//  Set mindigits1 to the largest element digit size
 			

@@ -102,8 +102,10 @@
 	in one of the public key ciphers but messages saved on users' computers will still be decryptable be-
 	cause file encryption uses private key cryptography. Also, an error was corrected in the passphrase
 	dialog that caused problems on some versions of Linux; an error in the Save As menu item was corrected
-	that caused files to be encrypted twice; and an error in the save mail settings method was corrected
-	so that the method saves the font size, frame size, number of ciphers, and other mail settings.
+	that caused files to be encrypted twice; an error in the save mail settings method was corrected so
+	that the method saves the font size, frame size, number of ciphers, and other mail settings; and an
+	error in the SavedEmails class was corrected that caused the view saved emails dialog to not detach
+	the appended file text from the saved messages and to not display the view, save, and delete buttons.
 	
 	
 	
@@ -438,9 +440,9 @@
 	to right and from top to bottom. Ciphers can be generalized further to use multi-dimensional algebra
 	by using points on a plane a0 + a1 i instead of points on a line, points in a cube a0 + a1 i + a2 j,
 	points in a tesseract a0 + a1 i + a2 j + a3 k, or points in any-dimensional space or hyperspace by
-	defining i^2 == j^2 == k^2 == 1 and i j == k, j k == i, k i == j, ... Matrices of multi-dimensional
-	points such as quaternions can also use multi-dimensional arithmetic in addition to multi-dimensional
-	algebra.
+	defining orthogonal unit vectors or an orthonormal basis i, j, k, ... such that i^2 == j^2 == k^2 ==
+	== 1 and i j == k, j k == i, k i == j, ... Matrices of multi-dimensional points such as quaternions
+	can also use multi-dimensional arithmetic in addition to multi-dimensional algebra.
 	
 	Ciphers can also be generalized by using a symmetric matrix of matrices such as the 2x2 block matrix
 	A[][] = { { A1, A2 }, { A2, A3 } } as a public parameter, reducing the 2x2 block matrix to a 2x1 block
