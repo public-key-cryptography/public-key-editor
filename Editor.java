@@ -152,7 +152,7 @@
 	Downloading the java development kit (JDK)
 	
 	To download the JDK, go to jdk.java.net
-	Click on the link that says  Ready for use: JDK 22.
+	Click on the link that says  Ready for use: JDK 23.
 	
 	Then click on a tar file link that says tar.gz.
 	Choose the correct file for your processor architecture
@@ -162,28 +162,28 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-22.0.2_linux-x64_bin.tar.gz
+	openjdk-23_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-22.0.2_linux-x64_bin.tar.gz  from the website jdk.java.net/22.
+	0.  Download the file openjdk-23_linux-x64_bin.tar.gz  from the website jdk.java.net/23.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-23_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
 	
 	3.  To run the Editor program, copy the Editor.java file to the Downloads directory and type the command
 	
-	    cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java (text, table, image, mail)
+	    cd; /usr/jdk/jdk-23/bin/java ./Downloads/Editor.java (text, table, image, mail)
 	
 	If you add an argument after the file name then the program will display the text editor, table editor,
 	image viewer, or email editor.
@@ -197,17 +197,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-22.0.2_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-23_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-23_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-23/bin/java ./Downloads/Editor.java
 	
 	or for the email client only
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-22.0.2/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-23_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-23/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -221,20 +221,20 @@
 	
 	It is faster to compile the program once so that the program doesn't have to be re-compiled every time.
 	
-	If the jdk is not installed in your computer, you first have to untar the openjdk-22.0.2 using the command
+	If the jdk is not installed in your computer, you first have to untar the openjdk-23 using the command
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-22.0.2_linux-x64_bin.tar.gz /usr/jdk;
-	cd /usr/jdk; sudo tar zxvf openjdk-22.0.2_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-23_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
 	
-	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-22.0.2/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
+	cd; mkdir -p ./EditorClassFiles; /usr/jdk/jdk-23/bin/javac -Xlint -d ./EditorClassFiles ./Downloads/Editor.java;
 	
 	To run the compiled Editor or Mail program, use the command
 	
-	cd; /usr/jdk/jdk-22.0.2/bin/java -cp ./EditorClassFiles Editor   or
-	    /usr/jdk/jdk-22.0.2/bin/java -cp /home/username/EditorClassFiles Editor
+	cd; /usr/jdk/jdk-23/bin/java -cp ./EditorClassFiles Editor   or
+	    /usr/jdk/jdk-23/bin/java -cp /home/username/EditorClassFiles Editor
 	
 	
 	To remove or delete the jdk directory from your computer, use the command
@@ -263,10 +263,10 @@
 	
 	If the Editor.java file is in the Downloads folder, use the commands
 	
-	/usr/jdk/jdk-22.0.2/bin/javac -d TempDirectory Downloads/Editor.java;
-	/usr/jdk/jdk-22.0.2/bin/jar cvf Editor.jar -C TempDirectory .;
+	/usr/jdk/jdk-23/bin/javac -d TempDirectory Downloads/Editor.java;
+	/usr/jdk/jdk-23/bin/jar cvf Editor.jar -C TempDirectory .;
 	cd; echo "Main-Class: Editor" > temp.txt;
-	/usr/jdk/jdk-22.0.2/bin/jar -u -f Editor.jar -m temp.txt;
+	/usr/jdk/jdk-23/bin/jar -u -f Editor.jar -m temp.txt;
 	rm -r -f TempDirectory; rm temp.txt;
 	
 	by copying and pasting into the terminal.
@@ -305,7 +305,7 @@
 	doesn't start with a slash /, but it is redundant to use cd if the next command has an
 	absolute path name because then it doesn't do anything.
 	
-	The path name /usr/jdk/jdk-22.0.2/bin/java can be replaced by the file name java if the
+	The path name /usr/jdk/jdk-23/bin/java can be replaced by the file name java if the
 	terminal knows where to find the java command. The path name is included because some
 	users may be running a live version of Linux.
 	
@@ -319,11 +319,11 @@
 	
 	For the Editor program, the command would be
 	
-	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar for the text editor, or
+	cd; /usr/jdk/jdk-23/bin/java -jar Editor.jar for the text editor, or
 	
-	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar mail
-	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar table
-	cd; /usr/jdk/jdk-22.0.2/bin/java -jar Editor.jar image
+	cd; /usr/jdk/jdk-23/bin/java -jar Editor.jar mail
+	cd; /usr/jdk/jdk-23/bin/java -jar Editor.jar table
+	cd; /usr/jdk/jdk-23/bin/java -jar Editor.jar image
 	
 	for the email client, table editor, or image viewer, and the file will be executed
 	immediately because the jar file contains the compiled classes or executable byte
@@ -15208,7 +15208,9 @@ class Programs
 				
 				if (indexer == stack.size()) indexer--;
 				
-				if (indexer <= 0) indexer++;
+				if (indexer == 0) return;
+				
+				if (indexer < 0) indexer++;
 				
 				
 				//  Replace the current text with the previous text
@@ -18563,7 +18565,7 @@ class Programs
 			int miniconsize = 8;
 			int maxiconsize = 40;
 			
-			int width = (int) (1.25*frameSizeToFontSize());
+			int width = (int) (1.25*frameSizeToFontSize(frame));
 			
 			for (int i = 0; i < iconbuttons.length; i++)
 			{
@@ -19413,7 +19415,7 @@ class Programs
 			
 			//  Set the font size
 			
-			float fontsize = frameSizeToFontSize();
+			float fontsize = frameSizeToFontSize(frame);
 			
 			Font font = this.font.deriveFont(fontsize);
 			
@@ -19444,7 +19446,7 @@ class Programs
 			
 			//  Set the font size
 			
-			float fontsize = frameSizeToFontSize();
+			float fontsize = frameSizeToFontSize(frame);
 			
 			Font font = this.font.deriveFont(fontsize);
 			
@@ -19452,7 +19454,7 @@ class Programs
 		}
 		
 		
-		private int frameSizeToFontSize()
+		private int frameSizeToFontSize(JFrame frame)
 		{
 			//  scales the font size to the frame size
 			
@@ -19836,7 +19838,7 @@ class Programs
 						
 						resizeImage();
 						
-						float fontsize = frameSizeToFontSize();
+						float fontsize = frameSizeToFontSize(frame);
 						
 						Font font1 = font.deriveFont(fontsize);
 						
@@ -22321,8 +22323,8 @@ class Programs
 			
 			
 			
-			//  The component listener resizes the font
-			//  if the user changes the frame size
+			//  The component listener resizes the font for the
+			//  sendmailframe if the user changes the frame size
 			
 			private class ComponentListener1 extends ComponentAdapter
 			{
@@ -22337,6 +22339,41 @@ class Programs
 						setFont1(font);
 					}
 				}
+			}
+			
+			
+			
+			private int frameSizeToFontSize(JFrame frame)
+			{
+				//  scales or adjusts the send mail frame
+				//  font size to the retrieve mail frame size
+				
+				//  Read the screen size
+				
+				Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+				
+				int avg = (d.width + d.height) / 2;
+				
+				int x = frame.getSize().width;
+				int y = frame.getSize().height;
+				
+				double q = 1.0 * x / avg; // ~ 0 to 1
+				
+				//  m is used to make the send mail frame font size ap-
+				//  pear the same as the retrieve mail frame font size
+				//  when the send mail frame is opened; n is used to con-
+				//  trol the magnification as the user resizes the frame.
+				
+				//  0 .10 .20 .30 .40 .50 .60 .70 .80 .90  1.0
+				//  0 .31 .45 .55 .63 .71 .77 .84 .89 .95  1.0  sqrt
+				//  0 .56 .67 .74 .80 .84 .88 .91 .94 .97  1.0  sqrt sqrt
+				
+				double m = 1.10; // multiplier
+				double n = 0.20; // exponent
+				
+				double fontsize = m * maxfontsize * Math.pow(q, n);
+				
+				return (int) fontsize;
 			}
 			
 			
@@ -25043,9 +25080,9 @@ class Programs
 			
 				//  sets the font for the SendMail frame and Keyboard
 				
-				//  This method is not named setFont because
-				//  then it would be called twice instead of once
-				//  and the font may get reset to the default font
+				//  This method is not named setFont because then
+				//  it would be called twice instead of once and
+				//  the font may get reset to the default font
 				
 				
 				this.font = font;
@@ -25054,12 +25091,11 @@ class Programs
 				
 				int framearea = (int) (d.getWidth() * d.getHeight());
 				
-				int maxsize = maxfontsize + 2;
-				
 				float maxbuttonsize = maxfontsize;
-				float maxboxsize = maxfontsize - 2;
-				float maxtextfieldsize = maxfontsize - 2;
+				float maxboxsize = maxfontsize - 0;
+				float maxtextfieldsize = maxfontsize - 0;
 				float maxlabelsize = maxtextfieldsize;
+				
 				
 				//  Make the keyboard font larger than the send mail frame font
 				
@@ -25072,7 +25108,6 @@ class Programs
 					keyboardlistener.keyboardframe.setSize(
 					keyboardlistener.keyboardframe.getPreferredSize());
 				}
-				
 				
 				
 				//  Set the max font size for the buttons,
@@ -25218,23 +25253,31 @@ class Programs
 			
 			public void setFrameSize()
 			{
-				//  sets the SendMail frame size
+				//  sets the send mail frame size
 				
-				int w = 440, h = 500;
+				Dimension d = retrievemailframe.getSize();
 				
-				//  Scale the size of the frame so that the
-				//  frame is proportioned to the screen size
+				int w = d.width;
+				int h = d.height;
 				
-				//  1920 / 1080 ~ 1.77;  440 * 1.77 ~ 770;
-				//  1366 /  768 ~ 1.77;  500 * 1.77 ~ 885;
+				//  Scale the height of the send mail frame
+				//  to about 3/4 of the retrieve mail frame,
+				//  and then set the width so that the aspect
+				//  ratio is always about 5/4 or 1.25.
 				
-				float m1 = 1.0f * screenwidth / 1366;
-				float m2 = 1.0f * screenheight / 768;
+				h = h * 3/4;
 				
-				//  System.out.println("m1 m2 == " + m1 + "  " + m2);
+				d = Toolkit.getDefaultToolkit().getScreenSize();
 				
-				w = (int) (w * m1);
-				h = (int) (h * m2);
+				//  Keep the height between max and min sizes
+				
+				int min = (int) (d.height / 3.3);
+				int max = (int) (d.height / 2.0);
+				
+				if (h < min) h = min;
+				if (h > max) h = max;
+				
+				w = h * 5/4;
 				
 				frame.setSize(w, h);
 			}
@@ -28250,15 +28293,17 @@ class Programs
 					sendmailframe = new SendMailFrame();
 					
 					sendmailframe.setReverseColors(
-					    emailpanel.reverse_colors);
+					     emailpanel.reverse_colors);
 					
 					sendmailframe.setForeground1(
-					    emailpanel.foreground);
+					      emailpanel.foreground);
 					
 					sendmailframe.setBackground1(
-					    emailpanel.background);
+					      emailpanel.background);
 					
 					sendmailframe.setFont1(font);
+					
+					sendmailframe.setFrameSize();
 					
 					sendmailframe.setOutgoingMailServer(
 					      emailpanel.outgoingmailserver);
@@ -30721,24 +30766,6 @@ class Programs
 			
 			
 			
-			private void setFrameSize()
-			{
-				//  sets the RetrieveMail frame size
-				
-				if (fontsize < minfontsize)
-				    fontsize = minfontsize;
-				
-				int[] w_h = fontSizeToFrameSize(fontsize);
-				
-				int w = w_h[0], h = w_h[1];
-				
-				//  Set the new frame size
-				
-				frame.setSize(w, h);
-			}
-			
-			
-			
 			//  The RetrieveMailFrame increment and decrement size methods
 			
 			
@@ -30771,6 +30798,28 @@ class Programs
 				
 				setFont1(newfont);
 			}
+			
+			
+			private int frameSizeToFontSize(JFrame frame)
+			{
+				//  scales the font size to the frame size
+				
+				//  Read the screen size
+				
+				Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+				
+				int x = frame.getSize().width;
+				int y = frame.getSize().height;
+				
+				int avg = (d.width + d.height) / 2;
+				
+				double q = 1.0 * x / avg; // ~ 0 to 1
+				
+				double fontsize = maxfontsize * Math.sqrt(q);
+				
+				return (int) fontsize;
+			}
+			
 			
 			
 			private String getPassphrase()
@@ -31584,7 +31633,7 @@ class Programs
 								}
 								
 								else if ( (cp >= savepos[i])
-								       && (cp < savepos[i] + savewidth) )
+								       && (cp <  savepos[i] + savewidth) )
 								{
 									//  Save the attached file(s)
 									
@@ -33886,9 +33935,11 @@ class Programs
 				sendmailframe.setForeground1(emailpanel.foreground);
 				sendmailframe.setBackground1(emailpanel.background);
 				
+				sendmailframe.setEditable(false);
+				
 				sendmailframe.setFont1(font);
 				
-				sendmailframe.setEditable(false);
+				sendmailframe.setFrameSize();
 				
 				
 				
@@ -35601,7 +35652,7 @@ class Programs
 					
 					Box vbox = Box.createVerticalBox();
 					
-					findfield = new JTextField(20);
+					findfield = new JTextField(24);
 					
 					findfield.setFont(font);
 					
@@ -35725,7 +35776,7 @@ class Programs
 						
 						JCheckBox delebox = deleboxes[i];
 						
-						delebox.setToolTipText(__.delete);
+						delebox.setToolTipText(__.Delete);
 						
 						delebox.addActionListener(new ActionListener()
 						{ public void actionPerformed(ActionEvent e)
@@ -39041,83 +39092,6 @@ class Programs
 		
 		
 		
-		private int[] fontSizeToFrameSize(float fontsize)
-		{
-			//  scales the font size to the frame size
-			
-			//  (this method returns a rectangular size for
-			//  the retrieve mail frame, but the send mail
-			//  class can square the frame by setting w = h)
-			
-			//  Read the screen size
-			
-			Toolkit tk = Toolkit.getDefaultToolkit();
-			
-			Dimension d = tk.getScreenSize();
-			
-			//  Compute the dimension of the frame for the font size
-			
-			double q = 1.0 * (fontsize - 3) / maxfontsize;
-			
-			double w = 1.5 * d.width  * q * Math.sqrt(q) * 7/10;
-			double h = 1.5 * d.height * q * Math.sqrt(q) * 5/8;
-			
-			//  The frame size should not exceed the screen size
-			
-			if (w > d.width)  w = d.width;
-			if (h > d.height) h = d.height;
-			
-			return new int[] { (int) w, (int) h };
-		}
-		
-		
-		
-		private float frameSizeToFontSize(int[] width_height)
-		{
-			//  scales the frame size to the font size
-			
-			int x = width_height[0];
-			int y = width_height[1];
-			
-			int z = Math.min(x, y);
-			
-			int avg = (d.width + d.height) / 2;
-			
-			//  q = ~ 0 to 1 so the font size
-			//     goes from 0 to maxfontsize
-			
-			double q = 1.0 * z / avg;
-			
-			//  Use the sqrt of q instead of q
-			
-			double sqrt = Math.sqrt(q);
-			
-			double fontsize = 1.3 * maxfontsize * sqrt;
-			
-			return (float) fontsize;
-		}
-		
-		
-		
-		private float frameSizeToFontSize(JFrame frame)
-		{
-			//  scales the frame size to the font size
-			
-			//  Read the screen size
-			
-			Toolkit tk = Toolkit.getDefaultToolkit();
-			
-			Dimension d = tk.getScreenSize();
-			
-			int x = frame.getSize().width;
-			int y = frame.getSize().height;
-			
-			return frameSizeToFontSize(new int[] { x, y });
-		}
-		
-		
-		
-		
 		private String readPassphrase(
 		
 			JFrame frame, Color foreground, Color background, Font font)
@@ -40093,7 +40067,9 @@ class Undo
 		
 		if (indexer == stack.size()) indexer--;
 		
-		if (indexer <= 0) indexer++;
+		if (indexer == 0) return;
+		
+		if (indexer < 0) indexer++;
 		
 		
 		//  Replace the current text with the previous text
@@ -52783,7 +52759,9 @@ class PublicKey
 	//  To compute a shared secret key using a symmetrical public key cipher, the
 	//  sender and receiver choose private keys x, k, and compute the static and one-
 	//  time public keys y = f(a, x) and z = f(a, k) where a is a public parameter or
-	//  blank public key. The sender and receiver then compute the shared secret key
+	//  blank public key. The sender and receiver then exchange public keys and com-
+	//  pute the key agreement or shared secret key
+	//
 	//  e = f(y, k) == f(z, x).
 	//
 	//  Asymmetric public key cryptography requires a one-way function that can be
@@ -52850,7 +52828,8 @@ class PublicKey
 	//        x                    k
 	//  y = a  (mod p)  and  z = a  (mod p)
 	//
-	//  The sender and receiver then compute the shared secret key
+	//  The sender and receiver then exchange public keys and compute the
+	//  key agreement or shared secret key
 	//
 	//          k      x      k x
 	//  e  =  y  ==  z  ==  a    (mod p)
@@ -62674,7 +62653,7 @@ class PublicKey
 		//  plied by p-1. (For the binary subset sum problem the modulus
 		//  p = 2 and the multiplier p-1 == 1.)
 		//
-		//  The superincreasing subset sum problem is used to decrypt the
+		//  The superincreasing subset sum method is used to decrypt the
 		//  message or secret key in the Merkle-Hellman / knapsack cipher.
 		
 		
@@ -69337,7 +69316,7 @@ class Math
 	
 	public static double log(double a, double b)
 	{
-		//  returns log(a) to the base b
+		//  returns log of a to the base b
 		//
 		//  using the logarithmic identity
 		//
@@ -69376,17 +69355,18 @@ class Math
 		    return Double.NaN;
 		
 		
-		//  Set d = e^k * b. Then
+		//  Set d = (e ^ k) * b. Then
 		//
-		//  log(d) == log(e^k * b) == k + log(b)
+		//  log(d) == log(e ^ k * b) == k + log(b)
 		
 		int k = 0;  double d1 = d;
 		
 		while (d1 > 1.5)  { d1 /= e;  k++; }
+		while (d1 < 0.5)  { d1 *= e;  k--; }
 		
 		double b = d1,  x = b - 1,  log = k;
 		
-		for (long n = 1; n < 32; n++)
+		for (long n = 1; n < 64; n++)
 		{
 			double t = pow(x, n) / n;
 			
@@ -69405,7 +69385,7 @@ class Math
 		{
 			System.out.println("d == " + d + " log(d) == " + log);
 			
-			System.out.println("e^log(d) / d == " + (exp(log) / d));
+			System.out.println("e ^ log(d) / d == " + exp(log) / d);
 			
 			throw new ArithmeticException();
 		}
@@ -69796,6 +69776,45 @@ class Math
 	
 	
 	
+	//  The set of numbers n C r for r = 0, 1, 2, ..., n  is the set
+	//  of coefficients in the expansion of the binomial (a + b) ^ n
+	//
+	//  == (nC0) a^0 b^n + (nC1) a^1 b^(n-1) + ... + (nCn) a^r b^(n-n).
+	//
+	//
+	//  Example  Derive or prove the formula n C r == n! / r! / (n - r)!
+	//
+	//  This formula can be derived by induction starting with r = 1.
+	//
+	//  The number of ways to choose 1 out of n elements is n.
+	//
+	//  The number of ways to choose 2 out of n elements is  n (n-1) / 2
+	//  because there are only n-1 elements remaining after the first element
+	//  is selected, and there are 2 ways to select any two elements such as
+	//  { a, b } or { b, a }.
+	//
+	//  The number of ways to choose 3 out of n elements is  n (n-1) (n-2) / 6
+	//  because there are only n-1 and then n-2 remaining elements as each ele-
+	//  ment is selected, and there are 6 ways to select any 3 elements such as
+	//  { a, b, c }, { a, c, b }, { b, a, c }, { b, c, a }, { c, a, b }, { c, b, a }.
+	//
+	//  By induction we find the number of ways to choose r of n objects is
+	//
+	//  n (n-1) (n-2) ... (n-(r-1)) / r! ==
+	//  n (n-1) (n-2) ... (n-r +1) / r! ==
+	//  n (n-1) (n-2) ... (n-r +1) [ (n-r)! / (n-r)! ] / r! ==
+	//  n (n-1) (n-2) ...  1 / (n-r)! / r! == n! / (n-r)! / r!
+	//
+	//
+	//  Example  Prove that the number of permutations of n objects is n factorial or n!
+	//
+	//  For each element that is added to an array of objects, the number of permutations
+	//  is multiplied by the size of the array because, for all the permuted arrays, the
+	//  new element can be added or inserted at any index to create another permutation.
+	//  Since n elements can be added to an array starting from zero elements, this means
+	//  that the number of permutations is 1, 1*2, 1*2*3, ..., 1*2*3*4*...*n, or n factorial.
+	
+	
 	public static Number nCr(int n, int r)
 	{
 		//  returns the number of ways to choose r elements
@@ -69840,11 +69859,19 @@ class Math
 		//            __                k[i] -1
 		//  phi(n) == || (p[i] - 1) p[i]
 		//
-		//  (If there are no prime powers in n where k > 1, then this
+		//  (If there are no prime powers in n or k[i] == 1, then this
 		//  formula reduces to the product of p[i] - 1.
 		//
-		//  The Carmichael lambda function computes the least common
-		//  multiple instead of the product of the phi functions of p[i].
+		//  The Carmichael lambda function computes the least common multi-
+		//  ple of phi[] or lcm(phi(p[])) instead of the product of the phi
+		//  functions of p[i]. The lambda function of n gives the order of
+		//  the function y = a ^ x (mod n) or the modulus of the expnent,
+		//  but the phi function can also be used for exponent calculations
+		//  because phi is a multiple of lambda.
+		//
+		//  The word  totient comes from  totiens meaning  so many times.
+		//  The word quotient comes from quotiens meaning how many times
+		//  (a divisor can be subtracted from a dividend).
 		
 		if (n < 2) return 1;
 		
@@ -70073,7 +70100,8 @@ class Math
 		//  a             ==  a     a
 		
 		
-		double a = base, b = exp;
+		final double a = base;
+		final double b = exp;
 		
 		if (b == 0)  return 1.0D;
 		
@@ -70092,7 +70120,7 @@ class Math
 		double k = (abs(a - e) > 0.00000001)? k = log(a) : 1;
 		
 		
-		//            x     k x    k x   x'
+		//            x     k x    k x   x1
 		//  Compute a  == (e ) == e == e
 		//
 		//  where k = log(a) from the series
@@ -70100,34 +70128,41 @@ class Math
 		//   x      n                  2       3
 		//  e  == x / n!  ==  1 + x + x / 2 + x / 6 + ...
 		//
-		//  This series brings the fraction x from
-		//  the exponent down to the base to avoid
-		//  doing square roots which are expensive
+		//  This power series brings the fraction k x from the
+		//  exponent down to the base to avoid doing square roots
+		//  which are expensive. (Fractional powers could be computed
+		//  using a square root and multiply method similar to the
+		//  square and multiply method but it would be very slow.)
 		
 		
-		double yfrac = 0.0D, temp = 1.0D;
+ 		//  Compute the new exponent x1 = x k
+ 		
+ 		double b1 = b * k;
 		
-		//  temp = x^0 / 0!
 		
 		double factorial = 1.0D;
 		
-		//  Compute the new exponent x' = k x
+ 		double yfrac = 0.0D;
 		
-		double b1 = b*k;
+		double temp = 1.0D;
+		
+		//  temp = x ^ 0
+		
 		
 		//  Compute the integer value y_int
 		
-		double yint = pow(e, (long) b1);
+		double yint = pow(e, abs((long) b1));
+		
 		
 		//  Compute the fractional value y_frac
 		
-		b1 = abs(b1 - (long) b1);
+		double bfrac = abs(b1 - (long) b1);
 		
 		for (int n = 1; n < 32; n++)
 		{
 			yfrac += (temp / factorial);
 			
-			temp *= b1;
+			temp *= bfrac;
 			
 			factorial *= n;
 		}
@@ -70136,9 +70171,8 @@ class Math
 		
 		double y = yint * yfrac;
 		
-		//  Invert the output if the exponent is negative
 		
-		if (b <= 0)  y = inverse(y);
+		if (b1 < 0)  y = inverse(y);
 		
 		return y;
 	}
@@ -74382,14 +74416,14 @@ class Number implements Comparable<Number>
 	{
 		//  tests if a number is a prime power
 		
-		//  if a number n = p^k, then the totient is
+		//  If a number n = p ^ k, then the totient is
 		//
-		//           k           k-1
-		//  phi(n = p ) = (p-1) p
+		//           k              k-1
+		//  phi(n = p ) = (p - 1) p
 		//
 		//  This means that for any base a < p
 		//
-		//    (p-1) p^(k-1)      phi(n)
+		//    (p-1) p^(k-1)       phi(n)
 		//  a               ==  a       ==  1 (mod n)
 		//
 		//  Fermat's test says that for any prime or prime power n = p^k,
@@ -74900,7 +74934,8 @@ class Number implements Comparable<Number>
 		}
 		
 		
-		//  Move the integer / fraction point so the argument is close to 1
+		//  Move the integer / fraction point
+		//  so the argument is close to 1
 		
 		int exp = 0;
 		
@@ -74932,7 +74967,7 @@ class Number implements Comparable<Number>
 		
 		    log.doubleValue()) / this.doubleValue();
 		
-		if ((e2logx < 0.9) || (e2logx > 1.1))
+		if ((e2logx < 0.9999) || (e2logx > 1.0001))
 		
 		    throw new ArithmeticException();
 		
@@ -75776,6 +75811,76 @@ class Number implements Comparable<Number>
 	
 	
 	
+	public Number modPow(Number exp, Number[] p)
+	{
+	
+		//  computes y = a ^ x (mod n)
+		//                              __
+		//  for a composite modulus n = || p[] by
+		//  computing the reduced residues
+		//
+		//  r[] = a ^ x (mod p[])
+		//
+		//  and then computing the composite residue y
+		//  modulo n using the lcr(r[], p[]) method
+		
+		//  The array elements in p[] do not have to be prime
+		//  but they have to be coprime for the lcr method
+		//  which means they can be primes, prime powers, or
+		//  composite numbers. This method or the phi method for
+		//  reducing the exponents requires that the moduli be
+		//  primes or prime powers to avoid factoring integers.
+		
+		
+		//  Example  Test the modPow(Number, Number)
+		//            and the modPow(Number, Number[]) methods
+		//            and verify that the results are equal
+		//
+		//  int digits = 64, radix = 16, t = 16;
+		//  
+		//  Number[] p = new Number[t];
+		//
+		//  for (int i = 0; i < t; i++) p[i] = Number
+		//
+		//      .random(digits, radix) .nextPrime();
+		//
+		//  Number a = new Number(2);
+		//
+		//  Number x = Number.random(digits * t, radix);
+		//
+		//  Number n = Number.multiply(p);
+		//
+		//  Number y1 = a .modPow(x, n);
+		//  Number y2 = a .modPow(x, p);
+		//
+		//  boolean bool = y1.equals(y2);
+		//
+		//  System.out.println(bool);
+		
+		
+		final int size = p.length;
+		
+		Number[]   r = new Number[size];
+		Number[] phi = new Number[size];
+		
+		for (int i = 0; i < size; i++)
+		
+		    phi[i] = p[i].phi();
+		
+		for (int i = 0; i < size; i++)
+		
+		    r[i] = this.modPow(exp.mod(phi[i]), p[i]);
+		
+		//  Compute the least common / composite remainder
+		
+		Number lcr = Math.lcr(r, p);
+		
+		return lcr;
+	}
+	
+	
+	
+	
 	
 	//  This method has not been tested or debugged
 	
@@ -76057,7 +76162,9 @@ class Number implements Comparable<Number>
 		//  redundant than Tonelli's original algorithm.
 		//
 		//  This method is very slow if the totient of p^k
-		//  or (p-1) p^(k-1) has a large number of twos
+		//  or (p-1) p^(k-1) has a large number of twos.
+		//  (Cipolla's algorithm is a faster method for moduli
+		//  that have a large number of twos in the totient.)
 		
 		
 		//  Compute the totient of p
@@ -76775,6 +76882,112 @@ class Number implements Comparable<Number>
 	
 	
 	
+	//  Example  Derive the Euler phi function or totient of a prime number p.
+	//  (The totient of n is the number of numbers that are coprime with n.)
+	//
+	//  By definition of a prime number, all integers less than a prime p must be
+	//  coprime with p, because a prime number has no factors smaller than itself.
+	//
+	//  Therefore the number of numbers less than p that are coprime with p is p - 1.
+	//
+	//
+	//  Example  Derive the phi function or totient of a composite integer n = p q
+	//
+	//  All integers less than a composite integer n = p q are coprime with n except
+	//  for multiples of p and q.
+	//
+	//  There are n / p - 1 == q - 1 multiples of p, and n / q - 1 == p - 1 multiples
+	//  of q less than n. (For example, for n = 5*7 == 35, there are 7-1 fives and
+	//  and 5-1 sevens less than n. These are 5, 10, 15, 20, 25, 30 and 7, 14, 21, 28.)
+	//
+	//  Therefore phi(n = p q) == all integers less than n minus the multiples of
+	//  p and q, or (n - 1) - [(p - 1) + (q - 1)] == n - p - q + 1 == p q - p - q + 1
+	//  == (p - 1) (q - 1) == phi(p) phi(q).
+	//
+	//
+	//  Example  Derive the phi function or totient of a prime power n = p ^ k
+	//
+	//  All integers less than a prime power n = p^k are coprime with n except
+	//  for multiples of p.
+	//
+	//  There are n / p - 1 == p^(k-1) -1 multiples of p less than n = p^k.
+	//
+	//  (For example, for n = 5^3 == 125, there are 5^2 -1 == 25 - 1 multiples
+	//  of 5. These are 5, 10, 15, 20, 25, ..., 120.)
+	//
+	//  Therefore phi(n = p^k) == (n - 1) - (n / p - 1) == p^k - p^(k-1)
+	//  == p^k - p^(k-1) == (p - 1) p^(k-1).
+	//
+	//  Also, because phi(p q) == phi(p) phi(q), the phi function of a product
+	//  of prime powers is
+	//                                  k[i]-1
+	//  phi(p[]^k[]) == (p[i] - 1) p[i].       (Euler's phi formula)
+	//
+	//
+	//  Gauss's theorem for phi(n) can also be used to derive the formula for phi(p^k).
+	//
+	//  This theorem says that any number n equals the sum of the phi functions of
+	//  its divisors d[i], or
+	//       __
+	//  n == \   phi d[i]   (for each d|n)
+	//       /_
+	//  For example, 10 == phi(1) + phi(2) + phi(5) + phi(10) == 1 + 1 + 4 + 4 == 10.
+	//
+	//  Therefore p^k == sum(phi(d[i])) == phi(p^0) + phi(p^1) + phi(p^2) + ... + phi(p^k),
+	//
+	//  or phi(p^k) == p^k - phi(p^(k-1)) - phi(p^(k-2)) ... - 1 == (p - 1) p^(k-1).
+	//
+	//  For example, phi(7^3 == 343) == 7^3 - phi(7^2) - phi(7^1) - phi(7^0) ==
+	//  7^3 - 6*7 - 6 - 1 == 294 == 6 * 49 == (7 - 1) 7^2.
+	//
+	//  Note that the divisors of a number are the 2^k combinations of the prime factors of the
+	//  number (including the empty set combination or 1 which is a divisor). For example, for
+	//  the number 105 == 3 5 7, the divisors are the 2^3 == 8 combinations { 1, 7, 5, 5*7, 3,
+	//  3*7, 3*5, 3*5*7 }.
+	
+	
+	public Number phi()
+	{
+		//  computes phi only for primes and prime powers
+		//  (composite numbers first have to be factored)
+		
+		//  computes the phi function or totient of n
+		//
+		//  The Euler phi function is
+		//            __                k[i] -1
+		//  phi(n) == || (p[i] - 1) p[i]
+		//
+		//  (If there are no prime powers in n or k[i] == 1, then this
+		//  formula reduces to the product of p[i] - 1.
+		//
+		//  The Carmichael lambda function computes the least common multi-
+		//  ple of phi[] or lcm(phi(p[])) instead of the product of the phi
+		//  functions of p[i]. The lambda function of n gives the order of
+		//  the function y = a ^ x (mod n) or the modulus of the expnent,
+		//  but the phi function can also be used for exponent calculations
+		//  because phi is a multiple of lambda.
+		//
+		//  The word  totient comes from  totiens meaning  so many times.
+		//  The word quotient comes from quotiens meaning how many times
+		//  (a divisor can be subtracted from a dividend).
+		
+		
+		if (this.isPrime()) return this.subtract(1);
+		
+		if (!this.isPrimePower()) throw new IllegalArgumentException();
+		
+		int k = 1; while (!this.isPower(++k)) ;
+		
+		Number p = this.root(k);
+		
+		Number phi = p.subtract(1) .multiply( p.pow(k-1) );
+		
+		return phi;
+	}
+	
+	
+	
+	
 	//   Iterative formulas for pi
 	//
 	//
@@ -77238,11 +77451,11 @@ class Number implements Comparable<Number>
 		
 		//  The series for the exponential function
 		//
-		//    x      k x          n
+		//    x       k x         n
 		//  a   ==  e    ==  (k x) / n!
 		//
 		//               k
-		//  where a == e,  or  k == log(a).
+		//  where a == e,  or  k == ln a.
 		
 		
 		//  Example  Compute the square root using the
@@ -77280,7 +77493,7 @@ class Number implements Comparable<Number>
 		}
 		
 		
-		//  Compute the integer value
+		//  Compute the integer value using the square and multiply method
 		
 		Number yint = pow1(exp.abs().toInteger());
 		
@@ -77291,21 +77504,23 @@ class Number implements Comparable<Number>
 		
 		
 		//                                    k
-		//  Solve for k in the equation a = e,  or k = ln(a)
+		//  Solve for k in the equation a = e,  or k = ln a
 		
 		Number base = new Number(this) .setPrecision(precision);
 		
 		Number k = base.log();
 		
 		
-		//           k x                   k x         n
+		//            k x                   k x        n
 		//  Compute e    from the series  e    == (k x) / n!
 		//
 		//  where x is the exponent and n is the index 0, 1, 2, ...
 		//
 		//  This power series brings the fraction k x from the
 		//  exponent down to the base to avoid doing square roots
-		//  which are expensive.
+		//  which are expensive. (Fractional powers could be computed
+		//  using a square root and multiply method similar to the
+		//  square and multiply method but it would be very slow.)
 		
 		
 		Number yfrac = new Number(0);
@@ -77316,6 +77531,8 @@ class Number implements Comparable<Number>
 		//  iterations = digits / digits per iteration
 		
 		int d = 4 + (int) (2*precision / Math.log(precision, 16));
+		
+		//  Read the fractional exponent
 		
 		Number exp1 = exp .abs() .toFraction();
 		
@@ -78718,7 +78935,7 @@ class Number implements Comparable<Number>
 				
 				list = new ArrayList<Number>();
 				
-				while (!number.equals(0))
+				while (!number.equals(0) || list.isEmpty())
 				{
 					//  Compute the "digits"
 					
@@ -78744,7 +78961,8 @@ class Number implements Comparable<Number>
 		
 		finally  //  Verify that the number array is correct
 		{
-			Number sum = new Number(0), base = new Number(1);
+			Number  sum = new Number(0);
+			Number base = new Number(1);
 			
 			for (int i = 0; i < array.length; i++)
 			{
@@ -78955,7 +79173,7 @@ class Number implements Comparable<Number>
 			
 			list = new ArrayList<Integer>();
 			
-			while (!number.equals(0))
+			while (!number.equals(0) || list.isEmpty())
 			{
 				//  Compute the digits
 				
@@ -84723,7 +84941,7 @@ class Matrix
 		//  A matrix in row canonical form is in upper and lower triangular form
 		//  because the elements above and below the diagonal are all zero.
 		//
-		//  Row canonical form is used to solve the matrix equation A X == B.
+		//  Row canonical form is used to solve the matrix equation A x == b.
 		
 		
 		Matrix matrix = new Matrix(this);
