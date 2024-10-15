@@ -1,4 +1,4 @@
- 	
+	
 	
 	
 	/************************************************
@@ -3302,6 +3302,8 @@ class Programs
 				
 					.requestFocusInWindow();
 				
+				setCurrentLineTextField();
+				
 				setFrameTitle();
 			}
 		}
@@ -4330,7 +4332,7 @@ class Programs
 			
 				File file = null;
 				
-				JFileChooser fc;
+				FileChooser fc;
 				
 				fc = new FileChooser(directory);
 				
@@ -5157,7 +5159,7 @@ class Programs
 						
 						String title = __.addfilename;
 						
-						JFileChooser fc;
+						FileChooser fc;
 						
 						fc = new FileChooser(directorypath);
 						
@@ -6207,6 +6209,7 @@ class Programs
 					
 					Gbc gbc = new Gbc();
 					gbc.setPosition(0, 0);
+					gbc.setSize(1, 1);
 					gbc.setFill(Gbc.both);
 					gbc.setWeight(100, 100);
 					
@@ -6214,6 +6217,7 @@ class Programs
 					
 					gbc = new Gbc();
 					gbc.setPosition(0, 1);
+					gbc.setSize(1, 1);
 					gbc.setFill(Gbc.both);
 					gbc.setWeight(100, 100);
 					
@@ -6227,14 +6231,16 @@ class Programs
 					textarea3 .setText("");
 					
 					dialog = new JDialog(frame);
-					dialog.setResizable(false);
 					dialog.add(panel);
 					
 					dialog.setDefaultCloseOperation(
 					
 					    JFrame.HIDE_ON_CLOSE);
 					
-					dialog.setSize(dialog.getPreferredSize());
+					//  Set resizable to true or else the
+					//  find / replace dialog will collapse
+					 
+					dialog.setResizable(true);
 					
 					dialog.setAlwaysOnTop(true);
 					dialog.setVisible(false);
@@ -7908,7 +7914,7 @@ class Programs
 			{
 				File selectedfile = null;
 				
-				JFileChooser fc;
+				FileChooser fc;
 				
 				fc = new FileChooser(directorypath);
 				
@@ -8215,6 +8221,8 @@ class Programs
 				//  lighted even if it is selected
 				
 				textarea = textareapanel.textarea;
+				
+				textarea.requestFocusInWindow();
 				
 				pos0 = textarea.getCaretPosition();
 				
@@ -10590,7 +10598,7 @@ class Programs
 				{
 					//  Choose a file
 					
-					File file = fe.chooseFile();
+					File file = fe.chooseFile(directorypath);
 					
 					if (file == null) return;
 					
@@ -13989,7 +13997,7 @@ class Programs
 			{
 				File file = null;
 				
-				JFileChooser fc;
+				FileChooser fc;
 				
 				fc = new FileChooser(directory);
 				
@@ -17606,7 +17614,7 @@ class Programs
 				{
 					//  Choose a file
 					
-					File file = fe.chooseFile();
+					File file = fe.chooseFile(directorypath);
 					
 					if (file == null) return;
 					
@@ -19144,7 +19152,7 @@ class Programs
 				
 				File currentdir = null;
 				
-				JFileChooser fc;
+				FileChooser fc;
 				
 				fc = new FileChooser();
 				
@@ -20794,7 +20802,7 @@ class Programs
 			{
 				File file = null;
 				
-				JFileChooser fc;
+				FileChooser fc;
 				
 				fc = new FileChooser(directory);
 				
@@ -24627,7 +24635,7 @@ class Programs
 				{
 					File file = null;
 					
-					JFileChooser fc;
+					FileChooser fc;
 					
 					fc = new FileChooser(directory);
 					
@@ -24661,7 +24669,7 @@ class Programs
 					
 					int mode = JFileChooser.FILES_AND_DIRECTORIES;
 					
-					JFileChooser fc;
+					FileChooser fc;
 					
 					fc = new FileChooser(directory);
 					
@@ -25744,7 +25752,9 @@ class Programs
 					keyboard = new Keyboard();
 					
 					keyboardframe = keyboard.getFrame();
+					
 					keyboardframe.setLocationRelativeTo(null);
+					
 					keyboardframe.addWindowListener(
 					    new WindowListener1());
 				}
@@ -25774,6 +25784,7 @@ class Programs
 			public void setFont(Font font)
 			{
 				keyboard.setFont(font);
+				
 				keyboardframe.setSize(
 				keyboardframe.getPreferredSize());
 			}
@@ -27776,8 +27787,8 @@ class Programs
 						listpanel.setBackground1(foreground);
 						
 						textarea.setForeground(background);
-						textarea.setCaretColor(background);
 						textarea.setBackground(foreground);
+						textarea.setCaretColor(foreground);
 					}
 					
 					else // if (!reverse)
@@ -27786,8 +27797,8 @@ class Programs
 						listpanel.setBackground1(background);
 						
 						textarea.setForeground(foreground);
-						textarea.setCaretColor(foreground);
 						textarea.setBackground(background);
+						textarea.setCaretColor(background);
 					}
 				}
 				
@@ -28332,7 +28343,6 @@ class Programs
 						keyboard.setBackground(emailpanel.background);
 						
 						keyboardlistener.setFont(font);
-						keyboardlistener.keyboardframe.setLocationRelativeTo(null);
 						keyboardlistener.setTextComponent(sendmailframe.textarea);
 					}
 					
@@ -29893,10 +29903,8 @@ class Programs
 					if (!emailpanel.reverse_colors)
 					{
 						if (emailpanel.textarea != null)
-						{
 						    emailpanel.textarea.setForeground(color);
-						    emailpanel.textarea.setCaretColor(color);
-						}
+						
 						
 						if (emailpanel.listpanel != null)
 						    emailpanel.listpanel.setForeground1(color);
@@ -29904,7 +29912,10 @@ class Programs
 					
 					else
 					{	if (emailpanel.textarea != null)
+						{
 						    emailpanel.textarea.setBackground(color);
+						    emailpanel.textarea.setCaretColor(color);
+						}
 						
 						if (emailpanel.listpanel != null)
 						    emailpanel.listpanel.setBackground1(color);
@@ -29988,7 +29999,10 @@ class Programs
 					if (!emailpanel.reverse_colors)
 					{
 						if (emailpanel.textarea != null)
+						{
 						    emailpanel.textarea.setBackground(color);
+						    emailpanel.textarea.setCaretColor(color);
+						}
 						
 						if (emailpanel.listpanel != null)
 						    emailpanel.listpanel.setBackground1(color);
@@ -29996,10 +30010,7 @@ class Programs
 					
 					else
 					{	if (emailpanel.textarea != null)
-						{
 						    emailpanel.textarea.setForeground(color);
-						    emailpanel.textarea.setCaretColor(color);
-						}
 						
 						if (emailpanel.listpanel != null)
 						    emailpanel.listpanel.setForeground1(color);
@@ -30042,7 +30053,7 @@ class Programs
 					
 					if (emailpanel.savedemails != null)
 					
-						emailpanel.savedemails.setBackground(color);
+					    emailpanel.savedemails.setBackground(color);
 					
 					if (!emailpanel.reverse_colors)
 					
@@ -32034,15 +32045,11 @@ class Programs
 						if (maxfontsize < 50)
 						
 						    incrementSize(1);
-						
-					///	setFrameSize();
 					}
 					
 					else if (control && (keychar == __.minuskeychar))
 					{
 						decrementSize(1);
-						
-					///	setFrameSize();
 					}
 					
 					else if (control && (keycode == __.checkallkeycode))
@@ -33974,10 +33981,12 @@ class Programs
 					
 					keyboard.setForeground(emailpanel.foreground);
 					keyboard.setBackground(emailpanel.background);
+					
 					keyboard.setFont(font);
 					
-					keyboardlistener.keyboardframe.setLocationRelativeTo(null);
-					keyboardlistener.setTextComponent(sendmailframe.textarea);
+					keyboardlistener.setTextComponent(
+					
+					    sendmailframe.textarea);
 				}
 				
 				//  Move frame to front
@@ -34840,6 +34849,7 @@ class Programs
 					     new File(maildirectory).mkdir();
 					
 					File dir = new File(dirname);
+					
 					if (!dir.exists()) dir.mkdir();
 					
 					mouselistener1 = new MouseListener1();
@@ -35734,9 +35744,11 @@ class Programs
 					
 					for (int i = 0; i < t; i++)
 					{
+						ImageIcon deleicon = Icons.get(Icons.delete1);
+						
 						     panels[i] = new JPanel();
 						 datelabels[i] = new JLabel();
-						  deleboxes[i] = new JCheckBox();
+						  deleboxes[i] = new JCheckBox(deleicon);
 						editbuttons[i] = new JButton();
 						  textareas[i] = new JTextArea(rows, cols);
 						
@@ -35785,7 +35797,10 @@ class Programs
 						
 						JButton editbutton = editbuttons[i];
 						editbutton.setIcon(editicon);
+						editbutton.setContentAreaFilled(false);
+						editbutton.setBorderPainted(false);
 						editbutton.setToolTipText(__.edit);
+						
 						
 						editbutton.addActionListener(new ActionListener()
 						{   public void actionPerformed(ActionEvent e)
@@ -36107,7 +36122,9 @@ class Programs
 					
 					Documents.setFont(font);
 					
-					dialog.pack();
+					//  Don't pack the saved emails dialog because
+					//  it will contract the width of the frame
+					//  and then the user will have to widen it
 				}
 				
 				
@@ -37911,7 +37928,6 @@ class Programs
 								emailpanel.textarea.requestFocusInWindow();
 								
 								reading = false;
-								
 								clicked = false;
 							};
 						});
@@ -40425,8 +40441,8 @@ class Colors
 		{ 0x380070,  __.darkpurple },
 		{ 0x9000c0,  __.reddishpurple },
 		
-		{ 0x2000A0, __.purplishblue },
-		{ 0x170080, __.violet },
+		{ 0x2200a0, __.purplishblue },
+		{ 0x180080, __.violet },
 		
 		//  ...
 		
@@ -40644,11 +40660,13 @@ class FileChooser extends JFileChooser
 	private int minsize = 10;
 	private int maxsize = 22;
 	
-	public FileChooser(Window parent, File directory)
+	public FileChooser(Window parent, String directory)
 	{
 		super.createDialog(parent);
 		
-		super.setCurrentDirectory(directory);
+		if ((directory != null) && new File(directory).exists())
+		
+		super.setCurrentDirectory(new File(directory));
 	}
 	
 	public FileChooser(String directorypath)
@@ -40686,7 +40704,7 @@ class FileChooser extends JFileChooser
 		//  can get truncated if the text is too long
 		//  (such as the encrypt/decrypt button)
 		
-		d = new Dimension((int) (1.2*x), (int) (1.2*y));
+		d = new Dimension((int) (1.30*x), (int) (1.15*y));
 		
 		this.setPreferredSize(d);
 	}
@@ -41122,7 +41140,7 @@ class RenameFile
 	
 		File file = null;
 		
-		JFileChooser fc;
+		FileChooser fc;
 		
 		fc = new FileChooser(directory);
 		
@@ -41447,7 +41465,7 @@ class EncryptDirectory
 	{
 		//  Choose a directory to encrypt
 		
-		JFileChooser fc;
+		FileChooser fc;
 		
 		fc = new FileChooser();
 		
@@ -42529,12 +42547,12 @@ class FileEncryptor
 		this.title = title;
 	}
 	
-	public File chooseFile()
+	public File chooseFile(String dirpath)
 	{
 	
 		File file = null;
 		
-		fc = new FileChooser(window, null);
+		fc = new FileChooser(window, dirpath);
 		
 		fc.setFont(font);
 		
@@ -48249,9 +48267,59 @@ class Icons
 	"NHlDUQAAAABJRU5ErkJggg==";
 	
 	
-	//  static String paperclip = // paper clip
-	//
-	//  ...    ...
+	
+	static String save1 =
+	
+	"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA9lBMVEX///9OmwZMmAVNmQROmAROmgVO" +
+	"mgZOmgZOmgZOmwZOmgZOmQZPmQZOmgZOmQZOmgZQmwhPnAcuNDYxPzFATD9FfRNOmgZYWlZaqA9aqRBt" +
+	"vh1twB5vcW1yxSF1uDZ4zSd6uzx70CmChYaGiYOIioWJ4DOK4jSM4TiNj4uQko2X2lec2mCc5lOdoJqd" +
+	"51af51if51mkpqGu33+u4nu1uLG5ure6vba66Y276o6/wbvH8Z/NzsrQ0c7Q863Q867T1NDh4d/i4+Dj" +
+	"5uLk5eLl5uTp6+fr7Ort7ezv8O3v8O/x8vH09fP19vT29/X5+vj7+/r+/v7///+SYRA1AAAAEnRSTlMA" +
+	"Li88Pr7FyMrLzM7T193h7fBljohdAAAAiklEQVR42qXIQwIDQRAAwF7Gtm3bttP/f0ywnDlvHQtknF3k" +
+	"geTsJkxUBJfFoKFgHZZ/uKy8EubeKLkspsc1QQlbtT1dFJv1lKgE74mVWsVC1M2AZJL1ByKZTDjg8w6l" +
+	"WOHj/no/b+fDti9F57JbI+Jpttk3pMgdN/NBJV+ebY45KeJXTVyKEAHgC8pvFhDBKb9BAAAAAElFTkSu" +
+	"QmCC";
+	
+	
+	
+	static String delete1 = //  trash can
+	
+	"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";
+	
+	
+	
+	static String delete_x = //  x
+	
+	"iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAUVBMVEUAAAD///////8AAAABAQF4eHh5" +
+	"eXl9fX1/f3+AgICCgoKFhYWIiIiJiYmKioqNjY2QkJCYmJimpqaqqqqysrKzs7O1tbW3t7e7u7vDw8P/" +
+	"//80UGKGAAAAA3RSTlMAwcJd/YFNAAAAeElEQVR42sWPRRLDUAxDE78wM+j+B+2U6/ndRxuzJUXXwyTF" +
+	"LnlBR7rdG6YtO/Q7KKFVbBoSSjeYuU/UA5McRwcUBZDLomDi+m4S9O+D/j6oFf/tQ+MnpgqScUigchMt" +
+	"T7kNsIYGze4Tb/Bs9rse096c3qBkLrkWN4AECCY93pbfAAAAAElFTkSuQmCC";
 	
 	
 	
@@ -51461,7 +51529,7 @@ class PassphraseDialog extends JDialog implements AncestorListener
 					
 					File selectedfile = null;
 					
-					JFileChooser fc;
+					FileChooser fc;
 					
 					fc = new FileChooser();
 					
@@ -52784,8 +52852,9 @@ class PublicKey
 	//  A one-way function has to be easy to evaluate or compute but hard to invert.
 	//  This means that the function has to be computable in polynomial time (such
 	//  as O(n^2) or O(n^3) where n is the size or number of bits) but invertible in
-	//  exponential time. (Some functions such as the factorial function a! (mod p)
-	//  are neither computable nor invertible in polynomial time.)
+	//  exponential time. Some functions such as the factorial function a! (mod p)
+	//  are neither computable nor invertible in polynomial time. (If a! (mod n) were
+	//  computable it would solve the factorization problem for n.)
 	//
 	//  A non-invertible public key function that has no secret parameters has to be
 	//  commutative and symmetric because the sender and recipient have to be able to
@@ -59405,8 +59474,8 @@ class PublicKey
 	//  A commutative or invertible function such as the Rabin cipher doesn't have to be based on a refractory
 	//  problem to be a public key cipher. It only has to be harder to invert than to compute either because of
 	//  the time complexity or memory space requirements of the algorithm. Some functions such as the factorial
-	//  function a! (mod p) are neither computable nor invertible in polynomial time. If a! (mod n) were comput-
-	//  able it would solve the factorization problem for n.
+	//  function a! (mod p) are neither computable nor invertible in polynomial time. (If a! (mod n) were comput-
+	//  able it would solve the factorization problem for n.)
 	//
 	//  The Rabin cipher c = m ^ e (mod n) where (e, phi(n)) != 1 (e and phi are co-composite such as e = 2^k)
 	//  is equivalent to factorization because there is a many-to-one mapping of m to c. If m1 is chosen and
@@ -67132,9 +67201,9 @@ class Cipher
 			//
 			//  This swaps the elements in the array in reverse order
 			//  starting from element n. Each highest element n, n-1,
-			//  n-2, n-3, ... can only be swapped once because the
-			//  modulus (n - i) of the random number generator de-
-			//  creases for each iteration.
+			//  n-2, n-3, ... can only be swapped once because the mod-
+			//  ulus (n - i) of the random number generator decreases
+			//  for each iteration.
 			
 			
 			int n = elements;
@@ -68895,7 +68964,7 @@ class Math
 		//
 		//  where p[] = fact(n). (If there are no prime powers in n
 		//  where the exponent is > 1 then this formula reduces to
-		//  the lcm of (p[i]-1]))
+		//  the lcm of (p[]-1]))
 		//
 		//  The lambda function is the order or exponent modulus of
 		//  the congruence a^x == 1 (mod n). The phi function is a
@@ -69043,7 +69112,7 @@ class Math
 		//
 		//  This method uses Gauss's remainder algorithm to compute
 		//  the least common remainder, Chinese remainder, or composite
-		//  residue R mod n ... from a set of reduced residues
+		//  residue R mod N ... from a set of reduced residues
 		//
 		//  r = { r1, r2, ..., rk }, and a set of coprime moduli
 		//  p = { p1, p2, ..., pk }.
@@ -69097,9 +69166,7 @@ class Math
 			
 			Number N1 = N .divide(n[i]); // slow
 			
-			N1 = N1 .mod(p);
-			
-			if (!N1.equals(0))  m[i] = N1.modInverse(p);
+			if (!N1.mod(p).equals(0))  m[i] = N1.modInverse(p);
 			
 			else // p[i] == 1, m[i] = 0 since r[i] (mod 1) = 0
 			
@@ -69115,13 +69182,9 @@ class Math
 		
 		for (int i = 0; i < t; i++)
 		{
-			N = new Number(1);
+			Number N1 = N .divide(n[i]);
 			
-			for (int j = 0; j < t; j++)
-			
-			    if (j != i)  N = N .multiply(n[j]);
-			
-			R = R .add( r[i] .multiply(m[i]) .multiply(N) );
+			R = R .add( r[i] .multiply(m[i]) .multiply(N1) );
 		}
 		
 		
@@ -69151,6 +69214,7 @@ class Math
 	}
 	
 	
+	
 	private static Number GarnersFormula(Number[] r, Number[] n)
 	{
 	
@@ -69162,9 +69226,10 @@ class Math
 		//  Garner's formula may be several times faster.
 		//
 		//  The following formula was excerpted from the Handbook of Applied
-		//  Cryptography. The algorithm is not correct but it can be used to
-		//  test the speed of the algorithm. (See the commented code below that
-		//  was used to compare the speed of Gauss's and Garner's formulas.)
+		//  Cryptography. The implementation or the description of the algo-
+		//  rithm is not correct but it can be used to test the speed of the
+		//  algorithm. (See the commented code below that was used to compare
+		//  the speed of Gauss's and Garner's formulas.)
 		//
 		//                                __ t
 		//  Input: a positive integer M = ||   m[i] > 1, with (m[i], m[j]) == 1 for all
@@ -69853,18 +69918,29 @@ class Math
 	
 	public static int phi(int n)
 	{
-		//  computes the phi function or totient of n
+		//  computes the phi function or totient of n. The phi function
+		//  or totient of n is the total number of numbers that are co-
+		//  prime with n.
 		//
 		//  The Euler phi function is
+		//
 		//            __                k[i] -1
 		//  phi(n) == || (p[i] - 1) p[i]
 		//
 		//  (If there are no prime powers in n or k[i] == 1, then this
 		//  formula reduces to the product of p[i] - 1.
 		//
+		//  The Fermat-Euler theorem says that for any (a, n) == 1,
+		//
+		//    phi(n)
+		//  a       == 1 (mod n).  If n is prime then this reduces to
+		//
+		//                             phi(p)      p-1
+		//  Fermat's little theorem  a       ==  a    == 1 (mod p).
+		//
 		//  The Carmichael lambda function computes the least common multi-
 		//  ple of phi[] or lcm(phi(p[])) instead of the product of the phi
-		//  functions of p[i]. The lambda function of n gives the order of
+		//  functions of p[]. The lambda function of n gives the order of
 		//  the function y = a ^ x (mod n) or the modulus of the expnent,
 		//  but the phi function can also be used for exponent calculations
 		//  because phi is a multiple of lambda.
@@ -69958,9 +70034,9 @@ class Math
 		//
 		//  This swaps the elements in the array in reverse order
 		//  starting from element n. Each highest element n, n-1,
-		//  n-2, n-3, ... can only be swapped once because the
-		//  modulus (n - i) of the random number generator de-
-		//  creases for each iteration.
+		//  n-2, n-3, ... can only be swapped once because the mod-
+		//  ulus (n - i) of the random number generator decreases
+		//  for each iteration.
 		
 		
 		int n = elements;
@@ -70256,6 +70332,31 @@ class Math
 	}
 	
 	
+	
+	public static int[] primes(int start, int n)
+	{
+		//  returns the next n primes from the start integer
+		
+		//  the number of primes < n ~  n / log n
+		
+		int n1 = n + (int) (start / log(start)) + 100;
+		
+		int[] primes1 = primes(n1);
+		
+		int index1 = 0;
+		
+		for (int i = 0; i < primes1.length; i++)
+		
+		    if (primes1[i] >= start) { index1 = i; break; }
+		
+		int[] primes = new int[n];
+		
+		for (int i = 0; i < n; i++)
+		
+		    primes[i] = primes1[index1 + i];
+		
+		return primes;
+	}
 	
 	
 	
@@ -75447,24 +75548,24 @@ class Number implements Comparable<Number>
 		//  The modular inverse of a number a is the solution to
 		//  the congruence or modular equation a x == 1 (mod n)
 		
-		if (!this.isInteger()) throw new IllegalArgumentException();
+		Number a = this.mod(n).abs();
 		
-		if (this.isComplex()) return this.complexInverse(n);
+		if (!a.isInteger()) throw new IllegalArgumentException();
 		
-		if (this.equals(1)) return new Number(this);
+		if (a.isComplex()) return a.complexInverse(n);
 		
-		char sign = (this.sign == '+') ? '+' : '-';
+		if (a.equals(1)) return new Number(a);
 		
-		Number a = new Number(this) .abs();
+		char sign = (a.sign == '+') ? '+' : '-';
 		
-		if (this.equals(0) || !this.isCoprimeWith(n))
+		if (a.equals(0) || !a.isCoprimeWith(n))
 		{
 			String message = "non-invertible number";
 			
 			System.out.println();
-			System.out.println("a == " + this.toString(16));
-			System.out.println("n == " +    n.toString(16));
-			System.out.println("gcd == " + this.gcd(n).toString(16));
+			System.out.println("a ==   " + a.toString(16));
+			System.out.println("n ==   " + n.toString(16));
+			System.out.println("gcd == " + a.gcd(n).toString(16));
 			
 			throw new ArithmeticException(message);
 		}
@@ -76951,14 +77052,24 @@ class Number implements Comparable<Number>
 		//  computes phi only for primes and prime powers
 		//  (composite numbers first have to be factored)
 		
-		//  computes the phi function or totient of n
+		//  The phi function or totient of n is the total number of
+		//  numbers that are coprime with n.
 		//
 		//  The Euler phi function is
+		//
 		//            __                k[i] -1
 		//  phi(n) == || (p[i] - 1) p[i]
 		//
 		//  (If there are no prime powers in n or k[i] == 1, then this
 		//  formula reduces to the product of p[i] - 1.
+		//
+		//  The Fermat-Euler theorem says that for any (a, n) == 1,
+		//
+		//    phi(n)
+		//  a       == 1 (mod n).  If n is prime then this reduces to
+		//
+		//                             phi(p)      p-1
+		//  Fermat's little theorem  a       ==  a    == 1 (mod p).
 		//
 		//  The Carmichael lambda function computes the least common multi-
 		//  ple of phi[] or lcm(phi(p[])) instead of the product of the phi
