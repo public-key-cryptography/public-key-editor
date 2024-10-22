@@ -1,7 +1,7 @@
 	
 	
 	
-	/************************************************
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	
 	
 	This program is free software; you can redistribute it and/or
@@ -598,7 +598,8 @@
 	lution set is too large to try all the possible keys or combinations.
 	
 	
-	************************************************/
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	
 
 
 
@@ -2272,96 +2273,100 @@ class Programs
 		private Color caretcolor;
 		
 		
+		//  Use the keyword transient or else the compiler or Xlint
+		//  will complain that the objects are not serializable
+		//  (warning: [serial] non-transient instance field of a
+		//  serializable class declared with a non-serializable type)
 		
-		NewListener newlistener;
-		OpenListener openlistener;
-		DeleteListener deletelistener;
-		SaveListener savelistener;
-		SaveAsListener saveaslistener;
-		PrintListener printlistener;
-		CloseListener closelistener;
-		ExitListener exitlistener;
+		transient NewListener newlistener;
+		transient OpenListener openlistener;
+		transient DeleteListener deletelistener;
+		transient SaveListener savelistener;
+		transient SaveAsListener saveaslistener;
+		transient PrintListener printlistener;
+		transient CloseListener closelistener;
+		transient ExitListener exitlistener;
 		
 		
 		//  Opening the file list
 		
-		FileListListener filelistlistener;
+		transient FileListListener filelistlistener;
 		
 		//  Opening a file on the file list
 		
-		OpenListFileListener openlistfilelistener;
+		transient OpenListFileListener openlistfilelistener;
 		
 		
-		UndoListener undolistener;
+		transient UndoListener undolistener;
 		
-		CutListener cutlistener;
-		CopyListener copylistener;
-		PasteListener pastelistener;
+		transient CutListener cutlistener;
+		transient CopyListener copylistener;
+		transient PasteListener pastelistener;
 		
-		FindAndReplace.FindListener findlistener;
-		FindAndReplace.ReplaceListener replacelistener;
-		ReplaceAllListener replacealllistener;
+		transient FindAndReplace.FindListener findlistener;
+		transient FindAndReplace.ReplaceListener replacelistener;
+		transient ReplaceAllListener replacealllistener;
 		
-		HighlightTextListener highlighttextlistener;
-		GoToLineListener gotolinelistener;
-		UpperLowerCaseListener upperlowercaselistener;
-		IndentListener indentlistener;
-		SelectAllListener selectalllistener;
-		SelectRangeListener selectrangelistener;
-		ConvertTextListener converttextlistener;
-		SetTitleListener settitlelistener;
+		transient HighlightTextListener highlighttextlistener;
+		transient GoToLineListener gotolinelistener;
+		transient UpperLowerCaseListener upperlowercaselistener;
+		transient IndentListener indentlistener;
+		transient SelectAllListener selectalllistener;
+		transient SelectRangeListener selectrangelistener;
+		transient ConvertTextListener converttextlistener;
+		transient SetTitleListener settitlelistener;
 		
-		HashListener hashlistener;
-		HashFileListener hashfilelistener;
-		HashPublicKeyListener hashpublickeylistener;
-		
-		
-		LineWrapListener linewraplistener;
-		FontSizeListener fontsizelistener;
-		FontTypeListener fonttypelistener;
-		TextBoldListener textboldlistener;
-		ColorListener colorlistener;
-		WordLineCountListener wordlinecountlistener;
-		ShowHideButtonsListener showhidebuttonslistener;
-		ImageViewerListener imageviewerlistener;
-		TableEditorListener tableeditorlistener;
-		HTMLEditorPaneListener htmleditorpanelistener;
-		
-		EncryptMessageListener encryptmessagelistener;
-		DecryptMessageListener decryptmessagelistener;
-		
-		EncryptDirectoryListener encryptdirectorylistener;
-		DecryptDirectoryListener decryptdirectorylistener;
-		
-		EncryptFileListener encryptfilelistener;
-		DecryptFileListener decryptfilelistener;
-		
-		SignKeyListener signkeylistener;
-		SignDocumentListener signdocumentlistener1;
-		SignDocumentListener signdocumentlistener2;
-		VerifySignatureListener verifysignaturelistener;
-		
-		PrivateKeyListener privatekeylistener;
-		PublicKeyListener publickeylistener;
-		
-		EditorListener editorlistener;
-		RetrieveMailListener retrievemaillistener;
-		
-		AboutListener aboutlistener;
-		LicenseListener licenselistener;
-		
-		ColorButtonListener colorbuttonlistener;
+		transient HashListener hashlistener;
+		transient HashFileListener hashfilelistener;
+		transient HashPublicKeyListener hashpublickeylistener;
 		
 		
-		WindowListener1 windowlistener1;
-		ChangeListener1 changelistener1;
-		ComponentListener1 componentlistener1;
+		transient LineWrapListener linewraplistener;
+		transient FontSizeListener fontsizelistener;
+		transient FontTypeListener fonttypelistener;
+		transient TextBoldListener textboldlistener;
+		transient ColorListener colorlistener;
+		transient WordLineCountListener wordlinecountlistener;
+		transient ShowHideButtonsListener showhidebuttonslistener;
+		transient ImageViewerListener imageviewerlistener;
+		transient TableEditorListener tableeditorlistener;
+		transient HTMLEditorPaneListener htmleditorpanelistener;
 		
-		KeyListener1 keylistener1;
-		MouseWheelListener1 mousewheellistener1;
+		transient EncryptMessageListener encryptmessagelistener;
+		transient DecryptMessageListener decryptmessagelistener;
 		
-		FocusListener focuslistener;
-		MouseListener mouselistener;
+		transient EncryptDirectoryListener encryptdirectorylistener;
+		transient DecryptDirectoryListener decryptdirectorylistener;
+		
+		transient EncryptFileListener encryptfilelistener;
+		transient DecryptFileListener decryptfilelistener;
+		
+		transient SignKeyListener signkeylistener;
+		transient SignDocumentListener signdocumentlistener1;
+		transient SignDocumentListener signdocumentlistener2;
+		transient VerifySignatureListener verifysignaturelistener;
+		
+		transient PrivateKeyListener privatekeylistener;
+		transient PublicKeyListener publickeylistener;
+		
+		transient EditorListener editorlistener;
+		transient RetrieveMailListener retrievemaillistener;
+		
+		transient AboutListener aboutlistener;
+		transient LicenseListener licenselistener;
+		
+		transient ColorButtonListener colorbuttonlistener;
+		
+		
+		transient WindowListener1 windowlistener1;
+		transient ChangeListener1 changelistener1;
+		transient ComponentListener1 componentlistener1;
+		
+		transient KeyListener1 keylistener1;
+		transient MouseWheelListener1 mousewheellistener1;
+		
+		transient FocusListener focuslistener;
+		transient MouseListener mouselistener;
 		
 		
 		
@@ -3207,7 +3212,7 @@ class Programs
 			private boolean autoindent = true;
 			private boolean linewrap = true;
 			
-			private Undo undo;
+			transient private Undo undo;
 			
 			
 			public TextAreaPanel()
@@ -3592,9 +3597,6 @@ class Programs
 				
 					textareapanel.filechanged = true;
 				
-				
-				if ((keycode == __.undokeycode)
-				 || (keycode == __.redokeycode))
 				
 				//  ctrl + a == 1,  ctrl + b == 2, ctrl + c == 3, ...
 				
@@ -9330,7 +9332,6 @@ class Programs
 		
 		
 		
-		///////////////////////////////////////////////
 		
 		//  Define the cipher to be used for signatures
 		//
@@ -9343,11 +9344,11 @@ class Programs
 		
 		private final String cipher = Signature.lsdl;
 		
-		///////////////////////////////////////////////
 		
 		
 		private class SignKeyListener implements ActionListener
 		{
+		
 		
 			//  This method opens a signature key passphrase
 			//  dialog and displays a new signature key
@@ -12258,76 +12259,76 @@ class Programs
 		
 		
 		
-		NewListener newlistener;
-		OpenListener openlistener;
-		SaveListener savelistener;
-		SaveAsListener saveaslistener;
-		DeleteListener deletelistener;
-		CloseListener closelistener;
-		PrintListener printlistener;
-		ExitListener exitlistener;
+		transient NewListener newlistener;
+		transient OpenListener openlistener;
+		transient SaveListener savelistener;
+		transient SaveAsListener saveaslistener;
+		transient DeleteListener deletelistener;
+		transient CloseListener closelistener;
+		transient PrintListener printlistener;
+		transient ExitListener exitlistener;
 		
-		TableSizeListener tablesizelistener;
+		transient TableSizeListener tablesizelistener;
 		
-		UndoListener undolistener;
+		transient UndoListener undolistener;
 		
-		CutListener cutlistener;
-		CopyListener copylistener;
-		PasteListener pastelistener;
+		transient CutListener cutlistener;
+		transient CopyListener copylistener;
+		transient PasteListener pastelistener;
 		
-		FindAndReplace.FindListener findlistener;
-		FindAndReplace.ReplaceListener replacelistener;
+		transient FindAndReplace.FindListener findlistener;
+		transient FindAndReplace.ReplaceListener replacelistener;
 		
-		AutoSumListener autosumlistener;
-		TransposeListener transposelistener;
+		transient AutoSumListener autosumlistener;
+		transient TransposeListener transposelistener;
 		
-		InsertRowsListener insertrowslistener;
-		DeleteRowsListener deleterowslistener;
-		
-		
-		FontSizeListener fontsizelistener;
-		FontTypeListener fonttypelistener;
-		TextBoldListener textboldlistener;
-		
-		ColorListener colorlistener;
-		ShowGridListener showgridlistener;
-		EnableReorderingListener enablereorderinglistener;
-		EnableSortingListener enablesortinglistener;
-		SetAutoResizeListener setautoresizelistener;
+		transient InsertRowsListener insertrowslistener;
+		transient DeleteRowsListener deleterowslistener;
 		
 		
-		EncryptDirectoryListener encryptdirectorylistener;
-		DecryptDirectoryListener decryptdirectorylistener;
+		transient FontSizeListener fontsizelistener;
+		transient FontTypeListener fonttypelistener;
+		transient TextBoldListener textboldlistener;
 		
-		EncryptFileListener encryptfilelistener;
-		DecryptFileListener decryptfilelistener;
+		transient ColorListener colorlistener;
+		transient ShowGridListener showgridlistener;
+		transient EnableReorderingListener enablereorderinglistener;
+		transient EnableSortingListener enablesortinglistener;
+		transient SetAutoResizeListener setautoresizelistener;
 		
-		AboutListener aboutlistener;
-		LicenseListener licenselistener;
+		
+		transient EncryptDirectoryListener encryptdirectorylistener;
+		transient DecryptDirectoryListener decryptdirectorylistener;
+		
+		transient EncryptFileListener encryptfilelistener;
+		transient DecryptFileListener decryptfilelistener;
+		
+		transient AboutListener aboutlistener;
+		transient LicenseListener licenselistener;
 		
 		
-		ColorButtonListener colorbuttonlistener;
+		transient ColorButtonListener colorbuttonlistener;
 		
 		
 		//  Opening the file list
 		
-		////  FileListListener filelistlistener;
+		////  transient FileListListener filelistlistener;
 		
 		//  Opening a file on the file list
 		
-		OpenListFileListener openlistfilelistener;
+		transient OpenListFileListener openlistfilelistener;
 		
 		
-		KeyListener1 keylistener1;
-		MouseWheelListener1 mousewheellistener1;
+		transient KeyListener1 keylistener1;
+		transient MouseWheelListener1 mousewheellistener1;
 		
-		FocusListener focuslistener;
-		MouseListener mouselistener;
-		MouseMotionListener mousemotionlistener;
+		transient FocusListener focuslistener;
+		transient MouseListener mouselistener;
+		transient MouseMotionListener mousemotionlistener;
 		
-		WindowListener windowlistener1;
-		ChangeListener1 changelistener1;
-	//	ComponentListener1 componentlistener1;
+		transient WindowListener windowlistener1;
+		transient ChangeListener1 changelistener1;
+	//	transient ComponentListener1 componentlistener1;
 		
 		
 		
@@ -12953,7 +12954,7 @@ class Programs
 			
 			private boolean showgrid = true;
 			
-			private Undo undo;
+			transient private Undo undo;
 			
 			
 			public TablePanel()
@@ -16613,7 +16614,7 @@ class Programs
 				
 				for (int i = 0; i < size; i++)
 				
-				    numberlist.set(i, (Number) numbers[i]);
+				    numberlist.set(i, numbers[i]);
 				
 				
 				Number sum = new Number(0).setPrecision(2);
@@ -18112,47 +18113,47 @@ class Programs
 		
 		
 		
-		NewListener newlistener;
-		OpenListener openlistener;
-		OpenDirectoryListener opendirectorylistener;
-		DeleteListener deletelistener;
-		CloseListener closelistener;
-		PrintListener printlistener;
-		ExitListener exitlistener;
+		transient NewListener newlistener;
+		transient OpenListener openlistener;
+		transient OpenDirectoryListener opendirectorylistener;
+		transient DeleteListener deletelistener;
+		transient CloseListener closelistener;
+		transient PrintListener printlistener;
+		transient ExitListener exitlistener;
 		
 		
-		BackListener backlistener;
-		ForwardListener forwardlistener;
+		transient BackListener backlistener;
+		transient ForwardListener forwardlistener;
 		
-		ViewListener viewlistener;
-		ShowTitleListener showtitlelistener;
+		transient ViewListener viewlistener;
+		transient ShowTitleListener showtitlelistener;
 		
-		EncryptDirectoryListener encryptdirectorylistener;
-		DecryptDirectoryListener decryptdirectorylistener;
+		transient EncryptDirectoryListener encryptdirectorylistener;
+		transient DecryptDirectoryListener decryptdirectorylistener;
 		
-		AboutListener aboutlistener;
-		LicenseListener licenselistener;
-		
-		
-		
-		
-		WindowListener1 windowlistener1;
-		ActionListener1 actionlistener1;
-		KeyListener1 keylistener1;
-		KeyListener1.MouseWheelListener1 mousewheellistener1;
-		
-		ComponentListener1 componentlistener1;
-		ChangeListener changelistener1;
-		FocusListener focuslistener;
-		MouseListener mouselistener;
+		transient AboutListener aboutlistener;
+		transient LicenseListener licenselistener;
 		
 		
 		
-		ArrayList<String> filenamelist;
 		
-		ArrayList<JTextField> textfieldlist;
+		transient WindowListener1 windowlistener1;
+		transient ActionListener1 actionlistener1;
+		transient KeyListener1 keylistener1;
+		transient KeyListener1.MouseWheelListener1 mousewheellistener1;
 		
-		ArrayList<JMenuItem> listmenuitem;
+		transient ComponentListener1 componentlistener1;
+		transient ChangeListener changelistener1;
+		transient FocusListener focuslistener;
+		transient MouseListener mouselistener;
+		
+		
+		
+		private ArrayList<String> filenamelist;
+		
+		private ArrayList<JTextField> textfieldlist;
+		
+		private ArrayList<JMenuItem> listmenuitem;
 		
 		
 		
@@ -18163,7 +18164,7 @@ class Programs
 		
 		JMenuItem newmenuitem, openmenuitem, opendirectorymenuitem,
 		
-		printmenuitem, closemenuitem, exitmenuitem;
+		        printmenuitem, closemenuitem, exitmenuitem;
 		
 		JMenuItem copymenuitem, findmenuitem, selectallmenuitem, selectrangemenuitem;
 		
@@ -19946,40 +19947,40 @@ class Programs
 		
 		
 		
-		NewListener newlistener;
-		OpenListener openlistener;
-		DeleteListener deletelistener;
-		SaveListener savelistener;
-		SaveAsListener saveaslistener;
-		CloseListener closelistener;
-		PrintListener printlistener;
-		ExitListener exitlistener;
+		transient NewListener newlistener;
+		transient OpenListener openlistener;
+		transient DeleteListener deletelistener;
+		transient SaveListener savelistener;
+		transient SaveAsListener saveaslistener;
+		transient CloseListener closelistener;
+		transient PrintListener printlistener;
+		transient ExitListener exitlistener;
 		
 		
-		CopyListener copylistener;
+		transient CopyListener copylistener;
 		
-		FindListener findlistener;
-		TextHTMLListener texthtmllistener;
+		transient FindListener findlistener;
+		transient TextHTMLListener texthtmllistener;
 		
-		FontSizeListener fontsizelistener;
-		
-		
-		WindowListener1 windowlistener1;
-		KeyListener1 keylistener1;
-		KeyListener1.MouseWheelListener1 mousewheellistener1;
-		
-		FocusListener focuslistener;
-		MouseListener mouselistener;
-		
-		Hyperactive hyperactive;
+		transient FontSizeListener fontsizelistener;
 		
 		
+		transient WindowListener1 windowlistener1;
+		transient KeyListener1 keylistener1;
+		transient KeyListener1.MouseWheelListener1 mousewheellistener1;
 		
-		ArrayList<String> filenamelist;
+		transient FocusListener focuslistener;
+		transient MouseListener mouselistener;
 		
-		ArrayList<JTextField> textfieldlist;
+		transient Hyperactive hyperactive;
 		
-		ArrayList<JMenuItem> listmenuitem;
+		
+		
+		private ArrayList<String> filenamelist;
+		
+		private ArrayList<JTextField> textfieldlist;
+		
+		private ArrayList<JMenuItem> listmenuitem;
 		
 		
 		
@@ -21630,6 +21631,9 @@ class Programs
 		
 			private static final long serialVersionUID = 1L;
 			
+			transient private Undo undo;
+			
+			
 			private JFrame frame;
 			
 			private boolean disposed;
@@ -21656,8 +21660,6 @@ class Programs
 			
 			private JTextArea textarea;
 			private JTextArea textarea2;
-			
-			private Undo undo;
 			
 			
 			private JPanel panel;
@@ -21703,9 +21705,9 @@ class Programs
 			
 			//  An object to hold the recipients' keys
 			
-			private PublicKeyRing publickeyring
+			transient private PublicKeyRing
 			
-			    = new PublicKeyRing();
+			    publickeyring = new PublicKeyRing();
 			
 			private String recipientskey;
 			private String recipientskeyaddress;
@@ -21748,27 +21750,31 @@ class Programs
 			//  Listeners
 			
 			
-			SendButtonListener sendbuttonlistener;
+			transient SendButtonListener
+			          sendbuttonlistener;
 			
-			KeyListener1 keylistener1;
-			KeyListener1.MouseWheelListener1
+			transient KeyListener1 keylistener1;
+			transient KeyListener1.MouseWheelListener1
 			    mousewheellistener1;
 			
-			FocusListener focuslistener;
-			MouseListener mouselistener;
+			transient FocusListener focuslistener;
+			transient MouseListener mouselistener;
 			
-			AttachListener attachlistener;
-			OpenListener openlistener;
-			SaveListener savelistener;
-			SaveAsListener saveaslistener;
-			ExitListener exitlistener;
+			transient AttachListener attachlistener;
+			transient OpenListener openlistener;
+			transient SaveListener savelistener;
+			transient SaveAsListener saveaslistener;
+			transient ExitListener exitlistener;
 			
-			UndoListener undolistener;
+			transient UndoListener undolistener;
 			
-			CutListener cutlistener;
-			CopyListener copylistener;
-			PasteListener pastelistener;
+			transient CutListener cutlistener;
+			transient CopyListener copylistener;
+			transient PasteListener pastelistener;
 			
+			transient ComponentListener1 componentlistener1;
+			
+			transient WindowListener1 windowlistener1;
 			
 			
 			private JPanel iconpanel;
@@ -21827,11 +21833,9 @@ class Programs
 				
 				    .new MouseWheelListener1();
 				
-				ComponentListener1 componentlistener1
+				componentlistener1 = new ComponentListener1();
 				
-				    = new ComponentListener1();
-				
-				WindowListener1 windowlistener1 = new WindowListener1();
+				windowlistener1 = new WindowListener1();
 				
 				if (keyboardlistener == null)
 				
@@ -23602,7 +23606,7 @@ class Programs
 								
 								for (File file : files)
 								
-								    totalfilesize += file.length();
+								    totalfilesize += (int) file.length();
 								
 								for (int i = 0; i < filedatalist.size(); i++)
 								
@@ -25756,10 +25760,12 @@ class Programs
 					keyboardframe.setLocationRelativeTo(null);
 					
 					keyboardframe.addWindowListener(
+					
 					    new WindowListener1());
 				}
 				
 				if (keyboardframe != null)
+				
 				    keyboardframe.setVisible(true);
 				
 				setFont(font.deriveFont(font.getSize() + 4.0f));
@@ -25950,7 +25956,6 @@ class Programs
 			closemenuitem, openmenuitem, exitmenuitem;
 			
 			JMenuItem undeletemenuitem,
-			
 			checkallmenuitem, copymenuitem,
 			setprogramtitlemenuitem, settabtitlemenuitem,
 			findmenuitem, replykeysettingsmenuitem,
@@ -25958,14 +25963,10 @@ class Programs
 			randomtextmenuitem, privatekeymenuitem,
 			newpublickeymenuitem;
 			
-			JMenuItem fontsizemenuitem,
-			fonttypemenuitem, boldmenuitem,
-			colormenuitem,
-			clientservermenuitem,
-			showkeyboardmenuitem,
-			showsentemailsmenuitem,
-			viewpublickeysmenuitem,
-			viewsavedemailsmenuitem,
+			JMenuItem fontsizemenuitem, fonttypemenuitem,
+			boldmenuitem, colormenuitem, clientservermenuitem,
+			showkeyboardmenuitem, showsentemailsmenuitem,
+			viewpublickeysmenuitem, viewsavedemailsmenuitem,
 			keyboardmenuitem;
 			
 			JMenuItem aboutmenuitem;
@@ -25977,55 +25978,55 @@ class Programs
 			//  Listeners
 			
 			
-			NewListener newlistener;
-			SendMailListener sendmaillistener;
-			CloseListener closelistener;
-			ExitListener exitlistener;
+			transient NewListener newlistener;
+			transient SendMailListener sendmaillistener;
+			transient CloseListener closelistener;
+			transient ExitListener exitlistener;
 			
-			UndeleteListener undeletelistener;
-			CheckAllListener checkalllistener;
-			CopyListener copylistener;
-			SetTitleListener settitlelistener;
-			SetTabTitleListener settabtitlelistener;
-			FindListener findlistener;
-			ReplyKeySettingsListener replykeysettingslistener;
-			PassphraseListener passphraselistener;
-			UserPassListener userpasslistener;
-			RandomTextListener randomtextlistener;
-			PublicKeyListener publickeylistener;
+			transient UndeleteListener undeletelistener;
+			transient CheckAllListener checkalllistener;
+			transient CopyListener copylistener;
+			transient SetTitleListener settitlelistener;
+			transient SetTabTitleListener settabtitlelistener;
+			transient FindListener findlistener;
+			transient ReplyKeySettingsListener replykeysettingslistener;
+			transient PassphraseListener passphraselistener;
+			transient UserPassListener userpasslistener;
+			transient RandomTextListener randomtextlistener;
+			transient PublicKeyListener publickeylistener;
 			
-			FontSizeListener fontsizelistener;
-			FontTypeListener fonttypelistener;
-			ColorListener colorlistener;
-			ClientServerListener clientserverlistener;
+			transient FontSizeListener fontsizelistener;
+			transient FontTypeListener fonttypelistener;
+			transient ColorListener colorlistener;
+			transient ClientServerListener clientserverlistener;
 			
-			ShowKeyboardListener showkeyboardlistener;
-			ShowHideEmailsListener showsentemailslistener;
+			transient ShowKeyboardListener showkeyboardlistener;
+			transient ShowHideEmailsListener showsentemailslistener;
 			
-			ViewPublicKeysListener viewpublickeyslistener;
-			ViewSavedEmailsListener viewsavedemailslistener;
+			transient ViewPublicKeysListener viewpublickeyslistener;
+			transient ViewSavedEmailsListener viewsavedemailslistener;
 			
-			ColorButtonListener colorbuttonlistener;
-			ReverseColorsListener reversecolorslistener;
+			transient ColorButtonListener colorbuttonlistener;
+			transient ReverseColorsListener reversecolorslistener;
 			
-			AboutListener aboutlistener;
-			TestMailListener testmaillistener;
-			HowToUsePopMailListener howtousepopmaillistener;
+			transient AboutListener aboutlistener;
+			transient TestMailListener testmaillistener;
+			transient HowToUsePopMailListener howtousepopmaillistener;
 			
-			TextBoldListener textboldlistener;
+			transient TextBoldListener textboldlistener;
 			
-			KeyListener1 keylistener1;
-			MouseWheelListener1 mousewheellistener1;
+			transient KeyListener1 keylistener1;
+			transient MouseWheelListener1 mousewheellistener1;
 			
-			FocusListener1 focuslistener1;
-			ChangeListener changelistener1;
-			IconListener iconlistener;
-			MouseListener mouselistener1;
-			MouseMotionListener mousemotionlistener;
+			transient FocusListener1 focuslistener1;
+			transient ChangeListener changelistener1;
+			transient IconListener iconlistener;
+			transient MouseListener mouselistener1;
+			transient MouseMotionListener mousemotionlistener;
 			
-			WindowListener1 windowlistener1;
-			WindowStateListener1 windowstatelistener1;
-			ComponentListener1 componentlistener1;
+			transient WindowListener1 windowlistener1;
+			transient WindowStateListener1 windowstatelistener1;
+			transient ComponentListener1 componentlistener1;
 			
 			
 			
@@ -26278,8 +26279,7 @@ class Programs
 				
 				
 				replykeysettingsmenuitem = new JMenuItem(__.replykeysettings);
-				replykeysettingsmenuitem.addActionListener(
-				    replykeysettingslistener);
+				replykeysettingsmenuitem.addActionListener(replykeysettingslistener);
 				editmenu.add(replykeysettingsmenuitem);
 				
 				editmenu.addSeparator();
@@ -27283,9 +27283,9 @@ class Programs
 				//  The user's public key generated from hash(SP)
 				//  The user's public key generated from hash(SP + email addr)
 				
-				private PublicKey[] publickey_sp;
-				private PublicKey[] publickey_sp_email;
-				private PublicKey[] publickey_testmail;
+				transient private PublicKey[] publickey_sp;
+				transient private PublicKey[] publickey_sp_email;
+				transient private PublicKey[] publickey_testmail;
 				
 				
 				private int msno = -1; // msg number
@@ -27299,12 +27299,12 @@ class Programs
 				
 				//  An object to hold the email messages
 				
-				private ArrayList1 list1;
+				transient private ArrayList1 list1;
 				
 				
 				//  An object to hold the connection data
 				
-				private PopMail popmail;
+				transient private PopMail popmail;
 				
 				
 				//  An object to hold the display labels
@@ -27314,7 +27314,7 @@ class Programs
 				
 				//  An object to hold the saved emails
 				
-				private SavedEmails savedemails;
+				transient private SavedEmails savedemails;
 				
 				
 				private JScrollPane popscrollpane;
@@ -27347,8 +27347,6 @@ class Programs
 				
 				private JButton[] buttons;
 				
-				private ButtonListener buttonlistener;
-				
 				private JComponent[] components;
 				
 				private JTextArea textarea;
@@ -27359,9 +27357,10 @@ class Programs
 				private JScrollPane scrollpane2;
 				private JScrollPane scrollpane3;
 				
-				
 				private ArrayList<SendMailFrame> sendmailframelist
 				  = new ArrayList<SendMailFrame>();
+				
+				transient private ButtonListener buttonlistener;
 				
 				
 				//  buttonpanel == List, Read All, Delete, Sign out
@@ -40858,7 +40857,7 @@ class DeleteFile
 				    message, "", JOptionPane.ERROR_MESSAGE);
 				
 				return;
-			}	
+			}
 			
 			directory = file.getParent();
 			
@@ -50648,11 +50647,9 @@ class PassphraseDialog extends JDialog implements AncestorListener
 	
 	private Component[] components, components1;
 	
-	private KeyboardListener keyboardlistener;
-	
-	private KeyListener keylistener = new KeyListener();
-	
-	private MouseListener mouselistener1;
+	transient private KeyboardListener keyboardlistener;
+	transient private KeyListener keylistener = new KeyListener();
+	transient private MouseListener mouselistener1;
 	
 	private JPanel keyboardpanel;
 	
@@ -55705,28 +55702,32 @@ class PublicKey
 	
 		byte[] privatekey, String[] receivedkey)
 	{
-		//  creates a matching one-time, transient or ephemeral public
-		//  key using the ciphers in the static public key, even if
-		//  some of the ciphers are commented or disabled;
+		//  creates a matching one-time, transient or ephemeral public key
+		//  using the ciphers in the static public key, even if some of the
+		//  ciphers are commented or disabled; a deprecated cipher would still
+		//  be used to generate a matching one-time public key to encrypt and
+		//  send messages to an older key but not for the user's static public
+		//  key for receiving and decrypting messages.
 		//
-		//  for public key sizes that are not valid, the method will
-		//  create a public key element that contains the empty string
-		//  so that the generate secret key method will ignore the key.
-		//
-		//  This method is used by the encrypt method and by the SSL
-		//  Socket class.
+		//  For public key sizes that are not valid, are no longer supported
+		//  or are not recognized by a previous or older version of the soft-
+		//  ware because they were recently added, the method will create a
+		//  public key element that contains the empty string so the generate
+		//  secret key method will ignore the cipher.
 		//
 		//  Because this method is used to generate a matching one-time
-		//  public key (instead of generating a static public key), the
-		//  PublicKey constructor requires the corresponding static key.
+		//  public key (instead of a static public key), the PublicKey con-
+		//  structor requires the corresponding static key.
 		//
-		//  Note that the static key variable is only required for asym-
-		//  metric public key ciphers such as the vector / cross product
-		//  cipher, the Merkle-Hellman / knapsack cipher, and the factor-
-		//  ization cipher. The other public key ciphers ignore the stat-
-		//  ic key because the public keys are symmetrical or use commu-
-		//  tative one-way functions instead of an invertible one-way
-		//  function.
+		//  Note that the static key variable is only required for asymmetric
+		//  public key ciphers such as the vector / cross product cipher, the
+		//  Merkle-Hellman / knapsack cipher, and the factorization cipher.
+		//  The other public key ciphers ignore the static key because the
+		//  public keys are symmetrical or use commutative one-way functions
+		//  instead of an invertible one-way function.
+		
+		//  This method is used by the encrypt method and SSLSocket class.
+		
 		
 		
 		
@@ -67997,7 +67998,7 @@ class Math
 			temp += temp_a;
 			temp += temp_b;
 			
-			c[c_length -1 -i] += temp;
+			c[c_length -1 -i] += (int) temp;
 			
 			temp >>= 32;
 			
@@ -68068,7 +68069,7 @@ class Math
 		
 		array[array.length -1 - (int) (bit / 8)]
 		
-		    &= ~(1 << bit % 8);
+		    &= (byte) ~ (1 << bit % 8);
 	}
 	
 	
@@ -68571,7 +68572,7 @@ class Math
 		
 		    throw new IllegalArgumentException();
 		
-		array[array.length -1 - (int)(bit / 8)] ^= (1 << (bit % 8));
+		array[array.length -1 - (int)(bit / 8)] ^= (byte) (1 << (bit % 8));
 	}
 	
 	
@@ -69740,19 +69741,19 @@ class Math
 			//  w = uv mod 2^32
 			
 			w[w.length -1 - j] = 0;
-			w[w.length -1 - j] += uv;
+			w[w.length -1 - j] += (int) uv;
 			
 			//  Copy the upper int of uv to the carry int z
 			
 			//  z = (uv >>> 32) mod 2^32
 			
-			z = 0;  z += (uv >>> 32);
+			z = 0;  z += (int) (uv >>> 32);
 		}
 		
 		//  Copy the upper int of uv to w
 		
 		w[w.length -1 - m1] = 0;
-		w[w.length -1 - m1] += (uv >>> 32);
+		w[w.length -1 - m1] += (int) (uv >>> 32);
 		
 		return w;
 	}
@@ -70428,19 +70429,19 @@ class Math
 				//  w = uv mod 2^32
 				
 				w[(m1 + m2) -1 - (i + j)] = 0;
-				w[(m1 + m2) -1 - (i + j)] += uv;
+				w[(m1 + m2) -1 - (i + j)] += (int) uv;
 				
 				//  Copy the upper int to the carry int z
 				
 				//  z = (uv >>> 32) mod 2^32
 				
-				z = 0;  z += (uv >>> 32);
+				z = 0;  z += (int) (uv >>> 32);
 			}
 			
 			//  Copy the upper int from uv into w
 			
 			w[(m1 + m2) -1 - (i + m1)] = 0;
-			w[(m1 + m2) -1 - (i + m1)] += (uv >>> 32);
+			w[(m1 + m2) -1 - (i + m1)] += (int) (uv >>> 32);
 		}
 		
 		return w;
@@ -70703,7 +70704,7 @@ class Math
 		
 		array[array.length -1 - (int) (bit / 8)]
 		
-		    |= (1 << bit % 8);
+		    |= (byte) (1 << bit % 8);
 	}
 	
 	
@@ -72539,8 +72540,8 @@ class Number implements Comparable<Number>
 		
 		//  Set the new precision
 		
-		a = a.setPrecision(p);
-		b = b.setPrecision(p);
+		a = a.setPrecision(p).roundBit();
+		b = b.setPrecision(p).roundBit();
 		
 		
 		
@@ -72686,6 +72687,15 @@ class Number implements Comparable<Number>
 	//  or properties of triangles
 	//
 	//
+	//  The series for cosine and sine
+	//
+	//                n  2 n + 0
+	//  cos(x) == (-1)  x       / (2 n + 0)!
+	//
+	//                n  2 n + 1
+	//  sin(x) == (-1)  x       / (2 n + 1)!
+	//
+	//
 	//  The sum of two angle formulas
 	//
 	//  cos(a + b) == cos(a) cos(b) - sin(a) sin(b),
@@ -72704,14 +72714,6 @@ class Number implements Comparable<Number>
 	//
 	//  sin^2 (A) + cos^2 (A) == 1  (the right-angle formula for the unit circle)
 	//
-	//
-	//  The series for cosine and sine
-	//
-	//                n  2 n + 0
-	//  cos(x) == (-1)  x       / (2 n + 0)!
-	//
-	//                n  2 n + 1
-	//  sin(x) == (-1)  x       / (2 n + 1)!
 	//
 	//
 	//  The law of sines
@@ -74130,7 +74132,7 @@ class Number implements Comparable<Number>
 		{
 			v1 = v .shiftLeft(bits + 32, bits);
 			
-			v1.intpoint += bits / 32;
+			v1.intpoint += (int) bits / 32;
 			
 			v1 = v1 .shiftRight(d).trim();
 		}
@@ -74188,7 +74190,7 @@ class Number implements Comparable<Number>
 		{
 			u1 = u1 .shiftLeft(bits + 32, bits);
 			
-			u1 .intpoint += bits / 32;
+			u1 .intpoint += (int) bits / 32;
 			
 			u = u1 .shiftRight(d) .trim();
 		}
@@ -76114,6 +76116,7 @@ class Number implements Comparable<Number>
 		
 		//  If the root index is coprime with the totient (which includes k = 1)
 		//  then return the coprime root == residue ^ (k^-1 mod (p-1)) (mod p)
+		//  (coprime root extraction modulo a prime p)
 		
 		if (totient.isCoprimeWith(k)) return new Number[] // residue ^ (1/k mod (p-1))
 		
@@ -77085,15 +77088,41 @@ class Number implements Comparable<Number>
 		
 		if (this.isPrime()) return this.subtract(1);
 		
-		if (!this.isPrimePower()) throw new IllegalArgumentException();
+		if (this.isPrimePower())
+		{
+			int k = 1; while (!this.isPower(++k)) ;
+			
+			Number p = this.root(k);
+			
+			Number phi = p.subtract(1) .multiply( p.pow(k-1) );
+			
+			return phi;
+		}
 		
-		int k = 1; while (!this.isPower(++k)) ;
-		
-		Number p = this.root(k);
-		
-		Number phi = p.subtract(1) .multiply( p.pow(k-1) );
-		
-		return phi;
+		else // factor the composite number if it contains only small divisors
+		{
+			int[] factors = this.factor(64*1024);
+			
+			Number quotient = this.divide(Number.multiply(factors));
+			
+			if (!quotient.equals(1)) throw new IllegalArgumentException();
+			
+			int[][] prime_exp = Math.sortAndCollate(factors);
+			
+			Number phi = new Number(1);
+			
+			for (int i = 0; i < prime_exp.length; i++)
+			{
+				int p = prime_exp[i][0];
+				int k = prime_exp[i][1];
+				
+				phi = phi .multiply(p - 1) .multiply(
+				
+				    new Number(p).pow(k-1));
+			}
+			
+			return phi;
+		}
 	}
 	
 	
@@ -77186,28 +77215,23 @@ class Number implements Comparable<Number>
 	
 	
 	
-	//   A quadratically convergent formula for pi
-	//
+	//   Exponentially convergent formulas for pi
+	
+	
 	//   (Eugene Salamin and Richard Brent)
 	//                          _
 	//   Set a0 = 1, b0 = 1 / \/2, s0 = 1/2, then iterate
+	//                                         _____________
+	//   a[k] = (a[k-1] + b[k-1])/2;  b[k] = \/a[k-1] b[k-1];
 	//
-	//   a[k] = (a[k-1] + b[k-1])/2,
-	//            _____________
-	//   b[k] = \/a[k-1] b[k-1],
-	//
-	//   c[k] = a[k]^2 - b[k]^2,
-	//
-	//   s[k] = s[k-1] - 2^k c[k],
+	//   c[k] = a[k]^2 - b[k]^2;  s[k] = s[k-1] - 2^k c[k];
 	//
 	//   p[k] = 2 a[k]^2 / s[k].
 	//
-	//   p[k] converges quadratically to pi.
+	//   p[k] converges to pi at 2^k bits per iteration
 	
 	
 	
-	//   A cubically convergent formula for pi
-	//
 	//   (Borwein and Borwein)
 	//                             _
 	//   Set a0 = 1/3, and s0 = (\/3 - 1)/2, then iterate
@@ -77218,12 +77242,10 @@ class Number implements Comparable<Number>
 	//
 	//   a[k+1] = r[k+1]^2 a[k] - 3^k (r[k+1]^2 - 1).
 	//
-	//   1/a^k converges cubically to pi
+	//   1 / a^k  converges to pi at 3^k bits per iteration
 	
 	
 	
-	//   A quartically convergent formula for pi
-	//
 	//   (Borwein and Borwein)
 	//
 	//                        _              _
@@ -77238,12 +77260,9 @@ class Number implements Comparable<Number>
 	//                               4     2k+3        1        2        3
 	//   a[k+1]  =  a[k] (1 + y[k+1])  -  2    ( y[k+1] + y[k+1] + y[k+1] ).
 	//
-	//   Then a[k] coverges quartically to 1 / pi.
 	//
-	//
-	//   The quartically convergent formula for computing pi is only
-	//   2 * (10 multiplies / 16 multiplies) == 1.25 times as fast as
-	//   the quadratically convergent formula for pi.
+	//   a[k] converges to 1 / pi at 4^k bits per iteration.
+	
 	
 	
 	
@@ -78034,20 +78053,36 @@ class Number implements Comparable<Number>
 	}
 	
 	
+	
 	public Number root(int k)
 	{
 	
 		//  the root extractor
 		
-		//  computes the kth root of a number
+		//  computes the kth root of a real number or integer
 		
-		//  This method will expand the precision of the number by
-		//  the number of integer digits (just like the inverse method)
-		//  unless the number is a perfect power such as a perfect square.
+		//  This method will expand the precision of the number by the num-
+		//  ber of integer digits (just like the inverse method) unless the
+		//  number is a perfect power such as a perfect square.
 		//
-		//  For example, the sqrt of the integer 12345678 will return
-		//  the real number 3513.6417 because 3513.6417 ^ 2 ~ 12345678
-		//  while 3513.641 ^ 2 only equals ~ 12345673.
+		//  For example, the sqrt of the integer 12345678 will return the
+		//  expanded precision real number 3513.6417 because 3513.6417 ^ 2
+		//  ~ 12345678 while 3513.641 ^ 2 only equals ~ 12345673.
+		//
+		//  If the radicand is a perfect power then the root will be an in-
+		//  teger even if the radicand is a real number or non-integer.
+		//
+		//  For small number sizes the root extractor can call the pow(
+		//  Number exp) method and use the exponent 1 / k because Newton's
+		//  iteration is not efficient for small size numbers. This will slow
+		//  the method from O(2^n) to O(n) bits per iteration which means
+		//  that the root will converge linearly instead of exponentially.
+		//  
+		//  For large numbers the root method will use Newton's iteration,
+		//  and for composite indexes the method will also factor the index
+		//  and use iteration to compute the root r = a .root(p1) .root(p2)
+		//  ... where k == p1 p2 ... pn, or recursion to compute the root
+		//  r = a .root(k/2) .root(2) if k == 2 ^ n or a power of 2.
 		
 		
 		//  Newton's iteration for root extraction
@@ -78109,36 +78144,80 @@ class Number implements Comparable<Number>
 		//  (so that n ~ r^2) and then iterating  r = (r + n / r) / 2.
 		
 		
-		//  Expand the precision to the number of integer digits plus the precision
 		
-		int precision = this.precision +
+		//  Expand the precision to the number
+		//  of integer digits plus the precision
 		
-		    (int) this.toInteger().bitCount()/4;
+		int p = this.precision * 2 + (int)
 		
-		if (precision < 8) precision = 8;
+		    this.toInteger().bitCount()/4;
 		
-		Number n0 = new Number(this).setPrecision(precision);
-		
-		Number zero = new Number("0", 16) .setPrecision(precision * 3/4);
-		Number  one = new Number("1", 16) .setPrecision(precision * 3/4);
-		
-		if (this.equals(zero) || this.equals(zero))
-		
-		    //  zero and one are idempotent
-		
-			return new Number(this);
+		if (p < 8) p = 8;
 		
 		
 		//  a ^  minus root == a ^-1 ^ |root|
 		//  a ^ zeroth root == a ^ (1/0) == infinity
 		//  a ^  first root == a ^ (1/1) == a
 		
-		if (k <  0)  return this .inverse() .root(-k);
+		if (k <  0)  return this.inverse().root(-k);
 		if (k == 0)  throw new IllegalArgumentException("zeroth root");
 		if (k == 1)  return new Number(this);
 		
 		
-		//  Remove the integer point from the number n = a / 2 ^ b
+		int minsize = 256;
+		
+		//  Use the pow(Number exp) method for small bit numbers
+		//
+		//  (Note that the pow(double exp) method cannot be used
+		//  even if the base number has a high precision because
+		//  the precision of a double is limited to about 10 digits
+		//  or 40 bits.)
+		
+		if (this.bitCount() < minsize)
+		
+		    return this.setPrecision(p) .pow(
+		
+			new Number(k).setPrecision(p).inverse());
+		
+		
+		//  Use recursion for powers of 2
+		
+		//  Test before recursion
+		
+		if (Math.isPowerOf2(k) && (k > 2))
+		
+		    return this.root(k/2) .root(2);
+		
+		
+		//  Use iteration for non-prime non-powers of 2
+		
+		if (!Math.isPowerOf2(k) && !Math.isPrime(k))
+		{
+			//  k == p1 p2 ... pn
+			//
+			//  r = a .root(p1) .root(p2) ...
+			
+			int[] primes = Math.factor(k);
+			
+			Number root = this;
+			
+			int p1 = root.precision * 2 + (int)
+			
+			    root.toInteger().bitCount()/4;
+			
+			if (p1 < 8) p1 = 8;
+			
+			for (int i = 0; i < primes.length; i++)
+			
+			    root = root .setPrecision(p1) .root(primes[i]);
+			
+			return root;
+		}
+		
+		
+		//  Remove the integer point from the number n = a / 2^b
+		
+		Number n0 = new Number(this).setPrecision(p);
 		
 		Number n = n0.trim();  n.intpoint = 0;
 		
@@ -78149,24 +78228,32 @@ class Number implements Comparable<Number>
 		
 		long bits = n.bitCount();
 		
-		Number r = new Number(1) .shiftLeft(bits/k, bits/k);
+		Number r = new Number(1)
+		
+		    .shiftLeft(bits/k, bits/k);
 		
 		
 		//  The number of twos must be divisible by k
 		//
 		//  so that the root of 2 ^ bits == 2 ^ (bits / k)
 		
-		while ((b++ % k) != 0) { n = n.shiftLeft(1); }
+		while ((b % k) != 0) { b++; n = n.multiply(2); }
+		
+		if ((b % k) != 0) throw new ArithmeticException();
 		
 		
 		//  First iterate a few times at 64 bits precision
 		
-		int t = Math.max(8, (int) Math.log2(n0.toInteger().bitCount()));
+		Number rprev = r;
 		
-		for (int i = 0; i < t; i++) r = r.setPrecision(64) .multiply(k-1)
-		
-		    .add( n.setPrecision(64).divide(r.pow(k-1)) ) .divide(k) .trim();
-		
+		while (true)
+		{
+			r = r.setPrecision(64) .multiply(k-1) .add(
+			
+			    n.setPrecision(64).divide(r.pow(k-1)) ) .divide(k) .trim();
+			
+			if (r.equals(rprev)) break; rprev = r;
+		}
 		
 		//  Do a few more iterations doubling the precision for each iteration
 		
@@ -78178,15 +78265,15 @@ class Number implements Comparable<Number>
 		//  hidden constant in the running time that makes it higher than 1.5
 		//  multiplications.
 		
-		int p = precision;
+		int p1 = p;
 		
 		while (true)
 		{
-			r = r.setPrecision(p) .multiply(k-1) .add( n.setPrecision(p)
+			r = r.setPrecision(p1) .multiply(k-1) .add( n.setPrecision(p1)
 			
-			    .divide(r.pow(k-1)) ) .divide(k) .setPrecision(p);
+			    .divide(r.pow(k-1)) ) .divide(k) .setPrecision(p1);
 			
-			if (p > n0.precision + 16) break;  p *= 2;
+			if (p1 > 2*p) break;  p1 *= 2;
 		}
 		
 		//  Restore the integer point for the root r
@@ -78198,12 +78285,22 @@ class Number implements Comparable<Number>
 		
 		//  Verify that the root is correct
 		
-		if (!r.pow(k) .subtract(n0) .abs() .equals(zero)
-		 || !r.pow(k)   .divide(n0) .abs() .equals(one))
+		Number zero = new Number("0", 16) .setPrecision(p * 3/4);
+		Number  one = new Number("1", 16) .setPrecision(p * 3/4);
+		
+		if (this.equals(zero) || this.equals(zero))
+		
+		    //  zero and one are idempotent
+		
+			return new Number(this);
+		
+		if (!r.pow(k) .subtract(this) .abs() .equals(zero)
+		 || !r.pow(k)   .divide(this) .abs() .equals(one))
 		{
-			System.out.println(r.pow(k).divide(this).subtract(1));
-			System.out.println(" r^k == " + r.pow(k) .toString(16));
+			System.out.println("root index k == " + k);
 			System.out.println("this == " + this.toString(16));
+			System.out.println("   r == " +    r.toString(16));
+			System.out.println(" r^k == " + r.pow(k) .toString(16));
 			
 			System.out.println("r^k - this == " + r.pow(k)
 			    .subtract(this) .abs() .toString(16));
@@ -78213,24 +78310,25 @@ class Number implements Comparable<Number>
 			System.out.println("zero == " + zero.toString(16));
 			System.out.println(" one == " +  one.toString(16));
 			System.out.println("r^k - this should have at least "
-			    + precision + " zero digits");
+			    + p + " zero digits");
 			
 			String message = "root extraction error";
 			
 			throw new ArithmeticException(message);
 		}
 		
-		//  If the radicand is the power of an integer
+		//  If the radicand is a power of an integer
 		//  (such as a perfect square or perfect cube)
-		//  then return the root r as an integer
+		//  then set the root precision to the radicand
+		//  precision and return.
 		
 		if (this.toFraction().equals(0) &&
 		
-		    r.toInteger(true) .pow(k) .equals(this))
+		    r.toInteger(true).pow(k).equals(this))
 		
 			return r.toInteger(true);
 		
-		return r.setPrecision(precision);
+		return r.setPrecision(p);
 	}
 	
 	
@@ -82211,6 +82309,7 @@ class Matrix
 	}
 	
 	
+	
 	public Number gcd()
 	{
 		//  returns the gcd or greatest common divisor of the elements;
@@ -82302,7 +82401,7 @@ class Matrix
 	
 	public int getPrecision()
 	{
-		//  returns the precision of the elements
+		//  returns the largest precision
 		
 		int precision = 0;
 		
@@ -83164,10 +83263,9 @@ class Matrix
 		//  Find a matrix P such that P^-1 A P == D
 		//  so Y = A^x can be computed from P D^x P^-1
 		//
-		//  This makes the matrix modPow method several times faster
-		//  for matrices; for example, for a 2x2 matrix and a 160-bit
-		//  modulus the modPow method is ~ 8 times faster if Tonelli's
-		//  algorithm is used for modular square roots.
+		//  This makes the matrix modPow method several times faster;
+		//  for example, for a 2x2 matrix and a 160-bit modulus the modPow
+		//  method is ~ 8 times faster.
 		//
 		//  Diagonalization is not used in this program for exponentiation
 		//  because for Latin squares the method uses multiplyLs() which
@@ -85609,19 +85707,19 @@ class Convert
 			
 			if ((4*j + 1) < byte64array.length)
 			{
-				barray[0] +=      ((byte64array[4*j + 1] >> 4) & 0x3f);
-				barray[1] = (byte) (byte64array[4*j + 1] << 4);
+				barray[0] += (byte) ((byte64array[4*j + 1] >> 4) & 0x3f);
+				barray[1]  = (byte)  (byte64array[4*j + 1] << 4);
 			}
 			
 			if ((4*j + 2) < byte64array.length)
 			{
-				barray[1] +=      ((byte64array[4*j + 2] >> 2) & 0x0f);
-				barray[2] = (byte) (byte64array[4*j + 2] << 6);
+				barray[1] += (byte) ((byte64array[4*j + 2] >> 2) & 0x0f);
+				barray[2]  = (byte)  (byte64array[4*j + 2] << 6);
 			}
 			
 			if ((4*j + 3) < byte64array.length)
 			
-			    barray[2] += ((byte64array[4*j + 3] >> 0) & 0x3f);
+			    barray[2] += (byte) ((byte64array[4*j + 3] >> 0) & 0x3f);
 			
 			for (int k = 0; k < 3; k++)
 			
@@ -85677,14 +85775,14 @@ class Convert
 			
 			if ((3*j + 1) < byte256array.length)
 			{
-				barray[1] +=       ((byte256array[3*j + 1] >> 4) & 0x0f);
-				barray[2] =  (byte)((byte256array[3*j + 1] << 2) & 0x3c);
+				barray[1] += (byte) ((byte256array[3*j + 1] >> 4) & 0x0f);
+				barray[2]  = (byte) ((byte256array[3*j + 1] << 2) & 0x3c);
 			}
 			
 			if ((3*j + 2) < byte256array.length)
 			{
 				barray[2] += (byte)((byte256array[3*j + 2] >> 6) & 0x03);
-				barray[3] =  (byte)((byte256array[3*j + 2] << 0) & 0x3f);
+				barray[3]  = (byte)((byte256array[3*j + 2] << 0) & 0x3f);
 			}
 			
 			for (int k = 0; k < 4; k++)
@@ -85731,14 +85829,14 @@ class Convert
 			temp += byte16array[2*i];
 			temp &= 0xf;
 			
-			byte256array[i] += temp;
+			byte256array[i] += (byte) temp;
 			byte256array[i] <<= 4;
 			
 			temp = 0;
 			temp += byte16array[2*i + 1];
 			temp &= 0xf;
 			
-			byte256array[i] += temp;
+			byte256array[i] += (byte) temp;
 		}
 		
 		return byte256array;
@@ -85794,7 +85892,7 @@ class Convert
 		
 		for (int i = 3; i >= 0; i--)
 		{
-			array[i] += intdata;
+			array[i] += (byte) intdata;
 			
 			intdata >>>= 8;
 		}
@@ -85832,7 +85930,7 @@ class Convert
 		
 		for (int i = 0; i < array.length; i++)
 		{
-			charray[i] += array[i];
+			charray[i] += (char) array[i];
 			charray[i] &= 0xff;
 		}
 		
@@ -85849,7 +85947,7 @@ class Convert
 		
 		for (int i = 0; i < array.length; i++)
 		
-		    barray[i] += array[i];
+		    barray[i] += (byte) array[i];
 		
 		return barray;
 	}
@@ -85906,10 +86004,10 @@ class Convert
 		
 		for (int i = 0; i < iarray.length; i++)
 		{
-			barray[4*i + 3] += iarray[i];  iarray[i] >>>= 8;
-			barray[4*i + 2] += iarray[i];  iarray[i] >>>= 8;
-			barray[4*i + 1] += iarray[i];  iarray[i] >>>= 8;
-			barray[4*i + 0] += iarray[i];
+			barray[4*i + 3] += (byte) iarray[i];  iarray[i] >>>= 8;
+			barray[4*i + 2] += (byte) iarray[i];  iarray[i] >>>= 8;
+			barray[4*i + 1] += (byte) iarray[i];  iarray[i] >>>= 8;
+			barray[4*i + 0] += (byte) iarray[i];
 		}
 		
 		return barray;
@@ -85937,10 +86035,10 @@ class Convert
 		
 		for (int i = 0; i < iarray.length; i++)
 		{
-			barray[4*i + 3] += iarray[i];  iarray[i] >>>= 8;
-			barray[4*i + 2] += iarray[i];  iarray[i] >>>= 8;
-			barray[4*i + 1] += iarray[i];  iarray[i] >>>= 8;
-			barray[4*i + 0] += iarray[i];
+			barray[4*i + 3] += (byte) iarray[i];  iarray[i] >>>= 8;
+			barray[4*i + 2] += (byte) iarray[i];  iarray[i] >>>= 8;
+			barray[4*i + 1] += (byte) iarray[i];  iarray[i] >>>= 8;
+			barray[4*i + 0] += (byte) iarray[i];
 		}
 		
 		return barray;
@@ -86292,10 +86390,10 @@ class Fourier
 		//  computes the discrete fourier transform or dft of a set of
 		//  complex numbers using the fast / fft or slow / quadratic dft.
 		//
-		//  The inverse transform divides the array by the number of ele-
-		//  ments, but some implementations divide both the transform and
-		//  the inverse transform by the sqrt of the number of elements
-		//  to make the transform symmetrical.
+		//  The inverse transform divides the array by the number of
+		//  elements, but some implementations divide both the transform
+		//  and the inverse transform by the sqrt of the number of ele-
+		//  ments to make the transform symmetrical.
 		
 		
 		final int p = 8;
@@ -86714,17 +86812,18 @@ class Fourier
 	//  (See the slow fourier transform or dft method.)
 	
 	
-	//  The user calls the public Fourier.transform() method, not the private fft method,
-	//  just as a user calls the Number.multiply() method instead of the quadratic,
-	//  sesquilinear (Karatsuba), or linear log (fftmultiply) methods.
+	//  The user calls the public Fourier.transform() method, not the private fft
+	//  method, just as a user calls the Number.multiply() method instead of the
+	//  quadratic (grade-school), sesquilinear (Karatsuba), or linear log (fft-
+	//  multiply) methods. This separates the method name from the algorithm or
+	//  implementation which depends on the size of the multiplier and multiplicand.
 	//
-	//  The Fast Fourier Transform (fft) is an algorithm or method for computing
-	//  the Discrete Fourier Transform (dft), just as Karatsuba multiplication is
-	//  an algorithm for fast multiplication. The fft computes and returns the same
-	//  value or array of numbers as the dft method.
-	//
-	//  The Fast Fourier Transform requires only O(n log(n)) operations, where n is the
-	//  number of bits. The Slow Fourier Transform or dft requires O(n^2) operations.
+	//  The Fast Fourier Transform (fft) is an algorithm or method for computing the
+	//  Discrete Fourier Transform (dft) of an array of numbers, just as Karatsuba
+	//  multiplication is an algorithm for multiplying two numbers. The fft computes
+	//  and returns the same value or array of numbers as the dft method, but the
+	//  fft requires only O(n log(n)) operations, where n is the number of bits,
+	//  while the Slow Fourier Transform or dft requires O(n^2) operations.
 	
 	
 	
@@ -87341,9 +87440,9 @@ class Fourier
 			for (int j = 0; j < w.length/temp0.length; j++)
 			{
 				if (         (temp0[i].length -1 -j) >= 0)
-				     temp0[i][temp0[i].length -1 -j] +=
+				     temp0[i][temp0[i].length -1 -j] += (int)
 				
-					( ((long)( w[w.length -1 -i -4*j]) & 0xffffffff ) );
+					( ((long)( w[w.length -1 -i -4*j]) & 0xffffffffL ) );
 			}
 			
 			//  Copy the upper 20-bits
@@ -87351,9 +87450,9 @@ class Fourier
 			for (int j = 0; j < w.length/temp1.length; j++)
 			{
 				if (         (temp1[i].length -2 -j) >= 0)
-				     temp1[i][temp1[i].length -2 -j] +=
+				     temp1[i][temp1[i].length -2 -j] += (int)
 				
-					( (((long)(w[w.length -1 -i -4*j]) >> 32) & 0xffffffff ) );
+					( (((long)(w[w.length -1 -i -4*j]) >> 32) & 0xffffffffL ) );
 			}
 		}
 		
