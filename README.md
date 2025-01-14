@@ -1,5 +1,3 @@
-	Readme file
-	
 	
 	The Java Editor program contains a text editor, table editor, email editor and image viewer. The
 	program also includes the Math, Number, Matrix, PublicKey, Signature, Cipher, and Convert classes.
@@ -37,8 +35,9 @@
 	
 	The public key agreement or encryption is unbreakable since every public key cipher would have to be
 	broken to solve for the composite secret key. Also, the program doesn't use broken ciphers such as
-	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem. The software
-	includes 18 Diffie-Merkle-Hellman ciphers and 2 matrix digital signature algorithms.
+	RSA or the integer Diffie-Hellman cipher which are not based on any hard math problem such as factor-
+	ization or discrete logs. The software includes 18 Diffie-Merkle-Hellman ciphers and 2 matrix digital
+	signature algorithms. The Rabin / factorization cipher is also included but is not enabled by default.
 	
 	If any of these ciphers can be broken it will just get replaced. For example, if a cipher can be
 	solved because it uses integers and a single equation, then it can be replaced by another cipher that
@@ -100,17 +99,6 @@
 	tion protocols changes.
 	
 	
-	** Note that the new version of the software will not decrypt email messages encrypted by previous
-	versions of the software if the maximum number of ciphers is used because a private key was modified
-	in one of the public key ciphers but messages saved on users' computers will still be decryptable be-
-	cause file encryption uses private key cryptography. Also, an error was corrected in the passphrase
-	dialog that caused problems on some versions of Linux; an error in the Save As menu item was corrected
-	that caused files to be encrypted twice; an error in the save mail settings method was corrected so
-	that the method saves the font size, frame size, number of ciphers, and other mail settings; and an
-	error in the SavedEmails class was corrected that caused the view saved emails dialog to not detach
-	the appended file text from the saved messages and to not display the view, save, and delete buttons.
-	
-	
 	
 	
 	
@@ -135,21 +123,21 @@
 	Click on the button that says Save File.
 	
 	This should download and save the file
-	openjdk-23_linux-x64_bin.tar.gz
+	openjdk-23.0.1_linux-x64_bin.tar.gz
 	in the Downloads folder / directory.
 	
 	
 	
 	Installing the java development kit (JDK) and running the java editor program
 	
-	0.  Download the file openjdk-23_linux-x64_bin.tar.gz  from the website jdk.java.net/23.
+	0.  Download the file openjdk-23.0.1_linux-x64_bin.tar.gz  from the website jdk.java.net/23.
 	
 	1.  Drag and drop or copy and paste the Editor.java file to the Downloads folder.
 	
 	2.  Open a terminal and copy and paste the commands or the command line
 	
-	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23_linux-x64_bin.tar.gz /usr/jdk;
-	    cd /usr/jdk; sudo tar zxvf openjdk-23_linux-x64_bin.tar.gz; cd;
+	    cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23.0.1_linux-x64_bin.tar.gz /usr/jdk;
+	    cd /usr/jdk; sudo tar zxvf openjdk-23.0.1_linux-x64_bin.tar.gz; cd;
 	
 	    (the -p option suppresses the error message if the directory already exists and creates the parent
 	    directories as needed)
@@ -170,17 +158,17 @@
 	
 	All the commands can be concatenated into a single line using the semicolon as a delimiter.
 	
-	If you are running a live version of Linux, you can drag and drop the openjdk-23_linux-x64_bin.tar.gz
+	If you are running a live version of Linux, you can drag and drop the openjdk-23.0.1_linux-x64_bin.tar.gz
 	file and the Editor.java file to the Downloads folder from a USB device and then copy and paste the
 	single command line
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-23_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-23/bin/java ./Downloads/Editor.java
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-23.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-23/bin/java ./Downloads/Editor.java
 	
 	or for the email client only
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
-	sudo tar zxvf openjdk-23_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-23/bin/java ./Downloads/Editor.java mail
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23.0.1_linux-x64_bin.tar.gz /usr/jdk; cd /usr/jdk;
+	sudo tar zxvf openjdk-23.0.1_linux-x64_bin.tar.gz; cd; /usr/jdk/jdk-23/bin/java ./Downloads/Editor.java mail
 	
 	into the terminal using the Edit -> Paste command or the popup menu.
 	
@@ -196,8 +184,8 @@
 	
 	If the jdk is not installed in your computer, you first have to untar the openjdk-23 using the command
 	
-	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23_linux-x64_bin.tar.gz /usr/jdk;
-	cd /usr/jdk; sudo tar zxvf openjdk-23_linux-x64_bin.tar.gz; cd;
+	cd; sudo mkdir -p /usr/jdk; cd; sudo cp ./Downloads/openjdk-23.0.1_linux-x64_bin.tar.gz /usr/jdk;
+	cd /usr/jdk; sudo tar zxvf openjdk-23.0.1_linux-x64_bin.tar.gz; cd;
 	
 	To compile the Editor program, copy the Editor.java file to the Downloads folder and then copy and paste
 	the command line
@@ -274,7 +262,7 @@
 	would only work on the computer on which the code was compiled).
 	
 	Note that the cd command can be omitted because it just changes the directory to the home
-	directory. This is useful if the next command contains a relative path name or path that
+	folder. This is useful if the next command contains a relative path name or path that
 	doesn't start with a slash /, but it is redundant to use cd if the next command has an
 	absolute path name because then it doesn't do anything.
 	
@@ -299,10 +287,9 @@
 	cd; /usr/jdk/jdk-23/bin/java -jar Editor.jar image
 	
 	for the email client, table editor, or image viewer, and the file will be executed
-	immediately because the jar file contains the compiled classes or executable byte
-	code instead of the source code. The java virtual machine will convert the byte code
-	to the user's binary machine code depending on the user's computer or processor
-	architecture.
+	immediately because the jar file contains the compiled classes or executable byte code
+	instead of the source code. The java virtual machine will convert the byte code to the
+	user's binary machine code depending on the user's computer or processor architecture.
 	
 	If you execute a .jar file instead of a .java file, then you have to remember to
 	create a new jar file for each new version of the source code. You can do this either
@@ -378,7 +365,7 @@
 	for private key encryption. The public key agreement or secret key is hashed to generate a sequence of
 	random numbers which is used as a one-time pad. The ciphertext is computed by adding the one-time pad
 	to the plaintext, and then the plaintext is recovered by subtracting the one-time pad from the cipher-
-	text.
+	text. The process of adding and subtracting two binary digits or bits is called xor-ing.
 	
 	The hash cipher is unbreakable because cryptographic hash functions are non-invertible. Even if the
 	hash function could be inverted it wouldn't break the cipher because there are 2^768 pre-images for
@@ -508,39 +495,70 @@
 	In 2021 we wrote that elliptic curve ciphers that are based on isogenies are quantum resistant but are
 	almost certainly broken since they are being approved for standardization and cryptanalysts have had
 	over a decade to study them. Just because a cipher is quantum resistant doesn't mean that the cipher
-	is also classical resistant or resistant to classical computing.
+	is also classical resistant or resistant to classical computing. Classical computing is what cryptog-
+	raphers really have to worry about because large-scale quantum computers will never be built.
 	
-	In 2022, after we wrote that the cipher was almost certainly broken because it had been approved for
-	standardization and it was being promoted and backed by a few companies, a method was published for
-	breaking the supersingular isogeny key exchange cipher. If the authors hadn't published their paper,
-	this algorithm would have been standardized and implemented in software programs along with the other
-	broken public key ciphers, including polynomial factorization, error-correcting code ciphers, the Mc-
-	Eliece cipher, the learning with errors cipher, and lattice ciphers.
+	There may be a law of physics that prevents large-scale quantum computers from being built, because
+	even after decades of work and billions of dollars of investment, the largest quantum computers ever
+	built only have around a hundred logical qubits. They doubled the number of bits in five years, but
+	they would need thousands of logical bits or millions of physical qubits to factor a thousand-bit num-
+	ber or to do anything useful. It obviously is a hard problem to build a physical quantum computer be-
+	cause if it were easy they would already have thousands of logical qubits instead of only a hundred
+	qubits; there would be no reason to add only fifty bits in five years. There may be problems with
+	noise and decoherence as the number of bits increases, and the coherence time may become too short to
+	make accurate measurements of the quantum states. This may be why quantum computers still don't do
+	anything useful, even though at 80 bits they were supposed to achieve quantum superiority and outper-
+	form classical computers, but they are still inferior to classical computers.
+	
+	The developers of quantum computers may be hiding the fact that there are uncorrectable errors in the
+	computations that make them useless for anything that requires perfect accuracy such as solving the
+	discrete log or factorization problem. Many of the companies working on quantum computers including
+	those that are implemented in silicon chips like microprocessors may just be investment scams to cap-
+	italize on the quantum computing hype from investors and venture capitalists. Quantum annealing com-
+	puters that have a few thousand qubits have been commercialized and are being used by some companies,
+	but they are useful only for a limited number of problems that allow for errors because the solutions
+	only have to be approximately correct instead of exactly correct, such as for optimization problems.
+	There may be quantum-like algorithms that could do the same thing on a regular or classical computer
+	if they also allow for errors.
+	
+	In 2022, after we wrote that the supersingular isogeny key exchange cipher was almost certainly bro-
+	ken because it had been approved for standardization and it was being promoted and backed by a few
+	companies, a method was published for breaking the sike cipher. If the authors hadn't published their
+	paper, this algorithm would have been standardized and implemented in software programs along with the
+	other broken public key ciphers, including polynomial factorization, error-correcting code ciphers,
+	the McEliece cipher, the learning with errors cipher, and lattice ciphers. Cryptographers would have
+	claimed that the cipher is resistant to quantum computing and that it had survived over a decade of
+	public cryptanalysis, and most users would have believed that the sike cipher is unbreakable because
+	there is no quantum algorithm for it.
 	
 	This example shows that the reason for the cipher competition is to discover which ciphers or equa-
 	tions are complicated enough that only a few mathematicians or cryptanalysts can break or solve them,
-	and then standardize those broken ciphers. This mistake or embarrassment occurred because in approving
-	this cipher they underestimated the number of mathematicians who can comprehend the math that was used
-	to break the cipher. For the methods of cryptanalysis to remain secret, the number of mathematicians
-	who can break a cipher has to be in the single digits (such as for solving coprime root extraction,
-	factorization, and the integer Diffie-Hellman problem) and in this case the number was in the double
-	digits because there are tens of mathematicians who can understand the math for breaking supersingular
-	isogeny key exchange. This discovery was of no importance to the field of mathematics because the ci-
-	phers included additional information in the public key to do the key agreement, and this information
-	was used to break the cipher without solving the underlying math problem, just as RSA was broken with-
-	out solving the factorization problem.
+	and then standardize the broken ciphers so that signals intelligence agencies can continue reading en-
+	crypted messages while users think that their communications are secure. They weren't expecting anyone
+	to publish a method for breaking the sike cipher. This mistake or embarrassment occurred because in
+	approving this cipher they underestimated the number of mathematicians who can comprehend the math
+	that was used to break the cipher. For the methods of cryptanalysis to remain secret, the number of
+	mathematicians who can break a cipher has to be in the single digits and in this case the number was
+	in the double digits because there are tens of mathematicians who can understand the math for breaking
+	supersingular isogeny key exchange. (This discovery was of no importance to the field of mathematics
+	because the cipher included additional information in the public key to do the key agreement, and this
+	information was used to break the cipher without solving the underlying math problem on which the ci-
+	pher was supposed to be based, just as the coprime root extraction cipher was broken without solving
+	the factorization problem.)
 	
 	Competitions are good for many things but public key cryptography is not one of them because it just
 	selects ciphers, functions, or equations that only a few people in the world know how to break, in-
 	vert, or solve, and it gives users a false sense of security and confidence in the ciphers. Some users
-	reassure themselves that because ciphers such as coprime root extraction or RSA have withstood many
-	decades of public cryptanalysis, that this gives them a certain level of confidence in the security of
-	the ciphers which is a false or erroneous assumption because cryptanalysts are secretive. They don't
-	know that coprime root extraction has been broken for a few decades (which is why RSA was rejected for
-	digital signature algorithms) or that lattice ciphers and error-correcting code ciphers are completely
-	broken for all key sizes and parameters. Some companies are implementing lattice ciphers into their
-	software programs even though some of them have been publicly broken and all of them have been pri-
-	vately broken just like RSA.
+	reassure themselves that because ciphers such as coprime root extraction have withstood many decades
+	of public cryptanalysis, that this gives them a certain level of confidence in the security of the ci-
+	phers which is a false or erroneous assumption because cryptanalysts are secretive. They don't know
+	that coprime root extraction has been broken for a few decades (which is why RSA was rejected for dig-
+	ital signature algorithms) or that lattice ciphers and error-correcting code ciphers are completely
+	broken for all key sizes and parameters. There is also discussion about using error-correcting code
+	ciphers like McEliece which are easier to solve than factorization and require 4 to 8 M bits while
+	Rabin / factorization only requires 16 to 32 K bits for security and is a much better cipher. The fac-
+	torization cipher will never be broken even by quantum computing because large-scale quantum computers
+	that have perfect accuracy will never be built.
 	
 	Another broken cipher that is being backed by a number of companies is the learning with errors ci-
 	pher. In the LWE cipher, the recipient chooses a prime (or prime power) modulus q, a public array a[],
@@ -564,8 +582,10 @@
 	unlike the knapsack cipher which is also linear and has small errors but uses a private modulus.
 	
 	The Merkle-Hellman / knapsack cipher c[] = s0 a[] + r[][] s[] (mod n), b = c[] (m[] + e[]), b1 =
-	r[][] ^ T (m[] + e[]) is included in the public key class because it is the only cipher that uses a
-	private modulus. Unlike lattice ciphers, this cipher is secure because it uses random errors in the
-	static public key c[] and the one-time public key b. Unless the static public key could be broken, the
-	one-time public key can never be broken because the solution is ambiguous and the search space or so-
-	lution set is too large to try all the possible keys or combinations.
+	r[][] ^ T (m[] + e[]) is included in the public key class because it is the only linear cipher that
+	is unbreakable by classical computing and the only public key cipher that uses a nonpublic modulus.
+	Unlike lattice ciphers, this cipher is secure because it uses random errors in the static public key
+	c[] and the one-time public key b. Unless the static public key could be broken, the one-time public
+	key can never be broken because the solution is ambiguous and the search space or solution set is too
+	large to try all the possible keys or combinations.
+	
